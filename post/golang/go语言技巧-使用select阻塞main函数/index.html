@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Go语言技巧-使用select{}阻塞main函数 - Even</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="roc" />
+  <meta name="description" content="很多时候我们需要让main函数不退出，让它在后台一直执行，例如： func main() { for i := 0; i &amp;lt; 20; i&#43;&#43; { //启动20个协程处理消息队列中的消息 c := consumer.New() go c.Start() } select" />
+<meta name="keywords" content="golang, go" />
+
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.26" />
+
+
+<link rel="canonical" href="http://imroc.io/post/golang/go%E8%AF%AD%E8%A8%80%E6%8A%80%E5%B7%A7-%E4%BD%BF%E7%94%A8select%E9%98%BB%E5%A1%9Emain%E5%87%BD%E6%95%B0/" />
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="icon" href="/favicon.ico" />
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.min.css?v=2.5.0" rel="stylesheet">
+<link href="/lib/fancybox/jquery.fancybox-3.1.20.min.css" rel="stylesheet">
+
+<meta property="og:title" content="Go语言技巧-使用select{}阻塞main函数" />
+<meta property="og:description" content="很多时候我们需要让main函数不退出，让它在后台一直执行，例如： func main() { for i := 0; i &lt; 20; i&#43;&#43; { //启动20个协程处理消息队列中的消息 c := consumer.New() go c.Start() } select" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://imroc.io/post/golang/go%E8%AF%AD%E8%A8%80%E6%8A%80%E5%B7%A7-%E4%BD%BF%E7%94%A8select%E9%98%BB%E5%A1%9Emain%E5%87%BD%E6%95%B0/" />
+
+
+
+<meta property="article:published_time" content="2017-09-06T15:35:18&#43;08:00"/>
+<meta property="article:modified_time" content="2017-09-06T15:35:18&#43;08:00"/>
+
+
+
+
+
+
+
+
+
+
+
+<meta itemprop="name" content="Go语言技巧-使用select{}阻塞main函数">
+<meta itemprop="description" content="很多时候我们需要让main函数不退出，让它在后台一直执行，例如： func main() { for i := 0; i &lt; 20; i&#43;&#43; { //启动20个协程处理消息队列中的消息 c := consumer.New() go c.Start() } select">
+
+
+<meta itemprop="dateModified" content="2017-09-06T15:35:18&#43;08:00" />
+<meta itemprop="wordCount" content="75">
+
+
+
+<meta itemprop="keywords" content="golang," />
+<meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Go语言技巧-使用select{}阻塞main函数"/>
+<meta name="twitter:description" content="很多时候我们需要让main函数不退出，让它在后台一直执行，例如： func main() { for i := 0; i &lt; 20; i&#43;&#43; { //启动20个协程处理消息队列中的消息 c := consumer.New() go c.Start() } select"/>
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+  <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Even</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">About</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">Even</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">About</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Go语言技巧-使用select{}阻塞main函数</h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2017-09-06
+        </span>
+        
+      </div>
+    </header>
+
+    
+    
+
+    
+    <div class="post-content">
+      <p>很多时候我们需要让main函数不退出，让它在后台一直执行，例如：</p>
+
+<pre><code class="language-go">func main() {
+	for i := 0; i &lt; 20; i++ { //启动20个协程处理消息队列中的消息
+		c := consumer.New()
+		go c.Start()
+	}
+	select {} // 阻塞
+}
+</code></pre>
+
+    </div>
+
+    
+    
+
+    
+    
+
+    <footer class="post-footer">
+      <div class="post-tags">
+          
+          <a href="/tags/golang/">golang</a>
+          
+        </div>
+
+      
+      <nav class="post-nav">
+        
+          <a class="prev" href="/post/golang/go%E8%AF%AD%E8%A8%80%E6%8A%80%E5%B7%A7-%E4%BD%BF%E7%94%A8for-range-time-tick%E5%9B%BA%E5%AE%9A%E9%97%B4%E9%9A%94%E6%97%B6%E9%97%B4%E6%89%A7%E8%A1%8C/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Go语言技巧-使用for range time.Tick()固定间隔时间执行</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
+        
+          <a class="next" href="/post/golang/golanggo%E8%AF%AD%E8%A8%80%E4%B8%ADappend%E5%87%BD%E6%95%B0%E8%BF%94%E5%9B%9E%E5%80%BC%E5%BF%85%E9%A1%BB%E6%9C%89%E5%8F%98%E9%87%8F%E6%8E%A5%E6%94%B6%E7%9A%84%E5%8E%9F%E5%9B%A0%E6%8E%A2%E7%A9%B6/">
+            <span class="next-text nav-default">golang中append函数返回值必须有变量接收的原因探究</span>
+            <span class="prev-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+      </div>  
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+        <a href="mailto:imrocchan@gmail.com" class="iconfont icon-email" title="email"></a>
+        <a href="https://twitter.com/imrocchan" class="iconfont icon-twitter" title="twitter"></a>
+        <a href="https://github.com/imroc" class="iconfont icon-github" title="github"></a>
+        <a href="https://weibo.com/cpwl520" class="iconfont icon-weibo" title="weibo"></a>
+  <a href="http://imroc.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="copyright-year">
+    &copy; 
+    2017
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">roc</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+<script src="/lib/highlight/highlight.pack.js"></script>
+<script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+  <script type="text/javascript" src="/lib/fancybox/jquery.fancybox-3.1.20.min.js"></script>
+<script type="text/javascript" src="/dist/even.min.js?v=2.5.0"></script>
+
+
+
+
+
+
+</body>
+</html>
