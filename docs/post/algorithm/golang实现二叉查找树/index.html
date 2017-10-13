@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>golang实现二叉查找树 - roc</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="roc" />
+  <meta name="description" content="为简单起见，键值均为整型。 定义接口(tree.go)： type Tree interface { Put(k, v int) //新增或修改 Get(k int) int //查询 Delete(k int) //删除 Size() int //树的大小 Min() int //最小键 DeleteMin()" />
+
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.26" />
+
+
+<link rel="canonical" href="http://blog.imroc.io/post/algorithm/golang%E5%AE%9E%E7%8E%B0%E4%BA%8C%E5%8F%89%E6%9F%A5%E6%89%BE%E6%A0%91/" />
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="icon" href="/favicon.ico" />
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.min.css?v=2.5.0" rel="stylesheet">
+<link href="/lib/fancybox/jquery.fancybox-3.1.20.min.css" rel="stylesheet">
+
+<meta property="og:title" content="golang实现二叉查找树" />
+<meta property="og:description" content="为简单起见，键值均为整型。 定义接口(tree.go)： type Tree interface { Put(k, v int) //新增或修改 Get(k int) int //查询 Delete(k int) //删除 Size() int //树的大小 Min() int //最小键 DeleteMin()" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://blog.imroc.io/post/algorithm/golang%E5%AE%9E%E7%8E%B0%E4%BA%8C%E5%8F%89%E6%9F%A5%E6%89%BE%E6%A0%91/" />
+
+
+
+<meta property="article:published_time" content="2017-09-05T15:35:18&#43;08:00"/>
+<meta property="article:modified_time" content="2017-09-05T15:35:18&#43;08:00"/>
+
+
+
+
+
+
+
+
+
+
+
+<meta itemprop="name" content="golang实现二叉查找树">
+<meta itemprop="description" content="为简单起见，键值均为整型。 定义接口(tree.go)： type Tree interface { Put(k, v int) //新增或修改 Get(k int) int //查询 Delete(k int) //删除 Size() int //树的大小 Min() int //最小键 DeleteMin()">
+
+
+<meta itemprop="dateModified" content="2017-09-05T15:35:18&#43;08:00" />
+<meta itemprop="wordCount" content="890">
+
+
+
+<meta itemprop="keywords" content="算法," />
+<meta name="twitter:card" content="summary"/><meta name="twitter:title" content="golang实现二叉查找树"/>
+<meta name="twitter:description" content="为简单起见，键值均为整型。 定义接口(tree.go)： type Tree interface { Put(k, v int) //新增或修改 Get(k int) int //查询 Delete(k int) //删除 Size() int //树的大小 Min() int //最小键 DeleteMin()"/>
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+  <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">roc</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">主页</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">归档</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">标签</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">关于</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <a href="/"> 
+  <img class="logo-wrapper" src="http://blog.imroc.io/images/tinylogo.png" style="margin-right:2em;"></img>
+  <div class="logo-wrapper">
+    <span href="/" class="logo">roc</span>
+  </div>
+</a>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">主页</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">归档</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">标签</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">关于</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">golang实现二叉查找树</h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2017-09-05
+        </span>
+        
+      </div>
+    </header>
+
+    
+    
+
+    
+    <div class="post-content">
+      <p>为简单起见，键值均为整型。</p>
+
+<p>定义接口(tree.go)：</p>
+
+<pre><code class="language-go">type Tree interface {
+	Put(k, v int)  //新增或修改
+	Get(k int) int //查询
+	Delete(k int)  //删除
+	Size() int     //树的大小
+	Min() int      //最小键
+	DeleteMin()    //删除最小键
+}
+</code></pre>
+
+<p>二叉查找树(binary_tree.go)：</p>
+
+<pre><code class="language-go">//二叉查找树
+type BinaryTree struct {
+	root *node
+	n    int
+}
+ 
+//创建节点
+func newNode(k, v int) *node {
+	return &amp;node{k: k, v: v, sz: 1}
+}
+ 
+//创建二叉查找树
+func NewBinaryTree() *BinaryTree {
+	return &amp;BinaryTree{}
+}
+ 
+//增加或修改
+func (bt *BinaryTree) Put(k, v int) {
+	bt.root, _ = put(bt.root, k, v)
+}
+ 
+//查找
+func (bt *BinaryTree) Get(k int) int {
+	return get(bt.root, k)
+}
+ 
+//树的大小
+func (bt *BinaryTree) Size() int {
+	return size(bt.root)
+}
+ 
+//选出最小键
+func (bt *BinaryTree) Min() int {
+	return min(bt.root).k
+}
+ 
+//删除最小键
+func (bt *BinaryTree) DeleteMin() {
+	bt.root = deleteMin(bt.root)
+}
+ 
+//删除
+func (bt *BinaryTree) Delete(k int) {
+	bt.root = delete(bt.root, k)
+}
+</code></pre>
+
+<p>节点(node.go)：</p>
+
+<pre><code class="language-go">//节点
+type node struct {
+	k, v, sz    int   //键，值，大小
+	left, right *node //左右子节点
+}
+
+//在以nd为根节点的树下增加或修改一个节点
+//如果创建了新节点，第二个参数返回true，
+//如果只是修改，第二个参数返回false
+func put(nd *node, k, v int) (*node, bool) {
+	if nd == nil {
+		return newNode(k, v), true
+	}
+	hasNew := false //检测是否创建了新节点
+	if k &lt; nd.k {
+		nd.left, hasNew = put(nd.left, k, v)
+	} else if k &gt; nd.k {
+		nd.right, hasNew = put(nd.right, k, v)
+	} else {
+		nd.v = v //仅修改，不会增加增加节点，就不更新节点大小
+	}
+	if hasNew { //如果创建了新节点就更新树的大小
+		updateSize(nd)
+	}
+	return nd, hasNew
+}
+ 
+//在以nd为根节点的树中获取键为k的值
+func get(nd *node, k int) int {
+	if nd == nil {
+		return -1
+	}
+	if k &lt; nd.k {
+		return get(nd.left, k)
+	} else if k &gt; nd.k {
+		return get(nd.right, k)
+	} else {
+		return nd.v
+	}
+}
+ 
+//获取以nd为根节点的树的大小
+func size(nd *node) int {
+	if nd == nil {
+		return 0
+	}
+	return nd.sz
+}
+ 
+//更新以nd为根节点的树的大小
+func updateSize(nd *node) {
+	if nd == nil {
+		return
+	}
+	nd.sz = size(nd.left) + size(nd.right) + 1
+}
+ 
+//选出以nd为根节点的树的最小键节点
+func min(nd *node) *node {
+	if nd == nil {
+		return nil
+	}
+	if nd.left != nil {
+		return min(nd.left)
+	}
+	return nd
+}
+ 
+//删除以nd为根节点的树的最小键节点
+//返回被删除的节点
+func deleteMin(nd *node) *node {
+	if nd == nil {
+		return nil
+	}
+	if nd.left == nil { //找到最小节点
+		nd = nd.right //用右子节点代替自己
+	} else { //还有更小的
+		nd.left = deleteMin(nd.left)
+	}
+	updateSize(nd)
+	return nd
+}
+ 
+//删除以nd为根节点的树并且键为k的节点
+func delete(nd *node, k int) *node {
+	if nd == nil {
+		return nil
+	}
+	if k &lt; nd.k {
+		nd.left = delete(nd.left, k)
+	} else if k &gt; nd.k {
+		nd.right = delete(nd.right, k)
+	} else { //命中要删除的节点
+		//只有一个或零个子节点
+		if nd.right == nil {
+			return nd.left
+		}
+		if nd.left == nil {
+			return nd.right
+		}
+		//同时具有两个子节点
+		//先找出大于本节点的最小节点作为后继节点
+		t := nd
+		nd.k = min(t.right).k
+		//删除
+		deleteMin(t.right)
+		//用后继节点代替本节点
+		nd.left = t.left
+	}
+	updateSize(nd)
+	return nd
+}
+</code></pre>
+
+    </div>
+
+    
+    
+
+    
+    
+
+    <footer class="post-footer">
+      <div class="post-tags">
+          
+          <a href="/tags/%E7%AE%97%E6%B3%95/">算法</a>
+          
+        </div>
+
+      
+      <nav class="post-nav">
+        
+          <a class="prev" href="/post/algorithm/golang%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92%E6%B1%82%E8%A7%A3%E6%9C%80%E5%A4%A7%E8%BF%9E%E7%BB%AD%E5%AD%90%E6%95%B0%E7%BB%84%E5%92%8C/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">golang动态规划求解最大连续子数组和</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        
+          <a class="next" href="/post/algorithm/%E4%B8%89%E5%90%91%E5%88%87%E5%88%86%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8Fc-c&#43;&#43;%E5%AE%9E%E7%8E%B0/">
+            <span class="next-text nav-default">三向切分快速排序(C-C&#43;&#43;实现)</span>
+            <span class="prev-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+      </div>  
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+        <a href="mailto:imrocchan@gmail.com" class="iconfont icon-email" title="email"></a>
+        <a href="https://twitter.com/imrocchan" class="iconfont icon-twitter" title="twitter"></a>
+        <a href="https://github.com/imroc" class="iconfont icon-github" title="github"></a>
+        <a href="https://weibo.com/cpwl520" class="iconfont icon-weibo" title="weibo"></a>
+  <a href="http://blog.imroc.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="copyright-year">
+    &copy; 
+    2017
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">roc</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+<script src="/lib/highlight/highlight.pack.js"></script>
+<script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+  <script type="text/javascript" src="/lib/fancybox/jquery.fancybox-3.1.20.min.js"></script>
+<script type="text/javascript" src="/dist/even.min.js?v=2.5.0"></script>
+
+
+
+
+
+
+</body>
+</html>

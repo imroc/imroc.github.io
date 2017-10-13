@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>golang中append函数返回值必须有变量接收的原因探究 - roc</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="roc" />
+  <meta name="description" content="append函数返回更新后的slice（长度和容量可能会变），必须重新用slice的变量接收，不然无法编译通过 为了弄明白为什么，首先我们需要" />
+<meta name="keywords" content="golang, go" />
+
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.26" />
+
+
+<link rel="canonical" href="http://blog.imroc.io/post/golang/golang-append/" />
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="icon" href="/favicon.ico" />
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.min.css?v=2.5.0" rel="stylesheet">
+<link href="/lib/fancybox/jquery.fancybox-3.1.20.min.css" rel="stylesheet">
+
+<meta property="og:title" content="golang中append函数返回值必须有变量接收的原因探究" />
+<meta property="og:description" content="append函数返回更新后的slice（长度和容量可能会变），必须重新用slice的变量接收，不然无法编译通过 为了弄明白为什么，首先我们需要" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://blog.imroc.io/post/golang/golang-append/" />
+
+
+
+<meta property="article:published_time" content="2017-09-06T15:35:18&#43;08:00"/>
+<meta property="article:modified_time" content="2017-09-06T15:35:18&#43;08:00"/>
+
+
+
+
+
+
+
+
+
+
+
+<meta itemprop="name" content="golang中append函数返回值必须有变量接收的原因探究">
+<meta itemprop="description" content="append函数返回更新后的slice（长度和容量可能会变），必须重新用slice的变量接收，不然无法编译通过 为了弄明白为什么，首先我们需要">
+
+
+<meta itemprop="dateModified" content="2017-09-06T15:35:18&#43;08:00" />
+<meta itemprop="wordCount" content="545">
+
+
+
+<meta itemprop="keywords" content="golang," />
+<meta name="twitter:card" content="summary"/><meta name="twitter:title" content="golang中append函数返回值必须有变量接收的原因探究"/>
+<meta name="twitter:description" content="append函数返回更新后的slice（长度和容量可能会变），必须重新用slice的变量接收，不然无法编译通过 为了弄明白为什么，首先我们需要"/>
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+  <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">roc</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">主页</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">归档</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">标签</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">关于</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <a href="/"> 
+  <img class="logo-wrapper" src="http://blog.imroc.io/images/tinylogo.png" style="margin-right:2em;"></img>
+  <div class="logo-wrapper">
+    <span href="/" class="logo">roc</span>
+  </div>
+</a>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">主页</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">归档</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">标签</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">关于</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">golang中append函数返回值必须有变量接收的原因探究</h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2017-09-06
+        </span>
+        
+      </div>
+    </header>
+
+    
+    
+
+    
+    <div class="post-content">
+      <p>append函数返回更新后的slice（长度和容量可能会变），必须重新用slice的变量接收，不然无法编译通过</p>
+
+<p>为了弄明白为什么，首先我们需要清楚几件事：</p>
+
+<ul>
+<li>slice的底层是数组，一片连续的内存，slice变量只是存储该slice在底层数组的起始位置、结束位置以及容量。</li>
+<li>它的长度可以通过起始位置和结束位置算出来，容量也可以通过起点位置到底层数组的末端位置的长度算出来，多个slice可以指向同一个底层数组。所以slice和数组指针不同，数组指针主要存储底层数组的首地址。</li>
+<li>因为Go函数传递默认是值拷贝，将slice变量传入append函数相当于传了原slice变量的一个副本，注意不是拷贝底层数组，因为slice变量并不是数组，它仅仅是存储了底层数组的一些信息。</li>
+</ul>
+
+<p>所以说，当它改变传入的slice变量的信息，原slice变量并不会有任何变化，打印原slice变量和之前也会一模一样。该函数会返回修改后的slice变量，因为原slice并不会变，假如没有任何slice变量接收返回的值，那么此次append操作就没有意义了。所以必须要有slice变量重新接收修改后的slice变量，不然编译器会报错。Go不希望你做无意义的事，就像导入的包或定义的变量没有用上，它也会报错。</p>
+
+<p>个人是这样理解的，如有不对之处还请指正。</p>
+
+    </div>
+
+    
+    
+
+    
+    
+
+    <footer class="post-footer">
+      <div class="post-tags">
+          
+          <a href="/tags/golang/">golang</a>
+          
+        </div>
+
+      
+      <nav class="post-nav">
+        
+          <a class="prev" href="/post/golang/golang-select/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Go语言技巧-使用select{}阻塞main函数</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        
+          <a class="next" href="/post/algorithm/union-findc&#43;&#43;%E5%AE%9E%E7%8E%B0%E5%AE%9E%E7%8E%B0/">
+            <span class="next-text nav-default">Union-Find(C&#43;&#43;实现实现)</span>
+            <span class="prev-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+      </div>  
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+        <a href="mailto:imrocchan@gmail.com" class="iconfont icon-email" title="email"></a>
+        <a href="https://twitter.com/imrocchan" class="iconfont icon-twitter" title="twitter"></a>
+        <a href="https://github.com/imroc" class="iconfont icon-github" title="github"></a>
+        <a href="https://weibo.com/cpwl520" class="iconfont icon-weibo" title="weibo"></a>
+  <a href="http://blog.imroc.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="copyright-year">
+    &copy; 
+    2017
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">roc</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+<script src="/lib/highlight/highlight.pack.js"></script>
+<script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+  <script type="text/javascript" src="/lib/fancybox/jquery.fancybox-3.1.20.min.js"></script>
+<script type="text/javascript" src="/dist/even.min.js?v=2.5.0"></script>
+
+
+
+
+
+
+</body>
+</html>

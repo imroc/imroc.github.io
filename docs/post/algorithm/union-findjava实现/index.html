@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Union-Find(Java实现) - roc</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="roc" />
+  <meta name="description" content="quick-find、quick-union、加权quick-union(附带路径压缩优化) 本算法主要解决动态连通性一类问题，这里尽量用精炼" />
+
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.26" />
+
+
+<link rel="canonical" href="http://blog.imroc.io/post/algorithm/union-findjava%E5%AE%9E%E7%8E%B0/" />
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="icon" href="/favicon.ico" />
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.min.css?v=2.5.0" rel="stylesheet">
+<link href="/lib/fancybox/jquery.fancybox-3.1.20.min.css" rel="stylesheet">
+
+<meta property="og:title" content="Union-Find(Java实现)" />
+<meta property="og:description" content="quick-find、quick-union、加权quick-union(附带路径压缩优化) 本算法主要解决动态连通性一类问题，这里尽量用精炼" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://blog.imroc.io/post/algorithm/union-findjava%E5%AE%9E%E7%8E%B0/" />
+
+
+
+<meta property="article:published_time" content="2017-09-05T15:35:18&#43;08:00"/>
+<meta property="article:modified_time" content="2017-09-05T15:35:18&#43;08:00"/>
+
+
+
+
+
+
+
+
+
+
+
+<meta itemprop="name" content="Union-Find(Java实现)">
+<meta itemprop="description" content="quick-find、quick-union、加权quick-union(附带路径压缩优化) 本算法主要解决动态连通性一类问题，这里尽量用精炼">
+
+
+<meta itemprop="dateModified" content="2017-09-05T15:35:18&#43;08:00" />
+<meta itemprop="wordCount" content="770">
+
+
+
+<meta itemprop="keywords" content="算法," />
+<meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Union-Find(Java实现)"/>
+<meta name="twitter:description" content="quick-find、quick-union、加权quick-union(附带路径压缩优化) 本算法主要解决动态连通性一类问题，这里尽量用精炼"/>
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+  <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">roc</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">主页</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">归档</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">标签</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">关于</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <a href="/"> 
+  <img class="logo-wrapper" src="http://blog.imroc.io/images/tinylogo.png" style="margin-right:2em;"></img>
+  <div class="logo-wrapper">
+    <span href="/" class="logo">roc</span>
+  </div>
+</a>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">主页</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">归档</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">标签</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">关于</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Union-Find(Java实现)</h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2017-09-05
+        </span>
+        
+      </div>
+    </header>
+
+    
+    
+
+    
+    <div class="post-content">
+      
+
+<p><strong>quick-find、quick-union、加权quick-union(附带路径压缩优化)</strong></p>
+
+<hr />
+
+<p>本算法主要解决动态连通性一类问题，这里尽量用精炼简洁的话来阐述。</p>
+
+<p><strong>数据结构描述:</strong></p>
+
+<ul>
+<li>有N个节点（索引0~N-1），可以查询节点数量</li>
+<li>可以连接两个节点</li>
+<li>可以查询两个节点是否连通</li>
+</ul>
+
+<p><strong>算法大致设计思路：</strong></p>
+
+<ul>
+<li>每个节点初始化为不同的整数标记</li>
+<li>通过一个辅助函数查询某个节点的标记值</li>
+<li>如果两节点标记相同，说明两节点是连通的
+&mdash;&mdash;</li>
+</ul>
+
+<p>抽象基类：</p>
+
+<pre><code class="language-java">package com.roc.algorithms.unionfind;
+
+/**
+ * Union-Find算法的基类
+ * @author roc
+ */
+public abstract class UnionFind {
+    protected int[] id;
+    protected int count;
+    public UnionFind(int n){
+        this.count = n;
+        this.id = new int[n];
+        for (int i=0;i&lt;n;i++){
+            this.id[i] = i;
+        }
+    }
+    public int getCount(){
+        return this.count;
+    }
+    public abstract boolean isConnected(int p,int q);
+    public abstract void union(int p,int q);
+}
+</code></pre>
+
+<h2 id="quickfind">QuickFind</h2>
+
+<ul>
+<li>a和b进行union的时候，将b及与b连通节点的标记都置为和a的标记一样</li>
+<li>标记相同的节点是连通的</li>
+</ul>
+
+<pre><code class="language-java">package com.roc.algorithms.unionfind;
+
+/**
+ * union-find算法的quick-find实现版本
+ *
+ * @author roc
+ */
+public class QuickFind extends UnionFind {
+    public QuickFind(int n) {
+        super(n);
+    }
+
+    @Override
+    public boolean isConnected(int p, int q) {
+        return id[p] == id[q];
+    }
+
+    @Override
+    public void union(int p, int q) {
+        int i = id[p];
+        int j = id[q];
+        if (i == j) {
+            return;
+        }
+        for (int k = 0; k &lt; id.length; k++) {
+            if (id[k] == j) {
+                id[k] = i;
+            }
+        }
+        count--;
+    }
+}
+</code></pre>
+
+<h2 id="quickunion">QuickUnion</h2>
+
+<ul>
+<li>连通的节点形成一棵树，根节点相同</li>
+</ul>
+
+<pre><code class="language-java">package com.roc.algorithms.unionfind;
+
+/**
+ * union-find算法的quick-union实现版本
+ * @author roc
+ */
+public class QuickUnion extends UnionFind {
+    public QuickUnion(int n) {
+        super(n);
+    }
+
+    private int findRoot(int p) {
+        while (p != id[p]) {
+            p = id[p];
+        }
+        return p;
+    }
+
+    @Override
+    public boolean isConnected(int p, int q) {
+        return findRoot(p) == findRoot(q);
+    }
+
+    @Override
+    public void union(int p, int q) {
+        int i = findRoot(p);
+        int j = findRoot(q);
+        if (i == j) {
+            return;
+        }
+        id[j] = id[i];
+        count--;
+    }
+}
+</code></pre>
+
+<h2 id="加权quickunion-附带路径压缩优化">加权QuickUnion(附带路径压缩优化)</h2>
+
+<ul>
+<li>union的时候小树挂在大树下</li>
+<li>查询根节点的时候顺便将该节点的父节点直接指向根节点，压缩路径</li>
+</ul>
+
+<pre><code class="language-java">package com.roc.algorithms.unionfind;
+
+/**
+ * union-find算法的加权quick-union实现版本，
+ * 附带路径压缩优化
+ *
+ * @author roc
+ */
+public class WeightedQuickUnion extends QuickUnion {
+    private int[] sz;
+
+    public WeightedQuickUnion(int n) {
+        super(n);
+        this.sz = new int[n];
+        for (int i = 0; i &lt; n; i++) {
+            this.sz[i] = 1;
+        }
+    }
+
+    ////查询根节点，顺便压缩路径
+    @Override
+    protected int findRoot(int p) {
+        while (p != id[p]) {
+            id[p] = id[id[p]];
+            p = id[p];
+        }
+        return p;
+    }
+
+    @Override
+    public void union(int p, int q) {
+        int i = findRoot(p);
+        int j = findRoot(q);
+        if (i == j) {
+            return;
+        }
+        if (sz[i] &lt; sz[j]) {
+            id[i] = j;
+            sz[j] += sz[i];
+        } else {
+            id[j] = i;
+            sz[i] += sz[j];
+        }
+        count--;
+    }
+}
+</code></pre>
+
+    </div>
+
+    
+    
+
+    
+    
+
+    <footer class="post-footer">
+      <div class="post-tags">
+          
+          <a href="/tags/%E7%AE%97%E6%B3%95/">算法</a>
+          
+        </div>
+
+      
+      <nav class="post-nav">
+        
+          <a class="prev" href="/post/algorithm/union-findc&#43;&#43;%E5%AE%9E%E7%8E%B0%E5%AE%9E%E7%8E%B0/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Union-Find(C&#43;&#43;实现实现)</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        
+          <a class="next" href="/post/algorithm/union-findgolang%E5%AE%9E%E7%8E%B0/">
+            <span class="next-text nav-default">Union-Find(golang实现)</span>
+            <span class="prev-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+      </div>  
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+        <a href="mailto:imrocchan@gmail.com" class="iconfont icon-email" title="email"></a>
+        <a href="https://twitter.com/imrocchan" class="iconfont icon-twitter" title="twitter"></a>
+        <a href="https://github.com/imroc" class="iconfont icon-github" title="github"></a>
+        <a href="https://weibo.com/cpwl520" class="iconfont icon-weibo" title="weibo"></a>
+  <a href="http://blog.imroc.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="copyright-year">
+    &copy; 
+    2017
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">roc</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+<script src="/lib/highlight/highlight.pack.js"></script>
+<script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+  <script type="text/javascript" src="/lib/fancybox/jquery.fancybox-3.1.20.min.js"></script>
+<script type="text/javascript" src="/dist/even.min.js?v=2.5.0"></script>
+
+
+
+
+
+
+</body>
+</html>
