@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>架构 on roc</title>
+    <link>https://imroc.io/tags/%E6%9E%B6%E6%9E%84/</link>
+    <description>Recent content in 架构 on roc</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <managingEditor>roc@imroc.io (roc)</managingEditor>
+    <webMaster>roc@imroc.io (roc)</webMaster>
+    <lastBuildDate>Wed, 06 Sep 2017 15:52:18 +0800</lastBuildDate>
+    
+	<atom:link href="https://imroc.io/tags/%E6%9E%B6%E6%9E%84/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>单体应用缺陷与微服务特点</title>
+      <link>https://imroc.io/posts/arch/%E5%8D%95%E4%BD%93%E5%BA%94%E7%94%A8%E7%BC%BA%E9%99%B7%E4%B8%8E%E5%BE%AE%E6%9C%8D%E5%8A%A1%E7%89%B9%E7%82%B9/</link>
+      <pubDate>Wed, 06 Sep 2017 15:52:18 +0800</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/posts/arch/%E5%8D%95%E4%BD%93%E5%BA%94%E7%94%A8%E7%BC%BA%E9%99%B7%E4%B8%8E%E5%BE%AE%E6%9C%8D%E5%8A%A1%E7%89%B9%E7%82%B9/</guid>
+      <description>单体应用（All in one) 程序缺陷 先天性缺陷：难以分布式部署和扩容 系统性风险：一个组件的缺陷导致真个进程崩溃 运维风险：系统升级、Bug修复、故障排</description>
+    </item>
+    
+  </channel>
+</rss>

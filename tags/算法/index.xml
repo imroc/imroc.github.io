@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>算法 on roc</title>
+    <link>https://imroc.io/tags/%E7%AE%97%E6%B3%95/</link>
+    <description>Recent content in 算法 on roc</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <managingEditor>roc@imroc.io (roc)</managingEditor>
+    <webMaster>roc@imroc.io (roc)</webMaster>
+    <lastBuildDate>Tue, 05 Sep 2017 15:35:18 +0800</lastBuildDate>
+    
+	<atom:link href="https://imroc.io/tags/%E7%AE%97%E6%B3%95/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Union-Find(C&#43;&#43;实现实现)</title>
+      <link>https://imroc.io/posts/algorithm/union-findc&#43;&#43;%E5%AE%9E%E7%8E%B0%E5%AE%9E%E7%8E%B0/</link>
+      <pubDate>Tue, 05 Sep 2017 15:35:18 +0800</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/posts/algorithm/union-findc&#43;&#43;%E5%AE%9E%E7%8E%B0%E5%AE%9E%E7%8E%B0/</guid>
+      <description>quick-find、quick-union、加权quick-union(附带路径压缩优化) 本算法主要解决动态连通性一类问题，这里尽量用精炼</description>
+    </item>
+    
+    <item>
+      <title>Union-Find(Java实现)</title>
+      <link>https://imroc.io/posts/algorithm/union-findjava%E5%AE%9E%E7%8E%B0/</link>
+      <pubDate>Tue, 05 Sep 2017 15:35:18 +0800</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/posts/algorithm/union-findjava%E5%AE%9E%E7%8E%B0/</guid>
+      <description>quick-find、quick-union、加权quick-union(附带路径压缩优化) 本算法主要解决动态连通性一类问题，这里尽量用精炼</description>
+    </item>
+    
+    <item>
+      <title>Union-Find(golang实现)</title>
+      <link>https://imroc.io/posts/algorithm/union-findgolang%E5%AE%9E%E7%8E%B0/</link>
+      <pubDate>Tue, 05 Sep 2017 15:35:18 +0800</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/posts/algorithm/union-findgolang%E5%AE%9E%E7%8E%B0/</guid>
+      <description>quick-find、quick-union、加权quick-union(附带路径压缩优化) 本算法主要解决动态连通性一类问题，这里尽量用精炼</description>
+    </item>
+    
+    <item>
+      <title>golang动态规划求解最大连续子数组和</title>
+      <link>https://imroc.io/posts/algorithm/golang%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92%E6%B1%82%E8%A7%A3%E6%9C%80%E5%A4%A7%E8%BF%9E%E7%BB%AD%E5%AD%90%E6%95%B0%E7%BB%84%E5%92%8C/</link>
+      <pubDate>Tue, 05 Sep 2017 15:35:18 +0800</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/posts/algorithm/golang%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92%E6%B1%82%E8%A7%A3%E6%9C%80%E5%A4%A7%E8%BF%9E%E7%BB%AD%E5%AD%90%E6%95%B0%E7%BB%84%E5%92%8C/</guid>
+      <description>// 求最大连续子数组和 func MaxSubArray(arr []int) int { currSum := 0 maxSum := arr[0] for _, v := range arr { if currSum &amp;gt; 0 { currSum += v } else { currSum = v } if maxSum &amp;lt; currSum { maxSum = currSum } } return maxSum }</description>
+    </item>
+    
+    <item>
+      <title>golang实现二叉查找树</title>
+      <link>https://imroc.io/posts/algorithm/golang%E5%AE%9E%E7%8E%B0%E4%BA%8C%E5%8F%89%E6%9F%A5%E6%89%BE%E6%A0%91/</link>
+      <pubDate>Tue, 05 Sep 2017 15:35:18 +0800</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/posts/algorithm/golang%E5%AE%9E%E7%8E%B0%E4%BA%8C%E5%8F%89%E6%9F%A5%E6%89%BE%E6%A0%91/</guid>
+      <description>为简单起见，键值均为整型。 定义接口(tree.go)： type Tree interface { Put(k, v int) //新增或修改 Get(k int) int //查询 Delete(k int) //删除 Size() int //树的大小 Min() int //最小键 DeleteMin()</description>
+    </item>
+    
+    <item>
+      <title>三向切分快速排序(C-C&#43;&#43;实现)</title>
+      <link>https://imroc.io/posts/algorithm/%E4%B8%89%E5%90%91%E5%88%87%E5%88%86%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8Fc-c&#43;&#43;%E5%AE%9E%E7%8E%B0/</link>
+      <pubDate>Tue, 05 Sep 2017 15:35:18 +0800</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/posts/algorithm/%E4%B8%89%E5%90%91%E5%88%87%E5%88%86%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8Fc-c&#43;&#43;%E5%AE%9E%E7%8E%B0/</guid>
+      <description>封装成函数： //交换数组元素 void swap(int *a,int i,int j) { int t = a[i]; a[i] = a[j]; a[j] = t; } //在lt之前的(lo~lt-1)都小于中间值 //在gt之前的(gt+1~hi</description>
+    </item>
+    
+    <item>
+      <title>三向切分快速排序(Java实现)</title>
+      <link>https://imroc.io/posts/algorithm/%E4%B8%89%E5%90%91%E5%88%87%E5%88%86%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8Fjava%E5%AE%9E%E7%8E%B0/</link>
+      <pubDate>Tue, 05 Sep 2017 15:35:18 +0800</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/posts/algorithm/%E4%B8%89%E5%90%91%E5%88%87%E5%88%86%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8Fjava%E5%AE%9E%E7%8E%B0/</guid>
+      <description>封装成类： package com.roc.algorithms.sort; /** * 三向切分快速排序 * 适合有较多重复元素的排序算法 * * @author imroc */ public class ThreeWayQuickSort { public static void sort(int[] a) { sort(a, 0, a.length - 1); } //在lt之前的(lo~lt-1)</description>
+    </item>
+    
+    <item>
+      <title>三向切分快速排序(golang实现)</title>
+      <link>https://imroc.io/posts/algorithm/%E4%B8%89%E5%90%91%E5%88%87%E5%88%86%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8Fgolang%E5%AE%9E%E7%8E%B0/</link>
+      <pubDate>Tue, 05 Sep 2017 15:35:18 +0800</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/posts/algorithm/%E4%B8%89%E5%90%91%E5%88%87%E5%88%86%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8Fgolang%E5%AE%9E%E7%8E%B0/</guid>
+      <description>封装成函数： //三向切分快速排序 func ThreeWayQuickSort(s []int) { sort3way(s, 0, len(s)-1) } //在lt之前的(lo~lt-1)都小于中间值 //在gt之前的(gt+1~hi)都大于中间值</description>
+    </item>
+    
+    <item>
+      <title>二分法查找(C-C&#43;&#43;实现)</title>
+      <link>https://imroc.io/posts/algorithm/%E4%BA%8C%E5%88%86%E6%B3%95%E6%9F%A5%E6%89%BEc-c&#43;&#43;%E5%AE%9E%E7%8E%B0/</link>
+      <pubDate>Tue, 05 Sep 2017 15:35:18 +0800</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/posts/algorithm/%E4%BA%8C%E5%88%86%E6%B3%95%E6%9F%A5%E6%89%BEc-c&#43;&#43;%E5%AE%9E%E7%8E%B0/</guid>
+      <description>封装成函数： //二分法查找 //数组a是升序的，len为数组长度 //k为待查找的整数 //如果查到有就返回对应角标, //没有就返回-1 int search(int *a,int len, int</description>
+    </item>
+    
+    <item>
+      <title>二分法查找(Java实现)</title>
+      <link>https://imroc.io/posts/algorithm/%E4%BA%8C%E5%88%86%E6%B3%95%E6%9F%A5%E6%89%BEjava%E5%AE%9E%E7%8E%B0/</link>
+      <pubDate>Tue, 05 Sep 2017 15:35:18 +0800</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/posts/algorithm/%E4%BA%8C%E5%88%86%E6%B3%95%E6%9F%A5%E6%89%BEjava%E5%AE%9E%E7%8E%B0/</guid>
+      <description>封装成类： package com.roc.algorithms.search; /** * 二分法查找 * * @author imroc */ public class BinarySearch { /** * @param a 升序排列的数组 * @param k 待查找的整数 * @return 如果查到有就返回对应角标，没有就返回-1 */ public static int search(int[]</description>
+    </item>
+    
+    <item>
+      <title>二分法查找(golang实现)</title>
+      <link>https://imroc.io/posts/algorithm/%E4%BA%8C%E5%88%86%E6%B3%95%E6%9F%A5%E6%89%BEgolang%E5%AE%9E%E7%8E%B0/</link>
+      <pubDate>Tue, 05 Sep 2017 15:35:18 +0800</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/posts/algorithm/%E4%BA%8C%E5%88%86%E6%B3%95%E6%9F%A5%E6%89%BEgolang%E5%AE%9E%E7%8E%B0/</guid>
+      <description>封装成函数： //二分法查找 //切片s是升序的 //k为待查找的整数 //如果查到有就返回对应角标, //没有就返回-1 func BinarySearch(s []int, k int) int { lo, hi := 0, len(s)-1 for lo</description>
+    </item>
+    
+    <item>
+      <title>冒泡排序(C-C&#43;&#43;-实现)</title>
+      <link>https://imroc.io/posts/algorithm/%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8Fc-c&#43;&#43;-%E5%AE%9E%E7%8E%B0/</link>
+      <pubDate>Tue, 05 Sep 2017 15:35:18 +0800</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/posts/algorithm/%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8Fc-c&#43;&#43;-%E5%AE%9E%E7%8E%B0/</guid>
+      <description>两种类似的方式： //交换数组元素 void swap(int *a,int i,int j){ int t = a[i]; a[i] = a[j]; a[j] = t; } //第一种冒泡排序 void bubble_sort1(int *a,int len){ int max = len-1; int i,j; for(i=0;i&amp;lt;max;i++){ for(j=0;j&amp;lt;max-i;j++){ if(a[j+1]&amp;lt;a[j]){ swap(a,j,j+1); } } } } //第二种冒泡排序 void bubble_sort2(int</description>
+    </item>
+    
+    <item>
+      <title>冒泡排序(Java实现)</title>
+      <link>https://imroc.io/posts/algorithm/%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8Fjava%E5%AE%9E%E7%8E%B0/</link>
+      <pubDate>Tue, 05 Sep 2017 15:35:18 +0800</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/posts/algorithm/%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8Fjava%E5%AE%9E%E7%8E%B0/</guid>
+      <description>两种类似的方式： /** * 冒泡排序 * @author roc */ public class BubbleSort { //交换数组元素 private static void swap(int[] a,int i,int j){ int t = a[i]; a[i] = a[j]; a[j] = t; } //第一种冒泡排序 public static void sort1(int[] a){ int max = a.length-1; int i,j; for(i=0;i&amp;lt;max;i++){ for(j=0;j&amp;lt;max-i;j++){</description>
+    </item>
+    
+    <item>
+      <title>冒泡排序(golang实现)</title>
+      <link>https://imroc.io/posts/algorithm/%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8Fgolang%E5%AE%9E%E7%8E%B0/</link>
+      <pubDate>Tue, 05 Sep 2017 15:35:18 +0800</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/posts/algorithm/%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8Fgolang%E5%AE%9E%E7%8E%B0/</guid>
+      <description>有两种相似的方式： func swap(slice []int, i int, j int) { slice[i], slice[j] = slice[j], slice[i] } //第一种冒泡排序 func BubbleSort1(slice []int) { length := len(slice) max := length - 1 for i := 0; i &amp;lt; max; i++ { for j := 0; j &amp;lt; max-i; j++ { if slice[j+1] &amp;lt; slice[j] { swap(slice, j, j+1)</description>
+    </item>
+    
+    <item>
+      <title>堆排序(C-C&#43;&#43;实现)</title>
+      <link>https://imroc.io/posts/algorithm/%E5%A0%86%E6%8E%92%E5%BA%8Fc-c&#43;&#43;%E5%AE%9E%E7%8E%B0/</link>
+      <pubDate>Tue, 05 Sep 2017 15:35:18 +0800</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/posts/algorithm/%E5%A0%86%E6%8E%92%E5%BA%8Fc-c&#43;&#43;%E5%AE%9E%E7%8E%B0/</guid>
+      <description>封装成函数： //交换数组元素 void swap(int *a,int i,int j) { int t = a[i]; a[i] = a[j]; a[j] = t; } //下沉（由上至下的堆有序化） void sink(int *a,int k,int N) { while (1) { int i = 2 * k; if (i &amp;gt; N) //保证该</description>
+    </item>
+    
+    <item>
+      <title>堆排序(Java实现)</title>
+      <link>https://imroc.io/posts/algorithm/%E5%A0%86%E6%8E%92%E5%BA%8Fjava%E5%AE%9E%E7%8E%B0/</link>
+      <pubDate>Tue, 05 Sep 2017 15:35:18 +0800</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/posts/algorithm/%E5%A0%86%E6%8E%92%E5%BA%8Fjava%E5%AE%9E%E7%8E%B0/</guid>
+      <description>封装成类： package com.roc.algorithms.sort; /** * 堆排序 * a[0]不用，实际元素从角标1开始 * 父节点元素大于子节点元素 * 左子节点角标为2*k * 右子节点角标为2*k+1 * 父节</description>
+    </item>
+    
+    <item>
+      <title>堆排序(golang实现)</title>
+      <link>https://imroc.io/posts/algorithm/%E5%A0%86%E6%8E%92%E5%BA%8Fgolang%E5%AE%9E%E7%8E%B0/</link>
+      <pubDate>Tue, 05 Sep 2017 15:35:18 +0800</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/posts/algorithm/%E5%A0%86%E6%8E%92%E5%BA%8Fgolang%E5%AE%9E%E7%8E%B0/</guid>
+      <description>封装成函数： //堆排序 //s[0]不用，实际元素从角标1开始 //父节点元素大于子节点元素 //左子节点角标为2*k //右子节点角标为2*k+1</description>
+    </item>
+    
+    <item>
+      <title>希尔排序(C-C&#43;&#43;实现)</title>
+      <link>https://imroc.io/posts/algorithm/%E5%B8%8C%E5%B0%94%E6%8E%92%E5%BA%8Fc-c&#43;&#43;%E5%AE%9E%E7%8E%B0/</link>
+      <pubDate>Tue, 05 Sep 2017 15:35:18 +0800</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/posts/algorithm/%E5%B8%8C%E5%B0%94%E6%8E%92%E5%BA%8Fc-c&#43;&#43;%E5%AE%9E%E7%8E%B0/</guid>
+      <description>封装成函数： //交换数组元素 void swap(int *a,int i,int j) { int t = a[i]; a[i] = a[j]; a[j] = t; } //希尔排序 void shell_sort(int *a,int len) { int h=1,i,j; while(h&amp;lt;len/3) //寻找合适的间隔h { h = 3*h+1; } while(h&amp;gt;=1) { //将数组变为间</description>
+    </item>
+    
+    <item>
+      <title>希尔排序(Java实现)</title>
+      <link>https://imroc.io/posts/algorithm/%E5%B8%8C%E5%B0%94%E6%8E%92%E5%BA%8Fjava%E5%AE%9E%E7%8E%B0/</link>
+      <pubDate>Tue, 05 Sep 2017 15:35:18 +0800</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/posts/algorithm/%E5%B8%8C%E5%B0%94%E6%8E%92%E5%BA%8Fjava%E5%AE%9E%E7%8E%B0/</guid>
+      <description>封装成类： package com.roc.algorithms.sort; /** * 希尔排序 * * @author imroc */ public class ShellSort { //交换数组元素 private static void swap(int[] a, int i, int j) { int t = a[i]; a[i] = a[j]; a[j] = t; } public static void sort(int[] a) { int h = 1; while (h &amp;lt; a.length / 3) {//</description>
+    </item>
+    
+    <item>
+      <title>希尔排序(golang实现)</title>
+      <link>https://imroc.io/posts/algorithm/%E5%B8%8C%E5%B0%94%E6%8E%92%E5%BA%8Fgolang%E5%AE%9E%E7%8E%B0/</link>
+      <pubDate>Tue, 05 Sep 2017 15:35:18 +0800</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/posts/algorithm/%E5%B8%8C%E5%B0%94%E6%8E%92%E5%BA%8Fgolang%E5%AE%9E%E7%8E%B0/</guid>
+      <description>封装成函数： func ShellSort(a []int) { n := len(a) h := 1 for h &amp;lt; n/3 { //寻找合适的间隔h h = 3*h + 1 } for h &amp;gt;= 1 { //将数组变为间隔h个元素有序 for i := h; i &amp;lt; n; i++ { //间隔</description>
+    </item>
+    
+    <item>
+      <title>归并排序,自顶向下与自底向上两种方式(C-C&#43;&#43;实现)</title>
+      <link>https://imroc.io/posts/algorithm/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F%E8%87%AA%E9%A1%B6%E5%90%91%E4%B8%8B%E4%B8%8E%E8%87%AA%E5%BA%95%E5%90%91%E4%B8%8A%E4%B8%A4%E7%A7%8D%E6%96%B9%E5%BC%8Fc-c&#43;&#43;%E5%AE%9E%E7%8E%B0/</link>
+      <pubDate>Tue, 05 Sep 2017 15:35:18 +0800</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/posts/algorithm/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F%E8%87%AA%E9%A1%B6%E5%90%91%E4%B8%8B%E4%B8%8E%E8%87%AA%E5%BA%95%E5%90%91%E4%B8%8A%E4%B8%A4%E7%A7%8D%E6%96%B9%E5%BC%8Fc-c&#43;&#43;%E5%AE%9E%E7%8E%B0/</guid>
+      <description>封装成函数merge_sort_up_to_down（自顶向下方式）和merge_sort_down_to_up（自底向上方式）： #include &amp;lt;malloc.h&amp;gt; //归</description>
+    </item>
+    
+    <item>
+      <title>归并排序,自顶向下与自底向上两种方式(Java实现)</title>
+      <link>https://imroc.io/posts/algorithm/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F%E8%87%AA%E9%A1%B6%E5%90%91%E4%B8%8B%E4%B8%8E%E8%87%AA%E5%BA%95%E5%90%91%E4%B8%8A%E4%B8%A4%E7%A7%8D%E6%96%B9%E5%BC%8Fjava%E5%AE%9E%E7%8E%B0/</link>
+      <pubDate>Tue, 05 Sep 2017 15:35:18 +0800</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/posts/algorithm/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F%E8%87%AA%E9%A1%B6%E5%90%91%E4%B8%8B%E4%B8%8E%E8%87%AA%E5%BA%95%E5%90%91%E4%B8%8A%E4%B8%A4%E7%A7%8D%E6%96%B9%E5%BC%8Fjava%E5%AE%9E%E7%8E%B0/</guid>
+      <description>封装成类： package com.roc.algorithms.sort; /** * 归并排序 * * @author imroc */ public class MergeSort { //自顶向下方式 public static void sortUpToDown(int[] a) { int[] aux = new int[a.length]; sort(a, aux, 0, a.length - 1); } //自底向上方式 public static void sortDownToUp(int[] a) { int[] aux = new int[a.length]; for (int sz</description>
+    </item>
+    
+    <item>
+      <title>归并排序,自顶向下与自底向上两种方式(golang实现)</title>
+      <link>https://imroc.io/posts/algorithm/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F%E8%87%AA%E9%A1%B6%E5%90%91%E4%B8%8B%E4%B8%8E%E8%87%AA%E5%BA%95%E5%90%91%E4%B8%8A%E4%B8%A4%E7%A7%8D%E6%96%B9%E5%BC%8Fgolang%E5%AE%9E%E7%8E%B0/</link>
+      <pubDate>Tue, 05 Sep 2017 15:35:18 +0800</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/posts/algorithm/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F%E8%87%AA%E9%A1%B6%E5%90%91%E4%B8%8B%E4%B8%8E%E8%87%AA%E5%BA%95%E5%90%91%E4%B8%8A%E4%B8%A4%E7%A7%8D%E6%96%B9%E5%BC%8Fgolang%E5%AE%9E%E7%8E%B0/</guid>
+      <description>封装成函数： //自顶向下归并排序 func MergeSortUpToDown(s []int) { aux := make([]int, len(s)) //辅助切片 mergeSortUpToDown(s, aux, 0, len(s)-1) } //自底向上归并排序 func MergeSortDownToUp(s []int) { aux := make([]int, len(s)) //辅助切片 n := len(s) for sz := 1; sz &amp;lt; n; sz</description>
+    </item>
+    
+    <item>
+      <title>快速排序(C-C&#43;&#43;实现)</title>
+      <link>https://imroc.io/posts/algorithm/%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8Fc-c&#43;&#43;%E5%AE%9E%E7%8E%B0/</link>
+      <pubDate>Tue, 05 Sep 2017 15:35:18 +0800</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/posts/algorithm/%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8Fc-c&#43;&#43;%E5%AE%9E%E7%8E%B0/</guid>
+      <description>封装成函数： //快速排序 void quick_sort(int *a,int len) { sort(a,0,len-1); } void sort(int *a,int lo,int hi) { int i,j,k; if(lo&amp;gt;=hi) { return; } k = partition(a,lo,hi); sort(a,lo,k); sort(a,k+1,hi); } //交换数组元素 void swap(int *a,int i,int j) { int t = a[i]; a[i] = a[j]; a[j] = t; } int partition(int *a,int lo,int hi) { int i,j;</description>
+    </item>
+    
+    <item>
+      <title>快速排序(Java实现)</title>
+      <link>https://imroc.io/posts/algorithm/%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8Fjava%E5%AE%9E%E7%8E%B0/</link>
+      <pubDate>Tue, 05 Sep 2017 15:35:18 +0800</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/posts/algorithm/%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8Fjava%E5%AE%9E%E7%8E%B0/</guid>
+      <description>封装成类： package com.roc.algorithms.sort; /** * 快速排序 * * @author imroc */ public class QuickSort { public static void sort(int[] a) { sort(a, 0, a.length - 1); } private static void sort(int[] a, int lo, int hi) { if (lo &amp;gt;= hi) { return; } int k = partition(a, lo, hi); sort(a, lo, k); sort(a, k + 1, hi); } private static int partition(int[]</description>
+    </item>
+    
+    <item>
+      <title>快速排序(golang实现)</title>
+      <link>https://imroc.io/posts/algorithm/%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8Fgolang%E5%AE%9E%E7%8E%B0/</link>
+      <pubDate>Tue, 05 Sep 2017 15:35:18 +0800</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/posts/algorithm/%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8Fgolang%E5%AE%9E%E7%8E%B0/</guid>
+      <description>封装成函数： //快速排序 func QuickSort(s []int) { sort(s, 0, len(s)-1) } func sort(s []int, lo, hi int) { if lo &amp;gt;= hi { return } k := partition(s, lo, hi) sort(s, lo, k) sort(s, k+1, hi) } func partition(s []int, lo, hi int) int { i, j := lo, hi+1 //将lo作为中间值 for</description>
+    </item>
+    
+    <item>
+      <title>插入排序(C-C&#43;&#43;实现)</title>
+      <link>https://imroc.io/posts/algorithm/%E6%8F%92%E5%85%A5%E6%8E%92%E5%BA%8Fc-c&#43;&#43;%E5%AE%9E%E7%8E%B0/</link>
+      <pubDate>Tue, 05 Sep 2017 15:35:18 +0800</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/posts/algorithm/%E6%8F%92%E5%85%A5%E6%8E%92%E5%BA%8Fc-c&#43;&#43;%E5%AE%9E%E7%8E%B0/</guid>
+      <description>封装成函数： //交换数组元素 void swap(int *a,int i,int j) { int t = a[i]; a[i] = a[j]; a[j] = t; } //插入排序 void insertion_sort(int *a,int len) { int i,j; if (len &amp;lt; 2) { return; } for (i = 1; i &amp;lt; len; i++) { for (j = i; j &amp;gt; 0 &amp;amp;&amp;amp; a[j] &amp;lt;</description>
+    </item>
+    
+    <item>
+      <title>插入排序(Java实现)</title>
+      <link>https://imroc.io/posts/algorithm/%E6%8F%92%E5%85%A5%E6%8E%92%E5%BA%8Fjava%E5%AE%9E%E7%8E%B0/</link>
+      <pubDate>Tue, 05 Sep 2017 15:35:18 +0800</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/posts/algorithm/%E6%8F%92%E5%85%A5%E6%8E%92%E5%BA%8Fjava%E5%AE%9E%E7%8E%B0/</guid>
+      <description>封装成类： package com.roc.algorithms.sort; /** * 插入排序 * * @author roc */ public class InsertionSort { //交换数组元素 private static void swap(int[] a, int i, int j) { int t = a[i]; a[i] = a[j]; a[j] = t; } public static void sort(int[] a) { if (a.length &amp;lt; 2) { return; } for (int i = 1; i</description>
+    </item>
+    
+    <item>
+      <title>插入排序(golang实现)</title>
+      <link>https://imroc.io/posts/algorithm/%E6%8F%92%E5%85%A5%E6%8E%92%E5%BA%8Fgolang%E5%AE%9E%E7%8E%B0/</link>
+      <pubDate>Tue, 05 Sep 2017 15:35:18 +0800</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/posts/algorithm/%E6%8F%92%E5%85%A5%E6%8E%92%E5%BA%8Fgolang%E5%AE%9E%E7%8E%B0/</guid>
+      <description>封装成函数： //插入排序 func InsertionSort(s []int) { n := len(s) if n &amp;lt; 2 { return } for i := 1; i &amp;lt; n; i++ { for j := i; j &amp;gt; 0 &amp;amp;&amp;amp; s[j] &amp;lt; s[j - 1]; j-- { swap(s, j, j - 1) } } } func swap(slice []int, i int, j int) { slice[i], slice[j] = slice[j],</description>
+    </item>
+    
+    <item>
+      <title>求n次方的高效算法</title>
+      <link>https://imroc.io/posts/algorithm/%E6%B1%82n%E6%AC%A1%E6%96%B9%E7%9A%84%E9%AB%98%E6%95%88%E7%AE%97%E6%B3%95/</link>
+      <pubDate>Tue, 05 Sep 2017 15:35:18 +0800</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/posts/algorithm/%E6%B1%82n%E6%AC%A1%E6%96%B9%E7%9A%84%E9%AB%98%E6%95%88%E7%AE%97%E6%B3%95/</guid>
+      <description>注：次幂n为整数，底数可以是整数、小数、矩阵等(只要能进行乘法运算的 举个求整数的n次方的例子(Go语言版)： func pow(x, n int) int { ret := 1 // 结果初始为0</description>
+    </item>
+    
+    <item>
+      <title>求两圆交点算法代码(golang实现)</title>
+      <link>https://imroc.io/posts/algorithm/%E6%B1%82%E4%B8%A4%E5%9C%86%E4%BA%A4%E7%82%B9%E7%AE%97%E6%B3%95%E4%BB%A3%E7%A0%81golang%E5%AE%9E%E7%8E%B0/</link>
+      <pubDate>Tue, 05 Sep 2017 15:35:18 +0800</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/posts/algorithm/%E6%B1%82%E4%B8%A4%E5%9C%86%E4%BA%A4%E7%82%B9%E7%AE%97%E6%B3%95%E4%BB%A3%E7%A0%81golang%E5%AE%9E%E7%8E%B0/</guid>
+      <description>实现代码： package main import ( &amp;quot;math&amp;quot; ) //代表一个点，包含横纵坐标 type Point struct { X, Y float64 } //代表一个圆，包含横纵坐标及半径 type Circle struct { Point R float64 } //创建圆对象 func NewCircle(x, y, r float64)</description>
+    </item>
+    
+    <item>
+      <title>求两圆相交的交点的方法</title>
+      <link>https://imroc.io/posts/algorithm/%E6%B1%82%E4%B8%A4%E5%9C%86%E7%9B%B8%E4%BA%A4%E7%9A%84%E4%BA%A4%E7%82%B9%E7%9A%84%E6%96%B9%E6%B3%95/</link>
+      <pubDate>Tue, 05 Sep 2017 15:35:18 +0800</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/posts/algorithm/%E6%B1%82%E4%B8%A4%E5%9C%86%E7%9B%B8%E4%BA%A4%E7%9A%84%E4%BA%A4%E7%82%B9%E7%9A%84%E6%96%B9%E6%B3%95/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>线性复杂度选出第k小元素、中位数、最小的k个元素(C-C&#43;&#43;实现)</title>
+      <link>https://imroc.io/posts/algorithm/%E7%BA%BF%E6%80%A7%E5%A4%8D%E6%9D%82%E5%BA%A6%E9%80%89%E5%87%BA%E7%AC%ACk%E5%B0%8F%E5%85%83%E7%B4%A0%E4%B8%AD%E4%BD%8D%E6%95%B0%E6%9C%80%E5%B0%8F%E7%9A%84k%E4%B8%AA%E5%85%83%E7%B4%A0c-c&#43;&#43;%E5%AE%9E%E7%8E%B0/</link>
+      <pubDate>Tue, 05 Sep 2017 15:35:18 +0800</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/posts/algorithm/%E7%BA%BF%E6%80%A7%E5%A4%8D%E6%9D%82%E5%BA%A6%E9%80%89%E5%87%BA%E7%AC%ACk%E5%B0%8F%E5%85%83%E7%B4%A0%E4%B8%AD%E4%BD%8D%E6%95%B0%E6%9C%80%E5%B0%8F%E7%9A%84k%E4%B8%AA%E5%85%83%E7%B4%A0c-c&#43;&#43;%E5%AE%9E%E7%8E%B0/</guid>
+      <description>封装成函数： #include &amp;lt;malloc.h&amp;gt; void swap(int *a,int i,int j) { int t = a[i]; a[i] = a[j]; a[j] = t; } int partition(int *a,int lo,int hi) { int i,j; i=lo; j=hi+1; while(1) { while(a[++i]&amp;lt;=a[lo]) { if(i==hi) { break; } } while(a[--j]&amp;gt;a[lo]) { if(j==lo) { break; } } if(i&amp;gt;=j) { break; } swap(a,i,j); } swap(a,lo,j); return j; } int* copy_of(int *a,int len) { int *ret = (int*)malloc(sizeof(int)*len);</description>
+    </item>
+    
+    <item>
+      <title>线性复杂度选出第k小元素、中位数、最小的k个元素(Java实现)</title>
+      <link>https://imroc.io/posts/algorithm/%E7%BA%BF%E6%80%A7%E5%A4%8D%E6%9D%82%E5%BA%A6%E9%80%89%E5%87%BA%E7%AC%ACk%E5%B0%8F%E5%85%83%E7%B4%A0%E4%B8%AD%E4%BD%8D%E6%95%B0%E6%9C%80%E5%B0%8F%E7%9A%84k%E4%B8%AA%E5%85%83%E7%B4%A0java%E5%AE%9E%E7%8E%B0/</link>
+      <pubDate>Tue, 05 Sep 2017 15:35:18 +0800</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/posts/algorithm/%E7%BA%BF%E6%80%A7%E5%A4%8D%E6%9D%82%E5%BA%A6%E9%80%89%E5%87%BA%E7%AC%ACk%E5%B0%8F%E5%85%83%E7%B4%A0%E4%B8%AD%E4%BD%8D%E6%95%B0%E6%9C%80%E5%B0%8F%E7%9A%84k%E4%B8%AA%E5%85%83%E7%B4%A0java%E5%AE%9E%E7%8E%B0/</guid>
+      <description>封装成类： package com.roc.algorithms.common; import java.util.Arrays; /** * 选出第k小元素、中位数、最小的k个元素(线性复杂度) * * @author imroc */ public class Select { //选出第k小元素，k为1~a.length public static</description>
+    </item>
+    
+    <item>
+      <title>线性复杂度选出第k小元素、中位数、最小的k个元素(golang实现)</title>
+      <link>https://imroc.io/posts/algorithm/%E7%BA%BF%E6%80%A7%E5%A4%8D%E6%9D%82%E5%BA%A6%E9%80%89%E5%87%BA%E7%AC%ACk%E5%B0%8F%E5%85%83%E7%B4%A0%E4%B8%AD%E4%BD%8D%E6%95%B0%E6%9C%80%E5%B0%8F%E7%9A%84k%E4%B8%AA%E5%85%83%E7%B4%A0golang%E5%AE%9E%E7%8E%B0/</link>
+      <pubDate>Tue, 05 Sep 2017 15:35:18 +0800</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/posts/algorithm/%E7%BA%BF%E6%80%A7%E5%A4%8D%E6%9D%82%E5%BA%A6%E9%80%89%E5%87%BA%E7%AC%ACk%E5%B0%8F%E5%85%83%E7%B4%A0%E4%B8%AD%E4%BD%8D%E6%95%B0%E6%9C%80%E5%B0%8F%E7%9A%84k%E4%B8%AA%E5%85%83%E7%B4%A0golang%E5%AE%9E%E7%8E%B0/</guid>
+      <description>封装成函数： //选出第k小元素，k为1~len(s) func SelectKthMin(s []int, k int) int { k-- lo, hi := 0, len(s)-1 for { j := partition(s, lo, hi) if j &amp;lt; k { lo = j + 1 } else if j &amp;gt; k { hi = j - 1 } else</description>
+    </item>
+    
+    <item>
+      <title>选择排序(C-C&#43;&#43;-实现)</title>
+      <link>https://imroc.io/posts/algorithm/%E9%80%89%E6%8B%A9%E6%8E%92%E5%BA%8Fc-c&#43;&#43;-%E5%AE%9E%E7%8E%B0/</link>
+      <pubDate>Tue, 05 Sep 2017 15:35:18 +0800</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/posts/algorithm/%E9%80%89%E6%8B%A9%E6%8E%92%E5%BA%8Fc-c&#43;&#43;-%E5%AE%9E%E7%8E%B0/</guid>
+      <description>封装成函数： //交换数组元素 void swap(int *a,int i,int j) { int t = a[i]; a[i] = a[j]; a[j] = t; } //选择排序 void selection_sort(int *a,int len) { int m = len-1; //以免每次循环判断都运算 int i,j,k; for (i=0; i&amp;lt;m; i++) { k=i; for (j=i+1; j&amp;lt;len;</description>
+    </item>
+    
+    <item>
+      <title>选择排序(Java实现)</title>
+      <link>https://imroc.io/posts/algorithm/%E9%80%89%E6%8B%A9%E6%8E%92%E5%BA%8Fjava%E5%AE%9E%E7%8E%B0/</link>
+      <pubDate>Tue, 05 Sep 2017 15:35:18 +0800</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/posts/algorithm/%E9%80%89%E6%8B%A9%E6%8E%92%E5%BA%8Fjava%E5%AE%9E%E7%8E%B0/</guid>
+      <description>封装成类： /** * 选择排序 * * @author imroc */ public class SelectionSort { //交换数组元素 private static void swap(int[] a, int i, int j) { int t = a[i]; a[i] = a[j]; a[j] = t; } //选择排序 public static void sort(int[] a) { int m = a.length - 1; //以</description>
+    </item>
+    
+    <item>
+      <title>选择排序(golang实现)</title>
+      <link>https://imroc.io/posts/algorithm/%E9%80%89%E6%8B%A9%E6%8E%92%E5%BA%8Fgolang%E5%AE%9E%E7%8E%B0/</link>
+      <pubDate>Tue, 05 Sep 2017 15:35:18 +0800</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/posts/algorithm/%E9%80%89%E6%8B%A9%E6%8E%92%E5%BA%8Fgolang%E5%AE%9E%E7%8E%B0/</guid>
+      <description>封装成函数： //交换数组元素 func swap(slice []int, i int, j int) { slice[i], slice[j] = slice[j], slice[i] } //选择排序 func SelectionSort(s []int) { l := len(s) //以免每次循环判断都运算 m := len(s)-1 for i:=0;i&amp;lt;m;i++ { k:=i for j:=i+1;j&amp;lt;l;j++ { if s[j]&amp;lt;s[k] { k = j</description>
+    </item>
+    
+  </channel>
+</rss>

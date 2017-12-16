@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title> golang实现二叉查找树 - </title>
+  <meta name="description" content="" />
+  <meta property="og:title" content="golang实现二叉查找树" />
+  <meta name="twitter:title" content="golang实现二叉查找树" />
+  <meta name="description" content="为简单起见，键值均为整型。 定义接口(tree.go)： type Tree interface { Put(k, v int) //新增或修改 Get(k int) int //查询 Delete(k int) //删除 Size() int //树的大小 Min() int //最小键 DeleteMin()">
+  <meta property="og:description" content="为简单起见，键值均为整型。 定义接口(tree.go)： type Tree interface { Put(k, v int) //新增或修改 Get(k int) int //查询 Delete(k int) //删除 Size() int //树的大小 Min() int //最小键 DeleteMin()">
+  <meta name="twitter:description" content="为简单起见，键值均为整型。 定义接口(tree.go)： type Tree interface { Put(k, v int) //新增或修改 Get(k int) int //查询 Delete(k int) //删除 Size() int //树的大小 Min() int //最小键 DeleteMin()">
+  <meta name="author" content="{Description { .Site.Author.name }}"/>
+  <link href='https://imroc.io/favicon.png' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://imroc.io/images/logo.png" />
+  <meta name="twitter:image" content="https://imroc.io/images/logo.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@imrocchan" />
+  <meta name="twitter:creator" content="@imrocchan" />
+  <meta property="og:url" content="https://imroc.io/posts/algorithm/golang%E5%AE%9E%E7%8E%B0%E4%BA%8C%E5%8F%89%E6%9F%A5%E6%89%BE%E6%A0%91/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="roc" />
+
+  <meta name="generator" content="Hugo 0.26" />
+  <link rel="canonical" href="https://imroc.io/posts/algorithm/golang%E5%AE%9E%E7%8E%B0%E4%BA%8C%E5%8F%89%E6%9F%A5%E6%89%BE%E6%A0%91/" />
+  <link rel="alternate" href="https://imroc.io/index.xml" type="application/rss+xml" title="roc">
+  <script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/jquery-1.12.4.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  
+  
+  <link rel="stylesheet" href="https://imroc.io/css/main.css" />
+  <link rel="stylesheet" href="https://imroc.io/css/search.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  
+
+<meta name="baidu-site-verification" content="g8IYR9SNLF" />
+<script>
+    var _hmt = _hmt || [];
+    (function() {
+    var hm = document.createElement("script");
+    hm.src = "https://hm.baidu.com/hm.js?11f7d254cfa4e0ca44b175c66d379ecc";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+<link rel="stylesheet" href="https://imroc.io/css/prism.css" />
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe.min.css" integrity="sha256-sCl5PUOGMLfFYctzDW3MtRib0ctyUvI9Qsmq2wXOeBY=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/default-skin/default-skin.min.css" integrity="sha256-BFeI1V+Vh1Rk37wswuOYn5lsTcaU96hGaI7OUVCLjPc=" crossorigin="anonymous" />
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://imroc.io/">roc</a>
+    </div>
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="Blog" href="/posts">Blog</a>
+              
+              
+            </li>
+          
+        
+          
+            <li>
+              <a title="Tags" href="/tags">Tags</a>
+              
+              
+            </li>
+          
+        
+          
+            <li>
+              <a title="About" href="/about">About</a>
+              
+              
+            </li>
+          
+        
+
+        
+
+        
+        
+          <li>
+            <a href="#modalSearch" data-toggle="modal" data-target="#modalSearch" style="outline: none;">
+              <span class="hidden-sm hidden-md hidden-lg">Search</span> <span id="searchGlyph" class="glyphicon glyphicon-search"></span>
+            </a>
+          </li>
+          
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="roc" href="https://imroc.io/">
+            <img class="avatar-img" src="https://imroc.io/images/logo.png" alt="roc" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+
+  <div id="modalSearch" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Search jimmysong.io</h4>
+        </div>
+        <div class="modal-body">
+            
+<div class="aa-input-container" id="aa-input-container">
+    <input type="search" id="aa-search-input" class="aa-input-search" placeholder="Search for titles or URIs..." name="search" autocomplete="off" />
+    <svg class="aa-input-icon" viewBox="654 -372 1664 1664">
+        <path d="M1806,332c0-123.3-43.8-228.8-131.5-316.5C1586.8-72.2,1481.3-116,1358-116s-228.8,43.8-316.5,131.5  C953.8,103.2,910,208.7,910,332s43.8,228.8,131.5,316.5C1129.2,736.2,1234.7,780,1358,780s228.8-43.8,316.5-131.5  C1762.2,560.8,1806,455.3,1806,332z M2318,1164c0,34.7-12.7,64.7-38,90s-55.3,38-90,38c-36,0-66-12.7-90-38l-343-342  c-119.3,82.7-252.3,124-399,124c-95.3,0-186.5-18.5-273.5-55.5s-162-87-225-150s-113-138-150-225S654,427.3,654,332  s18.5-186.5,55.5-273.5s87-162,150-225s138-113,225-150S1262.7-372,1358-372s186.5,18.5,273.5,55.5s162,87,225,150s113,138,150,225  S2062,236.7,2062,332c0,146.7-41.3,279.7-124,399l343,343C2305.7,1098.7,2318,1128.7,2318,1164z" />
+    </svg>
+</div>
+
+
+
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/algoliasearch.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/autocomplete.min.js"></script>
+
+<script>
+var client = algoliasearch("X4YB3WOBNV", "6a65fd1d25daa9b3ba8ae02715023e72");
+var index = client.initIndex('rootsongjc-hugo');
+
+autocomplete('#aa-search-input',
+{ hint: false}, {
+    source: autocomplete.sources.hits(index, {hitsPerPage: 5}),
+    
+    displayKey: 'name',
+    
+    templates: {
+        
+        suggestion: function(suggestion) {
+            
+            return '<span>' + '<a href="/' + suggestion.uri+ '">' +
+            suggestion._highlightResult.title.value + '</a></span>';
+        }
+    }
+});
+</script>
+
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12 col-md-12 col-md-offset-0">
+            <div class="posts-heading">
+                <h1 align="center">golang实现二叉查找树</h1>
+                
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main" itemscope itemtype="http://schema.org/Article">
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            
+            
+            
+<div>
+    <section id="datecount">
+        <h4 id="date"> Tue Sep 5, 2017</h4>
+    </section>
+    <h5 id="wc">900 Words|Read in about 2 Min</h5>
+    <h5 id="tags">Tags: 
+        
+        <a href="https://imroc.io/tags/%E7%AE%97%E6%B3%95/">算法</a> &nbsp;
+    </h5>
+</div>
+
+            
+            <article role="main" class="blog-post" itemprop="articleBody" id="content">
+                <p>为简单起见，键值均为整型。</p>
+
+<p>定义接口(tree.go)：</p>
+
+<pre><code class="language-go">type Tree interface {
+	Put(k, v int)  //新增或修改
+	Get(k int) int //查询
+	Delete(k int)  //删除
+	Size() int     //树的大小
+	Min() int      //最小键
+	DeleteMin()    //删除最小键
+}
+</code></pre>
+
+<p>二叉查找树(binary_tree.go)：</p>
+
+<pre><code class="language-go">//二叉查找树
+type BinaryTree struct {
+	root *node
+	n    int
+}
+ 
+//创建节点
+func newNode(k, v int) *node {
+	return &amp;node{k: k, v: v, sz: 1}
+}
+ 
+//创建二叉查找树
+func NewBinaryTree() *BinaryTree {
+	return &amp;BinaryTree{}
+}
+ 
+//增加或修改
+func (bt *BinaryTree) Put(k, v int) {
+	bt.root, _ = put(bt.root, k, v)
+}
+ 
+//查找
+func (bt *BinaryTree) Get(k int) int {
+	return get(bt.root, k)
+}
+ 
+//树的大小
+func (bt *BinaryTree) Size() int {
+	return size(bt.root)
+}
+ 
+//选出最小键
+func (bt *BinaryTree) Min() int {
+	return min(bt.root).k
+}
+ 
+//删除最小键
+func (bt *BinaryTree) DeleteMin() {
+	bt.root = deleteMin(bt.root)
+}
+ 
+//删除
+func (bt *BinaryTree) Delete(k int) {
+	bt.root = delete(bt.root, k)
+}
+</code></pre>
+
+<p>节点(node.go)：</p>
+
+<pre><code class="language-go">//节点
+type node struct {
+	k, v, sz    int   //键，值，大小
+	left, right *node //左右子节点
+}
+
+//在以nd为根节点的树下增加或修改一个节点
+//如果创建了新节点，第二个参数返回true，
+//如果只是修改，第二个参数返回false
+func put(nd *node, k, v int) (*node, bool) {
+	if nd == nil {
+		return newNode(k, v), true
+	}
+	hasNew := false //检测是否创建了新节点
+	if k &lt; nd.k {
+		nd.left, hasNew = put(nd.left, k, v)
+	} else if k &gt; nd.k {
+		nd.right, hasNew = put(nd.right, k, v)
+	} else {
+		nd.v = v //仅修改，不会增加增加节点，就不更新节点大小
+	}
+	if hasNew { //如果创建了新节点就更新树的大小
+		updateSize(nd)
+	}
+	return nd, hasNew
+}
+ 
+//在以nd为根节点的树中获取键为k的值
+func get(nd *node, k int) int {
+	if nd == nil {
+		return -1
+	}
+	if k &lt; nd.k {
+		return get(nd.left, k)
+	} else if k &gt; nd.k {
+		return get(nd.right, k)
+	} else {
+		return nd.v
+	}
+}
+ 
+//获取以nd为根节点的树的大小
+func size(nd *node) int {
+	if nd == nil {
+		return 0
+	}
+	return nd.sz
+}
+ 
+//更新以nd为根节点的树的大小
+func updateSize(nd *node) {
+	if nd == nil {
+		return
+	}
+	nd.sz = size(nd.left) + size(nd.right) + 1
+}
+ 
+//选出以nd为根节点的树的最小键节点
+func min(nd *node) *node {
+	if nd == nil {
+		return nil
+	}
+	if nd.left != nil {
+		return min(nd.left)
+	}
+	return nd
+}
+ 
+//删除以nd为根节点的树的最小键节点
+//返回被删除的节点
+func deleteMin(nd *node) *node {
+	if nd == nil {
+		return nil
+	}
+	if nd.left == nil { //找到最小节点
+		nd = nd.right //用右子节点代替自己
+	} else { //还有更小的
+		nd.left = deleteMin(nd.left)
+	}
+	updateSize(nd)
+	return nd
+}
+ 
+//删除以nd为根节点的树并且键为k的节点
+func delete(nd *node, k int) *node {
+	if nd == nil {
+		return nil
+	}
+	if k &lt; nd.k {
+		nd.left = delete(nd.left, k)
+	} else if k &gt; nd.k {
+		nd.right = delete(nd.right, k)
+	} else { //命中要删除的节点
+		//只有一个或零个子节点
+		if nd.right == nil {
+			return nd.left
+		}
+		if nd.left == nil {
+			return nd.right
+		}
+		//同时具有两个子节点
+		//先找出大于本节点的最小节点作为后继节点
+		t := nd
+		nd.k = min(t.right).k
+		//删除
+		deleteMin(t.right)
+		//用后继节点代替本节点
+		nd.left = t.left
+	}
+	updateSize(nd)
+	return nd
+}
+</code></pre>
+
+            </article>
+
+            <ul class="pager blog-pager">
+                
+                <li class="previous">
+                    <a href="https://imroc.io/posts/algorithm/%E4%B8%89%E5%90%91%E5%88%87%E5%88%86%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8Fc-c&#43;&#43;%E5%AE%9E%E7%8E%B0/" data-toggle="tooltip" data-placement="top" title="三向切分快速排序(C-C&#43;&#43;实现)">&larr; Previous Post</a>
+                </li>
+                 
+                <li class="next">
+                    <a href="https://imroc.io/posts/algorithm/golang%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92%E6%B1%82%E8%A7%A3%E6%9C%80%E5%A4%A7%E8%BF%9E%E7%BB%AD%E5%AD%90%E6%95%B0%E7%BB%84%E5%92%8C/" data-toggle="tooltip" data-placement="top" title="golang动态规划求解最大连续子数组和">Next Post &rarr;</a>
+                </li>
+                
+            </ul>
+            
+            
+            
+            
+<div>
+    <section id="datecount">
+        <h4 id="date"> Tue Sep 5, 2017</h4>
+    </section>
+    <h5 id="wc">900 Words|Read in about 2 Min</h5>
+    <h5 id="tags">Tags: 
+        
+        <a href="https://imroc.io/tags/%E7%AE%97%E6%B3%95/">算法</a> &nbsp;
+    </h5>
+</div>
+
+            
+            </div>
+            
+            
+                
+                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+<aside id=comments>
+    <div>
+        <h2> Comments </h2>
+    </div>
+    <div id="container"></div>
+    <link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+    
+    <script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/gitment.browser.js"></script>
+    <script>
+        var gitment = new Gitment({
+            owner: 'imroc', 
+            repo: 'blog', 
+            oauth: {
+                client_id: 'd05b8f959b3111c6fb63',
+                client_secret: 'f30ef76ea0050ed731ace76f7fbf684ae5d28fbc',
+            },
+        })
+        gitment.render('container')
+    </script>
+</aside>
+</div>
+
+                
+            
+        </div>
+    </div>
+    </section>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+              <li>
+                <a href="mailto:roc@imroc.io" title="Email me">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com/imroc" title="GitHub">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://twitter.com/imrocchan" title="Twitter">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+          
+          <li>
+            <a href="https://imroc.io/index.xml" title="RSS">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+        &copy;2017
+          
+            
+              <a href="imroc.io">roc</a>
+                      
+          
+          
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://imroc.io/">roc</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.26</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/bootstrap.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/photoswipe-ui-default.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/photoswipe.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/auto-render.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/main.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/prism.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/katex.min.js"></script>
+<script> renderMathInElement(document.body); </script>
+
+
+
+
+
+
+
+  </body>
+</html>
+
