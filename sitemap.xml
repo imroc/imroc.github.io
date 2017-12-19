@@ -7,6 +7,11 @@
   </url>
   
   <url>
+    <loc>https://imroc.io/posts/docker/quick-start-for-docker-3/</loc>
+    <lastmod>2017-12-19T16:27:07+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://imroc.io/posts/docker/quick-start-for-docker-2/</loc>
     <lastmod>2017-12-19T11:00:42+08:00</lastmod>
   </url>
@@ -260,19 +265,19 @@
   
   <url>
     <loc>https://imroc.io/tags/docker/</loc>
-    <lastmod>2017-12-19T11:00:42+08:00</lastmod>
+    <lastmod>2017-12-19T16:27:07+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://imroc.io/categories/docker/</loc>
-    <lastmod>2017-12-19T11:00:42+08:00</lastmod>
+    <lastmod>2017-12-19T16:27:07+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://imroc.io/tags/docker%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/</loc>
-    <lastmod>2017-12-19T11:00:42+08:00</lastmod>
+    <lastmod>2017-12-19T16:27:07+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -290,19 +295,19 @@
   
   <url>
     <loc>https://imroc.io/posts/</loc>
-    <lastmod>2017-12-19T11:00:42+08:00</lastmod>
+    <lastmod>2017-12-19T16:27:07+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://imroc.io/tags/</loc>
-    <lastmod>2017-12-19T11:00:42+08:00</lastmod>
+    <lastmod>2017-12-19T16:27:07+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://imroc.io/</loc>
-    <lastmod>2017-12-19T11:00:42+08:00</lastmod>
+    <lastmod>2017-12-19T16:27:07+08:00</lastmod>
     <priority>0</priority>
   </url>
   

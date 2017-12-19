@@ -5,13 +5,13 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title> 冒泡排序(C-C&#43;&#43;-实现) - </title>
+  <title> Docker快速入门（三）常用命令与技巧 - </title>
   <meta name="description" content="" />
-  <meta property="og:title" content="冒泡排序(C-C&#43;&#43;-实现)" />
-  <meta name="twitter:title" content="冒泡排序(C-C&#43;&#43;-实现)" />
-  <meta name="description" content="两种类似的方式： //交换数组元素 void swap(int *a,int i,int j){ int t = a[i]; a[i] = a[j]; a[j] = t; } //第一种冒泡排序 void bubble_sort1(int *a,int len){ int max = len-1; int i,j; for(i=0;i&lt;max;i&#43;&#43;){ for(j=0;j&lt;max-i;j&#43;&#43;){ if(a[j&#43;1]&lt;a[j]){ swap(a,j,j&#43;1); } } } } //第二种冒泡排序 void bubble_sort2(int">
-  <meta property="og:description" content="两种类似的方式： //交换数组元素 void swap(int *a,int i,int j){ int t = a[i]; a[i] = a[j]; a[j] = t; } //第一种冒泡排序 void bubble_sort1(int *a,int len){ int max = len-1; int i,j; for(i=0;i&lt;max;i&#43;&#43;){ for(j=0;j&lt;max-i;j&#43;&#43;){ if(a[j&#43;1]&lt;a[j]){ swap(a,j,j&#43;1); } } } } //第二种冒泡排序 void bubble_sort2(int">
-  <meta name="twitter:description" content="两种类似的方式： //交换数组元素 void swap(int *a,int i,int j){ int t = a[i]; a[i] = a[j]; a[j] = t; } //第一种冒泡排序 void bubble_sort1(int *a,int len){ int max = len-1; int i,j; for(i=0;i&lt;max;i&#43;&#43;){ …">
+  <meta property="og:title" content="Docker快速入门（三）常用命令与技巧" />
+  <meta name="twitter:title" content="Docker快速入门（三）常用命令与技巧" />
+  <meta name="description" content="常用命令 列出机器上的镜像 docker images 拉取镜像 docker pull openjdk # 等同于 docker pull openjdk:latest docker pull openjdk:jre-slim # 指定了tag docker pull hub.imroc.io:5000/imroc/myapp:1.2 # 拉取私有仓库的镜像 上传镜像 docker push imroc/myapp:1atest # 上传到Docker Hu">
+  <meta property="og:description" content="常用命令 列出机器上的镜像 docker images 拉取镜像 docker pull openjdk # 等同于 docker pull openjdk:latest docker pull openjdk:jre-slim # 指定了tag docker pull hub.imroc.io:5000/imroc/myapp:1.2 # 拉取私有仓库的镜像 上传镜像 docker push imroc/myapp:1atest # 上传到Docker Hu">
+  <meta name="twitter:description" content="常用命令 列出机器上的镜像 docker images 拉取镜像 docker pull openjdk # 等同于 docker pull openjdk:latest docker pull openjdk:jre-slim # 指定了tag docker pull hub.imroc.io:5000/imroc/myapp:1.2 # 拉取私有仓库的镜像 上传镜像 docker push …">
   <meta name="author" content="{Description { .Site.Author.name }}"/>
   <link href='https://imroc.io/favicon.png' rel='icon' type='image/x-icon'/>
   <meta property="og:image" content="https://imroc.io/images/logo.png" />
@@ -19,12 +19,12 @@
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:site" content="@imrocchan" />
   <meta name="twitter:creator" content="@imrocchan" />
-  <meta property="og:url" content="https://imroc.io/posts/algorithm/%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8Fc-c&#43;&#43;-%E5%AE%9E%E7%8E%B0/" />
+  <meta property="og:url" content="https://imroc.io/posts/docker/quick-start-for-docker-3/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="roc" />
 
   <meta name="generator" content="Hugo 0.31.1" />
-  <link rel="canonical" href="https://imroc.io/posts/algorithm/%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8Fc-c&#43;&#43;-%E5%AE%9E%E7%8E%B0/" />
+  <link rel="canonical" href="https://imroc.io/posts/docker/quick-start-for-docker-3/" />
   <link rel="alternate" href="https://imroc.io/index.xml" type="application/rss+xml" title="roc">
   <script src="https://cdn.staticfile.org/jquery/1.12.4/jquery.min.js"></script>
   <link rel="stylesheet" href="https://cdn.staticfile.org/KaTeX/0.7.1/katex.min.css" crossorigin="anonymous">
@@ -189,7 +189,7 @@
         <div class="row">
           <div class="col-lg-12 col-md-12 col-md-offset-0">
             <div class="posts-heading">
-                <h1 align="center">冒泡排序(C-C&#43;&#43;-实现)</h1>
+                <h1 align="center">Docker快速入门（三）常用命令与技巧</h1>
                 
                 
             </div>
@@ -209,103 +209,142 @@
             
 <div>
     <section id="datecount">
-        <h4 id="date"> Tue Sep 5, 2017</h4>
+        <h4 id="date"> Tue Dec 19, 2017</h4>
     </section>
-    <h5 id="wc">200 Words|Read in about 1 Min</h5>
+    <h5 id="wc">700 Words|Read in about 2 Min</h5>
     <h5 id="tags">Tags: 
         
-        <a href="https://imroc.io/tags/%E7%AE%97%E6%B3%95/">算法</a> &nbsp;
+        <a href="https://imroc.io/tags/docker/">docker</a> &nbsp;
+        
+        <a href="https://imroc.io/tags/docker%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/">Docker快速入门</a> &nbsp;
     </h5>
 </div>
 
             
             <article role="main" class="blog-post" itemprop="articleBody" id="content">
-                <p>两种类似的方式：</p>
+                
 
-<pre><code class="language-c">//交换数组元素
-void swap(int *a,int i,int j){
-    int t = a[i];
-    a[i] = a[j];
-    a[j] = t;
-}
+<h1 id="常用命令">常用命令</h1>
 
+<h3 id="列出机器上的镜像">列出机器上的镜像</h3>
 
-//第一种冒泡排序
-void bubble_sort1(int *a,int len){
-    int max = len-1;
-    int i,j;
-    for(i=0;i&lt;max;i++){
-        for(j=0;j&lt;max-i;j++){
-            if(a[j+1]&lt;a[j]){
-                swap(a,j,j+1);
-            }
-        }
-    }
-}
-
-//第二种冒泡排序
-void bubble_sort2(int *a,int len){
-    int max = len-1;
-    int i,j;
-    for(i=0;i&lt;max;i++){
-        for(j=i+1;j&lt;len;j++){
-            if(a[j]&lt;a[i]){
-                swap(a,i,j);
-            }
-        }
-    }
-}
+<pre><code class="language-sh">docker images
 </code></pre>
 
-<p>测试：</p>
+<p><img src="https://res.cloudinary.com/imroc/image/upload/v1513675136/blog/docker/docker-images.png" alt="docker images" /></p>
 
-<pre><code class="language-c">//打印输出数组
-void print_arr(int *a,int len)
-{
-    int i;
-    if(len&lt;1)  //数组长度必须大于0
-    {
-        printf(&quot;length greater than 0&quot;);
-        return;
-    }
-    //打印整个数组
-    printf(&quot;[&quot;);
-    for(i=0; i&lt;len-1; i++)
-    {
-        printf(&quot;%d &quot;,a[i]);
-    }
-    printf(&quot;%d]\n&quot;,a[len-1]);
-}
+<h3 id="拉取镜像">拉取镜像</h3>
 
-int main()
-{
-    int a[] = {9,0,6,5,8,2,1,7,4,3};
-    int len = sizeof(a)/sizeof(int);
-    print_arr(a,len);
-    bubble_sort1(a,len);
-    //bubble_sort2(a,len);
-    print_arr(a,len);
-    return 0;
-}
+<pre><code class="language-sh">docker pull openjdk # 等同于 docker pull openjdk:latest
+
+docker pull openjdk:jre-slim # 指定了tag
+
+docker pull hub.imroc.io:5000/imroc/myapp:1.2 # 拉取私有仓库的镜像
 </code></pre>
 
-<p>输出：</p>
+<h3 id="上传镜像">上传镜像</h3>
 
-<p>[9 0 6 5 8 2 1 7 4 3]<br />
-[0 1 2 3 4 5 6 7 8 9]</p>
+<pre><code class="language-sh">docker push imroc/myapp:1atest # 上传到Docker Hub公有仓库
+
+docker push hub.imroc.io:5000/imroc/myqpp:1.2 # 上传到私有仓库
+</code></pre>
+
+<h3 id="删除镜像">删除镜像</h3>
+
+<pre><code class="language-sh"># 删除指定名称的镜像
+docker rmi imroc/myapp:latest
+
+# 删除没有tag的镜像（比如每次编译新镜像都会打latest这个tag，导致旧的latest镜像没了tag）
+docker rmi `docker images -f &quot;dangling=true&quot; -q`
+
+# 删除所有镜像
+docker rmi `docker images -q`
+</code></pre>
+
+<h3 id="列出机器上的容器">列出机器上的容器</h3>
+
+<h5 id="1-查看正在运行的">1. 查看正在运行的</h5>
+
+<pre><code class="language-sh">docker ps
+</code></pre>
+
+<p><img src="https://res.cloudinary.com/imroc/image/upload/v1513687714/blog/docker/docker-ps.png" alt="docker ps" /></p>
+
+<h5 id="2-查看所有的-包含已经停止并且没有删除的容器">2. 查看所有的 (包含已经停止并且没有删除的容器)</h5>
+
+<pre><code class="language-sh">docker ps -a
+</code></pre>
+
+<p><img src="https://res.cloudinary.com/imroc/image/upload/v1513688020/blog/docker/docker-ps-a.png" alt="docker ps -a" /></p>
+
+<h3 id="启动容器">启动容器</h3>
+
+<pre><code class="language-sh"># 前台运行，指定镜像为ubuntu，并指定要运行的是bash命令行
+docker run -it ubuntu /bin/bash 
+
+# 后台运行
+docker run -d imroc/myapp:1.2 
+
+# 给容器起别名
+docker run --name app imroc/myapp:1.2 
+
+# 映射宿主机5000端口到容器的80端口，即访问机器的5000端口相当于访问容器的80端口
+docker run -p 5000:80 imroc/myapp:1.2 
+
+# 挂载当前目录的配置文件到容器里
+docker run -v $PWD:/config.yaml:/app/config.yaml imroc/myapp:1.2 
+
+# 当容器停止就将其删除
+docker run --rm imroc/myapp:1.2
+</code></pre>
+
+<h3 id="删除容器">删除容器</h3>
+
+<pre><code class="language-sh"># 通过别名删除
+docker rm app
+
+# 通过id删除
+docker rm 4a19c300e0c0
+
+# 删除全部容器
+docker rm $(docker ps -a -q)
+
+# 删除已停止的容器
+docker rm $(docker ps -f status=exited -q)
+</code></pre>
+
+<h3 id="进入已运行的容器内部-进入容器内的命令行操作">进入已运行的容器内部 (进入容器内的命令行操作)</h3>
+
+<pre><code class="language-sh"># 进入别名为app的容器，终端为/bin/sh
+docker exec -it app /bin/sh
+
+# 进入id为c62874e3750a的容器，终端为/bin/bash（有些容器可能只有/bin/sh）
+docker exec -it c62874e3750a /bin/bash
+</code></pre>
+
+<h3 id="容器与宿主机之间文件拷贝">容器与宿主机之间文件拷贝</h3>
+
+<pre><code class="language-sh"># 将当前目录的配置文件拷贝到别名为app的容器里
+docker cp ./config.toml app:/app/config.toml
+
+# 将id为c62874e3750a的容器中的配置文件拷贝到当前目录
+docker cp c62874e3750a:/app/config.toml ./config.toml
+</code></pre>
+
+<h3 id="查看容器或镜像详细信息">查看容器或镜像详细信息</h3>
+
+<pre><code class="language-sh"># name可以为镜像id或名称，也可以为容器id或别名
+docker inspect name
+</code></pre>
 
             </article>
 
             <ul class="pager blog-pager">
                 
                 <li class="previous">
-                    <a href="https://imroc.io/posts/algorithm/%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8Fjava%E5%AE%9E%E7%8E%B0/" data-toggle="tooltip" data-placement="top" title="冒泡排序(Java实现)">&larr; Previous Post</a>
+                    <a href="https://imroc.io/posts/docker/quick-start-for-docker-2/" data-toggle="tooltip" data-placement="top" title="Docker快速入门（二）容器、镜像与镜像仓库">&larr; Previous Post</a>
                 </li>
                  
-                <li class="next">
-                    <a href="https://imroc.io/posts/algorithm/%E4%BA%8C%E5%88%86%E6%B3%95%E6%9F%A5%E6%89%BEgolang%E5%AE%9E%E7%8E%B0/" data-toggle="tooltip" data-placement="top" title="二分法查找(golang实现)">Next Post &rarr;</a>
-                </li>
-                
             </ul>
             
             <div>
@@ -313,15 +352,13 @@ int main()
                 <h2>See Also</h2>
                 <ul>
                     
-                    <li><a href="/posts/algorithm/%E9%80%89%E6%8B%A9%E6%8E%92%E5%BA%8Fc-c&#43;&#43;-%E5%AE%9E%E7%8E%B0/">选择排序(C-C&#43;&#43;-实现)</a></li>
+                    <li><a href="/posts/docker/quick-start-for-docker-2/">Docker快速入门（二）容器、镜像与镜像仓库</a></li>
                     
-                    <li><a href="/posts/algorithm/%E7%BA%BF%E6%80%A7%E5%A4%8D%E6%9D%82%E5%BA%A6%E9%80%89%E5%87%BA%E7%AC%ACk%E5%B0%8F%E5%85%83%E7%B4%A0%E4%B8%AD%E4%BD%8D%E6%95%B0%E6%9C%80%E5%B0%8F%E7%9A%84k%E4%B8%AA%E5%85%83%E7%B4%A0golang%E5%AE%9E%E7%8E%B0/">线性复杂度选出第k小元素、中位数、最小的k个元素(golang实现)</a></li>
+                    <li><a href="/posts/docker/quick-start-for-docker-1/">Docker快速入门（一）认识Docker</a></li>
                     
-                    <li><a href="/posts/algorithm/%E5%B8%8C%E5%B0%94%E6%8E%92%E5%BA%8Fc-c&#43;&#43;%E5%AE%9E%E7%8E%B0/">希尔排序(C-C&#43;&#43;实现)</a></li>
+                    <li><a href="/posts/docker/docker-network-communication/">Docker容器间通信</a></li>
                     
-                    <li><a href="/posts/algorithm/%E6%B1%82%E4%B8%A4%E5%9C%86%E4%BA%A4%E7%82%B9%E7%AE%97%E6%B3%95%E4%BB%A3%E7%A0%81golang%E5%AE%9E%E7%8E%B0/">求两圆交点算法代码(golang实现)</a></li>
-                    
-                    <li><a href="/posts/algorithm/%E4%B8%89%E5%90%91%E5%88%87%E5%88%86%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8Fjava%E5%AE%9E%E7%8E%B0/">三向切分快速排序(Java实现)</a></li>
+                    <li><a href="/posts/docker/understand-docker-cmd-entrypoint/">Docker中CMD与ENTRYPOINT的简明理解</a></li>
                     
                 </ul>
                 
@@ -332,12 +369,14 @@ int main()
             
 <div>
     <section id="datecount">
-        <h4 id="date"> Tue Sep 5, 2017</h4>
+        <h4 id="date"> Tue Dec 19, 2017</h4>
     </section>
-    <h5 id="wc">200 Words|Read in about 1 Min</h5>
+    <h5 id="wc">700 Words|Read in about 2 Min</h5>
     <h5 id="tags">Tags: 
         
-        <a href="https://imroc.io/tags/%E7%AE%97%E6%B3%95/">算法</a> &nbsp;
+        <a href="https://imroc.io/tags/docker/">docker</a> &nbsp;
+        
+        <a href="https://imroc.io/tags/docker%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/">Docker快速入门</a> &nbsp;
     </h5>
 </div>
 
