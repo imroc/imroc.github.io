@@ -5,13 +5,13 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title> 插入排序(Java实现) - </title>
+  <title> Docker快速入门（二）容器、镜像与镜像仓库 - </title>
   <meta name="description" content="" />
-  <meta property="og:title" content="插入排序(Java实现)" />
-  <meta name="twitter:title" content="插入排序(Java实现)" />
-  <meta name="description" content="封装成类： package com.roc.algorithms.sort; /** * 插入排序 * * @author roc */ public class InsertionSort { //交换数组元素 private static void swap(int[] a, int i, int j) { int t = a[i]; a[i] = a[j]; a[j] = t; } public static void sort(int[] a) { if (a.length &lt; 2) { return; } for (int i = 1; i">
-  <meta property="og:description" content="封装成类： package com.roc.algorithms.sort; /** * 插入排序 * * @author roc */ public class InsertionSort { //交换数组元素 private static void swap(int[] a, int i, int j) { int t = a[i]; a[i] = a[j]; a[j] = t; } public static void sort(int[] a) { if (a.length &lt; 2) { return; } for (int i = 1; i">
-  <meta name="twitter:description" content="封装成类： package com.roc.algorithms.sort; /** * 插入排序 * * @author roc */ public class InsertionSort { //交换数组元素 private static void swap(int[] a, int i, int j) { int t = a[i]; a[i] = a[j]; a[j] = t; } …">
+  <meta property="og:title" content="Docker快速入门（二）容器、镜像与镜像仓库" />
+  <meta name="twitter:title" content="Docker快速入门（二）容器、镜像与镜像仓库" />
+  <meta name="description" content="镜像与容器的关系 镜像就是把你程序以及依赖的运行时打包在一起的一个东东，运行一个镜像就成了容器。镜像与容器的关系有点类似程序与进程的关系，比如">
+  <meta property="og:description" content="镜像与容器的关系 镜像就是把你程序以及依赖的运行时打包在一起的一个东东，运行一个镜像就成了容器。镜像与容器的关系有点类似程序与进程的关系，比如">
+  <meta name="twitter:description" content="镜像与容器的关系 镜像就是把你程序以及依赖的运行时打包在一起的一个东东，运行一个镜像就成了容器。镜像与容器的关系有点类似程序与进程的关系，比如">
   <meta name="author" content="{Description { .Site.Author.name }}"/>
   <link href='https://imroc.io/favicon.png' rel='icon' type='image/x-icon'/>
   <meta property="og:image" content="https://imroc.io/images/logo.png" />
@@ -19,12 +19,12 @@
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:site" content="@imrocchan" />
   <meta name="twitter:creator" content="@imrocchan" />
-  <meta property="og:url" content="https://imroc.io/posts/algorithm/%E6%8F%92%E5%85%A5%E6%8E%92%E5%BA%8Fjava%E5%AE%9E%E7%8E%B0/" />
+  <meta property="og:url" content="https://imroc.io/posts/docker/quick-start-for-docker-2/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="roc" />
 
   <meta name="generator" content="Hugo 0.31.1" />
-  <link rel="canonical" href="https://imroc.io/posts/algorithm/%E6%8F%92%E5%85%A5%E6%8E%92%E5%BA%8Fjava%E5%AE%9E%E7%8E%B0/" />
+  <link rel="canonical" href="https://imroc.io/posts/docker/quick-start-for-docker-2/" />
   <link rel="alternate" href="https://imroc.io/index.xml" type="application/rss+xml" title="roc">
   <script src="https://cdn.staticfile.org/jquery/1.12.4/jquery.min.js"></script>
   <link rel="stylesheet" href="https://cdn.staticfile.org/KaTeX/0.7.1/katex.min.css" crossorigin="anonymous">
@@ -189,7 +189,7 @@
         <div class="row">
           <div class="col-lg-12 col-md-12 col-md-offset-0">
             <div class="posts-heading">
-                <h1 align="center">插入排序(Java实现)</h1>
+                <h1 align="center">Docker快速入门（二）容器、镜像与镜像仓库</h1>
                 
                 
             </div>
@@ -209,71 +209,103 @@
             
 <div>
     <section id="datecount">
-        <h4 id="date"> Tue Sep 5, 2017</h4>
+        <h4 id="date"> Tue Dec 19, 2017</h4>
     </section>
-    <h5 id="wc">200 Words|Read in about 1 Min</h5>
+    <h5 id="wc">1300 Words|Read in about 3 Min</h5>
     <h5 id="tags">Tags: 
         
-        <a href="https://imroc.io/tags/%E7%AE%97%E6%B3%95/">算法</a> &nbsp;
+        <a href="https://imroc.io/tags/docker/">docker</a> &nbsp;
+        
+        <a href="https://imroc.io/tags/docker%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/">Docker快速入门</a> &nbsp;
     </h5>
 </div>
 
             
             <article role="main" class="blog-post" itemprop="articleBody" id="content">
-                <p>封装成类：</p>
+                
 
-<pre><code class="language-java">package com.roc.algorithms.sort;
+<h1 id="镜像与容器的关系">镜像与容器的关系</h1>
 
-/**
- * 插入排序
- *
- * @author roc
- */
-public class InsertionSort {
-    //交换数组元素
-    private static void swap(int[] a, int i, int j) {
-        int t = a[i];
-        a[i] = a[j];
-        a[j] = t;
-    }
+<p>镜像就是把你程序以及依赖的运行时打包在一起的一个东东，运行一个镜像就成了容器。镜像与容器的关系有点类似程序与进程的关系，比如windows上的exe可执行文件是程序，双击运行它就有了进程，镜像可以看成程序，容器可以看成进程。</p>
 
-    public static void sort(int[] a) {
-        if (a.length &lt; 2) {
-            return;
-        }
-        for (int i = 1; i &lt; a.length; i++) {
-            for (int j = i; j &gt; 0 &amp;&amp; a[j] &lt; a[j - 1]; j--) {
-                swap(a, j, j - 1);
-            }
-        }
-    }
-}
+<h1 id="镜像仓库">镜像仓库</h1>
+
+<p>镜像仓库的作用是存放镜像的地方，官方术语叫 Registry，默认的仓库是 <a href="https://hub.docker.com/">Docker Hub</a>，它属于公有仓库，很多常用的镜像都来源于这里，有官方的，有个人的。</p>
+
+<p>除了公有仓库之外，还有私有仓库，主要企业内部用，一方面可以加快镜像拉取速度，另一方面可以提高安全性，避免将企业内部的程序泄露出去。Docker官方有开源docker-registry，不过功能比较简陋，连web ui都没有，通常搭建企业级docker私有仓库会选择 <a href="https://github.com/vmware/harbor">Harbor</a></p>
+
+<h1 id="标签">标签</h1>
+
+<p>镜像可以打标签，拉取镜像不加标签的化默认用的是latest，用来标识版本，比如我的程序要发布新的版本到镜像仓库，版本号为1.2.3，那么我可以给这个新版本镜像打上几个tag，分别是：1.2.3, 1.2, latest。 这样别人拉取镜像的时候如果不加tag，默认会拉取这个最新版，如果拉取的时候加1.2或1.2.3的tag，也会拉取到这个版本的镜像。</p>
+
+<h1 id="制作镜像">制作镜像</h1>
+
+<h3 id="1-docker-commit">1. docker commit</h3>
+
+<p>这种方式类似 git commit，通过某个镜像运行一个容器，做些修改操作，然后提交成一个新的镜像。</p>
+
+<p>比如你拉取一个ubuntu镜像，通过它启动一个容器，进入容器，然后安装java和ruby环境，装好后使用docker commit命令来将这个容器保存成一个新的镜像，这个镜像同时具有java和ruby环境。</p>
+
+<p>语法：</p>
+
+<pre><code class="language-sh">docker commit &lt;container&gt; [repo:tag]
 </code></pre>
 
-<p>测试：</p>
+<p>这种做法的优点是方便快速，缺点是不规范、无法自动化，也就不方便在一个团队中分享，所以通常我们会采用下面Dockerfile这种方式。</p>
 
-<pre><code class="language-java">int[] a = {9,0,6,5,8,2,1,7,4,3};
-System.out.println(Arrays.toString(a));
-InsertionSort.sort(a);
-System.out.println(Arrays.toString(a));
+<h3 id="2-dockerfile">2. Dockerfile</h3>
+
+<p>这种方式是编写一个 Dockerfile 文件，然后使用 docker build 命令来编译出镜像，文件格式就不赘述了，直接举个栗子：</p>
+
+<pre><code class="language-Dockerfile"># 这里是注释
+
+# 设置继承自哪个镜像
+FROM ubuntu:16.04
+
+# 下面是一些创建者的基本信息
+MAINTAINER roc&lt;imrocchan@gmail.com&gt;
+
+# 在终端需要执行的命令
+RUN apt-get install -y openjdk
+
+# 将当前目录的jar包拷到镜像里
+COPY app.jar /root/app.jar
+
+# 设置默认运行命令
+CMD [&quot;java&quot;, &quot;-jar&quot;, &quot;/root/app.jar&quot;]
 </code></pre>
 
-<p>输出：
-[9, 0, 6, 5, 8, 2, 1, 7, 4, 3]
-[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]</p>
+<p>写好Dockerfile之后就可以编译镜像了，比如：</p>
+
+<pre><code class="language-sh">docker build . -t imroc/myapp:latest
+</code></pre>
+
+<h1 id="上传镜像">上传镜像</h1>
+
+<p>上传前事先确保你已经登录了，利用docker login 命令进行登录，如果是Docker Hub，直接执行docker login 即可登录，如果是私有仓库，需要在后面加上私有仓库的地址，比如：</p>
+
+<pre><code class="language-sh">docker login hub.imroc.io
+</code></pre>
+
+<p>然后输入你所在仓库的用户名密码即可，一般登录了只要没有重启docker daemon就能一直保持登录，不需要重复登录。<br />
+上传镜像需要用到<code>docker push</code>命令，前提是你的镜像名符合规范。如果你想上传到私有仓库，那么你的镜像名前面需要加私有仓库地址，例如：<code>hub.imroc.io/imroc/myapp:1.2</code>，那么执行下面的命令就能上传镜像到私有仓库:</p>
+
+<pre><code class="language-sh">docker push hub.imroc.io/imroc/myqpp:1.2
+</code></pre>
+
+<p>如果是上传到 Docker Hub，你就不需要将仓库地址写出来了，因为默认就是Docker Hub，比如我的镜像名叫<code>imroc/myqpp:latest</code>，那么执行下面的命令就能上传到Docker Hub，所有人都可以拉取下来使用：</p>
+
+<pre><code class="language-sh">docker push imroc/myapp:latest
+</code></pre>
 
             </article>
 
             <ul class="pager blog-pager">
                 
                 <li class="previous">
-                    <a href="https://imroc.io/posts/algorithm/%E6%8F%92%E5%85%A5%E6%8E%92%E5%BA%8Fgolang%E5%AE%9E%E7%8E%B0/" data-toggle="tooltip" data-placement="top" title="插入排序(golang实现)">&larr; Previous Post</a>
+                    <a href="https://imroc.io/posts/docker/quick-start-for-docker-1/" data-toggle="tooltip" data-placement="top" title="Docker快速入门（一）认识Docker">&larr; Previous Post</a>
                 </li>
                  
-                <li class="next">
-                    <a href="https://imroc.io/posts/algorithm/%E6%8F%92%E5%85%A5%E6%8E%92%E5%BA%8Fc-c&#43;&#43;%E5%AE%9E%E7%8E%B0/" data-toggle="tooltip" data-placement="top" title="插入排序(C-C&#43;&#43;实现)">Next Post &rarr;</a>
-                </li>
-                
             </ul>
             
             <div>
@@ -281,15 +313,11 @@ System.out.println(Arrays.toString(a));
                 <h2>See Also</h2>
                 <ul>
                     
-                    <li><a href="/posts/algorithm/%E7%BA%BF%E6%80%A7%E5%A4%8D%E6%9D%82%E5%BA%A6%E9%80%89%E5%87%BA%E7%AC%ACk%E5%B0%8F%E5%85%83%E7%B4%A0%E4%B8%AD%E4%BD%8D%E6%95%B0%E6%9C%80%E5%B0%8F%E7%9A%84k%E4%B8%AA%E5%85%83%E7%B4%A0c-c&#43;&#43;%E5%AE%9E%E7%8E%B0/">线性复杂度选出第k小元素、中位数、最小的k个元素(C-C&#43;&#43;实现)</a></li>
+                    <li><a href="/posts/docker/quick-start-for-docker-1/">Docker快速入门（一）认识Docker</a></li>
                     
-                    <li><a href="/posts/algorithm/%E4%B8%89%E5%90%91%E5%88%87%E5%88%86%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8Fgolang%E5%AE%9E%E7%8E%B0/">三向切分快速排序(golang实现)</a></li>
+                    <li><a href="/posts/docker/docker-network-communication/">Docker容器间通信</a></li>
                     
-                    <li><a href="/posts/algorithm/%E5%B8%8C%E5%B0%94%E6%8E%92%E5%BA%8Fjava%E5%AE%9E%E7%8E%B0/">希尔排序(Java实现)</a></li>
-                    
-                    <li><a href="/posts/algorithm/%E4%BA%8C%E5%88%86%E6%B3%95%E6%9F%A5%E6%89%BEgolang%E5%AE%9E%E7%8E%B0/">二分法查找(golang实现)</a></li>
-                    
-                    <li><a href="/posts/algorithm/%E5%A0%86%E6%8E%92%E5%BA%8Fc-c&#43;&#43;%E5%AE%9E%E7%8E%B0/">堆排序(C-C&#43;&#43;实现)</a></li>
+                    <li><a href="/posts/docker/understand-docker-cmd-entrypoint/">Docker中CMD与ENTRYPOINT的简明理解</a></li>
                     
                 </ul>
                 
@@ -300,12 +328,14 @@ System.out.println(Arrays.toString(a));
             
 <div>
     <section id="datecount">
-        <h4 id="date"> Tue Sep 5, 2017</h4>
+        <h4 id="date"> Tue Dec 19, 2017</h4>
     </section>
-    <h5 id="wc">200 Words|Read in about 1 Min</h5>
+    <h5 id="wc">1300 Words|Read in about 3 Min</h5>
     <h5 id="tags">Tags: 
         
-        <a href="https://imroc.io/tags/%E7%AE%97%E6%B3%95/">算法</a> &nbsp;
+        <a href="https://imroc.io/tags/docker/">docker</a> &nbsp;
+        
+        <a href="https://imroc.io/tags/docker%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/">Docker快速入门</a> &nbsp;
     </h5>
 </div>
 
