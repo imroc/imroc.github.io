@@ -5,13 +5,13 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title> 选择排序(C-C&#43;&#43;-实现) - </title>
+  <title> Docker快速入门（五）docker-compose安装与基础用法 - </title>
   <meta name="description" content="" />
-  <meta property="og:title" content="选择排序(C-C&#43;&#43;-实现)" />
-  <meta name="twitter:title" content="选择排序(C-C&#43;&#43;-实现)" />
-  <meta name="description" content="封装成函数： //交换数组元素 void swap(int *a,int i,int j) { int t = a[i]; a[i] = a[j]; a[j] = t; } //选择排序 void selection_sort(int *a,int len) { int m = len-1; //以免每次循环判断都运算 int i,j,k; for (i=0; i&lt;m; i&#43;&#43;) { k=i; for (j=i&#43;1; j&lt;len;">
-  <meta property="og:description" content="封装成函数： //交换数组元素 void swap(int *a,int i,int j) { int t = a[i]; a[i] = a[j]; a[j] = t; } //选择排序 void selection_sort(int *a,int len) { int m = len-1; //以免每次循环判断都运算 int i,j,k; for (i=0; i&lt;m; i&#43;&#43;) { k=i; for (j=i&#43;1; j&lt;len;">
-  <meta name="twitter:description" content="封装成函数： //交换数组元素 void swap(int *a,int i,int j) { int t = a[i]; a[i] = a[j]; a[j] = t; } //选择排序 void selection_sort(int *a,int len) { int m = len-1; //以免每次循环判断都运算 int i,j,k; for (i=0; i&lt;m; i&#43;&#43;) { …">
+  <meta property="og:title" content="Docker快速入门（五）docker-compose安装与基础用法" />
+  <meta name="twitter:title" content="Docker快速入门（五）docker-compose安装与基础用法" />
+  <meta name="description" content="简介 docker-compose 可以用来定义和运行复杂应用的Docker工具，比如你的web应用需要用到好几个容器，mysql、redis和你自己的应用容器，它们之间">
+  <meta property="og:description" content="简介 docker-compose 可以用来定义和运行复杂应用的Docker工具，比如你的web应用需要用到好几个容器，mysql、redis和你自己的应用容器，它们之间">
+  <meta name="twitter:description" content="简介 docker-compose 可以用来定义和运行复杂应用的Docker工具，比如你的web应用需要用到好几个容器，mysql、redis和你自己的应用容器，它们之间">
   <meta name="author" content="{Description { .Site.Author.name }}"/>
   <link href='https://imroc.io/favicon.png' rel='icon' type='image/x-icon'/>
   <meta property="og:image" content="https://imroc.io/images/logo.png" />
@@ -19,12 +19,12 @@
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:site" content="@imrocchan" />
   <meta name="twitter:creator" content="@imrocchan" />
-  <meta property="og:url" content="https://imroc.io/posts/algorithm/%E9%80%89%E6%8B%A9%E6%8E%92%E5%BA%8Fc-c&#43;&#43;-%E5%AE%9E%E7%8E%B0/" />
+  <meta property="og:url" content="https://imroc.io/posts/docker/quick-start-for-docker-5/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="roc" />
 
   <meta name="generator" content="Hugo 0.31.1" />
-  <link rel="canonical" href="https://imroc.io/posts/algorithm/%E9%80%89%E6%8B%A9%E6%8E%92%E5%BA%8Fc-c&#43;&#43;-%E5%AE%9E%E7%8E%B0/" />
+  <link rel="canonical" href="https://imroc.io/posts/docker/quick-start-for-docker-5/" />
   <link rel="alternate" href="https://imroc.io/index.xml" type="application/rss+xml" title="roc">
   <script src="https://cdn.staticfile.org/jquery/1.12.4/jquery.min.js"></script>
   <link rel="stylesheet" href="https://cdn.staticfile.org/KaTeX/0.7.1/katex.min.css" crossorigin="anonymous">
@@ -189,7 +189,7 @@
         <div class="row">
           <div class="col-lg-12 col-md-12 col-md-offset-0">
             <div class="posts-heading">
-                <h1 align="center">选择排序(C-C&#43;&#43;-实现)</h1>
+                <h1 align="center">Docker快速入门（五）docker-compose安装与基础用法</h1>
                 
                 
             </div>
@@ -209,100 +209,101 @@
             
 <div>
     <section id="datecount">
-        <h4 id="date"> Tue Sep 5, 2017</h4>
+        <h4 id="date"> Wed Dec 20, 2017</h4>
     </section>
-    <h5 id="wc">200 Words|Read in about 1 Min</h5>
+    <h5 id="wc">600 Words|Read in about 2 Min</h5>
     <h5 id="tags">Tags: 
         
-        <a href="https://imroc.io/tags/%E7%AE%97%E6%B3%95/">算法</a> &nbsp;
+        <a href="https://imroc.io/tags/docker/">docker</a> &nbsp;
+        
+        <a href="https://imroc.io/tags/docker%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/">Docker快速入门</a> &nbsp;
     </h5>
 </div>
 
             
             <article role="main" class="blog-post" itemprop="articleBody" id="content">
-                <p>封装成函数：</p>
+                
 
-<pre><code class="language-c">//交换数组元素
-void swap(int *a,int i,int j)
-{
-    int t = a[i];
-    a[i] = a[j];
-    a[j] = t;
-}
+<h1 id="简介">简介</h1>
 
-//选择排序
-void selection_sort(int *a,int len)
-{
-    int m = len-1; //以免每次循环判断都运算
-    int i,j,k;
-    for (i=0; i&lt;m; i++)
-    {
-        k=i;
-        for (j=i+1; j&lt;len; j++)
-        {
-            if (a[j]&lt;a[k])
-            {
-                k = j;
-            }
-        }
-        if (k!=i)
-        {
-            swap(a,k,i);
-        }
-    }
-}
+<p>docker-compose 可以用来定义和运行复杂应用的Docker工具，比如你的web应用需要用到好几个容器，mysql、redis和你自己的应用容器，它们之间需要相互协作、通信，一般都是同时启动和关闭的。如果手工一个一个启动、link，这样很麻烦，通常如果它们运行在同一台机器上，我们可以用docker-compose来管理，非常方便。</p>
+
+<h1 id="安装">安装</h1>
+
+<p>如果你用的mac或windows桌面版docker，那么docker-compose已经自带了，如果是linux，可以在官方的github release页面下载最新版: <a href="https://github.com/docker/compose/releases">https://github.com/docker/compose/releases</a><br />
+通常选择<code>docker-compose-Linux-x86_64</code>，下载下来重命名为<code>docker-compose</code>，并增加可执行权限：</p>
+
+<pre><code class="language-sh">chmod +x docker-compose
 </code></pre>
 
-<p>测试：</p>
+<p>然后将其移到<code>PATH</code>下，比如：</p>
 
-<pre><code class="language-c">#include &lt;stdio.h&gt;
-
-//打印输出数组
-void print_arr(int *a,int len)
-{
-    int i;
-    if(len&lt;1)  //数组长度必须大于0
-    {
-        printf(&quot;length greater than 0&quot;);
-        return;
-    }
-    //打印整个数组
-    printf(&quot;[&quot;);
-    for(i=0; i&lt;len-1; i++)
-    {
-        printf(&quot;%d &quot;,a[i]);
-    }
-    printf(&quot;%d]\n&quot;,a[len-1]);
-}
-
-int main()
-{
-    int a[] = {9,0,6,5,8,2,1,7,4,3};
-    int len = sizeof(a)/sizeof(int);
-    print_arr(a,len);
-    selection_sort(a,len);
-    print_arr(a,len);
-    return 0;
-}
+<pre><code class="language-sh">mv docker-compose /usr/local/bin/
 </code></pre>
 
-<p>输出：</p>
+<p>最后检验一下是否安装成功：</p>
 
-<p>[9 0 6 5 8 2 1 7 4 3]<br />
-[0 1 2 3 4 5 6 7 8 9]</p>
+<pre><code class="language-sh">docker-compose --version
+</code></pre>
+
+<h1 id="编写docker-compose-yml">编写docker-compose.yml</h1>
+
+<p>要使用docker-compose，就必须定义<code>docker-compose.yml</code>配置文件，然后在配置文件所在目录执行docker-compose相关命令，配置文件示例：</p>
+
+<pre><code class="language-yaml">version: &quot;3&quot; # 配置文件格式版本号
+services:
+  web:
+    image: yourname/web # 镜像名
+    container_name: web # 给容器起别名
+    ports:
+      - 8080:80 # 容器内80端口映射到宿主机8080端口
+    volumes: # 挂载目录或文件
+      - ./conf.toml:/etc/web/conf.toml
+      - ./data:/data/web
+    working_dir: /web # 改变当前工作目录
+    command: python app.py # 改变默认启动命令
+    depends_on: db # 依赖db这个service
+  db:
+    image: mysql:5.6
+  redis:
+    image: redis
+</code></pre>
+
+<h1 id="docker-compose-命令">docker-compose 命令</h1>
+
+<p>执行docker-compose命令首先确保你的当前目录跟<code>docker-compose.yml</code>在同一目录下</p>
+
+<h3 id="启动">启动</h3>
+
+<p>通常都是后台启动，加<code>-d</code>参数：</p>
+
+<pre><code class="language-sh">docker-compose up -d
+</code></pre>
+
+<p><img src="https://res.cloudinary.com/imroc/image/upload/v1513752292/blog/docker/docker-compose-up.png" alt="docker compose up -d" /></p>
+
+<h3 id="查看运行状态">查看运行状态</h3>
+
+<pre><code class="language-sh">docker-compose ps
+</code></pre>
+
+<p><img src="https://res.cloudinary.com/imroc/image/upload/v1513752292/blog/docker/docker-compose-ps.png" alt="docker compose ps" /></p>
+
+<h3 id="停止">停止</h3>
+
+<pre><code class="language-sh">docker-compose down
+</code></pre>
+
+<p><img src="https://res.cloudinary.com/imroc/image/upload/v1513752292/blog/docker/docker-compose-down.png" alt="docker compose down" /></p>
 
             </article>
 
             <ul class="pager blog-pager">
                 
                 <li class="previous">
-                    <a href="https://imroc.io/posts/algorithm/%E9%80%89%E6%8B%A9%E6%8E%92%E5%BA%8Fjava%E5%AE%9E%E7%8E%B0/" data-toggle="tooltip" data-placement="top" title="选择排序(Java实现)">&larr; Previous Post</a>
+                    <a href="https://imroc.io/posts/docker/quick-start-for-docker-4/" data-toggle="tooltip" data-placement="top" title="Docker快速入门（四）常用命令与技巧">&larr; Previous Post</a>
                 </li>
                  
-                <li class="next">
-                    <a href="https://imroc.io/posts/algorithm/%E7%BA%BF%E6%80%A7%E5%A4%8D%E6%9D%82%E5%BA%A6%E9%80%89%E5%87%BA%E7%AC%ACk%E5%B0%8F%E5%85%83%E7%B4%A0%E4%B8%AD%E4%BD%8D%E6%95%B0%E6%9C%80%E5%B0%8F%E7%9A%84k%E4%B8%AA%E5%85%83%E7%B4%A0golang%E5%AE%9E%E7%8E%B0/" data-toggle="tooltip" data-placement="top" title="线性复杂度选出第k小元素、中位数、最小的k个元素(golang实现)">Next Post &rarr;</a>
-                </li>
-                
             </ul>
             
             <div>
@@ -310,15 +311,15 @@ int main()
                 <h2>See Also</h2>
                 <ul>
                     
-                    <li><a href="/posts/algorithm/%E7%BA%BF%E6%80%A7%E5%A4%8D%E6%9D%82%E5%BA%A6%E9%80%89%E5%87%BA%E7%AC%ACk%E5%B0%8F%E5%85%83%E7%B4%A0%E4%B8%AD%E4%BD%8D%E6%95%B0%E6%9C%80%E5%B0%8F%E7%9A%84k%E4%B8%AA%E5%85%83%E7%B4%A0golang%E5%AE%9E%E7%8E%B0/">线性复杂度选出第k小元素、中位数、最小的k个元素(golang实现)</a></li>
+                    <li><a href="/posts/docker/quick-start-for-docker-4/">Docker快速入门（四）常用命令与技巧</a></li>
                     
-                    <li><a href="/posts/algorithm/%E4%B8%89%E5%90%91%E5%88%87%E5%88%86%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8Fjava%E5%AE%9E%E7%8E%B0/">三向切分快速排序(Java实现)</a></li>
+                    <li><a href="/posts/docker/quick-start-for-docker-3/">Docker快速入门（三）在国内如何快速安装Docker与镜像加速器配置</a></li>
                     
-                    <li><a href="/posts/algorithm/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F%E8%87%AA%E9%A1%B6%E5%90%91%E4%B8%8B%E4%B8%8E%E8%87%AA%E5%BA%95%E5%90%91%E4%B8%8A%E4%B8%A4%E7%A7%8D%E6%96%B9%E5%BC%8Fjava%E5%AE%9E%E7%8E%B0/">归并排序,自顶向下与自底向上两种方式(Java实现)</a></li>
+                    <li><a href="/posts/docker/quick-start-for-docker-2/">Docker快速入门（二）容器、镜像与镜像仓库</a></li>
                     
-                    <li><a href="/posts/algorithm/%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8Fgolang%E5%AE%9E%E7%8E%B0/">冒泡排序(golang实现)</a></li>
+                    <li><a href="/posts/docker/quick-start-for-docker-1/">Docker快速入门（一）认识Docker</a></li>
                     
-                    <li><a href="/posts/algorithm/%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8Fc-c&#43;&#43;%E5%AE%9E%E7%8E%B0/">快速排序(C-C&#43;&#43;实现)</a></li>
+                    <li><a href="/posts/docker/understand-docker-cmd-entrypoint/">Docker中CMD与ENTRYPOINT的简明理解</a></li>
                     
                 </ul>
                 
@@ -329,12 +330,14 @@ int main()
             
 <div>
     <section id="datecount">
-        <h4 id="date"> Tue Sep 5, 2017</h4>
+        <h4 id="date"> Wed Dec 20, 2017</h4>
     </section>
-    <h5 id="wc">200 Words|Read in about 1 Min</h5>
+    <h5 id="wc">600 Words|Read in about 2 Min</h5>
     <h5 id="tags">Tags: 
         
-        <a href="https://imroc.io/tags/%E7%AE%97%E6%B3%95/">算法</a> &nbsp;
+        <a href="https://imroc.io/tags/docker/">docker</a> &nbsp;
+        
+        <a href="https://imroc.io/tags/docker%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/">Docker快速入门</a> &nbsp;
     </h5>
 </div>
 

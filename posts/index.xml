@@ -8,10 +8,19 @@
     <language>zh-cn</language>
     <managingEditor>roc@imroc.io (roc)</managingEditor>
     <webMaster>roc@imroc.io (roc)</webMaster>
-    <lastBuildDate>Wed, 20 Dec 2017 09:05:17 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 20 Dec 2017 13:12:35 +0800</lastBuildDate>
     
 	<atom:link href="https://imroc.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Docker快速入门（五）docker-compose安装与基础用法</title>
+      <link>https://imroc.io/posts/docker/quick-start-for-docker-5/</link>
+      <pubDate>Wed, 20 Dec 2017 13:12:35 +0800</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/posts/docker/quick-start-for-docker-5/</guid>
+      <description>简介 docker-compose 可以用来定义和运行复杂应用的Docker工具，比如你的web应用需要用到好几个容器，mysql、redis和你自己的应用容器，它们之间</description>
+    </item>
     
     <item>
       <title>Docker快速入门（四）常用命令与技巧</title>

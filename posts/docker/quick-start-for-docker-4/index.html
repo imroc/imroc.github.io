@@ -211,7 +211,7 @@
     <section id="datecount">
         <h4 id="date"> Wed Dec 20, 2017</h4>
     </section>
-    <h5 id="wc">1000 Words|Read in about 2 Min</h5>
+    <h5 id="wc">1100 Words|Read in about 3 Min</h5>
     <h5 id="tags">Tags: 
         
         <a href="https://imroc.io/tags/docker/">docker</a> &nbsp;
@@ -305,6 +305,9 @@ docker run -v $PWD:/config.yaml:/app/config.yaml imroc/myapp:1.2
 
 # 当容器停止就将其删除
 docker run --rm imroc/myapp:1.2
+
+# 连接别名为mysql的容器，使得该容器可以通过db这个地址访问mysql容器（修改hosts文件）
+docker run -link mysql:db imroc/myapp
 </code></pre>
 
 <h3 id="停止容器">停止容器</h3>
@@ -391,6 +394,10 @@ docker inspect name
                     <a href="https://imroc.io/posts/docker/quick-start-for-docker-3/" data-toggle="tooltip" data-placement="top" title="Docker快速入门（三）在国内如何快速安装Docker与镜像加速器配置">&larr; Previous Post</a>
                 </li>
                  
+                <li class="next">
+                    <a href="https://imroc.io/posts/docker/quick-start-for-docker-5/" data-toggle="tooltip" data-placement="top" title="Docker快速入门（五）docker-compose安装与基础用法">Next Post &rarr;</a>
+                </li>
+                
             </ul>
             
             <div>
@@ -404,9 +411,9 @@ docker inspect name
                     
                     <li><a href="/posts/docker/quick-start-for-docker-1/">Docker快速入门（一）认识Docker</a></li>
                     
-                    <li><a href="/posts/docker/understand-docker-cmd-entrypoint/">Docker中CMD与ENTRYPOINT的简明理解</a></li>
-                    
                     <li><a href="/posts/docker/docker-network-communication/">Docker容器间通信</a></li>
+                    
+                    <li><a href="/posts/docker/understand-docker-cmd-entrypoint/">Docker中CMD与ENTRYPOINT的简明理解</a></li>
                     
                 </ul>
                 
@@ -419,7 +426,7 @@ docker inspect name
     <section id="datecount">
         <h4 id="date"> Wed Dec 20, 2017</h4>
     </section>
-    <h5 id="wc">1000 Words|Read in about 2 Min</h5>
+    <h5 id="wc">1100 Words|Read in about 3 Min</h5>
     <h5 id="tags">Tags: 
         
         <a href="https://imroc.io/tags/docker/">docker</a> &nbsp;
