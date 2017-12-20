@@ -8,18 +8,27 @@
     <language>zh-cn</language>
     <managingEditor>roc@imroc.io (roc)</managingEditor>
     <webMaster>roc@imroc.io (roc)</webMaster>
-    <lastBuildDate>Tue, 19 Dec 2017 16:27:07 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 20 Dec 2017 09:05:17 +0800</lastBuildDate>
     
 	<atom:link href="https://imroc.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>Docker快速入门（三）常用命令与技巧</title>
+      <title>Docker快速入门（四）常用命令与技巧</title>
+      <link>https://imroc.io/posts/docker/quick-start-for-docker-4/</link>
+      <pubDate>Wed, 20 Dec 2017 09:05:17 +0800</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/posts/docker/quick-start-for-docker-4/</guid>
+      <description>列出机器上的镜像 docker images 拉取镜像 docker pull openjdk # 等同于 docker pull openjdk:latest docker pull openjdk:jre-slim # 指定了tag docker pull hub.imroc.io:5000/imroc/myapp:1.2 # 拉取私有仓库的镜像 上传镜像 docker push imroc/myapp:1atest # 上传到Docker Hub公有仓</description>
+    </item>
+    
+    <item>
+      <title>Docker快速入门（三）在国内如何快速安装Docker与镜像加速器配置</title>
       <link>https://imroc.io/posts/docker/quick-start-for-docker-3/</link>
       <pubDate>Tue, 19 Dec 2017 16:27:07 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
       <guid>https://imroc.io/posts/docker/quick-start-for-docker-3/</guid>
-      <description>常用命令 列出机器上的镜像 docker images 拉取镜像 docker pull openjdk # 等同于 docker pull openjdk:latest docker pull openjdk:jre-slim # 指定了tag docker pull hub.imroc.io:5000/imroc/myapp:1.2 # 拉取私有仓库的镜像 上传镜像 docker push imroc/myapp:1atest # 上传到Docker Hu</description>
+      <description>快速安装Docker Docker官方文档给出的安装方式会比较慢，因为提供软件源的服务器在国外，下载速度有时慢的像蜗牛，简直不能忍，现在就给大</description>
     </item>
     
     <item>
