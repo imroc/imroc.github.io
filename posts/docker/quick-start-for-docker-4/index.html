@@ -297,7 +297,8 @@ docker run -d imroc/myapp:1.2
 # 给容器起别名
 docker run --name app imroc/myapp:1.2 
 
-# 映射宿主机5000端口到容器的80端口，即访问机器的5000端口相当于访问容器的80端口
+# 映射宿主机5000端口到容器的80端口，
+# 即访问机器的5000端口相当于访问容器的80端口
 docker run -p 5000:80 imroc/myapp:1.2 
 
 # 挂载当前目录的配置文件到容器里
@@ -306,8 +307,15 @@ docker run -v $PWD:/config.yaml:/app/config.yaml imroc/myapp:1.2
 # 当容器停止就将其删除
 docker run --rm imroc/myapp:1.2
 
-# 连接别名为mysql的容器，使得该容器可以通过db这个地址访问mysql容器（修改hosts文件）
+# 连接别名为mysql的容器，使得该容器
+# 可以通过db这个地址访问mysql容器（修改hosts文件）
 docker run -link mysql:db imroc/myapp
+
+# 默认会把所有标准输出都存到文件，
+# 如果输出量很大，长时间运行会很
+# 占硬盘空间，可以设置只存文件最
+# 新的一部分内容
+docker run --log-opt max-size=10m app
 </code></pre>
 
 <h3 id="停止容器">停止容器</h3>
@@ -411,9 +419,9 @@ docker inspect name
                     
                     <li><a href="/posts/docker/quick-start-for-docker-1/">Docker快速入门（一）认识Docker</a></li>
                     
-                    <li><a href="/posts/docker/docker-network-communication/">Docker容器间通信</a></li>
-                    
                     <li><a href="/posts/docker/understand-docker-cmd-entrypoint/">Docker中CMD与ENTRYPOINT的简明理解</a></li>
+                    
+                    <li><a href="/posts/docker/docker-network-communication/">Docker容器间通信</a></li>
                     
                 </ul>
                 
