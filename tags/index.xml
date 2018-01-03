@@ -32,6 +32,15 @@
     </item>
     
     <item>
+      <title>Filebeat</title>
+      <link>https://imroc.io/tags/filebeat/</link>
+      <pubDate>Wed, 03 Jan 2018 15:48:33 +0800</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/tags/filebeat/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>Golang</title>
       <link>https://imroc.io/tags/golang/</link>
       <pubDate>Wed, 06 Sep 2017 15:35:18 +0800</pubDate>

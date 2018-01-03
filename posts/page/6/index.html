@@ -5,13 +5,10 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title> 插入排序(golang实现) - </title>
+  <title> Posts - </title>
   <meta name="description" content="" />
-  <meta property="og:title" content="插入排序(golang实现)" />
-  <meta name="twitter:title" content="插入排序(golang实现)" />
-  <meta name="description" content="封装成函数： //插入排序 func InsertionSort(s []int) { n := len(s) if n &lt; 2 { return } for i := 1; i &lt; n; i&#43;&#43; { for j := i; j &gt; 0 &amp;&amp; s[j] &lt; s[j - 1]; j-- { swap(s, j, j - 1) } } } func swap(slice []int, i int, j int) { slice[i], slice[j] = slice[j],">
-  <meta property="og:description" content="封装成函数： //插入排序 func InsertionSort(s []int) { n := len(s) if n &lt; 2 { return } for i := 1; i &lt; n; i&#43;&#43; { for j := i; j &gt; 0 &amp;&amp; s[j] &lt; s[j - 1]; j-- { swap(s, j, j - 1) } } } func swap(slice []int, i int, j int) { slice[i], slice[j] = slice[j],">
-  <meta name="twitter:description" content="封装成函数： //插入排序 func InsertionSort(s []int) { n := len(s) if n &lt; 2 { return } for i := 1; i &lt; n; i&#43;&#43; { for j := i; j &gt; 0 &amp;&amp; s[j] &lt; s[j - 1]; j-- { swap(s, j, j - 1) } } } func …">
+  <meta property="og:title" content="Posts" />
+  <meta name="twitter:title" content="Posts" />
   <meta name="author" content="{Description { .Site.Author.name }}"/>
   <link href='https://imroc.io/favicon.png' rel='icon' type='image/x-icon'/>
   <meta property="og:image" content="https://imroc.io/images/logo.png" />
@@ -19,12 +16,12 @@
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:site" content="@imrocchan" />
   <meta name="twitter:creator" content="@imrocchan" />
-  <meta property="og:url" content="https://imroc.io/posts/algorithm/%E6%8F%92%E5%85%A5%E6%8E%92%E5%BA%8Fgolang%E5%AE%9E%E7%8E%B0/" />
+  <meta property="og:url" content="https://imroc.io/posts/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="roc" />
 
   <meta name="generator" content="Hugo 0.31.1" />
-  <link rel="canonical" href="https://imroc.io/posts/algorithm/%E6%8F%92%E5%85%A5%E6%8E%92%E5%BA%8Fgolang%E5%AE%9E%E7%8E%B0/" />
+  <link rel="canonical" href="https://imroc.io/posts/" />
   <link rel="alternate" href="https://imroc.io/index.xml" type="application/rss+xml" title="roc">
   <script src="https://cdn.staticfile.org/jquery/1.12.4/jquery.min.js"></script>
   <link rel="stylesheet" href="https://cdn.staticfile.org/KaTeX/0.7.1/katex.min.css" crossorigin="anonymous">
@@ -169,26 +166,14 @@ var _hmt = _hmt || [];
 </nav>
 
     
-  
-  
-  
-
-
-
-
-  
-
   <header class="header-section ">
-    
     <div class="intro-header no-img">
-      
       <div class="container">
         <div class="row">
           <div class="col-lg-12 col-md-12 col-md-offset-0">
-            <div class="posts-heading">
-                <h1 align="center">插入排序(golang实现)</h1>
-                
-                
+            <div class="page-heading">
+              <h1>Posts</h1>
+              <hr class="small">
             </div>
           </div>
         </div>
@@ -196,140 +181,154 @@ var _hmt = _hmt || [];
     </div>
   </header>
 
-
     
-<div class="container" role="main" itemscope itemtype="http://schema.org/Article">
+  <div class="container" role="main">
     <div class="row">
-        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-            
-            
-            
-<div>
-    <section id="datecount">
-        <h4 id="date"> Tue Sep 5, 2017</h4>
-    </section>
-    <h5 id="wc">200 Words|Read in about 1 Min</h5>
-    <h5 id="tags">Tags: 
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
         
-        <a href="https://imroc.io/tags/%E7%AE%97%E6%B3%95/">算法</a> &nbsp;
-    </h5>
-</div>
+        <div class="posts-list">
+          
+            <article class="post-preview">
+              <a href="https://imroc.io/posts/algorithm/%E9%80%89%E6%8B%A9%E6%8E%92%E5%BA%8Fgolang%E5%AE%9E%E7%8E%B0/">
+                <h2 class="post-title">选择排序(golang实现)</h2>
 
-            
-            <article role="main" class="blog-post" itemprop="articleBody" id="content">
-                <p>封装成函数：</p>
+                
+              </a>
 
-<pre><code class="language-go">//插入排序
-func InsertionSort(s []int) {
-	n := len(s)
-	if n &lt; 2 {
-		return
-	}
-	for i := 1; i &lt; n; i++ {
-		for j := i; j &gt; 0 &amp;&amp; s[j] &lt; s[j - 1]; j-- {
-			swap(s, j, j - 1)
-		}
-	}
-}
- 
-func swap(slice []int, i int, j int) {
-	slice[i], slice[j] = slice[j], slice[i]
-}
-</code></pre>
+              <p class="post-meta">
+                Posted on September 5, 2017
+              </p>
+              <div class="post-entry">
+                
+                  封装成函数： //交换数组元素 func swap(slice []int, i int, j int) { slice[i], slice[j] = slice[j], slice[i] } //选择排序 func SelectionSort(s []int) { l := len(s) //以免每次循环判断都运算 m := len(s)-1 for i:=0;i&lt;m;i++ { k:=i for j:=i+1;j&lt;l;j++ { if s[j]&lt;s[k] { k = j
+                  <a href="https://imroc.io/posts/algorithm/%E9%80%89%E6%8B%A9%E6%8E%92%E5%BA%8Fgolang%E5%AE%9E%E7%8E%B0/" class="post-read-more">[Read More]</a>
+                
+              </div>
 
-<p>测试：</p>
-
-<pre><code class="language-go">s := []int{9,0,6,5,8,2,1,7,4,3}
-fmt.Println(s)
-InsertionSort(s)
-fmt.Println(s)
-</code></pre>
-
-<p>输出：
-[9 0 6 5 8 2 1 7 4 3]
-[0 1 2 3 4 5 6 7 8 9]</p>
+              
+                <span class="post-meta">
+                  
+                    #<a href="https://imroc.io/tags/%E7%AE%97%E6%B3%95/">算法</a>&nbsp;
+                  
+                </span>
+              
 
             </article>
-
-            <ul class="pager blog-pager">
-                
-                <li class="previous">
-                    <a href="https://imroc.io/posts/algorithm/%E6%B1%82n%E6%AC%A1%E6%96%B9%E7%9A%84%E9%AB%98%E6%95%88%E7%AE%97%E6%B3%95/" data-toggle="tooltip" data-placement="top" title="求n次方的高效算法">&larr; Previous Post</a>
-                </li>
-                 
-                <li class="next">
-                    <a href="https://imroc.io/posts/algorithm/%E6%8F%92%E5%85%A5%E6%8E%92%E5%BA%8Fjava%E5%AE%9E%E7%8E%B0/" data-toggle="tooltip" data-placement="top" title="插入排序(Java实现)">Next Post &rarr;</a>
-                </li>
-                
-            </ul>
-            
-            <div>
-                 
-                <h2>See Also</h2>
-                <ul>
-                    
-                    <li><a href="/posts/algorithm/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F%E8%87%AA%E9%A1%B6%E5%90%91%E4%B8%8B%E4%B8%8E%E8%87%AA%E5%BA%95%E5%90%91%E4%B8%8A%E4%B8%A4%E7%A7%8D%E6%96%B9%E5%BC%8Fgolang%E5%AE%9E%E7%8E%B0/">归并排序,自顶向下与自底向上两种方式(golang实现)</a></li>
-                    
-                    <li><a href="/posts/algorithm/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F%E8%87%AA%E9%A1%B6%E5%90%91%E4%B8%8B%E4%B8%8E%E8%87%AA%E5%BA%95%E5%90%91%E4%B8%8A%E4%B8%A4%E7%A7%8D%E6%96%B9%E5%BC%8Fc-c&#43;&#43;%E5%AE%9E%E7%8E%B0/">归并排序,自顶向下与自底向上两种方式(C-C&#43;&#43;实现)</a></li>
-                    
-                    <li><a href="/posts/algorithm/%E4%B8%89%E5%90%91%E5%88%87%E5%88%86%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8Fgolang%E5%AE%9E%E7%8E%B0/">三向切分快速排序(golang实现)</a></li>
-                    
-                    <li><a href="/posts/algorithm/%E9%80%89%E6%8B%A9%E6%8E%92%E5%BA%8Fgolang%E5%AE%9E%E7%8E%B0/">选择排序(golang实现)</a></li>
-                    
-                    <li><a href="/posts/algorithm/%E5%B8%8C%E5%B0%94%E6%8E%92%E5%BA%8Fjava%E5%AE%9E%E7%8E%B0/">希尔排序(Java实现)</a></li>
-                    
-                </ul>
-                
-            </div>
-            
-            
-            
-            
-<div>
-    <section id="datecount">
-        <h4 id="date"> Tue Sep 5, 2017</h4>
-    </section>
-    <h5 id="wc">200 Words|Read in about 1 Min</h5>
-    <h5 id="tags">Tags: 
-        
-        <a href="https://imroc.io/tags/%E7%AE%97%E6%B3%95/">算法</a> &nbsp;
-    </h5>
-</div>
-
-            
-            </div>
-            
-            
-                
-                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-<aside id=comments>
-    <div>
-        <h2> Comments </h2>
-    </div>
-    <div id="container"></div>
-    <link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
-    
-    <script src="https://res.cloudinary.com/imroc/raw/upload/v1513440650/blog/gitment.browser.js"></script>
-    <script>
-        var gitment = new Gitment({
-            owner: 'imroc', 
-            repo: 'imroc.github.io', 
-            oauth: {
-                client_id: 'd05b8f959b3111c6fb63',
-                client_secret: 'f30ef76ea0050ed731ace76f7fbf684ae5d28fbc',
-            },
-        })
-        gitment.render('container')
-    </script>
-</aside>
-</div>
-
-                
-            
+          
         </div>
+        
+          <ul class="pager main-pager">
+            
+              <li class="previous">
+                <a href="/posts/page/5">&larr; Newer Posts</a>
+              </li>
+            
+            
+          </ul>
+        
+      </div>
+    <div align="center" class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        
+
+<ul class="pagination">
+    
+    <li>
+        <a href="/posts/" aria-label="First"><span aria-hidden="true">&laquo;&laquo;</span></a>
+    </li>
+    
+    <li
+    >
+    <a href="/posts/page/5/" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a>
+    </li>
+    
+    
+    
+    
+    
+    
+        
+        
+    
+    
+    <li
+    ><a href="/posts/">1</a></li>
+    
+    
+    
+    
+    
+    
+        
+        
+    
+    
+    <li
+    ><a href="/posts/page/2/">2</a></li>
+    
+    
+    
+    
+    
+    
+        
+        
+    
+    
+    <li
+    ><a href="/posts/page/3/">3</a></li>
+    
+    
+    
+    
+    
+    
+        
+        
+    
+    
+    <li class="disabled"><span aria-hidden="true">&hellip;</span></li>
+    
+    
+    
+    
+    
+    
+        
+        
+    
+    
+    <li
+    ><a href="/posts/page/5/">5</a></li>
+    
+    
+    
+    
+    
+    
+        
+        
+    
+    
+    <li
+    class="active"><a href="/posts/page/6/">6</a></li>
+    
+    
+    <li
+    class="disabled">
+    <a href="" aria-label="Next"><span aria-hidden="true">&raquo;</span></a>
+    </li>
+    
+    <li>
+        <a href="/posts/page/6/" aria-label="Last"><span aria-hidden="true">&raquo;&raquo;</span></a>
+    </li>
+    
+</ul>
+
+        
+        
+      </div>
     </div>
-    </section>
-</div>
+  </div>
 
     <footer>
   <div class="container">
