@@ -8,7 +8,7 @@
     <language>zh-cn</language>
     <managingEditor>roc@imroc.io (roc)</managingEditor>
     <webMaster>roc@imroc.io (roc)</webMaster>
-    <lastBuildDate>Wed, 20 Dec 2017 13:12:35 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 05 Jan 2018 13:43:15 +0800</lastBuildDate>
     
 	<atom:link href="https://imroc.io/tags/index.xml" rel="self" type="application/rss+xml" />
     
@@ -16,7 +16,7 @@
     <item>
       <title>Docker</title>
       <link>https://imroc.io/tags/docker/</link>
-      <pubDate>Wed, 20 Dec 2017 13:12:35 +0800</pubDate>
+      <pubDate>Fri, 05 Jan 2018 13:43:15 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
       <guid>https://imroc.io/tags/docker/</guid>
       <description></description>
@@ -46,6 +46,15 @@
       <pubDate>Wed, 06 Sep 2017 15:35:18 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
       <guid>https://imroc.io/tags/golang/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Kubernetes</title>
+      <link>https://imroc.io/tags/kubernetes/</link>
+      <pubDate>Fri, 05 Jan 2018 13:43:15 +0800</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/tags/kubernetes/</guid>
       <description></description>
     </item>
     

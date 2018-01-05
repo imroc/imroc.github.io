@@ -8,10 +8,19 @@
     <language>zh-cn</language>
     <managingEditor>roc@imroc.io (roc)</managingEditor>
     <webMaster>roc@imroc.io (roc)</webMaster>
-    <lastBuildDate>Wed, 20 Dec 2017 13:12:35 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 05 Jan 2018 13:43:15 +0800</lastBuildDate>
     
 	<atom:link href="https://imroc.io/tags/docker/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Kubernetes程序二进制下载集合</title>
+      <link>https://imroc.io/posts/kubernetes/kubernetes-binaries/</link>
+      <pubDate>Fri, 05 Jan 2018 13:43:15 +0800</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/posts/kubernetes/kubernetes-binaries/</guid>
+      <description>前言 由于国内网络的特殊性，安装Kubernetes很多时候会采用二进制方式部署，我将涉及到的二进制传到百度云，方便大家下载。 Kubernet</description>
+    </item>
     
     <item>
       <title>Docker快速入门（五）docker-compose安装与基础用法</title>

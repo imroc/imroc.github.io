@@ -5,13 +5,13 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title> 希尔排序(Java实现) - </title>
+  <title> Kubernetes程序二进制下载集合 - </title>
   <meta name="description" content="" />
-  <meta property="og:title" content="希尔排序(Java实现)" />
-  <meta name="twitter:title" content="希尔排序(Java实现)" />
-  <meta name="description" content="封装成类： package com.roc.algorithms.sort; /** * 希尔排序 * * @author imroc */ public class ShellSort { //交换数组元素 private static void swap(int[] a, int i, int j) { int t = a[i]; a[i] = a[j]; a[j] = t; } public static void sort(int[] a) { int h = 1; while (h &lt; a.length / 3) {//">
-  <meta property="og:description" content="封装成类： package com.roc.algorithms.sort; /** * 希尔排序 * * @author imroc */ public class ShellSort { //交换数组元素 private static void swap(int[] a, int i, int j) { int t = a[i]; a[i] = a[j]; a[j] = t; } public static void sort(int[] a) { int h = 1; while (h &lt; a.length / 3) {//">
-  <meta name="twitter:description" content="封装成类： package com.roc.algorithms.sort; /** * 希尔排序 * * @author imroc */ public class ShellSort { //交换数组元素 private static void swap(int[] a, int i, int j) { int t = a[i]; a[i] = a[j]; a[j] = t; } public …">
+  <meta property="og:title" content="Kubernetes程序二进制下载集合" />
+  <meta name="twitter:title" content="Kubernetes程序二进制下载集合" />
+  <meta name="description" content="Kubernetes Binaries">
+  <meta property="og:description" content="Kubernetes Binaries">
+  <meta name="twitter:description" content="Kubernetes Binaries">
   <meta name="author" content="{Description { .Site.Author.name }}"/>
   <link href='https://imroc.io/favicon.png' rel='icon' type='image/x-icon'/>
   <meta property="og:image" content="https://imroc.io/images/logo.png" />
@@ -19,12 +19,12 @@
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:site" content="@imrocchan" />
   <meta name="twitter:creator" content="@imrocchan" />
-  <meta property="og:url" content="https://imroc.io/posts/algorithm/%E5%B8%8C%E5%B0%94%E6%8E%92%E5%BA%8Fjava%E5%AE%9E%E7%8E%B0/" />
+  <meta property="og:url" content="https://imroc.io/posts/kubernetes/kubernetes-binaries/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="roc" />
 
   <meta name="generator" content="Hugo 0.31.1" />
-  <link rel="canonical" href="https://imroc.io/posts/algorithm/%E5%B8%8C%E5%B0%94%E6%8E%92%E5%BA%8Fjava%E5%AE%9E%E7%8E%B0/" />
+  <link rel="canonical" href="https://imroc.io/posts/kubernetes/kubernetes-binaries/" />
   <link rel="alternate" href="https://imroc.io/index.xml" type="application/rss+xml" title="roc">
   <script src="https://cdn.staticfile.org/jquery/1.12.4/jquery.min.js"></script>
   <link rel="stylesheet" href="https://cdn.staticfile.org/KaTeX/0.7.1/katex.min.css" crossorigin="anonymous">
@@ -186,7 +186,11 @@ var _hmt = _hmt || [];
         <div class="row">
           <div class="col-lg-12 col-md-12 col-md-offset-0">
             <div class="posts-heading">
-                <h1 align="center">希尔排序(Java实现)</h1>
+                <h1 align="center">Kubernetes程序二进制下载集合</h1>
+                
+                  
+                    <h2 align="center" class="posts-subheading">Kubernetes Binaries</h2>
+                  
                 
                 
             </div>
@@ -206,78 +210,45 @@ var _hmt = _hmt || [];
             
 <div>
     <section id="datecount">
-        <h4 id="date"> Tue Sep 5, 2017</h4>
+        <h4 id="date"> Fri Jan 5, 2018</h4>
     </section>
     <h5 id="wc">200 Words|Read in about 1 Min</h5>
     <h5 id="tags">Tags: 
         
-        <a href="https://imroc.io/tags/%E7%AE%97%E6%B3%95/">算法</a> &nbsp;
+        <a href="https://imroc.io/tags/docker/">docker</a> &nbsp;
+        
+        <a href="https://imroc.io/tags/kubernetes/">kubernetes</a> &nbsp;
     </h5>
 </div>
 
             
             <article role="main" class="blog-post" itemprop="articleBody" id="content">
-                <p>封装成类：</p>
+                
 
-<pre><code class="language-java">package com.roc.algorithms.sort;
+<h1 id="前言">前言</h1>
 
-/**
- * 希尔排序
- *
- * @author imroc
- */
-public class ShellSort {
-    //交换数组元素
-    private static void swap(int[] a, int i, int j) {
-        int t = a[i];
-        a[i] = a[j];
-        a[j] = t;
-    }
+<p>由于国内网络的特殊性，安装Kubernetes很多时候会采用二进制方式部署，我将涉及到的二进制传到百度云，方便大家下载。</p>
 
-    public static void sort(int[] a) {
-        int h = 1;
-        while (h &lt; a.length / 3) {//寻找合适的间隔h
-            h = 3 * h + 1;
-        }
-        while (h &gt;= 1) {
-            //将数组变为间隔h个元素有序
-            for (int i = h; i &lt; a.length; i++) {
-                //间隔h插入排序
-                for (int j = i; j &gt;= h &amp;&amp; a[j] &lt; a[j - h]; j -= h) {
-                    swap(a, j, j - h);
-                }
-            }
-            h /= 3;
-        }
-    }
-}
-</code></pre>
+<p>Kubernetes在Github的<a href="https://github.com/kubernetes/kubernetes/releases">Release</a>页面其实已经有压缩包下载，但是在国内下载很慢，而且里面并不包含安装所需的程序二进制文件，需要执行里面的<code>./kubernetes/cluster/get-kube-binaries.sh</code>这个脚本去下载，在国内并不能直接下载。</p>
 
-<p>测试：</p>
+<h2 id="v1-9-1">v1.9.1</h2>
 
-<pre><code class="language-go">int[] a = {9,0,6,5,8,2,1,7,4,3};
-System.out.println(Arrays.toString(a));
-ShellSort.sort(a);
-System.out.println(Arrays.toString(a));
-</code></pre>
+<p>Github Release压缩包: <a href="https://pan.baidu.com/s/1cHdKx4">https://pan.baidu.com/s/1cHdKx4</a><br />
+程序二进制： <a href="https://pan.baidu.com/s/1gffFOrT">https://pan.baidu.com/s/1gffFOrT</a></p>
 
-<p>输出：</p>
+<h2 id="v1-8-6">v1.8.6</h2>
 
-<p>[9, 0, 6, 5, 8, 2, 1, 7, 4, 3]<br />
-[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]</p>
+<p>Github Release压缩包: <a href="https://pan.baidu.com/s/1c1Fx6ms">https://pan.baidu.com/s/1c1Fx6ms</a><br />
+程序二进制： <a href="https://pan.baidu.com/s/1o7LiM2e">https://pan.baidu.com/s/1o7LiM2e</a></p>
 
             </article>
 
             <ul class="pager blog-pager">
                 
                 <li class="previous">
-                    <a href="https://imroc.io/posts/algorithm/%E5%B8%8C%E5%B0%94%E6%8E%92%E5%BA%8Fgolang%E5%AE%9E%E7%8E%B0/" data-toggle="tooltip" data-placement="top" title="希尔排序(golang实现)">&larr; Previous Post</a>
+                    <a href="https://imroc.io/posts/other/note-for-filebeat/" data-toggle="tooltip" data-placement="top" title="filebeat源码阅读笔记">&larr; Previous Post</a>
                 </li>
                  
-                <li class="next">
-                    <a href="https://imroc.io/posts/algorithm/%E5%B8%8C%E5%B0%94%E6%8E%92%E5%BA%8Fc-c&#43;&#43;%E5%AE%9E%E7%8E%B0/" data-toggle="tooltip" data-placement="top" title="希尔排序(C-C&#43;&#43;实现)">Next Post &rarr;</a>
-                </li>
-                
             </ul>
             
             <div>
@@ -285,15 +256,15 @@ System.out.println(Arrays.toString(a));
                 <h2>See Also</h2>
                 <ul>
                     
-                    <li><a href="/posts/algorithm/%E4%BA%8C%E5%88%86%E6%B3%95%E6%9F%A5%E6%89%BEjava%E5%AE%9E%E7%8E%B0/">二分法查找(Java实现)</a></li>
+                    <li><a href="/posts/docker/quick-start-for-docker-5/">Docker快速入门（五）docker-compose安装与基础用法</a></li>
                     
-                    <li><a href="/posts/algorithm/%E7%BA%BF%E6%80%A7%E5%A4%8D%E6%9D%82%E5%BA%A6%E9%80%89%E5%87%BA%E7%AC%ACk%E5%B0%8F%E5%85%83%E7%B4%A0%E4%B8%AD%E4%BD%8D%E6%95%B0%E6%9C%80%E5%B0%8F%E7%9A%84k%E4%B8%AA%E5%85%83%E7%B4%A0golang%E5%AE%9E%E7%8E%B0/">线性复杂度选出第k小元素、中位数、最小的k个元素(golang实现)</a></li>
+                    <li><a href="/posts/docker/quick-start-for-docker-4/">Docker快速入门（四）常用命令与技巧</a></li>
                     
-                    <li><a href="/posts/algorithm/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F%E8%87%AA%E9%A1%B6%E5%90%91%E4%B8%8B%E4%B8%8E%E8%87%AA%E5%BA%95%E5%90%91%E4%B8%8A%E4%B8%A4%E7%A7%8D%E6%96%B9%E5%BC%8Fc-c&#43;&#43;%E5%AE%9E%E7%8E%B0/">归并排序,自顶向下与自底向上两种方式(C-C&#43;&#43;实现)</a></li>
+                    <li><a href="/posts/docker/quick-start-for-docker-3/">Docker快速入门（三）在国内如何快速安装Docker与镜像加速器配置</a></li>
                     
-                    <li><a href="/posts/algorithm/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F%E8%87%AA%E9%A1%B6%E5%90%91%E4%B8%8B%E4%B8%8E%E8%87%AA%E5%BA%95%E5%90%91%E4%B8%8A%E4%B8%A4%E7%A7%8D%E6%96%B9%E5%BC%8Fgolang%E5%AE%9E%E7%8E%B0/">归并排序,自顶向下与自底向上两种方式(golang实现)</a></li>
+                    <li><a href="/posts/docker/quick-start-for-docker-2/">Docker快速入门（二）容器、镜像与镜像仓库</a></li>
                     
-                    <li><a href="/posts/algorithm/%E5%A0%86%E6%8E%92%E5%BA%8Fc-c&#43;&#43;%E5%AE%9E%E7%8E%B0/">堆排序(C-C&#43;&#43;实现)</a></li>
+                    <li><a href="/posts/docker/quick-start-for-docker-1/">Docker快速入门（一）认识Docker</a></li>
                     
                 </ul>
                 
@@ -304,12 +275,14 @@ System.out.println(Arrays.toString(a));
             
 <div>
     <section id="datecount">
-        <h4 id="date"> Tue Sep 5, 2017</h4>
+        <h4 id="date"> Fri Jan 5, 2018</h4>
     </section>
     <h5 id="wc">200 Words|Read in about 1 Min</h5>
     <h5 id="tags">Tags: 
         
-        <a href="https://imroc.io/tags/%E7%AE%97%E6%B3%95/">算法</a> &nbsp;
+        <a href="https://imroc.io/tags/docker/">docker</a> &nbsp;
+        
+        <a href="https://imroc.io/tags/kubernetes/">kubernetes</a> &nbsp;
     </h5>
 </div>
 
