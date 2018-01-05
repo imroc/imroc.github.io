@@ -9,9 +9,9 @@
   <meta name="description" content="" />
   <meta property="og:title" content="Docker快速入门（三）在国内如何快速安装Docker与镜像加速器配置" />
   <meta name="twitter:title" content="Docker快速入门（三）在国内如何快速安装Docker与镜像加速器配置" />
-  <meta name="description" content="快速安装Docker Docker官方文档给出的安装方式会比较慢，因为提供软件源的服务器在国外，下载速度有时慢的像蜗牛，简直不能忍，现在就给大">
-  <meta property="og:description" content="快速安装Docker Docker官方文档给出的安装方式会比较慢，因为提供软件源的服务器在国外，下载速度有时慢的像蜗牛，简直不能忍，现在就给大">
-  <meta name="twitter:description" content="快速安装Docker Docker官方文档给出的安装方式会比较慢，因为提供软件源的服务器在国外，下载速度有时慢的像蜗牛，简直不能忍，现在就给大">
+  <meta name="description" content="前言 使用docker最常用的系统莫过于ubuntu和centos了，一般有两种方式，一种是直接用系统自带的源安装，另一种是官方的源安装。前者">
+  <meta property="og:description" content="前言 使用docker最常用的系统莫过于ubuntu和centos了，一般有两种方式，一种是直接用系统自带的源安装，另一种是官方的源安装。前者">
+  <meta name="twitter:description" content="前言 使用docker最常用的系统莫过于ubuntu和centos了，一般有两种方式，一种是直接用系统自带的源安装，另一种是官方的源安装。前者">
   <meta name="author" content="{Description { .Site.Author.name }}"/>
   <link href='https://imroc.io/favicon.png' rel='icon' type='image/x-icon'/>
   <meta property="og:image" content="https://imroc.io/images/logo.png" />
@@ -208,7 +208,7 @@ var _hmt = _hmt || [];
     <section id="datecount">
         <h4 id="date"> Tue Dec 19, 2017</h4>
     </section>
-    <h5 id="wc">700 Words|Read in about 2 Min</h5>
+    <h5 id="wc">800 Words|Read in about 2 Min</h5>
     <h5 id="tags">Tags: 
         
         <a href="https://imroc.io/tags/docker/">docker</a> &nbsp;
@@ -221,25 +221,18 @@ var _hmt = _hmt || [];
             <article role="main" class="blog-post" itemprop="articleBody" id="content">
                 
 
-<h1 id="快速安装docker">快速安装Docker</h1>
+<h1 id="前言">前言</h1>
 
-<p>Docker官方文档给出的安装方式会比较慢，因为提供软件源的服务器在国外，下载速度有时慢的像蜗牛，简直不能忍，现在就给大家介绍如何在国内愉快的安装Docker</p>
+<p>使用docker最常用的系统莫过于ubuntu和centos了，一般有两种方式，一种是直接用系统自带的源安装，另一种是官方的源安装。前者安装方便，但不是最新版，后者是最新版，但在国内安装会比较慢，后面会将快速安装的方法。</p>
 
-<h3 id="通用安装">通用安装</h3>
+<h1 id="自带源安装-稳定可靠但非最新版">自带源安装(稳定可靠但非最新版)</h1>
 
-<p>适用于Ubuntu，Debian, Centos等大部分Linux</p>
+<h1 id="官方源安装-最新版">官方源安装(最新版)</h1>
 
-<pre><code class="language-sh">curl -sSL https://get.daocloud.io/docker | sh
-</code></pre>
+<p>此方式装的是<code>docker-ce</code>，即docker社区版，利用国内的docker官方源镜像，加速下载安装。<br />
+注：Docker官方文档给出的安装方式会比较慢，因为提供软件源的服务器在国外，下载速度有时慢的像蜗牛，简直不能忍，现在就给大家介绍如何在国内愉快的安装Docker</p>
 
 <h3 id="ubuntu-14-04-16-04">Ubuntu 14.04/16.04</h3>
-
-<h4 id="一键安装">一键安装</h4>
-
-<pre><code class="language-sh">curl -sSL http://acs-public-mirror.oss-cn-hangzhou.aliyuncs.com/docker-engine/internet | sh -
-</code></pre>
-
-<h4 id="分步骤安装">分步骤安装</h4>
 
 <pre><code class="language-sh"># step 1: 安装必要的一些系统工具
 sudo apt-get update
@@ -289,12 +282,6 @@ sudo service docker start
 #   Available Packages
 # Step2 : 安装指定版本的Docker-CE: (VERSION 例如上面的 17.03.0.ce.1-1.el7.centos)
 # sudo yum -y install docker-ce-[VERSION]
-</code></pre>
-
-<h3 id="centos-6">CentOS 6</h3>
-
-<pre><code class="language-sh">yum install –y http://mirrors.yun-idc.com/epel/6/i386/epel-release-6-8.noarch.rpm
-yum install –y docker-io
 </code></pre>
 
 <h1 id="配置加速器">配置加速器</h1>
@@ -351,7 +338,7 @@ yum install –y docker-io
     <section id="datecount">
         <h4 id="date"> Tue Dec 19, 2017</h4>
     </section>
-    <h5 id="wc">700 Words|Read in about 2 Min</h5>
+    <h5 id="wc">800 Words|Read in about 2 Min</h5>
     <h5 id="tags">Tags: 
         
         <a href="https://imroc.io/tags/docker/">docker</a> &nbsp;
