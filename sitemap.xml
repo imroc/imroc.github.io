@@ -284,14 +284,14 @@
   </url>
   
   <url>
-    <loc>https://imroc.io/categories/docker/</loc>
-    <lastmod>2017-12-20T13:12:35+08:00</lastmod>
+    <loc>https://imroc.io/tags/docker/</loc>
+    <lastmod>2018-01-05T13:43:15+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://imroc.io/tags/docker/</loc>
-    <lastmod>2018-01-05T13:43:15+08:00</lastmod>
+    <loc>https://imroc.io/categories/docker/</loc>
+    <lastmod>2017-12-20T13:12:35+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -308,25 +308,25 @@
   </url>
   
   <url>
-    <loc>https://imroc.io/categories/golang/</loc>
-    <lastmod>2017-09-06T15:35:18+08:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
     <loc>https://imroc.io/tags/golang/</loc>
     <lastmod>2017-09-06T15:35:18+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://imroc.io/categories/kubernetes/</loc>
-    <lastmod>2018-01-05T13:43:15+08:00</lastmod>
+    <loc>https://imroc.io/categories/golang/</loc>
+    <lastmod>2017-09-06T15:35:18+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://imroc.io/tags/kubernetes/</loc>
+    <lastmod>2018-01-05T13:43:15+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://imroc.io/categories/kubernetes/</loc>
     <lastmod>2018-01-05T13:43:15+08:00</lastmod>
     <priority>0</priority>
   </url>
