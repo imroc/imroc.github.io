@@ -220,7 +220,7 @@ var _hmt = _hmt || [];
     <section id="datecount">
         <h4 id="date"> Tue Jan 16, 2018</h4>
     </section>
-    <h5 id="wc">2200 Words|Read in about 5 Min</h5>
+    <h5 id="wc">2400 Words|Read in about 5 Min</h5>
     <h5 id="tags">Tags: 
         
         <a href="https://imroc.io/tags/hugo/">hugo</a> &nbsp;
@@ -459,17 +459,36 @@ git push origin master
 
 <p>github 给我们提供了免费域名，但是我们还可以绑定自己的域名。</p>
 
+<p>很简单，在仓库的 <code>Settings</code> 里的 <code>Github Pages</code> 部分，有个 <code>Custom domain</code> 的设置，将其设置为你需要绑定的域名（它会新建一个 commit，就是创建一个 <code>CNAME</code> 文件，内容是你填的域名），你也可以自己手动创建一个 CNAME 文件，效果是一样的。</p>
+
+<p>下一步就是登录你的域名提供商的后台管理，设置DNS解析：</p>
+
 <h3 id="绑定根域名">绑定根域名</h3>
 
-<p>如果你想要绑定自己域名的根域名，如：<a href="imroc.io">imroc.io</a></p>
+<p>如果你想要绑定自己域名的根域名（如：<a href="imroc.io">imroc.io</a>），新建两个A记录，分别指向下面两个IP：
+&gt; 192.30.252.153<br />
+&gt; 192.30.252.154</p>
 
 <h3 id="绑定二级域名">绑定二级域名</h3>
 
-<p>如果你想要绑定自己域名的二级域名，如：<a href="blog.imroc.io">blog.imroc.io</a></p>
+<p>如果你想要绑定自己域名的二级域名（如：<a href="blog.imroc.io">blog.imroc.io</a>），新建一个 <code>CNAME</code> 记录，值为你的 github 域名，如： <code>imroc.github.io</code></p>
 
 <h2 id="自定义域名开启https">自定义域名开启https</h2>
 
-<p>如果绑定了自定义域名，github pages 原则上是不能启用https的，但是可以借助 cloudflare 实现自定义域名也能开启https</p>
+<p>如果绑定了自定义域名，github pages 原则上是不能启用https的，但是可以借助 cloudflare</p>
+
+<ul>
+<li>在<a href="https://www.cloudflare.com/">cloudflare</a>上注册并获得 <code>nameserver</code></li>
+<li>在域名注册机构的后台管理页面将  <code>nameservers</code> 设置为 <code>cloudflare</code> 上的（即让 <code>cloudflare</code> 来管理 dns）</li>
+<li>确保 <code>Crypto</code>-<code>SSL</code> 为 <code>Full</code>
+<img src="https://imroc.io/static/blog/hugo/cloudflare-crypto-full.png" /></li>
+<li>配置 Page Rules：加入一条规则，举例： <code>http://jimmysong.io/*</code> 设置为 <code>Always Use HTTPS</code>
+<img src="https://imroc.io/static/blog/hugo/cloudflare-always-https.png" /></li>
+</ul>
+
+<blockquote>
+<p>最后等待一段时间生效</p>
+</blockquote>
 
             </article>
 
@@ -492,7 +511,7 @@ git push origin master
     <section id="datecount">
         <h4 id="date"> Tue Jan 16, 2018</h4>
     </section>
-    <h5 id="wc">2200 Words|Read in about 5 Min</h5>
+    <h5 id="wc">2400 Words|Read in about 5 Min</h5>
     <h5 id="tags">Tags: 
         
         <a href="https://imroc.io/tags/hugo/">hugo</a> &nbsp;
