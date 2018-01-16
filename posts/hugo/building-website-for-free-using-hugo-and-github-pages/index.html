@@ -5,13 +5,13 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title> 快速排序(Java实现) - imroc.io|roc的博客|Cloud Native|Kubernetes|Go|Golang</title>
+  <title> 利用Hugo和Github Pages免费创建并永久托管网站 - imroc.io|roc的博客|Cloud Native|Kubernetes|Go|Golang</title>
   <meta name="description" content="imroc.io|roc的博客|Cloud Native|Kubernetes|Go|Golang" />
-  <meta property="og:title" content="快速排序(Java实现)" />
-  <meta name="twitter:title" content="快速排序(Java实现)" />
-  <meta name="description" content="封装成类： package com.roc.algorithms.sort; /** * 快速排序 * * @author imroc */ public class QuickSort { public static void sort(int[] a) { sort(a, 0, a.length - 1); } private static void sort(int[] a, int lo, int hi) { if (lo &gt;= hi) { return; } int k = partition(a, lo, hi); sort(a, lo, k); sort(a, k &#43; 1, hi); } private static int partition(int[]">
-  <meta property="og:description" content="封装成类： package com.roc.algorithms.sort; /** * 快速排序 * * @author imroc */ public class QuickSort { public static void sort(int[] a) { sort(a, 0, a.length - 1); } private static void sort(int[] a, int lo, int hi) { if (lo &gt;= hi) { return; } int k = partition(a, lo, hi); sort(a, lo, k); sort(a, k &#43; 1, hi); } private static int partition(int[]">
-  <meta name="twitter:description" content="封装成类： package com.roc.algorithms.sort; /** * 快速排序 * * @author imroc */ public class QuickSort { public static void sort(int[] a) { sort(a, 0, a.length - 1); } private static void sort(int[] a, int lo, …">
+  <meta property="og:title" content="利用Hugo和Github Pages免费创建并永久托管网站" />
+  <meta name="twitter:title" content="利用Hugo和Github Pages免费创建并永久托管网站" />
+  <meta name="description" content="概述 Hugo可以让你轻松生成静态网站，比如个人博客、API文档、公司主页等，你只需要提供markdown格式的文本，它就能帮你渲染成各种你想">
+  <meta property="og:description" content="概述 Hugo可以让你轻松生成静态网站，比如个人博客、API文档、公司主页等，你只需要提供markdown格式的文本，它就能帮你渲染成各种你想">
+  <meta name="twitter:description" content="概述 Hugo可以让你轻松生成静态网站，比如个人博客、API文档、公司主页等，你只需要提供markdown格式的文本，它就能帮你渲染成各种你想">
   <meta name="author" content="{Description { .Site.Author.name }}"/>
   <link href='https://imroc.io/favicon.png' rel='icon' type='image/x-icon'/>
   <meta property="og:image" content="https://imroc.io/images/logo.png" />
@@ -19,12 +19,12 @@
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:site" content="@imrocchan" />
   <meta name="twitter:creator" content="@imrocchan" />
-  <meta property="og:url" content="https://imroc.io/posts/algorithm/%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8Fjava%E5%AE%9E%E7%8E%B0/" />
+  <meta property="og:url" content="https://imroc.io/posts/hugo/building-website-for-free-using-hugo-and-github-pages/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="roc" />
 
   <meta name="generator" content="Hugo 0.31.1" />
-  <link rel="canonical" href="https://imroc.io/posts/algorithm/%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8Fjava%E5%AE%9E%E7%8E%B0/" />
+  <link rel="canonical" href="https://imroc.io/posts/hugo/building-website-for-free-using-hugo-and-github-pages/" />
   <link rel="alternate" href="https://imroc.io/index.xml" type="application/rss+xml" title="roc">
   <script src="https://cdn.staticfile.org/jquery/1.12.4/jquery.min.js"></script>
   <link rel="stylesheet" href="https://cdn.staticfile.org/KaTeX/0.7.1/katex.min.css" crossorigin="anonymous">
@@ -198,7 +198,7 @@ var _hmt = _hmt || [];
         <div class="row">
           <div class="col-lg-12 col-md-12 col-md-offset-0">
             <div class="posts-heading">
-                <h1 align="center">快速排序(Java实现)</h1>
+                <h1 align="center">利用Hugo和Github Pages免费创建并永久托管网站</h1>
                 
                 
             </div>
@@ -218,111 +218,251 @@ var _hmt = _hmt || [];
             
 <div>
     <section id="datecount">
-        <h4 id="date"> Tue Sep 5, 2017</h4>
+        <h4 id="date"> Tue Jan 16, 2018</h4>
     </section>
-    <h5 id="wc">200 Words|Read in about 1 Min</h5>
+    <h5 id="wc">2000 Words|Read in about 4 Min</h5>
     <h5 id="tags">Tags: 
         
-        <a href="https://imroc.io/tags/%E7%AE%97%E6%B3%95/">算法</a> &nbsp;
+        <a href="https://imroc.io/tags/hugo/">hugo</a> &nbsp;
     </h5>
 </div>
 
             
             <article role="main" class="blog-post" itemprop="articleBody" id="content">
-                <p>封装成类：</p>
+                
 
-<pre><code class="language-java">package com.roc.algorithms.sort;
+<h2 id="概述">概述</h2>
 
-/**
- * 快速排序
- *
- * @author imroc
- */
-public class QuickSort {
-    public static void sort(int[] a) {
-        sort(a, 0, a.length - 1);
-    }
-    private static void sort(int[] a, int lo, int hi) {
-        if (lo &gt;= hi) {
-            return;
-        }
-        int k = partition(a, lo, hi);
-        sort(a, lo, k);
-        sort(a, k + 1, hi);
-    }
-    private static int partition(int[] a, int lo, int hi) {
-        int i = lo, j = hi + 1;
-        while (true) {
-            while (a[++i] &lt;= a[lo]) {
-                if (i == hi) {
-                    break;
-                }
-            }
-            while (a[--j] &gt; a[lo]) {
-                if (j == lo) {
-                    break;
-                }
-            }
-            if (i &gt;= j) {
-                break;
-            }
-            swap(a, i, j);
-        }
-        swap(a, lo, j);
-        return j;
-    }
-    private static void swap(int[] a, int i, int j) {
-        int t = a[i];
-        a[i] = a[j];
-        a[j] = t;
-    }
-}
+<p>Hugo可以让你轻松生成静态网站，比如个人博客、API文档、公司主页等，你只需要提供markdown格式的文本，它就能帮你渲染成各种你想要的样式，只需要安装想要的主题，写好对于的markdown内容，就能快速编译出一个静态网站。</p>
+
+<h2 id="安装hugo">安装hugo</h2>
+
+<p>参考官方：<a href="http://gohugo.io/getting-started/installing/">http://gohugo.io/getting-started/installing/</a></p>
+
+<h2 id="创建网站">创建网站</h2>
+
+<p>首先初始化你的网站，假如 mysite 是存放网站相关文件的目录：</p>
+
+<pre><code class="language-sh">hugo new site mysite
 </code></pre>
 
-<p>测试：</p>
+<p>这会在当前路径创建一个 mysite 目录，进入该路径：</p>
 
-<pre><code class="language-java">int[] a = {9, 0, 6, 5, 8, 2, 1, 7, 4, 3};
-System.out.println(Arrays.toString(a));
-QuickSort.sort(a);
-System.out.println(Arrays.toString(a));
+<pre><code class="language-sh">cd mysite
 </code></pre>
 
-<p>输出：</p>
+<p>目录如下：</p>
 
-<p>[9, 0, 6, 5, 8, 2, 1, 7, 4, 3]<br />
-[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]</p>
+<pre><code class="language-bash"> ▸ archetypes/
+ ▸ content/
+ ▸ layouts/
+ ▸ static/
+ ▸ themes/
+   config.toml
+</code></pre>
+
+<p><code>config.toml</code> 是网站的配置文件，包含一些基本配置和主题特有的配置。<br />
+这几个文件夹的作用分别是：</p>
+
+<ul>
+<li>archetypes：包括内容类型，在创建新内容时自动生成内容的配置</li>
+<li>content：包括网站内容，全部使用markdown格式</li>
+<li>layouts：包括了网站的模版，决定内容如何呈现</li>
+<li>static：包括了css, js, fonts, media等，决定网站的外观</li>
+<li>themes：用于存放主题</li>
+</ul>
+
+<p>在创建页面之前需要安装想要的主题，官方有收集一些：<a href="https://themes.gohugo.io/">https://themes.gohugo.io/</a></p>
+
+<p>在这里我用我博客的主题<code>xhugo</code>作示例，下载到themes目录：</p>
+
+<pre><code class="language-bash">git clone https://github.com/imroc/xhugo.git themes/xhugo
+</code></pre>
+
+<p>在配置文件<code>config.toml</code>里加一行，配置本网站的主题：</p>
+
+<pre><code class="language-toml">theme = &quot;xhugo&quot;
+</code></pre>
+
+<p><strong>注：</strong> <code>config.toml</code> 中配置的主题名字应和主题目录名称一致</p>
+
+<p>新建页面：</p>
+
+<pre><code class="language-bash">hugo new posts/hello.md
+</code></pre>
+
+<p>此时会在 <code>content</code> 路径下创建文件，由于参数中还带有 posts 路径，所以最终创建的文件路径是 <code>content/posts/hello.md</code>， 每次创建的文件都根据 <code>archetypes/default.md</code> 生成的，包含一些页面的特定配置，比如标题、分类等，不同的主题还有自己支持的一些配置，需要看主题的说明。</p>
+
+<h2 id="效果预览">效果预览</h2>
+
+<p>写好 mardown 之后可以本地预览：</p>
+
+<pre><code class="language-bash">hugo server
+</code></pre>
+
+<p>在浏览器打开 <a href="http://localhost:1313">http://localhost:1313</a> 就能看到效果，并且改内容页面也能实时自动更新。<br />
+<strong>注：</strong> markdown 用什么编写就取决于你自己了，我自己有时用vim，有时用 vscode（装 markdown 的插件）</p>
+
+<h2 id="生成静态页面">生成静态页面</h2>
+
+<p>在生成之前先确定你想将此网站发布在哪儿，在 <code>config.toml</code> 里面配置 <code>baseURL</code> 为访问此网站的基本URL路径：</p>
+
+<pre><code class="language-toml">baseURL = &quot;https://imroc.io/&quot;
+</code></pre>
+
+<p>然后</p>
+
+<pre><code class="language-bash">hugo
+</code></pre>
+
+<p>对，你没看出，直接执行 <code>hugo</code> 就可以了，它编译并生成网站所需的静态页面和文件，输出到当前目录的 <code>public</code> 目录下，当然你也可以改变输出目的地，如：</p>
+
+<pre><code class="language-bash">hugo -d docs
+</code></pre>
+
+<p>你可以将生成的目录放到 nginx 或 tomcat 等服务器下对外提供服务，不过这需要自己有服务器，接下来我教大家如何利用 Github Pages 来做到永久免费。</p>
+
+<h2 id="github-pages">Github Pages</h2>
+
+<p>Github Pages 是 Github 推出的一项功能，可以免费托管静态网站，将你的静态文件放在仓库里，然后在仓库的 <code>Settings</code> 里面，翻到下面的 <code>GitHub Pages</code> 部分，可以将此仓库设置为你的静态网站文件的存放仓库。</p>
+
+<p>其实 <code>Github Pages</code> 仓库分为两种。
+- 一种是主仓库，它里面存放的文件可以直接映射到你网站的根路径，而且只能有一个仓库名固定为：<code>&lt;github账号名&gt;.github.io</code>，比如我的 github 账号为 <code>imroc</code>,那么我的 <code>Github Pages</code> 主仓库就为 <code>imroc.github.io</code>，这个仓库的名字其实也就是访问你网站的域名。
+- 其它的仓库只能映射到网站的子路径，子路径名称和仓库名一致，比如我新建一个 <code>static</code> 仓库并设置为 <code>Github Pages</code> 仓库，那么我可以通过 <code>imroc.github.io/static/</code> 访问到里面的页面和文件</p>
+
+<h2 id="设置-github-pages">设置 Github Pages</h2>
+
+<p>静态文件存放位置有三种：
+- master 分支
+- master 分支下 docs 目录
+- gh-pages 分支(前提是这个分支存在才会显示)</p>
+
+<p><strong>注：</strong> <code>Github Pages</code> 主仓库除外，必须是 master 分支。</p>
+
+<p>一般都会先新建第一种 <code>Github Pages</code> 主仓库作为网站主要托管，根据你的账号名创建仓库，如: <code>imroc.github.io</code>， 提交静态文件后在仓库的 <code>Settings</code> 里面，翻到下面的 <code>Github Pages</code> 部分，根据自己需要设置 <code>Github Pages</code> 文件存放位置：
+<img src="https://imroc.io/static/blog/hugo/github-pages-setting.png" alt="github pages 设置" />
+<strong>注：</strong> <code>gh-pages</code> 分支选项需要在此分支存在的情况下才会显示次选项</p>
+
+<h3 id="源文件与-编译结果在同一仓库">源文件与编译结果在同一仓库</h3>
+
+<p>如果你想要将你网站的 <code>hugo</code> 源文件和编译后的静态文件目录放在一个仓库，那可以选择 <code>master</code> 下的 <code>docs</code> 目录作为 <code>Github Pages</code> 目录，编译的时候执行：</p>
+
+<pre><code class="language-bash">hugo -d docs
+</code></pre>
+
+<p>建议写个脚本，每次更新内容执行下脚本网站就可以更新，如(<code>deploy.sh</code>)：</p>
+
+<pre><code class="language-bash">#! /bin/bash
+
+set -eux 
+
+echo -e &quot;\033[0;32mDeploying updates to GitHub...\033[0m&quot;
+
+msg=&quot;rebuilding site `date`&quot;
+
+if [ $# -eq 1  ]
+    then msg=&quot;$1&quot;
+fi
+
+# Build the project. 
+hugo -d docs
+
+# Add changes to git.
+git add .
+
+# Commit changes.
+
+git commit -m &quot;$msg&quot;
+
+# Push source and build repos.
+git push origin master
+</code></pre>
+
+<p>这样，每次运行：</p>
+
+<pre><code class="language-bash">./deploy.sh
+</code></pre>
+
+<p>或</p>
+
+<pre><code class="language-bash">./deploy.sh &quot;本次更新描述&quot;
+</code></pre>
+
+<p>就可以更新网站了。</p>
+
+<p>另外，别忘了给脚本可执行权限哦</p>
+
+<pre><code class="language-bash">chmod +x deploy.sh
+</code></pre>
+
+<h3 id="源文件与-编译结果在不同仓库">源文件与编译结果在不同仓库</h3>
+
+<p>新建一个仓库存放源文件（此仓库不需要设置 <code>Github Pages</code>)，如 <code>blog</code> 仓库，编译结果放在主仓库里，如 <code>imroc.github.io</code> 仓库。</p>
+
+<p>进入hugo创建的网站目录并设置 git 的远程地址：</p>
+
+<pre><code class="language-bash">cd blog
+git remote add origin https://github.com/imroc/blog.git
+</code></pre>
+
+<p>将 <code>Github Pages</code> 的仓库下载到当前目录并命名 <code>public</code>：</p>
+
+<pre><code class="language-bash">git clone https://github.com/imroc/imroc.github.io.git
+mv imroc.github.io public
+</code></pre>
+
+<p>新增脚本 (<code>deploy.sh</code>):</p>
+
+<pre><code class="language-bash">#! /bin/bash
+
+set -eux 
+
+echo -e &quot;\033[0;32mDeploying updates to GitHub...\033[0m&quot;
+
+msg=&quot;rebuilding site `date`&quot;
+if [ $# -eq 1  ]
+    then msg=&quot;$1&quot;
+fi
+
+# Build the project. 
+hugo # if using a theme, replace by `hugo -t &lt;yourtheme&gt;`
+
+# Go To Public folder
+cd public
+
+# Add changes to git.
+git add .
+
+# Commit changes.
+git commit -m &quot;$msg&quot;
+
+# Push source and build repos.
+git push origin master
+
+# Come Back
+cd ..
+
+git add .
+git commit -m &quot;$msg&quot;
+git push origin master
+</code></pre>
+
+<p>这样执行脚本也可以更新网站，只不过分成了两个仓库，我也是用的这种做法，因为 <code>Github Pages</code> 主仓库只允许 master 分支作为网站内容，所以源文件就存在了另一个仓库 <code>blog</code></p>
+
+<h2 id="自定义域名">自定义域名</h2>
 
             </article>
 
             <ul class="pager blog-pager">
                 
                 <li class="previous">
-                    <a href="https://imroc.io/posts/algorithm/%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8Fgolang%E5%AE%9E%E7%8E%B0/" data-toggle="tooltip" data-placement="top" title="快速排序(golang实现)">&larr; Previous Post</a>
+                    <a href="https://imroc.io/posts/kubernetes/kubernetes-binaries/" data-toggle="tooltip" data-placement="top" title="Kubernetes程序二进制下载集合">&larr; Previous Post</a>
                 </li>
                  
-                <li class="next">
-                    <a href="https://imroc.io/posts/algorithm/%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8Fc-c&#43;&#43;%E5%AE%9E%E7%8E%B0/" data-toggle="tooltip" data-placement="top" title="快速排序(C-C&#43;&#43;实现)">Next Post &rarr;</a>
-                </li>
-                
             </ul>
             
             <div>
                  
-                <h2>See Also</h2>
-                <ul>
-                    
-                    <li><a href="/posts/algorithm/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F%E8%87%AA%E9%A1%B6%E5%90%91%E4%B8%8B%E4%B8%8E%E8%87%AA%E5%BA%95%E5%90%91%E4%B8%8A%E4%B8%A4%E7%A7%8D%E6%96%B9%E5%BC%8Fgolang%E5%AE%9E%E7%8E%B0/">归并排序,自顶向下与自底向上两种方式(golang实现)</a></li>
-                    
-                    <li><a href="/posts/algorithm/union-findc&#43;&#43;%E5%AE%9E%E7%8E%B0%E5%AE%9E%E7%8E%B0/">Union-Find(C&#43;&#43;实现实现)</a></li>
-                    
-                    <li><a href="/posts/algorithm/%E4%BA%8C%E5%88%86%E6%B3%95%E6%9F%A5%E6%89%BEc-c&#43;&#43;%E5%AE%9E%E7%8E%B0/">二分法查找(C-C&#43;&#43;实现)</a></li>
-                    
-                    <li><a href="/posts/algorithm/%E4%BA%8C%E5%88%86%E6%B3%95%E6%9F%A5%E6%89%BEjava%E5%AE%9E%E7%8E%B0/">二分法查找(Java实现)</a></li>
-                    
-                    <li><a href="/posts/algorithm/%E4%BA%8C%E5%88%86%E6%B3%95%E6%9F%A5%E6%89%BEgolang%E5%AE%9E%E7%8E%B0/">二分法查找(golang实现)</a></li>
-                    
-                </ul>
-                
             </div>
             
             
@@ -330,12 +470,12 @@ System.out.println(Arrays.toString(a));
             
 <div>
     <section id="datecount">
-        <h4 id="date"> Tue Sep 5, 2017</h4>
+        <h4 id="date"> Tue Jan 16, 2018</h4>
     </section>
-    <h5 id="wc">200 Words|Read in about 1 Min</h5>
+    <h5 id="wc">2000 Words|Read in about 4 Min</h5>
     <h5 id="tags">Tags: 
         
-        <a href="https://imroc.io/tags/%E7%AE%97%E6%B3%95/">算法</a> &nbsp;
+        <a href="https://imroc.io/tags/hugo/">hugo</a> &nbsp;
     </h5>
 </div>
 

@@ -8,10 +8,19 @@
     <language>zh-cn</language>
     <managingEditor>roc@imroc.io (roc)</managingEditor>
     <webMaster>roc@imroc.io (roc)</webMaster>
-    <lastBuildDate>Fri, 05 Jan 2018 13:43:15 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 16 Jan 2018 17:00:06 +0800</lastBuildDate>
     
 	<atom:link href="https://imroc.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>利用Hugo和Github Pages免费创建并永久托管网站</title>
+      <link>https://imroc.io/posts/hugo/building-website-for-free-using-hugo-and-github-pages/</link>
+      <pubDate>Tue, 16 Jan 2018 17:00:06 +0800</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/posts/hugo/building-website-for-free-using-hugo-and-github-pages/</guid>
+      <description>概述 Hugo可以让你轻松生成静态网站，比如个人博客、API文档、公司主页等，你只需要提供markdown格式的文本，它就能帮你渲染成各种你想</description>
+    </item>
     
     <item>
       <title>Kubernetes程序二进制下载集合</title>
