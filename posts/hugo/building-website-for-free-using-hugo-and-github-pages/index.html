@@ -220,7 +220,7 @@ var _hmt = _hmt || [];
     <section id="datecount">
         <h4 id="date"> Tue Jan 16, 2018</h4>
     </section>
-    <h5 id="wc">2000 Words|Read in about 4 Min</h5>
+    <h5 id="wc">2200 Words|Read in about 5 Min</h5>
     <h5 id="tags">Tags: 
         
         <a href="https://imroc.io/tags/hugo/">hugo</a> &nbsp;
@@ -343,8 +343,9 @@ var _hmt = _hmt || [];
 <p><strong>注：</strong> <code>Github Pages</code> 主仓库除外，必须是 master 分支。</p>
 
 <p>一般都会先新建第一种 <code>Github Pages</code> 主仓库作为网站主要托管，根据你的账号名创建仓库，如: <code>imroc.github.io</code>， 提交静态文件后在仓库的 <code>Settings</code> 里面，翻到下面的 <code>Github Pages</code> 部分，根据自己需要设置 <code>Github Pages</code> 文件存放位置：
-<img src="https://imroc.io/static/blog/hugo/github-pages-setting.png" alt="github pages 设置" />
-<strong>注：</strong> <code>gh-pages</code> 分支选项需要在此分支存在的情况下才会显示次选项</p>
+<img src="https://imroc.io/static/blog/hugo/github-pages-setting.png" alt="github pages 设置" /></p>
+
+<p><strong>注：</strong> <code>gh-pages</code> 分支选项需要在此分支存在的情况下才会显示次选项</p>
 
 <h3 id="源文件与-编译结果在同一仓库">源文件与编译结果在同一仓库</h3>
 
@@ -452,7 +453,23 @@ git push origin master
 
 <p>这样执行脚本也可以更新网站，只不过分成了两个仓库，我也是用的这种做法，因为 <code>Github Pages</code> 主仓库只允许 master 分支作为网站内容，所以源文件就存在了另一个仓库 <code>blog</code></p>
 
+<p>// TODO</p>
+
 <h2 id="自定义域名">自定义域名</h2>
+
+<p>github 给我们提供了免费域名，但是我们还可以绑定自己的域名。</p>
+
+<h3 id="绑定根域名">绑定根域名</h3>
+
+<p>如果你想要绑定自己域名的根域名，如：<a href="imroc.io">imroc.io</a></p>
+
+<h3 id="绑定二级域名">绑定二级域名</h3>
+
+<p>如果你想要绑定自己域名的二级域名，如：<a href="blog.imroc.io">blog.imroc.io</a></p>
+
+<h2 id="自定义域名开启https">自定义域名开启https</h2>
+
+<p>如果绑定了自定义域名，github pages 原则上是不能启用https的，但是可以借助 cloudflare 实现自定义域名也能开启https</p>
 
             </article>
 
@@ -475,7 +492,7 @@ git push origin master
     <section id="datecount">
         <h4 id="date"> Tue Jan 16, 2018</h4>
     </section>
-    <h5 id="wc">2000 Words|Read in about 4 Min</h5>
+    <h5 id="wc">2200 Words|Read in about 5 Min</h5>
     <h5 id="tags">Tags: 
         
         <a href="https://imroc.io/tags/hugo/">hugo</a> &nbsp;
