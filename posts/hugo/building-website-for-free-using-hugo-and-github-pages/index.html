@@ -252,7 +252,7 @@ var _hmt = _hmt || [];
     <section id="datecount">
         <h4 id="date"> Tue Jan 16, 2018</h4>
     </section>
-    <h5 id="wc">2400 Words|Read in about 5 Min</h5>
+    <h5 id="wc">2500 Words|Read in about 5 Min</h5>
     <h5 id="tags">Tags: 
         
         <a href="https://imroc.io/tags/hugo/">hugo</a> &nbsp;
@@ -494,6 +494,8 @@ git push origin master
 
 <p>很简单，在仓库的 <code>Settings</code> 里的 <code>Github Pages</code> 部分，有个 <code>Custom domain</code> 的设置，将其设置为你需要绑定的域名（它会新建一个 commit，就是创建一个 <code>CNAME</code> 文件，内容是你填的域名），你也可以自己手动创建一个 CNAME 文件，效果是一样的。</p>
 
+<p><strong>注：</strong> 由于自定义域名需要仓库里面有个 <code>CNAME</code> 文件，用上面的第二种方式（源文件与编译结果在不同仓库）管理的话，每次编译会覆盖 <code>public</code> 目录下除 <code>.git</code> 目录的文件，<code>CNAME</code> 文件可能就不在了，没关系，在源文件的 <code>static</code> 目录下放入 <code>CNAME</code> 文件即可保证每次编译的结果里面都会有 <code>CNAME</code> 文件。</p>
+
 <p>下一步就是登录你的域名提供商的后台管理，设置DNS解析：</p>
 
 <h3 id="绑定根域名">绑定根域名</h3>
@@ -553,7 +555,7 @@ git push origin master
     <section id="datecount">
         <h4 id="date"> Tue Jan 16, 2018</h4>
     </section>
-    <h5 id="wc">2400 Words|Read in about 5 Min</h5>
+    <h5 id="wc">2500 Words|Read in about 5 Min</h5>
     <h5 id="tags">Tags: 
         
         <a href="https://imroc.io/tags/hugo/">hugo</a> &nbsp;
