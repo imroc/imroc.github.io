@@ -453,8 +453,6 @@ git push origin master
 
 <p>这样执行脚本也可以更新网站，只不过分成了两个仓库，我也是用的这种做法，因为 <code>Github Pages</code> 主仓库只允许 master 分支作为网站内容，所以源文件就存在了另一个仓库 <code>blog</code></p>
 
-<p>// TODO</p>
-
 <h2 id="自定义域名">自定义域名</h2>
 
 <p>github 给我们提供了免费域名，但是我们还可以绑定自己的域名。</p>
@@ -465,9 +463,12 @@ git push origin master
 
 <h3 id="绑定根域名">绑定根域名</h3>
 
-<p>如果你想要绑定自己域名的根域名（如：<a href="imroc.io">imroc.io</a>），新建两个A记录，分别指向下面两个IP：
-&gt; 192.30.252.153<br />
-&gt; 192.30.252.154</p>
+<p>如果你想要绑定自己域名的根域名（如：<a href="imroc.io">imroc.io</a>），新建两个A记录，分别指向下面两个IP：</p>
+
+<blockquote>
+<p>192.30.252.153<br />
+192.30.252.154</p>
+</blockquote>
 
 <h3 id="绑定二级域名">绑定二级域名</h3>
 
@@ -480,11 +481,17 @@ git push origin master
 <ul>
 <li>在<a href="https://www.cloudflare.com/">cloudflare</a>上注册并获得 <code>nameserver</code></li>
 <li>在域名注册机构的后台管理页面将  <code>nameservers</code> 设置为 <code>cloudflare</code> 上的（即让 <code>cloudflare</code> 来管理 dns）</li>
-<li>确保 <code>Crypto</code>-<code>SSL</code> 为 <code>Full</code>
-<img src="https://imroc.io/static/blog/hugo/cloudflare-crypto-full.png" /></li>
-<li>配置 Page Rules：加入一条规则，举例： <code>http://jimmysong.io/*</code> 设置为 <code>Always Use HTTPS</code>
-<img src="https://imroc.io/static/blog/hugo/cloudflare-always-https.png" /></li>
+<li>确保 <code>Crypto</code>-<code>SSL</code> 为 <code>Full</code><br /></li>
 </ul>
+
+<p><img src="https://imroc.io/static/blog/hugo/cloudflare-crypto-full.png" /></p>
+
+<ul>
+<li>配置 Page Rules：加入一条规则，举例： <code>http://jimmysong.io/*</code> 设置为 <code>Always Use HTTPS</code><br />
+<br /></li>
+</ul>
+
+<p><img src="https://imroc.io/static/blog/hugo/cloudflare-always-https.png" /></p>
 
 <blockquote>
 <p>最后等待一段时间生效</p>
