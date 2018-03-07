@@ -8,10 +8,28 @@
     <language>zh-cn</language>
     <managingEditor>roc@imroc.io (roc)</managingEditor>
     <webMaster>roc@imroc.io (roc)</webMaster>
-    <lastBuildDate>Tue, 16 Jan 2018 20:35:06 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 07 Mar 2018 23:35:11 +0800</lastBuildDate>
     
 	<atom:link href="https://imroc.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>国内使用Kubeadm在CentOS 7上安装Kubernetes 1.9</title>
+      <link>https://imroc.io/posts/kubernetes/install-kubernetes-1.9-on-centos7-with-kubeadm/</link>
+      <pubDate>Wed, 07 Mar 2018 23:35:11 +0800</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/posts/kubernetes/install-kubernetes-1.9-on-centos7-with-kubeadm/</guid>
+      <description>准备 修改系统配置 开启路由转发（保证 proxy 正常运行，Service 需要） sysctl -w net.ipv4.ip_forward=1 默认情况下，由于安全原因，linux是关闭了路由转发的，即同台机器不</description>
+    </item>
+    
+    <item>
+      <title>go的channel是如何设计的</title>
+      <link>https://imroc.io/posts/golang/how-to-design-channel/</link>
+      <pubDate>Wed, 24 Jan 2018 08:57:24 +0800</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/posts/golang/how-to-design-channel/</guid>
+      <description>概述 大部分情况下我们把 go 的 channel 当成黑盒工具来用，不知道它的原理，这是 OK 的，但是在一些高级的开发中，我们还是需要了解下它的底层实现原理。 回顾</description>
+    </item>
     
     <item>
       <title>利用Hugo和Github Pages免费创建并永久托管网站</title>
@@ -488,6 +506,15 @@
       <author>roc@imroc.io (roc)</author>
       <guid>https://imroc.io/posts/algorithm/%E9%80%89%E6%8B%A9%E6%8E%92%E5%BA%8Fgolang%E5%AE%9E%E7%8E%B0/</guid>
       <description>封装成函数： //交换数组元素 func swap(slice []int, i int, j int) { slice[i], slice[j] = slice[j], slice[i] } //选择排序 func SelectionSort(s []int) { l := len(s) //以免每次循环判断都运算 m := len(s)-1 for i:=0;i&amp;lt;m;i++ { k:=i for j:=i+1;j&amp;lt;l;j++ { if s[j]&amp;lt;s[k] { k = j</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://imroc.io/posts/kubernetes/install-self-hosted-kubernetes-with-bootkube/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/posts/kubernetes/install-self-hosted-kubernetes-with-bootkube/</guid>
+      <description>使用bootkube安装自托管的kubernetes 自托管kubernetes 简单来说，就是将kubernetes运行在kubernetes上，不管 master 还是 worker 节点，都只需要安装 kubelet 和 容器运行时（通常是docker）这两个必要的组件，其它组件都运行在容器中，并由 kubelet 管理。</description>
     </item>
     
   </channel>

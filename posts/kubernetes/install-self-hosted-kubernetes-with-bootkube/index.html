@@ -5,10 +5,13 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title> Categories - imroc.io|roc的博客|Cloud Native|Kubernetes|Go|Golang</title>
+  <title> roc - imroc.io|roc的博客|Cloud Native|Kubernetes|Go|Golang</title>
   <meta name="description" content="imroc.io|roc的博客|Cloud Native|Kubernetes|Go|Golang" />
-  <meta property="og:title" content="Categories" />
-  <meta name="twitter:title" content="Categories" />
+  <meta property="og:title" content="roc" />
+  <meta name="twitter:title" content="roc" />
+  <meta name="description" content="使用bootkube安装自托管的kubernetes 自托管kubernetes 简单来说，就是将kubernetes运行在kubernetes上，不管 master 还是 worker 节点，都只需要安装 kubelet 和 容器运行时（通常是docker）这两个必要的组件，其它组件都运行在容器中，并由 kubelet 管理。">
+  <meta property="og:description" content="使用bootkube安装自托管的kubernetes 自托管kubernetes 简单来说，就是将kubernetes运行在kubernetes上，不管 master 还是 worker 节点，都只需要安装 kubelet 和 容器运行时（通常是docker）这两个必要的组件，其它组件都运行在容器中，并由 kubelet 管理。">
+  <meta name="twitter:description" content="使用bootkube安装自托管的kubernetes 自托管kubernetes 简单来说，就是将kubernetes运行在kubernetes上，不管 master 还是 worker 节点，都只需要安装 kubelet 和 容器运行时（通常是docker）这两个必要的组件，其它组件都运行在容器中，并由 kubelet 管理。">
   <meta name="author" content="{Description { .Site.Author.name }}"/>
   <link href='https://imroc.io/favicon.png' rel='icon' type='image/x-icon'/>
   <meta property="og:image" content="https://imroc.io/images/logo.png" />
@@ -16,12 +19,12 @@
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:site" content="@imrocchan" />
   <meta name="twitter:creator" content="@imrocchan" />
-  <meta property="og:url" content="https://imroc.io/categories/" />
+  <meta property="og:url" content="https://imroc.io/posts/kubernetes/install-self-hosted-kubernetes-with-bootkube/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="roc" />
 
   <meta name="generator" content="Hugo 0.31.1" />
-  <link rel="canonical" href="https://imroc.io/categories/" />
+  <link rel="canonical" href="https://imroc.io/posts/kubernetes/install-self-hosted-kubernetes-with-bootkube/" />
   <link rel="alternate" href="https://imroc.io/index.xml" type="application/rss+xml" title="roc">
   <script src="https://cdn.staticfile.org/jquery/1.12.4/jquery.min.js"></script>
   <link rel="stylesheet" href="https://cdn.staticfile.org/KaTeX/0.7.1/katex.min.css" crossorigin="anonymous">
@@ -188,51 +191,92 @@ var _hmt = _hmt || [];
 
 
 
-  
+  <div class="intro-header"></div>
 
-  <header class="header-section ">
+
     
-    <div class="intro-header no-img">
-      
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-12 col-md-12 col-md-offset-0">
-            <div class="categories-heading">
-                <h1 align="center">Categories</h1>
+<div class="container" role="main" itemscope itemtype="http://schema.org/Article">
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            
+            
+            
+<div>
+    <section id="datecount">
+        <h4 id="date"> Mon Jan 1, 0001</h4>
+    </section>
+    <h5 id="wc">100 Words|Read in about 1 Min</h5>
+    <h5 id="tags">Tags: 
+    </h5>
+</div>
+
+            
+            <article role="main" class="blog-post" itemprop="articleBody" id="content">
                 
+
+<h1 id="使用bootkube安装自托管的kubernetes">使用bootkube安装自托管的kubernetes</h1>
+
+<h2 id="自托管kubernetes">自托管kubernetes</h2>
+
+<p>简单来说，就是将kubernetes运行在kubernetes上，不管 master 还是 worker 节点，都只需要安装 kubelet 和 容器运行时（通常是docker）这两个必要的组件，其它组件都运行在容器中，并由 kubelet 管理。</p>
+
+            </article>
+
+            <ul class="pager blog-pager">
+                 
+                <li class="next">
+                    <a href="https://imroc.io/posts/algorithm/%E9%80%89%E6%8B%A9%E6%8E%92%E5%BA%8Fgolang%E5%AE%9E%E7%8E%B0/" data-toggle="tooltip" data-placement="top" title="选择排序(golang实现)">Next Post &rarr;</a>
+                </li>
                 
+            </ul>
+            
+            <div>
+                 
             </div>
-          </div>
-        </div>
-      </div>
+            
+            
+            
+            
+<div>
+    <section id="datecount">
+        <h4 id="date"> Mon Jan 1, 0001</h4>
+    </section>
+    <h5 id="wc">100 Words|Read in about 1 Min</h5>
+    <h5 id="tags">Tags: 
+    </h5>
+</div>
+
+            
+            </div>
+            
+			
+               <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+<aside id=comments>
+    <div>
+        <h2> Comments </h2>
     </div>
-  </header>
+    <div id="container"></div>
+    <link rel="stylesheet" href="https://imroc.io/static/gitment/default.css">
+    <script src="https://imroc.io/static/gitment/gitment.browser.js"></script>
+    <script>
+        var gitment = new Gitment({
+			owner: 'imroc', 
+			repo: 'imroc.github.io', 
+            oauth: {
+				client_id: 'd05b8f959b3111c6fb63',
+				client_secret: 'f30ef76ea0050ed731ace76f7fbf684ae5d28fbc',
+            },
+        })
+        gitment.render('container')
+    </script>
+</aside>
+</div>
 
-
-    
-  
-  <div class="container" role="main">
-    <article class="post-preview">
-      <div class="list-group col-lg-4 col-lg-offset-4 col-md-6 col-md-offset-3">
-      
-      <a href="https://imroc.io/categories/docker/" class="list-group-item">
-          docker<span class="badge">7</span></a>
-      
-      <a href="https://imroc.io/categories/golang/" class="list-group-item">
-          golang<span class="badge">5</span></a>
-      
-      <a href="https://imroc.io/categories/kubernetes/" class="list-group-item">
-          kubernetes<span class="badge">2</span></a>
-      
-      <a href="https://imroc.io/categories/arch/" class="list-group-item">
-          arch<span class="badge">1</span></a>
-      
-      <a href="https://imroc.io/categories/hugo/" class="list-group-item">
-          hugo<span class="badge">1</span></a>
-      
-      </div>
-    </article>
-  </div>
+			
+        </div>
+    </div>
+    </section>
+</div>
 
     <footer>
   <div class="container">

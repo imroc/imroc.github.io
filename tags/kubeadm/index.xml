@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Kubernetes on roc</title>
-    <link>https://imroc.io/categories/kubernetes/</link>
-    <description>Recent content in Kubernetes on roc</description>
+    <title>Kubeadm on roc</title>
+    <link>https://imroc.io/tags/kubeadm/</link>
+    <description>Recent content in Kubeadm on roc</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <managingEditor>roc@imroc.io (roc)</managingEditor>
     <webMaster>roc@imroc.io (roc)</webMaster>
     <lastBuildDate>Wed, 07 Mar 2018 23:35:11 +0800</lastBuildDate>
     
-	<atom:link href="https://imroc.io/categories/kubernetes/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://imroc.io/tags/kubeadm/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
@@ -20,15 +20,6 @@
       <author>roc@imroc.io (roc)</author>
       <guid>https://imroc.io/posts/kubernetes/install-kubernetes-1.9-on-centos7-with-kubeadm/</guid>
       <description>准备 修改系统配置 开启路由转发（保证 proxy 正常运行，Service 需要） sysctl -w net.ipv4.ip_forward=1 默认情况下，由于安全原因，linux是关闭了路由转发的，即同台机器不</description>
-    </item>
-    
-    <item>
-      <title>Kubernetes程序二进制下载集合</title>
-      <link>https://imroc.io/posts/kubernetes/kubernetes-binaries/</link>
-      <pubDate>Fri, 05 Jan 2018 13:43:15 +0800</pubDate>
-      <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/kubernetes/kubernetes-binaries/</guid>
-      <description>前言 由于国内网络的特殊性，安装Kubernetes很多时候会采用二进制方式部署，我将涉及到的二进制利用脚本传到百度云，方便大家下载，脚本开源</description>
     </item>
     
   </channel>

@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title> 国内使用Kubeadm在CentOS 7上安装Kubernetes 1.9 - imroc.io|roc的博客|Cloud Native|Kubernetes|Go|Golang</title>
+  <meta name="description" content="imroc.io|roc的博客|Cloud Native|Kubernetes|Go|Golang" />
+  <meta property="og:title" content="国内使用Kubeadm在CentOS 7上安装Kubernetes 1.9" />
+  <meta name="twitter:title" content="国内使用Kubeadm在CentOS 7上安装Kubernetes 1.9" />
+  <meta name="description" content="Self Hosting方式安装，ipvs替代iptables，CoreDNS替代kube-dns">
+  <meta property="og:description" content="Self Hosting方式安装，ipvs替代iptables，CoreDNS替代kube-dns">
+  <meta name="twitter:description" content="Self Hosting方式安装，ipvs替代iptables，CoreDNS替代kube-dns">
+  <meta name="author" content="{Description { .Site.Author.name }}"/>
+  <link href='https://imroc.io/favicon.png' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://imroc.io/images/logo.png" />
+  <meta name="twitter:image" content="https://imroc.io/images/logo.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@imrocchan" />
+  <meta name="twitter:creator" content="@imrocchan" />
+  <meta property="og:url" content="https://imroc.io/posts/kubernetes/install-kubernetes-1.9-on-centos7-with-kubeadm/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="roc" />
+
+  <meta name="generator" content="Hugo 0.31.1" />
+  <link rel="canonical" href="https://imroc.io/posts/kubernetes/install-kubernetes-1.9-on-centos7-with-kubeadm/" />
+  <link rel="alternate" href="https://imroc.io/index.xml" type="application/rss+xml" title="roc">
+  <script src="https://cdn.staticfile.org/jquery/1.12.4/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.staticfile.org/KaTeX/0.7.1/katex.min.css" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" crossorigin="anonymous">
+
+  <link rel="stylesheet" href="https://imroc.io/css/main.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  
+  <link rel="stylesheet" href="https://imroc.io/static/prism/prism.css" />
+
+  <script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?05e1e8b7484a08c51cd0953664168cd7";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe.min.css" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.2/default-skin/default-skin.min.css" crossorigin="anonymous" />
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://imroc.io/">roc</a>
+    </div>
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">Categories</a>
+              <div class="navlinks-children">
+                
+                
+                  <a href="https://imroc.io/categories/kubernetes">kubernetes</a>
+                
+                
+                  <a href="https://imroc.io/categories/docker">docker</a>
+                
+                
+                  <a href="https://imroc.io/categories/golang">golang</a>
+                
+                
+                  <a href="https://imroc.io/categories/arch">架构</a>
+                
+              </div>
+            </li>
+          
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">Books</a>
+              <div class="navlinks-children">
+                
+                
+                  <a href="https://imroc.io/kubernetes-the-gradual-way">Kubernetes The Gradual Way</a>
+                
+              </div>
+            </li>
+          
+        
+          
+            <li>
+              <a title="Tags" href="/tags">Tags</a>
+              
+              
+            </li>
+          
+        
+          
+            <li>
+              <a title="About" href="/about">About</a>
+              
+              
+            </li>
+          
+        
+
+        
+
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="roc" href="https://imroc.io/">
+            <img class="avatar-img" src="https://imroc.io/images/logo.png" alt="roc" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12 col-md-12 col-md-offset-0">
+            <div class="posts-heading">
+                <h1 align="center">国内使用Kubeadm在CentOS 7上安装Kubernetes 1.9</h1>
+                
+                  
+                    <h2 align="center" class="posts-subheading">Self Hosting方式安装，ipvs替代iptables，CoreDNS替代kube-dns</h2>
+                  
+                
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main" itemscope itemtype="http://schema.org/Article">
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            
+            
+            
+<div>
+    <section id="datecount">
+        <h4 id="date"> Wed Mar 7, 2018</h4>
+    </section>
+    <h5 id="wc">2200 Words|Read in about 5 Min</h5>
+    <h5 id="tags">Tags: 
+        
+        <a href="https://imroc.io/tags/docker/">docker</a> &nbsp;
+        
+        <a href="https://imroc.io/tags/kubernetes/">kubernetes</a> &nbsp;
+        
+        <a href="https://imroc.io/tags/kubeadm/">kubeadm</a> &nbsp;
+    </h5>
+</div>
+
+            
+            <article role="main" class="blog-post" itemprop="articleBody" id="content">
+                
+
+<h1 id="准备">准备</h1>
+
+<h2 id="修改系统配置">修改系统配置</h2>
+
+<p>开启路由转发（保证 proxy 正常运行，Service 需要）</p>
+
+<pre><code class="language-bash">sysctl -w net.ipv4.ip_forward=1
+</code></pre>
+
+<ul>
+<li>默认情况下，由于安全原因，linux是关闭了路由转发的，即同台机器不止一个网卡，将数据包从一个网卡传到另一个网卡，让另一个网卡继续路由，即实现两个不同网段的主机通信。service 的 IP 是通过 proxy（即 kube-proxy 或 kube-router ）路由的，并不需要路由器参与，node 收到数据包时，数据包的目的 IP 为本机的内网 IP，proxy 将数据包的目的IP转化成Service IP并路由转发到Serive IP 对应网段的虚拟网卡上，最终路由到正确的Pod</li>
+<li>ip_forward 与路由转发：<a href="http://blog.51cto.com/13683137989/1880744">http://blog.51cto.com/13683137989/1880744</a></li>
+</ul>
+
+<p>禁用 swap (保证 kubelet 正确运行):</p>
+
+<pre><code class="language-bash">swapoff -a
+</code></pre>
+
+<p>关闭SELinux和防火墙</p>
+
+<pre><code class="language-bash">sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config # 修改配置永久生效，需重启
+setenforce 0
+#关闭防火墙 
+systemctl stop firewalld &amp;&amp; systemctl disable firewalld
+</code></pre>
+
+<p>RHEL / CentOS 7上的某些用户报告了由于iptables被绕过而导致流量被错误路由的问题。应该确保net.bridge.bridge-nf-call-iptables的sysctl配置中被设置为1</p>
+
+<pre><code class="language-bash">cat &lt;&lt;EOF &gt;  /etc/sysctl.d/k8s.conf
+net.bridge.bridge-nf-call-ip6tables = 1
+net.bridge.bridge-nf-call-iptables = 1
+EOF
+sysctl --system
+</code></pre>
+
+<h2 id="升级内核">升级内核</h2>
+
+<p>运行docker的node节点需要升级到4.x内核支持overlay2驱动</p>
+
+<p>检查内核</p>
+
+<pre><code class="language-bash">uname -sr 
+</code></pre>
+
+<p>添加升级内核的第三方库
+<a href="http://elrepo.org/tiki/tiki-index.php">www.elrepo.org</a> 上有方法</p>
+
+<pre><code class="language-bash">rpm --import https://www.elrepo.org/RPM-GPG-KEY-elrepo.org
+rpm -Uvh http://www.elrepo.org/elrepo-release-7.0-3.el7.elrepo.noarch.rpm
+</code></pre>
+
+<p>列出内核相关包</p>
+
+<pre><code class="language-bash">yum --disablerepo=&quot;*&quot; --enablerepo=&quot;elrepo-kernel&quot; list available
+</code></pre>
+
+<p>安装最新稳定版</p>
+
+<pre><code class="language-bash">yum --enablerepo=elrepo-kernel install kernel-ml -y
+</code></pre>
+
+<p>查看内核默认启动顺序</p>
+
+<pre><code class="language-bash">awk -F\' '$1==&quot;menuentry &quot; {print $2}' /etc/grub2.cfg
+</code></pre>
+
+<p>结果显示</p>
+
+<pre><code class="language-bash">CentOS Linux (4.15.7-1.el7.elrepo.x86_64) 7 (Core)
+CentOS Linux (3.10.0-693.17.1.el7.x86_64) 7 (Core)
+CentOS Linux (3.10.0-693.2.2.el7.x86_64) 7 (Core)
+CentOS Linux (3.10.0-693.el7.x86_64) 7 (Core)
+CentOS Linux (0-rescue-f0f31005fb5a436d88e3c6cbf54e25aa) 7 (Core)
+</code></pre>
+
+<p>设置默认启动的内核，顺序index 分别是 0,1,2,3，每个人机器不一样，看清楚选择自己的index， 执行以下代码选择内核</p>
+
+<pre><code class="language-bash">grub2-set-default 0
+</code></pre>
+
+<p>重启</p>
+
+<pre><code class="language-bash">reboot
+</code></pre>
+
+<p>检查内核</p>
+
+<pre><code class="language-bash">uname -a
+</code></pre>
+
+<h2 id="docker-安装与配置">docker 安装与配置</h2>
+
+<p>不建议使用官网的docker-ce版本、支持性不是很好、使用epel源支持的docker即可。</p>
+
+<h4 id="确保epel源已安装">确保epel源已安装</h4>
+
+<pre><code class="language-bash">yum install -y epel-release
+</code></pre>
+
+<h4 id="安装docker">安装docker</h4>
+
+<pre><code class="language-bash">yum install -y docker
+</code></pre>
+
+<h4 id="使用overlay2驱动">使用overlay2驱动</h4>
+
+<p>docker 存储驱动很多默认用devicemapper，存在很多问题，最好使用overlay2，内核版本小于 3.10.0-693 的不要使用 overlay2 驱动。
+确保 yum-plugin-ovl 安装，解决 ovlerlay2 兼容性问题：</p>
+
+<pre><code class="language-bash">yum install -y yum-plugin-ovl
+</code></pre>
+
+<ul>
+<li>overlay2 兼容性问题详见：<a href="https://docs.docker.com/storage/storagedriver/overlayfs-driver/#limitations-on-overlayfs-compatibility">https://docs.docker.com/storage/storagedriver/overlayfs-driver/#limitations-on-overlayfs-compatibility</a>  ：</li>
+</ul>
+
+<p>备份 docker 用到的目录（若需要）</p>
+
+<pre><code class="language-bash">cp -au /var/lib/docker /var/lib/docker.bk
+</code></pre>
+
+<p>关闭 docker</p>
+
+<pre><code class="language-bash">systemctl stop docker
+</code></pre>
+
+<p>配置 docker 的存储驱动</p>
+
+<pre><code class="language-bash">vi /etc/docker/daemon.json
+</code></pre>
+
+<pre><code class="language-json">{
+  &quot;storage-driver&quot;: &quot;overlay2&quot;
+}
+</code></pre>
+
+<p>如果使用 Docker EE 并且版本大于 17.06，还需要一个 <code>storage-opts</code>，这样配置 ：</p>
+
+<pre><code class="language-json">{
+  &quot;storage-driver&quot;: &quot;overlay2&quot;,
+  &quot;storage-opts&quot;: [
+    &quot;overlay2.override_kernel_check=true&quot;
+  ]
+}
+</code></pre>
+
+<ul>
+<li>docker 设置 overlay2 驱动官方参考文档：<a href="https://docs.docker.com/storage/storagedriver/overlayfs-driver/#configure-docker-with-the-overlay-or-overlay2-storage-driver">https://docs.docker.com/storage/storagedriver/overlayfs-driver/#configure-docker-with-the-overlay-or-overlay2-storage-driver</a></li>
+</ul>
+
+<p>启动 docker</p>
+
+<pre><code class="language-bash">systemctl start docker
+</code></pre>
+
+<h2 id="安装-kubeadm-kubectl-kubelet">安装 kubeadm, kubectl, kubelet</h2>
+
+<p>配置国内kubernetes源</p>
+
+<pre><code class="language-bash">cat &gt; /etc/yum.repos.d/kubernetes.repo &lt;&lt;EOF
+[kubernetes]
+name=Kubernetes
+baseurl=https://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-x86_64
+enabled=1
+gpgcheck=0
+repo_gpgcheck=0
+EOF
+</code></pre>
+
+<p>如果直接安装最新版可以直接这样做</p>
+
+<pre><code class="language-bash">yum install -y kubelet kubeadm kubectl
+</code></pre>
+
+<p>如果要指定版本，可以先看看有那些版本</p>
+
+<pre><code class="language-bash">[root@roc ~]# yum list kubeadm --showduplicates
+Loaded plugins: fastestmirror, ovl
+Loading mirror speeds from cached hostfile
+ * elrepo: mirrors.tuna.tsinghua.edu.cn
+Installed Packages
+kubeadm.x86_64                   1.9.3-0                    @kubernetes
+Available Packages
+kubeadm.x86_64                   1.6.0-0                    kubernetes
+kubeadm.x86_64                   1.6.1-0                    kubernetes
+kubeadm.x86_64                   1.6.2-0                    kubernetes
+kubeadm.x86_64                   1.6.3-0                    kubernetes
+kubeadm.x86_64                   1.6.4-0                    kubernetes
+kubeadm.x86_64                   1.6.5-0                    kubernetes
+kubeadm.x86_64                   1.6.6-0                    kubernetes
+kubeadm.x86_64                   1.6.7-0                    kubernetes
+kubeadm.x86_64                   1.6.8-0                    kubernetes
+kubeadm.x86_64                   1.6.9-0                    kubernetes
+kubeadm.x86_64                   1.6.10-0                   kubernetes
+kubeadm.x86_64                   1.6.11-0                   kubernetes
+kubeadm.x86_64                   1.6.12-0                   kubernetes
+kubeadm.x86_64                   1.6.13-0                   kubernetes
+kubeadm.x86_64                   1.7.0-0                    kubernetes
+kubeadm.x86_64                   1.7.1-0                    kubernetes
+kubeadm.x86_64                   1.7.2-0                    kubernetes
+kubeadm.x86_64                   1.7.3-1                    kubernetes
+kubeadm.x86_64                   1.7.4-0                    kubernetes
+kubeadm.x86_64                   1.7.5-0                    kubernetes
+kubeadm.x86_64                   1.7.6-1                    kubernetes
+kubeadm.x86_64                   1.7.7-1                    kubernetes
+kubeadm.x86_64                   1.7.8-1                    kubernetes
+kubeadm.x86_64                   1.7.9-0                    kubernetes
+kubeadm.x86_64                   1.7.10-0                   kubernetes
+kubeadm.x86_64                   1.7.11-0                   kubernetes
+kubeadm.x86_64                   1.8.0-0                    kubernetes
+kubeadm.x86_64                   1.8.0-1                    kubernetes
+kubeadm.x86_64                   1.8.1-0                    kubernetes
+kubeadm.x86_64                   1.8.2-0                    kubernetes
+kubeadm.x86_64                   1.8.3-0                    kubernetes
+kubeadm.x86_64                   1.8.4-0                    kubernetes
+kubeadm.x86_64                   1.8.5-0                    kubernetes
+kubeadm.x86_64                   1.8.6-0                    kubernetes
+kubeadm.x86_64                   1.8.7-0                    kubernetes
+kubeadm.x86_64                   1.8.8-0                    kubernetes
+kubeadm.x86_64                   1.9.0-0                    kubernetes
+kubeadm.x86_64                   1.9.1-0                    kubernetes
+kubeadm.x86_64                   1.9.2-0                    kubernetes
+kubeadm.x86_64                   1.9.3-0                    kubernetes
+</code></pre>
+
+<p>如果安装 1.9.3 ，执行下面的命令</p>
+
+<pre><code class="language-bash">yum install -y kubelet-1.9.3-0 kubeadm-1.9.3-0 kubectl-1.9.3-0
+</code></pre>
+
+<p>kubelet启动参数增加  <code>--runtime-cgroups=/systemd/system.slice --kubelet-cgroups=/systemd/system.slice</code> 防止kubelet报错</p>
+
+<pre><code class="language-bash">vi /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+</code></pre>
+
+<p>将 KUBELET_CGROUP_ARGS 一行改为：</p>
+
+<pre><code class="language-bash">Environment=&quot;KUBELET_CGROUP_ARGS=--cgroup-driver=systemd --runtime-cgroups=/systemd/system.slice --kubelet-cgroups=/systemd/system.slice&quot;
+</code></pre>
+
+<p>然后reload</p>
+
+<pre><code class="language-bash">systemctl daemon-reload
+</code></pre>
+
+<h2 id="初始化master">初始化master</h2>
+
+<p>国内快速下载镜像（假设docker配了加速器）</p>
+
+<pre><code class="language-bash">docker pull docker.io/k8smirror:v0.9.1-amd64
+docker tag docker.io/k8smirror/flannel:v0.9.1-amd64 quay.io/coreos/flannel:v0.9.1-amd64
+docker rmi docker.io/k8smirror/flannel:v0.9.1-amd64
+
+docker pull docker.io/gcrio/pause-amd64:3.0
+docker tag docker.io/gcrio/pause-amd64:3.0 gcr.io/google_containers/pause-amd64:3.0
+docker rmi docker.io/gcrio/pause-amd64:3.0
+
+docker pull docker.io/gcrio/hyperkube:v1.9.3
+
+docker pull docker.io/gcrio/etcd:3.1.11
+</code></pre>
+
+<p>创建 kubeadm 配置文件</p>
+
+<pre><code class="language-bash">cat &lt;&lt;EOF &gt;  kubeadm.yaml
+apiVersion: kubeadm.k8s.io/v1alpha1
+kind: MasterConfiguration
+api:
+  advertiseAddress: 0.0.0.0
+unifiedControlPlaneImage: docker.io/gcrio/hyperkube:v1.9.3
+selfHosted: true
+kubernetesVersion: v1.9.3
+authorizationModes:
+  - RBAC
+  - Node
+kubeProxy:
+  config:
+    mode: ipvs # k8s 1.9开始kube-proxy的ipvs进入beta，替代iptables方式路由service
+etcd:
+  image: docker.io/gcrio/etcd:3.1.11 # k8s 1.9 官方推荐的etcd版本为 3.1.11
+imageRepository: gcrio
+featureGates:
+  CoreDNS: true
+networking:
+  dnsDomain: cluster.local
+  serviceSubnet: 10.96.0.0/12
+  podSubnet: 10.244.0.0/16
+EOF
+</code></pre>
+
+<p>执行初始化</p>
+
+<pre><code class="language-bash">[root@roc k8s]# kubeadm init --config kubeadm.yaml
+[init] Using Kubernetes version: v1.9.3
+[init] Using Authorization modes: [RBAC Node]
+[preflight] Running pre-flight checks.
+	[WARNING Hostname]: hostname &quot;roc&quot; could not be reached
+	[WARNING Hostname]: hostname &quot;roc&quot; lookup roc on 100.100.2.138:53: no such host
+	[WARNING FileExisting-crictl]: crictl not found in system path
+[preflight] Starting the kubelet service
+[certificates] Generated ca certificate and key.
+[certificates] Generated apiserver certificate and key.
+[certificates] apiserver serving cert is signed for DNS names [roc kubernetes kubernetes.default kubernetes.default.svc kubernetes.default.svc.cluster.local] and IPs [10.96.0.1 172.17.60.67]
+[certificates] Generated apiserver-kubelet-client certificate and key.
+[certificates] Generated sa key and public key.
+[certificates] Generated front-proxy-ca certificate and key.
+[certificates] Generated front-proxy-client certificate and key.
+[certificates] Valid certificates and keys now exist in &quot;/etc/kubernetes/pki&quot;
+[kubeconfig] Wrote KubeConfig file to disk: &quot;admin.conf&quot;
+[kubeconfig] Wrote KubeConfig file to disk: &quot;kubelet.conf&quot;
+[kubeconfig] Wrote KubeConfig file to disk: &quot;controller-manager.conf&quot;
+[kubeconfig] Wrote KubeConfig file to disk: &quot;scheduler.conf&quot;
+[controlplane] Wrote Static Pod manifest for component kube-apiserver to &quot;/etc/kubernetes/manifests/kube-apiserver.yaml&quot;
+[controlplane] Wrote Static Pod manifest for component kube-controller-manager to &quot;/etc/kubernetes/manifests/kube-controller-manager.yaml&quot;
+[controlplane] Wrote Static Pod manifest for component kube-scheduler to &quot;/etc/kubernetes/manifests/kube-scheduler.yaml&quot;
+[etcd] Wrote Static Pod manifest for a local etcd instance to &quot;/etc/kubernetes/manifests/etcd.yaml&quot;
+[init] Waiting for the kubelet to boot up the control plane as Static Pods from directory &quot;/etc/kubernetes/manifests&quot;.
+[init] This might take a minute or longer if the control plane images have to be pulled.
+[apiclient] All control plane components are healthy after 29.501817 seconds
+[uploadconfig] Storing the configuration used in ConfigMap &quot;kubeadm-config&quot; in the &quot;kube-system&quot; Namespace
+[markmaster] Will mark node roc as master by adding a label and a taint
+[markmaster] Master roc tainted and labelled with key/value: node-role.kubernetes.io/master=&quot;&quot;
+[bootstraptoken] Using token: 0e78a0.38a53399a9489d52
+[bootstraptoken] Configured RBAC rules to allow Node Bootstrap tokens to post CSRs in order for nodes to get long term certificate credentials
+[bootstraptoken] Configured RBAC rules to allow the csrapprover controller automatically approve CSRs from a Node Bootstrap Token
+[bootstraptoken] Configured RBAC rules to allow certificate rotation for all node client certificates in the cluster
+[bootstraptoken] Creating the &quot;cluster-info&quot; ConfigMap in the &quot;kube-public&quot; namespace
+[addons] Applied essential addon: CoreDNS
+[addons] Applied essential addon: kube-proxy
+
+Your Kubernetes master has initialized successfully!
+
+To start using your cluster, you need to run the following as a regular user:
+
+  mkdir -p $HOME/.kube
+  sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+  sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+You should now deploy a pod network to the cluster.
+Run &quot;kubectl apply -f [podnetwork].yaml&quot; with one of the options listed at:
+  https://kubernetes.io/docs/concepts/cluster-administration/addons/
+
+You can now join any number of machines by running the following on each node
+as root:
+
+  kubeadm join --token 0e78a0.38a53399a9489d52 172.17.60.67:6443 --discovery-token-ca-cert-hash sha256:038654a3d0adb79978913e5d2bce191b5d8536feac7d9354ca35b348e9fc4cd5
+</code></pre>
+
+<p>如果初始化失败，可以撤销</p>
+
+<pre><code class="language-bash">kubeadm reset
+</code></pre>
+
+<p>如果成功，根据输出提示，master 上如果想通过 kubectl 管理集群，执行下面的命令</p>
+
+<pre><code class="language-bash">mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
+</code></pre>
+
+<p>最重要的是最后一行，保存下来，其它 node 加入集群需要执行那条命令</p>
+
+<pre><code class="language-bash">kubeadm join --token 0e78a0.38a53399a9489d52 172.17.60.67:6443 --discovery-token-ca-cert-hash sha256:038654a3d0adb79978913e5d2bce191b5d8536feac7d9354ca35b348e9fc4cd5
+</code></pre>
+
+<p>这个时候，如果你看 kubelet 的日志会发现不断提示没有cni插件，kubeadm 配置文件中的 CoreDNS 也不会生效</p>
+
+<pre><code class="language-bash">journalctl -xef -u kubelet -n 20
+</code></pre>
+
+<p>安装 flannel 网络插件就可以搞定了</p>
+
+<pre><code class="language-bash">kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/v0.9.1/Documentation/kube-flannel.yml
+</code></pre>
+
+            </article>
+
+            <ul class="pager blog-pager">
+                
+                <li class="previous">
+                    <a href="https://imroc.io/posts/golang/how-to-design-channel/" data-toggle="tooltip" data-placement="top" title="go的channel是如何设计的">&larr; Previous Post</a>
+                </li>
+                 
+            </ul>
+            
+            <div>
+                 
+                <h2>See Also</h2>
+                <ul>
+                    
+                    <li><a href="/posts/kubernetes/kubernetes-binaries/">Kubernetes程序二进制下载集合</a></li>
+                    
+                    <li><a href="/posts/docker/quick-start-for-docker-5/">Docker快速入门（五）docker-compose安装与基础用法</a></li>
+                    
+                    <li><a href="/posts/docker/quick-start-for-docker-4/">Docker快速入门（四）常用命令与技巧</a></li>
+                    
+                    <li><a href="/posts/docker/quick-start-for-docker-3/">Docker快速入门（三）在国内如何快速安装Docker与镜像加速器配置</a></li>
+                    
+                    <li><a href="/posts/docker/quick-start-for-docker-2/">Docker快速入门（二）容器、镜像与镜像仓库</a></li>
+                    
+                </ul>
+                
+            </div>
+            
+            
+            
+            
+<div>
+    <section id="datecount">
+        <h4 id="date"> Wed Mar 7, 2018</h4>
+    </section>
+    <h5 id="wc">2200 Words|Read in about 5 Min</h5>
+    <h5 id="tags">Tags: 
+        
+        <a href="https://imroc.io/tags/docker/">docker</a> &nbsp;
+        
+        <a href="https://imroc.io/tags/kubernetes/">kubernetes</a> &nbsp;
+        
+        <a href="https://imroc.io/tags/kubeadm/">kubeadm</a> &nbsp;
+    </h5>
+</div>
+
+            
+            </div>
+            
+			
+               <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+<aside id=comments>
+    <div>
+        <h2> Comments </h2>
+    </div>
+    <div id="container"></div>
+    <link rel="stylesheet" href="https://imroc.io/static/gitment/default.css">
+    <script src="https://imroc.io/static/gitment/gitment.browser.js"></script>
+    <script>
+        var gitment = new Gitment({
+			owner: 'imroc', 
+			repo: 'imroc.github.io', 
+            oauth: {
+				client_id: 'd05b8f959b3111c6fb63',
+				client_secret: 'f30ef76ea0050ed731ace76f7fbf684ae5d28fbc',
+            },
+        })
+        gitment.render('container')
+    </script>
+</aside>
+</div>
+
+			
+        </div>
+    </div>
+    </section>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+              <li>
+                <a href="mailto:roc@imroc.io" title="Email me">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com/imroc" title="GitHub">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://twitter.com/imrocchan" title="Twitter">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+          
+          <li>
+            <a href="https://imroc.io/index.xml" title="RSS">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+        &copy;2017
+          
+            
+              <a href="imroc.io">roc</a>
+                      
+          
+          
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://imroc.io/">roc</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.31.1</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe-ui-default.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe.js"></script>
+<script src="https://imroc.io/js/auto-render.min.js"></script>
+<script src="https://imroc.io/js/main.js"></script>
+<script src="https://imroc.io/static/prism/prism.js"></script>
+<script src="https://cdn.staticfile.org/KaTeX/0.7.1/katex.min.js"></script>
+<script> renderMathInElement(document.body); </script>
+
+
+
+
+
+
+
+  </body>
+</html>
+

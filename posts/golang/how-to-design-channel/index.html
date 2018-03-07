@@ -5,13 +5,13 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title> Go语言技巧-使用select{}阻塞main函数 - imroc.io|roc的博客|Cloud Native|Kubernetes|Go|Golang</title>
+  <title> go的channel是如何设计的 - imroc.io|roc的博客|Cloud Native|Kubernetes|Go|Golang</title>
   <meta name="description" content="imroc.io|roc的博客|Cloud Native|Kubernetes|Go|Golang" />
-  <meta property="og:title" content="Go语言技巧-使用select{}阻塞main函数" />
-  <meta name="twitter:title" content="Go语言技巧-使用select{}阻塞main函数" />
-  <meta name="description" content="很多时候我们需要让main函数不退出，让它在后台一直执行，例如： func main() { for i := 0; i &lt; 20; i&#43;&#43; { //启动20个协程处理消息队列中的消息 c := consumer.New() go c.Start() } select">
-  <meta property="og:description" content="很多时候我们需要让main函数不退出，让它在后台一直执行，例如： func main() { for i := 0; i &lt; 20; i&#43;&#43; { //启动20个协程处理消息队列中的消息 c := consumer.New() go c.Start() } select">
-  <meta name="twitter:description" content="很多时候我们需要让main函数不退出，让它在后台一直执行，例如： func main() { for i := 0; i &lt; 20; i&#43;&#43; { //启动20个协程处理消息队列中的消息 c := consumer.New() go c.Start() } select">
+  <meta property="og:title" content="go的channel是如何设计的" />
+  <meta name="twitter:title" content="go的channel是如何设计的" />
+  <meta name="description" content="概述 大部分情况下我们把 go 的 channel 当成黑盒工具来用，不知道它的原理，这是 OK 的，但是在一些高级的开发中，我们还是需要了解下它的底层实现原理。 回顾">
+  <meta property="og:description" content="概述 大部分情况下我们把 go 的 channel 当成黑盒工具来用，不知道它的原理，这是 OK 的，但是在一些高级的开发中，我们还是需要了解下它的底层实现原理。 回顾">
+  <meta name="twitter:description" content="概述 大部分情况下我们把 go 的 channel 当成黑盒工具来用，不知道它的原理，这是 OK 的，但是在一些高级的开发中，我们还是需要了解下它的底层实现原理。 回顾">
   <meta name="author" content="{Description { .Site.Author.name }}"/>
   <link href='https://imroc.io/favicon.png' rel='icon' type='image/x-icon'/>
   <meta property="og:image" content="https://imroc.io/images/logo.png" />
@@ -19,12 +19,12 @@
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:site" content="@imrocchan" />
   <meta name="twitter:creator" content="@imrocchan" />
-  <meta property="og:url" content="https://imroc.io/posts/golang/golang-select/" />
+  <meta property="og:url" content="https://imroc.io/posts/golang/how-to-design-channel/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="roc" />
 
   <meta name="generator" content="Hugo 0.31.1" />
-  <link rel="canonical" href="https://imroc.io/posts/golang/golang-select/" />
+  <link rel="canonical" href="https://imroc.io/posts/golang/how-to-design-channel/" />
   <link rel="alternate" href="https://imroc.io/index.xml" type="application/rss+xml" title="roc">
   <script src="https://cdn.staticfile.org/jquery/1.12.4/jquery.min.js"></script>
   <link rel="stylesheet" href="https://cdn.staticfile.org/KaTeX/0.7.1/katex.min.css" crossorigin="anonymous">
@@ -201,7 +201,7 @@ var _hmt = _hmt || [];
         <div class="row">
           <div class="col-lg-12 col-md-12 col-md-offset-0">
             <div class="posts-heading">
-                <h1 align="center">Go语言技巧-使用select{}阻塞main函数</h1>
+                <h1 align="center">go的channel是如何设计的</h1>
                 
                 
             </div>
@@ -221,9 +221,9 @@ var _hmt = _hmt || [];
             
 <div>
     <section id="datecount">
-        <h4 id="date"> Wed Sep 6, 2017</h4>
+        <h4 id="date"> Wed Jan 24, 2018</h4>
     </section>
-    <h5 id="wc">100 Words|Read in about 1 Min</h5>
+    <h5 id="wc">1600 Words|Read in about 4 Min</h5>
     <h5 id="tags">Tags: 
         
         <a href="https://imroc.io/tags/golang/">golang</a> &nbsp;
@@ -232,27 +232,115 @@ var _hmt = _hmt || [];
 
             
             <article role="main" class="blog-post" itemprop="articleBody" id="content">
-                <p>很多时候我们需要让main函数不退出，让它在后台一直执行，例如：</p>
+                
 
-<pre><code class="language-go">func main() {
-	for i := 0; i &lt; 20; i++ { //启动20个协程处理消息队列中的消息
-		c := consumer.New()
-		go c.Start()
-	}
-	select {} // 阻塞
+<h2 id="概述">概述</h2>
+
+<p>大部分情况下我们把 go 的 channel 当成黑盒工具来用，不知道它的原理，这是 OK 的，但是在一些高级的开发中，我们还是需要了解下它的底层实现原理。</p>
+
+<p>回顾一下 channel 的用法：</p>
+
+<pre><code class="language-go">ch := make(chan int, 100) // 创建 channel
+ch &lt;- 1 // 发数据
+data := &lt;- ch // 取数据
+</code></pre>
+
+<p>在 go 的 runtime 源码里，channel 是一个名为 <code>hchan</code> 的结构体，make 返回其指针，所以多个 goroutine 用的 ch 变量指向同一个 <code>hchan</code> 的结构体，那么这个结构体里面需要哪些东西？下面我们结合源码片段来分析下。</p>
+
+<h2 id="缓冲区">缓冲区</h2>
+
+<p>channel 创建的时候可以设置缓冲区大小：</p>
+
+<pre><code class="language-go">ch := make(chan int, 100) // 创建 channel
+</code></pre>
+
+<p>首先它需要一个缓冲区，存数据，make的时候缓冲区大小固定，就用数组做环形队列来存，发送和接收数据都有 index 标记，这样才知道下一个 pop 的数据是哪一个，最新 push 的数据应该放在哪儿。</p>
+
+<pre><code class="language-go">type hchan struct {
+    ...
+    buf      unsafe.Pointer // 指向一个数组，结合下面的 index 实现环形队列
+    ... 
+    sendx    uint   // 发送 index
+    recvx    uint   // 接收 index
+    ...
 }
 </code></pre>
+
+<p>源码在 <a href="https://github.com/golang/go/blob/master/src/runtime/chan.go#L31">这里</a></p>
+
+<h2 id="锁">锁</h2>
+
+<p>为什么需要锁？ 一是发送和接收数据的时候要保证原子性，二是如果缓冲区满了或者没有缓冲区，并且没有其它 goroutine 接收数据，这时发送数据的 goroutine 就会挂起（睡眠），进入等待状态，等待 channel 可以再次被发送数据。同理，在没有</p>
+
+<pre><code class="language-go">ch &lt;- 1 // 发数据
+</code></pre>
+
+<p>要想 goroutine 挂起，就需要给 channel 一把锁，这锁并不是直接用标准库的 <code>sync.Mutex</code>，而是用的更底层的实现:</p>
+
+<pre><code class="language-go">type hchan struct {
+	// lock protects all fields in hchan, as well as several
+	// fields in sudogs blocked on this channel.
+	//
+	// Do not change another G's status while holding this lock
+	// (in particular, do not ready a G), as this can deadlock
+	// with stack shrinking.
+	lock mutex
+}
+</code></pre>
+
+<p>不同操作系统不一样，不过大致原理都是通过<strong>信号量</strong>来实现的，关于信号量的学习可以参考麦子学院视频：<a href="http://www.maiziedu.com/course/368-3774/">linux内核同步和互斥（一）：信号量</a></p>
+
+<p>go runtime 中的锁实现总体分两类：
+- <a href="https://github.com/golang/go/blob/master/src/runtime/lock_futex.go">lock_futex.go</a></p>
+
+<blockquote>
+<p>适用于 dragonfly freebsd linux</p>
+</blockquote>
+
+<ul>
+<li><a href="https://github.com/golang/go/blob/master/src/runtime/lock_sema.go">lock_sema.go</a></li>
+</ul>
+
+<blockquote>
+<p>适用于 darwin nacl netbsd openbsd plan9 solaris windows</p>
+</blockquote>
+
+<p>runtime 源码将锁实现分为这两大类，它们有不同的依赖函数，而这些函数的实现根据操作系统的不同也是不一样的，要找对应函数实现可以根据源文件名后面系统标识来区分，比如： <a href="https://github.com/golang/go/blob/master/src/runtime/os_freebsd.go"><code>os_freebsd.go</code></a></p>
+
+<h4 id="等待状态">等待状态</h4>
+
+<p>其实当 goroutine 遇到锁进入等待状态，也并不会占用cpu时间，为什么？不如我们来探究一下 goroutine 如何做到如此轻量、高性能的。</p>
+
+<p>goroutine 并非直接由操作系统的 OS 线程来调度的，而是在 go 的 runtime ，go 程序进程可能有多个 OS 线程，它的调度器来决定哪个 goroutine 运行在哪个 OS 线程中，一个 OS 线程可以运行多个 goroutine 。runtime 还维护了所有 goroutine 及其上下文，如果某个 goroutine 处于等待(挂起)状态，它可以将此 goroutine 从 OS 线程中移除（不占用cpu时间片），等状态恢复再放到某个 OS 线程中运行。</p>
+
+<p>这样，goroutine 为何如此轻量高性能也就有了答案，它不是有 OS 调度的线程，而是 go 的 runtime 来调度的，也就是说，goroutine所以让 goroutine 很轻量，可以创建很多 goroutine ，被阻塞时也并不会占用 cpu 时间片。这样，goroutine 极大的提高了性能。</p>
+
+<p>关于信号量的学习可以参考麦子学院视频：<a href="http://www.maiziedu.com/course/368-3774/">linux内核同步和互斥（一）：信号量</a></p>
+
+<h4 id="拓展-标准库-sync-mutex-的实-现">拓展：标准库 sync.Mutex 的实现</h4>
+
+<p>标准库的锁并非完全用信号量实现，还使用了自旋。锁通常有两种实现，信号量和自旋。</p>
+
+<p>linux 内核本身有信号量相关的系统调用API，比如 down(sem) 用于获取信号量，将值减1，为负会将调用者挂起(睡眠)，直到信号量为非负才继续运行，用 up(sem) 可将信号量加1，而用信号量实现的锁实际上就是初始值置为1的信号量，因为锁本身就是为了只让一个线程对资源进行读写。</p>
+
+<p>自旋锁相当于是循环等待，比较适合锁保持时间较短的情况，长时间的话会占用很多cpu资源。</p>
+
+<p>信号量会使线程睡眠，有切换代价，而自旋锁不会让出cpu，属于忙等待，如果等待时间短，可以很快恢复。</p>
+
+<p>了解了下 go runtime 的源码，它的锁是结合了信号量和自旋两种方式自己实现的一套逻辑，有冲突时先尝试自旋，如果超时再用信号量让 goroutine 进入等待状态。因为大多时候要锁的代码片段都比较短，自旋一下就可以了，很快又可以恢复过来，提升了性能。</p>
+
+<p>参考：<a href="https://zhuanlan.zhihu.com/p/27608263">Golang 互斥锁内部实现</a></p>
 
             </article>
 
             <ul class="pager blog-pager">
                 
                 <li class="previous">
-                    <a href="https://imroc.io/posts/golang/golang-append/" data-toggle="tooltip" data-placement="top" title="golang中append函数返回值必须有变量接收的原因探究">&larr; Previous Post</a>
+                    <a href="https://imroc.io/posts/hugo/building-website-for-free-using-hugo-and-github-pages/" data-toggle="tooltip" data-placement="top" title="利用Hugo和Github Pages免费创建并永久托管网站">&larr; Previous Post</a>
                 </li>
                  
                 <li class="next">
-                    <a href="https://imroc.io/posts/golang/golang-for-range-time-tick/" data-toggle="tooltip" data-placement="top" title="Go语言技巧-使用for range time.Tick()固定间隔时间执行">Next Post &rarr;</a>
+                    <a href="https://imroc.io/posts/kubernetes/install-kubernetes-1.9-on-centos7-with-kubeadm/" data-toggle="tooltip" data-placement="top" title="国内使用Kubeadm在CentOS 7上安装Kubernetes 1.9">Next Post &rarr;</a>
                 </li>
                 
             </ul>
@@ -262,11 +350,13 @@ var _hmt = _hmt || [];
                 <h2>See Also</h2>
                 <ul>
                     
-                    <li><a href="/posts/golang/golang-package/">Go语言(golang)包设计哲学-原则与项目结构组织最佳实践</a></li>
+                    <li><a href="/posts/golang/golang-for-range-time-tick/">Go语言技巧-使用for range time.Tick()固定间隔时间执行</a></li>
+                    
+                    <li><a href="/posts/golang/golang-select/">Go语言技巧-使用select{}阻塞main函数</a></li>
                     
                     <li><a href="/posts/golang/golang-append/">golang中append函数返回值必须有变量接收的原因探究</a></li>
                     
-                    <li><a href="/posts/golang/golang-for-range-time-tick/">Go语言技巧-使用for range time.Tick()固定间隔时间执行</a></li>
+                    <li><a href="/posts/golang/golang-package/">Go语言(golang)包设计哲学-原则与项目结构组织最佳实践</a></li>
                     
                 </ul>
                 
@@ -277,9 +367,9 @@ var _hmt = _hmt || [];
             
 <div>
     <section id="datecount">
-        <h4 id="date"> Wed Sep 6, 2017</h4>
+        <h4 id="date"> Wed Jan 24, 2018</h4>
     </section>
-    <h5 id="wc">100 Words|Read in about 1 Min</h5>
+    <h5 id="wc">1600 Words|Read in about 4 Min</h5>
     <h5 id="tags">Tags: 
         
         <a href="https://imroc.io/tags/golang/">golang</a> &nbsp;

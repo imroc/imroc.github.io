@@ -7,6 +7,16 @@
   </url>
   
   <url>
+    <loc>https://imroc.io/posts/kubernetes/install-kubernetes-1.9-on-centos7-with-kubeadm/</loc>
+    <lastmod>2018-03-07T23:35:11+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://imroc.io/posts/golang/how-to-design-channel/</loc>
+    <lastmod>2018-01-24T08:57:24+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://imroc.io/posts/hugo/building-website-for-free-using-hugo-and-github-pages/</loc>
     <lastmod>2018-01-16T20:35:06+08:00</lastmod>
   </url>
@@ -272,6 +282,10 @@
   </url>
   
   <url>
+    <loc>https://imroc.io/posts/kubernetes/install-self-hosted-kubernetes-with-bootkube/</loc>
+  </url>
+  
+  <url>
     <loc>https://imroc.io/about/</loc>
     <priority>0</priority>
   </url>
@@ -290,7 +304,7 @@
   
   <url>
     <loc>https://imroc.io/tags/docker/</loc>
-    <lastmod>2018-01-05T13:43:15+08:00</lastmod>
+    <lastmod>2018-03-07T23:35:11+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -314,13 +328,13 @@
   
   <url>
     <loc>https://imroc.io/tags/golang/</loc>
-    <lastmod>2017-09-06T15:35:18+08:00</lastmod>
+    <lastmod>2018-01-24T08:57:24+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://imroc.io/categories/golang/</loc>
-    <lastmod>2017-09-06T15:35:18+08:00</lastmod>
+    <lastmod>2018-01-24T08:57:24+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -337,32 +351,38 @@
   </url>
   
   <url>
+    <loc>https://imroc.io/tags/kubeadm/</loc>
+    <lastmod>2018-03-07T23:35:11+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>https://imroc.io/tags/kubernetes/</loc>
-    <lastmod>2018-01-05T13:43:15+08:00</lastmod>
+    <lastmod>2018-03-07T23:35:11+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://imroc.io/categories/kubernetes/</loc>
-    <lastmod>2018-01-05T13:43:15+08:00</lastmod>
+    <lastmod>2018-03-07T23:35:11+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://imroc.io/posts/</loc>
-    <lastmod>2018-01-16T20:35:06+08:00</lastmod>
+    <lastmod>2018-03-07T23:35:11+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://imroc.io/tags/</loc>
-    <lastmod>2018-01-05T13:43:15+08:00</lastmod>
+    <lastmod>2018-03-07T23:35:11+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://imroc.io/</loc>
-    <lastmod>2018-01-16T20:35:06+08:00</lastmod>
+    <lastmod>2018-03-07T23:35:11+08:00</lastmod>
     <priority>0</priority>
   </url>
   
