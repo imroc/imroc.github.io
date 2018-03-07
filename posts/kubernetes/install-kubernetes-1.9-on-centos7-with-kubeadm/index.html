@@ -349,14 +349,16 @@ CentOS Linux (0-rescue-f0f31005fb5a436d88e3c6cbf54e25aa) 7 (Core)
 
 <h4 id="使用overlay2驱动">使用overlay2驱动</h4>
 
-<p>docker 存储驱动很多默认用devicemapper，存在很多问题，最好使用overlay2，内核版本小于 3.10.0-693 的不要使用 overlay2 驱动。
-确保 yum-plugin-ovl 安装，解决 ovlerlay2 兼容性问题：</p>
+<p>docker 存储驱动很多默认用devicemapper，存在很多问题，最好使用overlay2，内核版本小于 3.10.0-693 的不要使用 overlay2 驱动。</p>
+
+<p>确保 yum-plugin-ovl 安装，解决 ovlerlay2 兼容性问题：</p>
 
 <pre><code class="language-bash">yum install -y yum-plugin-ovl
 </code></pre>
 
 <ul>
-<li>overlay2 兼容性问题详见：<a href="https://docs.docker.com/storage/storagedriver/overlayfs-driver/#limitations-on-overlayfs-compatibility">https://docs.docker.com/storage/storagedriver/overlayfs-driver/#limitations-on-overlayfs-compatibility</a>  ：</li>
+<li>overlay2 兼容性问题详见：<a href="https://docs.docker.com/storage/storagedriver/overlayfs-driver/#limitations-on-overlayfs-compatibility">https://docs.docker.com/storage/storagedriver/overlayfs-driver/#limitations-on-overlayfs-compatibility</a>  ：<br />
+<br /></li>
 </ul>
 
 <p>备份 docker 用到的目录（若需要）</p>
@@ -379,7 +381,7 @@ CentOS Linux (0-rescue-f0f31005fb5a436d88e3c6cbf54e25aa) 7 (Core)
 }
 </code></pre>
 
-<p>如果使用 Docker EE 并且版本大于 17.06，还需要一个 <code>storage-opts</code>，这样配置 ：</p>
+<p>如果使用 Docker EE 并且版本大于 17.06，还需要一个 <code>storage-opts</code>，这样配置</p>
 
 <pre><code class="language-json">{
   &quot;storage-driver&quot;: &quot;overlay2&quot;,
