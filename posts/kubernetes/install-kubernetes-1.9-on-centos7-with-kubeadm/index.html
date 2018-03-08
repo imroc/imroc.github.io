@@ -268,7 +268,7 @@ var _hmt = _hmt || [];
     <section id="datecount">
         <h4 id="date"> Wed Mar 7, 2018</h4>
     </section>
-    <h5 id="wc">2300 Words|Read in about 5 Min</h5>
+    <h5 id="wc">2400 Words|Read in about 5 Min</h5>
     <h5 id="tags">Tags: 
         
         <a href="https://imroc.io/tags/docker/">docker</a> &nbsp;
@@ -398,8 +398,7 @@ CentOS Linux (0-rescue-f0f31005fb5a436d88e3c6cbf54e25aa) 7 (Core)
 </code></pre>
 
 <ul>
-<li>overlay2 兼容性问题详见：<a href="https://docs.docker.com/storage/storagedriver/overlayfs-driver/#limitations-on-overlayfs-compatibility">https://docs.docker.com/storage/storagedriver/overlayfs-driver/#limitations-on-overlayfs-compatibility</a>  ：<br />
-<br /></li>
+<li>overlay2 兼容性问题详见：<a href="https://docs.docker.com/storage/storagedriver/overlayfs-driver/#limitations-on-overlayfs-compatibility">https://docs.docker.com/storage/storagedriver/overlayfs-driver/#limitations-on-overlayfs-compatibility</a>  ：<br /></li>
 </ul>
 
 <p>备份 docker 用到的目录（若需要）</p>
@@ -516,6 +515,11 @@ kubeadm.x86_64                   1.9.3-0                    kubernetes
 <pre><code class="language-bash">yum install -y kubelet-1.9.3-0 kubeadm-1.9.3-0 kubectl-1.9.3-0
 </code></pre>
 
+<p>kubelet设置开机自动运行</p>
+
+<pre><code class="language-bash">systemctl enable kubelet
+</code></pre>
+
 <p>kubelet启动参数增加  <code>--runtime-cgroups=/systemd/system.slice --kubelet-cgroups=/systemd/system.slice</code> 防止kubelet报错</p>
 
 <pre><code class="language-bash">vi /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
@@ -526,16 +530,17 @@ kubeadm.x86_64                   1.9.3-0                    kubernetes
 <pre><code class="language-bash">Environment=&quot;KUBELET_CGROUP_ARGS=--cgroup-driver=systemd --runtime-cgroups=/systemd/system.slice --kubelet-cgroups=/systemd/system.slice&quot;
 </code></pre>
 
-<p>然后reload</p>
+<p>然后reload并启动kubelet</p>
 
 <pre><code class="language-bash">systemctl daemon-reload
+systemctl start kubelet
 </code></pre>
 
 <h2 id="初始化master">初始化master</h2>
 
 <p>国内快速下载镜像（假设docker配了加速器）</p>
 
-<pre><code class="language-bash">docker pull docker.io/k8smirror:v0.9.1-amd64
+<pre><code class="language-bash">docker pull docker.io/k8smirror/flannel:v0.9.1-amd64
 docker tag docker.io/k8smirror/flannel:v0.9.1-amd64 quay.io/coreos/flannel:v0.9.1-amd64
 docker rmi docker.io/k8smirror/flannel:v0.9.1-amd64
 
@@ -670,6 +675,17 @@ controller-manager   Healthy   ok
 etcd-0               Healthy   {&quot;health&quot;: &quot;true&quot;}
 </code></pre>
 
+<p>使用kubeadm初始化的集群，出于安全考虑Pod不会被调度到Master Node上，可使用如下命令使Master节点参与工作负载</p>
+
+<pre><code class="language-bash">kubectl taint nodes --all node-role.kubernetes.io/master-
+</code></pre>
+
+<p>输出类似下面（报错可忽略）</p>
+
+<pre><code class="language-bash">node &quot;roc&quot; untainted
+error: taint &quot;node-role.kubernetes.io/master:&quot; not found
+</code></pre>
+
 <h2 id="worker-节点加入">worker 节点加入</h2>
 
 <p>下载需要的镜像</p>
@@ -727,7 +743,7 @@ docker rmi docker.io/gcrio/pause-amd64:3.0
     <section id="datecount">
         <h4 id="date"> Wed Mar 7, 2018</h4>
     </section>
-    <h5 id="wc">2300 Words|Read in about 5 Min</h5>
+    <h5 id="wc">2400 Words|Read in about 5 Min</h5>
     <h5 id="tags">Tags: 
         
         <a href="https://imroc.io/tags/docker/">docker</a> &nbsp;
