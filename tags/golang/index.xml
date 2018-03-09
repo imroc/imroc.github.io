@@ -8,19 +8,10 @@
     <language>zh-cn</language>
     <managingEditor>roc@imroc.io (roc)</managingEditor>
     <webMaster>roc@imroc.io (roc)</webMaster>
-    <lastBuildDate>Wed, 24 Jan 2018 08:57:24 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 06 Sep 2017 15:35:18 +0800</lastBuildDate>
     
 	<atom:link href="https://imroc.io/tags/golang/index.xml" rel="self" type="application/rss+xml" />
     
-    
-    <item>
-      <title>go的channel是如何设计的</title>
-      <link>https://imroc.io/posts/golang/how-to-design-channel/</link>
-      <pubDate>Wed, 24 Jan 2018 08:57:24 +0800</pubDate>
-      <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/golang/how-to-design-channel/</guid>
-      <description>概述 大部分情况下我们把 go 的 channel 当成黑盒工具来用，不知道它的原理，这是 OK 的，但是在一些高级的开发中，我们还是需要了解下它的底层实现原理。 回顾</description>
-    </item>
     
     <item>
       <title>Go语言(golang)包设计哲学-原则与项目结构组织最佳实践</title>
