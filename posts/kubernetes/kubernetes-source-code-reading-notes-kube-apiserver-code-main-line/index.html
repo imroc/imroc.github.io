@@ -5,13 +5,13 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title> golang实现二叉查找树 - imroc.io|roc的博客|Cloud Native|Kubernetes|Go|Golang</title>
+  <title> kubernetes源码阅读笔记：理清 kube-apiserver 的源码主线 - imroc.io|roc的博客|Cloud Native|Kubernetes|Go|Golang</title>
   <meta name="description" content="imroc.io|roc的博客|Cloud Native|Kubernetes|Go|Golang" />
-  <meta property="og:title" content="golang实现二叉查找树" />
-  <meta name="twitter:title" content="golang实现二叉查找树" />
-  <meta name="description" content="为简单起见，键值均为整型。 定义接口(tree.go)： type Tree interface { Put(k, v int) //新增或修改 Get(k int) int //查询 Delete(k int) //删除 Size() int //树的大小 Min() int //最小键 DeleteMin()">
-  <meta property="og:description" content="为简单起见，键值均为整型。 定义接口(tree.go)： type Tree interface { Put(k, v int) //新增或修改 Get(k int) int //查询 Delete(k int) //删除 Size() int //树的大小 Min() int //最小键 DeleteMin()">
-  <meta name="twitter:description" content="为简单起见，键值均为整型。 定义接口(tree.go)： type Tree interface { Put(k, v int) //新增或修改 Get(k int) int //查询 Delete(k int) //删除 Size() int //树的大小 Min() int //最小键 DeleteMin()">
+  <meta property="og:title" content="kubernetes源码阅读笔记：理清 kube-apiserver 的源码主线" />
+  <meta name="twitter:title" content="kubernetes源码阅读笔记：理清 kube-apiserver 的源码主线" />
+  <meta name="description" content="前言 我最近开始研究 kubernetes 源码，希望将阅读笔记记录下来，分享阅读思路和心得，更好的理解 kubernetes，这是第一篇，从 kube-apiserver 开始。 开始 k8s各组件">
+  <meta property="og:description" content="前言 我最近开始研究 kubernetes 源码，希望将阅读笔记记录下来，分享阅读思路和心得，更好的理解 kubernetes，这是第一篇，从 kube-apiserver 开始。 开始 k8s各组件">
+  <meta name="twitter:description" content="前言 我最近开始研究 kubernetes 源码，希望将阅读笔记记录下来，分享阅读思路和心得，更好的理解 kubernetes，这是第一篇，从 kube-apiserver 开始。 开始 k8s各组件">
   <meta name="author" content="{Description { .Site.Author.name }}"/>
   <link href='https://imroc.io/favicon.png' rel='icon' type='image/x-icon'/>
   <meta property="og:image" content="https://imroc.io/images/logo.png" />
@@ -19,12 +19,12 @@
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:site" content="@imrocchan" />
   <meta name="twitter:creator" content="@imrocchan" />
-  <meta property="og:url" content="https://imroc.io/posts/algorithm/golang%E5%AE%9E%E7%8E%B0%E4%BA%8C%E5%8F%89%E6%9F%A5%E6%89%BE%E6%A0%91/" />
+  <meta property="og:url" content="https://imroc.io/posts/kubernetes/kubernetes-source-code-reading-notes-kube-apiserver-code-main-line/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="roc" />
 
   <meta name="generator" content="Hugo 0.31.1" />
-  <link rel="canonical" href="https://imroc.io/posts/algorithm/golang%E5%AE%9E%E7%8E%B0%E4%BA%8C%E5%8F%89%E6%9F%A5%E6%89%BE%E6%A0%91/" />
+  <link rel="canonical" href="https://imroc.io/posts/kubernetes/kubernetes-source-code-reading-notes-kube-apiserver-code-main-line/" />
   <link rel="alternate" href="https://imroc.io/index.xml" type="application/rss+xml" title="roc">
   <script src="https://cdn.staticfile.org/jquery/1.12.4/jquery.min.js"></script>
   <link rel="stylesheet" href="https://cdn.staticfile.org/KaTeX/0.7.1/katex.min.css" crossorigin="anonymous">
@@ -201,7 +201,7 @@ var _hmt = _hmt || [];
         <div class="row">
           <div class="col-lg-12 col-md-12 col-md-offset-0">
             <div class="posts-heading">
-                <h1 align="center">golang实现二叉查找树</h1>
+                <h1 align="center">kubernetes源码阅读笔记：理清 kube-apiserver 的源码主线</h1>
                 
                 
             </div>
@@ -221,208 +221,227 @@ var _hmt = _hmt || [];
             
 <div>
     <section id="datecount">
-        <h4 id="date"> Tue Sep 5, 2017</h4>
+        <h4 id="date"> Mon Mar 12, 2018</h4>
     </section>
-    <h5 id="wc">900 Words|Read in about 2 Min</h5>
+    <h5 id="wc">1500 Words|Read in about 3 Min</h5>
     <h5 id="tags">Tags: 
         
-        <a href="https://imroc.io/tags/%E7%AE%97%E6%B3%95/">算法</a> &nbsp;
+        <a href="https://imroc.io/tags/kubernetes/">kubernetes</a> &nbsp;
     </h5>
 </div>
 
             
             <article role="main" class="blog-post" itemprop="articleBody" id="content">
-                <p>为简单起见，键值均为整型。</p>
+                
 
-<p>定义接口(tree.go)：</p>
+<h2 id="前言">前言</h2>
 
-<pre><code class="language-go">type Tree interface {
-	Put(k, v int)  //新增或修改
-	Get(k int) int //查询
-	Delete(k int)  //删除
-	Size() int     //树的大小
-	Min() int      //最小键
-	DeleteMin()    //删除最小键
+<p>我最近开始研究 kubernetes 源码，希望将阅读笔记记录下来，分享阅读思路和心得，更好的理解 kubernetes，这是第一篇，从 <code>kube-apiserver</code> 开始。</p>
+
+<h2 id="开始">开始</h2>
+
+<p>k8s各组件main包在cmd目录下，即各个程序的入口处，来看看 <code>kube-apiserver</code> 的源码</p>
+
+<p><strong>注：</strong> 三点代表省略的代码，只关注主要的代码，让思路更清晰
+<code>cmd/kube-apiserver/apiserver.go</code></p>
+
+<pre><code class="language-go">func main() {
+	...
+
+	command := app.NewAPIServerCommand()
+	
+	...
+
+	if err := command.Execute(); err != nil {
+		fmt.Fprintf(os.Stderr, &quot;error: %v\n&quot;, err)
+		os.Exit(1)
+	}
+}
+
+</code></pre>
+
+<p>各组件程序都是用 <code>cobra</code> 来管理、解析命令行参数的，main 包下面还有 app 包，app 包才是包含创建 cobra 命令逻辑的地方，所以其实 main 包的逻辑特别简单，主要是调用执行函数就可以了。那么问题来了，为什么要这样设计？答案很简单，有没有注意到还有个 hyperkube 程序？它把很多组件的功能都综合在一起了，安装的时候我们就不需要准备那么多程序，比如执行 <code>hyperkube apiserver</code> 和直接执行<code>kube-apiserver</code> 效果是一样的。由于各组件程序把创建 cobra 命令的逻辑都提取到下面的 app 包了，hyperkube 就只可以直接调用这些，所以 hyperkube 的 main 包就仅仅需要一个 main 文件就可以了，各组件程序代码有更新，hyperkube 重新编译也能获取更新，所以提取 app 包是一种解耦的方法。</p>
+
+<p><code>app.NewAPIServerCommand()</code> 返回 <code>*cobra.Command</code>,执行 <code>command.Execute()</code> 最终会调用 <code>*cobra.Command</code> 的 Run 字段的函数，我们来看看 <code>app.NewAPIServerCommand()</code> 是如何构造 <code>*cobra.Command</code> 的。</p>
+
+<pre><code class="language-go">func NewAPIServerCommand() *cobra.Command {
+	s := options.NewServerRunOptions()
+	cmd := &amp;cobra.Command{
+		...
+		Run: func(cmd *cobra.Command, args []string) {
+			...
+			stopCh := server.SetupSignalHandler()
+			if err := Run(s, stopCh); err != nil {
+				fmt.Fprintf(os.Stderr, &quot;%v\n&quot;, err)
+				os.Exit(1)
+			}
+		},
+	}
+	...
+
+	return cmd
 }
 </code></pre>
 
-<p>二叉查找树(binary_tree.go)：</p>
+<p>Run 字段是一个匿名函数，里面又调用了本包的 Run 函数</p>
 
-<pre><code class="language-go">//二叉查找树
-type BinaryTree struct {
-	root *node
-	n    int
-}
- 
-//创建节点
-func newNode(k, v int) *node {
-	return &amp;node{k: k, v: v, sz: 1}
-}
- 
-//创建二叉查找树
-func NewBinaryTree() *BinaryTree {
-	return &amp;BinaryTree{}
-}
- 
-//增加或修改
-func (bt *BinaryTree) Put(k, v int) {
-	bt.root, _ = put(bt.root, k, v)
-}
- 
-//查找
-func (bt *BinaryTree) Get(k int) int {
-	return get(bt.root, k)
-}
- 
-//树的大小
-func (bt *BinaryTree) Size() int {
-	return size(bt.root)
-}
- 
-//选出最小键
-func (bt *BinaryTree) Min() int {
-	return min(bt.root).k
-}
- 
-//删除最小键
-func (bt *BinaryTree) DeleteMin() {
-	bt.root = deleteMin(bt.root)
-}
- 
-//删除
-func (bt *BinaryTree) Delete(k int) {
-	bt.root = delete(bt.root, k)
+<pre><code class="language-go">// Run runs the specified APIServer.  This should never exit.
+func Run(runOptions *options.ServerRunOptions, stopCh &lt;-chan struct{}) error {
+	...
+
+	server, err := CreateServerChain(runOptions, stopCh)
+	if err != nil {
+		return err
+	}
+
+	return server.PrepareRun().Run(stopCh)
 }
 </code></pre>
 
-<p>节点(node.go)：</p>
+<p>这里面创建了一个 <code>server</code> ，经过 <code>PrepareRun()</code> 返回 <code>preparedGenericAPIServer</code> 并最终调用其方法 <code>Run()</code></p>
 
-<pre><code class="language-go">//节点
-type node struct {
-	k, v, sz    int   //键，值，大小
-	left, right *node //左右子节点
-}
+<pre><code class="language-go">// Run spawns the secure http server. It only returns if stopCh is closed
+// or the secure port cannot be listened on initially.
+func (s preparedGenericAPIServer) Run(stopCh &lt;-chan struct{}) error {
+	...
 
-//在以nd为根节点的树下增加或修改一个节点
-//如果创建了新节点，第二个参数返回true，
-//如果只是修改，第二个参数返回false
-func put(nd *node, k, v int) (*node, bool) {
-	if nd == nil {
-		return newNode(k, v), true
+	err := s.NonBlockingRun(stopCh)
+	if err != nil {
+		return err
 	}
-	hasNew := false //检测是否创建了新节点
-	if k &lt; nd.k {
-		nd.left, hasNew = put(nd.left, k, v)
-	} else if k &gt; nd.k {
-		nd.right, hasNew = put(nd.right, k, v)
-	} else {
-		nd.v = v //仅修改，不会增加增加节点，就不更新节点大小
-	}
-	if hasNew { //如果创建了新节点就更新树的大小
-		updateSize(nd)
-	}
-	return nd, hasNew
+
+	&lt;-stopCh
+
+	...
+
+	return nil
 }
- 
-//在以nd为根节点的树中获取键为k的值
-func get(nd *node, k int) int {
-	if nd == nil {
-		return -1
-	}
-	if k &lt; nd.k {
-		return get(nd.left, k)
-	} else if k &gt; nd.k {
-		return get(nd.right, k)
-	} else {
-		return nd.v
-	}
+</code></pre>
+
+<p>我们看到它又调用了 <code>s.NonBlockingRun()</code>，看方法名就知道是非阻塞运行即里面会创建新的 goroutine 最终运行 http 服务器，提供 http 接口给其它 kubernetes 组件调用，也是 kubernetes 集群控制的核心机制。然后到 <code>&lt;-stopCh</code> 这里阻塞，如果这个 channel 被 close，这里就会停止阻塞并处理关闭逻辑最后函数执行结束，<code>s.NonBlockingRun()</code>这个函数也传入了 <code>stopCh</code>，同样也是出于类似的考虑，让程序优雅关闭，<code>stopCh</code> 最初是 <code>NewAPIServerCommand()</code> 中创建的：</p>
+
+<pre><code class="language-go">stopCh := server.SetupSignalHandler()
+</code></pre>
+
+<p>很容易看出来这个 channel 跟系统信号量绑定了，即 <code>Ctrl+c</code> 或 <code>kill</code> 通知程序关闭的时候会 close 这个 channel ，然后下面的 <code>&lt;-stopCh</code></p>
+
+<pre><code class="language-go">// SetupSignalHandler registered for SIGTERM and SIGINT. A stop channel is returned
+// which is closed on one of these signals. If a second signal is caught, the program
+// is terminated with exit code 1.
+func SetupSignalHandler() (stopCh &lt;-chan struct{}) {
+	close(onlyOneSignalHandler) // panics when called twice
+
+	stop := make(chan struct{})
+	c := make(chan os.Signal, 2)
+	signal.Notify(c, shutdownSignals...)
+	go func() {
+		&lt;-c
+		close(stop)
+		&lt;-c
+		os.Exit(1) // second signal. Exit directly.
+	}()
+
+	return stop
 }
- 
-//获取以nd为根节点的树的大小
-func size(nd *node) int {
-	if nd == nil {
-		return 0
-	}
-	return nd.sz
-}
- 
-//更新以nd为根节点的树的大小
-func updateSize(nd *node) {
-	if nd == nil {
-		return
-	}
-	nd.sz = size(nd.left) + size(nd.right) + 1
-}
- 
-//选出以nd为根节点的树的最小键节点
-func min(nd *node) *node {
-	if nd == nil {
-		return nil
-	}
-	if nd.left != nil {
-		return min(nd.left)
-	}
-	return nd
-}
- 
-//删除以nd为根节点的树的最小键节点
-//返回被删除的节点
-func deleteMin(nd *node) *node {
-	if nd == nil {
-		return nil
-	}
-	if nd.left == nil { //找到最小节点
-		nd = nd.right //用右子节点代替自己
-	} else { //还有更小的
-		nd.left = deleteMin(nd.left)
-	}
-	updateSize(nd)
-	return nd
-}
- 
-//删除以nd为根节点的树并且键为k的节点
-func delete(nd *node, k int) *node {
-	if nd == nil {
-		return nil
-	}
-	if k &lt; nd.k {
-		nd.left = delete(nd.left, k)
-	} else if k &gt; nd.k {
-		nd.right = delete(nd.right, k)
-	} else { //命中要删除的节点
-		//只有一个或零个子节点
-		if nd.right == nil {
-			return nd.left
+</code></pre>
+
+<p>我们再来看看 <code>NonBlockingRun()</code> 这个函数的实现</p>
+
+<pre><code class="language-go">// NonBlockingRun spawns the secure http server. An error is
+// returned if the secure port cannot be listened on.
+func (s preparedGenericAPIServer) NonBlockingRun(stopCh &lt;-chan struct{}) error {
+	...
+
+	// Use an internal stop channel to allow cleanup of the listeners on error.
+	internalStopCh := make(chan struct{})
+
+	if s.SecureServingInfo != nil &amp;&amp; s.Handler != nil {
+		if err := s.SecureServingInfo.Serve(s.Handler, s.ShutdownTimeout, internalStopCh); err != nil {
+			close(internalStopCh)
+			return err
 		}
-		if nd.left == nil {
-			return nd.right
-		}
-		//同时具有两个子节点
-		//先找出大于本节点的最小节点作为后继节点
-		t := nd
-		nd.k = min(t.right).k
-		//删除
-		deleteMin(t.right)
-		//用后继节点代替本节点
-		nd.left = t.left
 	}
-	updateSize(nd)
-	return nd
+
+	...
+
+	return nil
 }
 </code></pre>
+
+<p>可以看到又调用了 <code>s.SecureServingInfo.Serve()</code> 来启动 http 服务器，继续深入进去</p>
+
+<pre><code class="language-go">// serveSecurely runs the secure http server. It fails only if certificates cannot
+// be loaded or the initial listen call fails. The actual server loop (stoppable by closing
+// stopCh) runs in a go routine, i.e. serveSecurely does not block.
+func (s *SecureServingInfo) Serve(handler http.Handler, shutdownTimeout time.Duration, stopCh &lt;-chan struct{}) error {
+	...
+
+	secureServer := &amp;http.Server{
+		Addr:           s.Listener.Addr().String(),
+		Handler:        handler,
+		...
+	}
+
+	...
+	
+	return RunServer(secureServer, s.Listener, shutdownTimeout, stopCh)
+}
+</code></pre>
+
+<p>它创建了 <code>http.Server</code>，里面包含处理 http 请求的 handler，又调用了 <code>RunServer()</code></p>
+
+<pre><code class="language-bash">// RunServer listens on the given port if listener is not given,
+// then spawns a go-routine continuously serving
+// until the stopCh is closed. This function does not block.
+// TODO: make private when insecure serving is gone from the kube-apiserver
+func RunServer(
+	server *http.Server,
+	ln net.Listener,
+	shutDownTimeout time.Duration,
+	stopCh &lt;-chan struct{},
+) error {
+	...
+
+	// Shutdown server gracefully.
+	go func() {
+		&lt;-stopCh
+		ctx, cancel := context.WithTimeout(context.Background(), shutDownTimeout)
+		server.Shutdown(ctx)
+		cancel()
+	}()
+
+	go func() {
+		...
+
+		err := server.Serve(listener)
+
+		msg := fmt.Sprintf(&quot;Stopped listening on %s&quot;, ln.Addr().String())
+		select {
+		case &lt;-stopCh:
+			glog.Info(msg)
+		default:
+			panic(fmt.Sprintf(&quot;%s due to error: %v&quot;, msg, err))
+		}
+	}()
+
+	return nil
+}
+</code></pre>
+
+<p>最终看到在后面那个新的 goroutine 中，调用了 <code>server.Serve()</code> 来启动 http 服务器，正常启动的情况下会一直阻塞在这里。</p>
+
+<h2 id="总结">总结</h2>
+
+<p>至此，我们初步把 <code>kube-apiserver</code> 源码的主线理清楚了，具体还有很多细节我们后面再继续深入。要理清思路我们就需要尽量先屏蔽细节，寻找我们想知道的逻辑路线。</p>
 
             </article>
 
             <ul class="pager blog-pager">
                 
                 <li class="previous">
-                    <a href="https://imroc.io/posts/algorithm/%E4%B8%89%E5%90%91%E5%88%87%E5%88%86%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8Fc-c&#43;&#43;%E5%AE%9E%E7%8E%B0/" data-toggle="tooltip" data-placement="top" title="三向切分快速排序(C-C&#43;&#43;实现)">&larr; Previous Post</a>
+                    <a href="https://imroc.io/posts/kubernetes/sync-images-to-docker-hub-using-katacoda/" data-toggle="tooltip" data-placement="top" title="利用Katacoda免费同步Docker镜像到Docker Hub">&larr; Previous Post</a>
                 </li>
                  
-                <li class="next">
-                    <a href="https://imroc.io/posts/algorithm/golang%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92%E6%B1%82%E8%A7%A3%E6%9C%80%E5%A4%A7%E8%BF%9E%E7%BB%AD%E5%AD%90%E6%95%B0%E7%BB%84%E5%92%8C/" data-toggle="tooltip" data-placement="top" title="golang动态规划求解最大连续子数组和">Next Post &rarr;</a>
-                </li>
-                
             </ul>
             
             <div>
@@ -430,15 +449,11 @@ func delete(nd *node, k int) *node {
                 <h2>See Also</h2>
                 <ul>
                     
-                    <li><a href="/posts/algorithm/%E4%B8%89%E5%90%91%E5%88%87%E5%88%86%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8Fgolang%E5%AE%9E%E7%8E%B0/">三向切分快速排序(golang实现)</a></li>
+                    <li><a href="/posts/kubernetes/sync-images-to-docker-hub-using-katacoda/">利用Katacoda免费同步Docker镜像到Docker Hub</a></li>
                     
-                    <li><a href="/posts/algorithm/%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8Fc-c&#43;&#43;-%E5%AE%9E%E7%8E%B0/">冒泡排序(C-C&#43;&#43;-实现)</a></li>
+                    <li><a href="/posts/kubernetes/install-kubernetes-1.9-on-centos7-with-kubeadm/">国内使用Kubeadm在CentOS 7上安装Kubernetes 1.9</a></li>
                     
-                    <li><a href="/posts/algorithm/%E7%BA%BF%E6%80%A7%E5%A4%8D%E6%9D%82%E5%BA%A6%E9%80%89%E5%87%BA%E7%AC%ACk%E5%B0%8F%E5%85%83%E7%B4%A0%E4%B8%AD%E4%BD%8D%E6%95%B0%E6%9C%80%E5%B0%8F%E7%9A%84k%E4%B8%AA%E5%85%83%E7%B4%A0golang%E5%AE%9E%E7%8E%B0/">线性复杂度选出第k小元素、中位数、最小的k个元素(golang实现)</a></li>
-                    
-                    <li><a href="/posts/algorithm/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F%E8%87%AA%E9%A1%B6%E5%90%91%E4%B8%8B%E4%B8%8E%E8%87%AA%E5%BA%95%E5%90%91%E4%B8%8A%E4%B8%A4%E7%A7%8D%E6%96%B9%E5%BC%8Fc-c&#43;&#43;%E5%AE%9E%E7%8E%B0/">归并排序,自顶向下与自底向上两种方式(C-C&#43;&#43;实现)</a></li>
-                    
-                    <li><a href="/posts/algorithm/%E7%BA%BF%E6%80%A7%E5%A4%8D%E6%9D%82%E5%BA%A6%E9%80%89%E5%87%BA%E7%AC%ACk%E5%B0%8F%E5%85%83%E7%B4%A0%E4%B8%AD%E4%BD%8D%E6%95%B0%E6%9C%80%E5%B0%8F%E7%9A%84k%E4%B8%AA%E5%85%83%E7%B4%A0java%E5%AE%9E%E7%8E%B0/">线性复杂度选出第k小元素、中位数、最小的k个元素(Java实现)</a></li>
+                    <li><a href="/posts/kubernetes/kubernetes-binaries/">Kubernetes程序二进制下载集合</a></li>
                     
                 </ul>
                 
@@ -449,12 +464,12 @@ func delete(nd *node, k int) *node {
             
 <div>
     <section id="datecount">
-        <h4 id="date"> Tue Sep 5, 2017</h4>
+        <h4 id="date"> Mon Mar 12, 2018</h4>
     </section>
-    <h5 id="wc">900 Words|Read in about 2 Min</h5>
+    <h5 id="wc">1500 Words|Read in about 3 Min</h5>
     <h5 id="tags">Tags: 
         
-        <a href="https://imroc.io/tags/%E7%AE%97%E6%B3%95/">算法</a> &nbsp;
+        <a href="https://imroc.io/tags/kubernetes/">kubernetes</a> &nbsp;
     </h5>
 </div>
 

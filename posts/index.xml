@@ -8,10 +8,19 @@
     <language>zh-cn</language>
     <managingEditor>roc@imroc.io (roc)</managingEditor>
     <webMaster>roc@imroc.io (roc)</webMaster>
-    <lastBuildDate>Fri, 09 Mar 2018 10:39:17 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 12 Mar 2018 11:47:19 +0800</lastBuildDate>
     
 	<atom:link href="https://imroc.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>kubernetes源码阅读笔记：理清 kube-apiserver 的源码主线</title>
+      <link>https://imroc.io/posts/kubernetes/kubernetes-source-code-reading-notes-kube-apiserver-code-main-line/</link>
+      <pubDate>Mon, 12 Mar 2018 11:47:19 +0800</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/posts/kubernetes/kubernetes-source-code-reading-notes-kube-apiserver-code-main-line/</guid>
+      <description>前言 我最近开始研究 kubernetes 源码，希望将阅读笔记记录下来，分享阅读思路和心得，更好的理解 kubernetes，这是第一篇，从 kube-apiserver 开始。 开始 k8s各组件</description>
+    </item>
     
     <item>
       <title>利用Katacoda免费同步Docker镜像到Docker Hub</title>
