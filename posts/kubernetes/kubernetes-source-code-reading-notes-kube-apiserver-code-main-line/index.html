@@ -356,7 +356,7 @@ func (s preparedGenericAPIServer) Run(stopCh &lt;-chan struct{}) error {
 <pre><code class="language-go">stopCh := server.SetupSignalHandler()
 </code></pre>
 
-<p>很容易看出来这个 channel 跟系统信号量绑定了，即 <code>Ctrl+c</code> 或 <code>kill</code> 通知程序关闭的时候会 close 这个 channel ，然后下面的 <code>&lt;-stopCh</code></p>
+<p>很容易看出来这个 channel 跟系统信号量绑定了，即 <code>Ctrl+c</code> 或 <code>kill</code> 通知程序关闭的时候会 close 这个 channel ，然后调用 <code>&lt;-stopCh</code> 的地方就会停止阻塞，做关闭程序需要的一些清理操作实现优雅关闭</p>
 
 <pre><code class="language-go">// SetupSignalHandler registered for SIGTERM and SIGINT. A stop channel is returned
 // which is closed on one of these signals. If a second signal is caught, the program
