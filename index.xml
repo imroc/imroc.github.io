@@ -23,7 +23,7 @@
     </item>
     
     <item>
-      <title>对比Kubernetes的Nodeport、Loadbalancer和Ingress，考虑什么时候该用哪种</title>
+      <title>对比Kubernetes的Nodeport、Loadbalancer和Ingress，什么时候该用哪种</title>
       <link>https://imroc.io/posts/kubernetes/kubernetes-nodeport-vs-loadbalancer-vs-ingress-when-should-i-use-what/</link>
       <pubDate>Tue, 13 Mar 2018 22:45:26 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
