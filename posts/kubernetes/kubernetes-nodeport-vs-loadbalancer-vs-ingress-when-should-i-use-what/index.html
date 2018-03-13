@@ -304,12 +304,12 @@ spec:
 
 <p>现在，你可以使用如下的 Kubernetes API 访问服务：</p>
 
-<pre><code>http://localhost:8080/api/v1/proxy/namespaces/&lt;NAMESPACE&gt;/services/&lt;SERVICE-NAME&gt;:&lt;PORT-NAME&gt;/
+<pre><code class="language-bash">http://localhost:8080/api/v1/proxy/namespaces/&lt;NAMESPACE&gt;/services/&lt;SERVICE-NAME&gt;:&lt;PORT-NAME&gt;/
 </code></pre>
 
 <p>所以，如果要访问我们刚刚定义的服务，可以使用下面的地址：</p>
 
-<pre><code>http://localhost:8080/api/v1/proxy/namespaces/default/services/my-internal-service:http/
+<pre><code class="language-bash">http://localhost:8080/api/v1/proxy/namespaces/default/services/my-internal-service:http/
 </code></pre>
 
 <h3 id="什么时候用">什么时候用？</h3>
@@ -362,7 +362,7 @@ spec:
 <h2 id="loadbalancer">LoadBalancer</h2>
 
 <p>LoadBalancer 服务暴露服务的标准方式。 在 GKE 上，这将启动一个<a href="https://cloud.google.com/compute/docs/load-balancing/network/">网络负载平衡器</a>，它将为您提供一个将所有流量转发到您的服务的IP地址。
-<img src="http://res.cloudinary.com/imroc/image/upload/v1520949676/blog/k8s/kubernetes-loadbalancer.png"></p>
+<img src="https://res.cloudinary.com/imroc/image/upload/v1520949676/blog/k8s/kubernetes-loadbalancer.png"></p>
 
 <h3 id="什么时候用-2">什么时候用？</h3>
 
