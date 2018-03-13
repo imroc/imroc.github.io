@@ -526,14 +526,5 @@
       <description>封装成函数： //交换数组元素 func swap(slice []int, i int, j int) { slice[i], slice[j] = slice[j], slice[i] } //选择排序 func SelectionSort(s []int) { l := len(s) //以免每次循环判断都运算 m := len(s)-1 for i:=0;i&amp;lt;m;i++ { k:=i for j:=i+1;j&amp;lt;l;j++ { if s[j]&amp;lt;s[k] { k = j</description>
     </item>
     
-    <item>
-      <title></title>
-      <link>https://imroc.io/posts/kubernetes/install-self-hosted-kubernetes-with-bootkube/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/kubernetes/install-self-hosted-kubernetes-with-bootkube/</guid>
-      <description>使用bootkube安装自托管的kubernetes 自托管kubernetes 简单来说，就是将kubernetes运行在kubernetes上，不管 master 还是 worker 节点，都只需要安装 kubelet 和 容器运行时（通常是docker）这两个必要的组件，其它组件都运行在容器中，并由 kubelet 管理。</description>
-    </item>
-    
   </channel>
 </rss>
