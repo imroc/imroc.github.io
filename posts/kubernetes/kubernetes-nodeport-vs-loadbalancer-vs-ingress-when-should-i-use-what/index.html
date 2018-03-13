@@ -5,13 +5,13 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title> Union-Find(golang实现) - imroc.io|roc的博客|Cloud Native|Kubernetes|Go|Golang</title>
+  <title> 对比Kubernetes的Nodeport、Loadbalancer和Ingress，考虑什么时候该用哪种 - imroc.io|roc的博客|Cloud Native|Kubernetes|Go|Golang</title>
   <meta name="description" content="imroc.io|roc的博客|Cloud Native|Kubernetes|Go|Golang" />
-  <meta property="og:title" content="Union-Find(golang实现)" />
-  <meta name="twitter:title" content="Union-Find(golang实现)" />
-  <meta name="description" content="quick-find、quick-union、加权quick-union(附带路径压缩优化) 本算法主要解决动态连通性一类问题，这里尽量用精炼">
-  <meta property="og:description" content="quick-find、quick-union、加权quick-union(附带路径压缩优化) 本算法主要解决动态连通性一类问题，这里尽量用精炼">
-  <meta name="twitter:description" content="quick-find、quick-union、加权quick-union(附带路径压缩优化) 本算法主要解决动态连通性一类问题，这里尽量用精炼">
+  <meta property="og:title" content="对比Kubernetes的Nodeport、Loadbalancer和Ingress，考虑什么时候该用哪种" />
+  <meta name="twitter:title" content="对比Kubernetes的Nodeport、Loadbalancer和Ingress，考虑什么时候该用哪种" />
+  <meta name="description" content="本文翻译自：https://medium.com/google-cloud/kubernetes-nodeport-vs-loadbalan">
+  <meta property="og:description" content="本文翻译自：https://medium.com/google-cloud/kubernetes-nodeport-vs-loadbalan">
+  <meta name="twitter:description" content="本文翻译自：https://medium.com/google-cloud/kubernetes-nodeport-vs-loadbalan">
   <meta name="author" content="{Description { .Site.Author.name }}"/>
   <link href='https://imroc.io/favicon.png' rel='icon' type='image/x-icon'/>
   <meta property="og:image" content="https://imroc.io/images/logo.png" />
@@ -19,12 +19,12 @@
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:site" content="@imrocchan" />
   <meta name="twitter:creator" content="@imrocchan" />
-  <meta property="og:url" content="https://imroc.io/posts/algorithm/union-findgolang%E5%AE%9E%E7%8E%B0/" />
+  <meta property="og:url" content="https://imroc.io/posts/kubernetes/kubernetes-nodeport-vs-loadbalancer-vs-ingress-when-should-i-use-what/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="roc" />
 
   <meta name="generator" content="Hugo 0.31.1" />
-  <link rel="canonical" href="https://imroc.io/posts/algorithm/union-findgolang%E5%AE%9E%E7%8E%B0/" />
+  <link rel="canonical" href="https://imroc.io/posts/kubernetes/kubernetes-nodeport-vs-loadbalancer-vs-ingress-when-should-i-use-what/" />
   <link rel="alternate" href="https://imroc.io/index.xml" type="application/rss+xml" title="roc">
   <script src="https://cdn.staticfile.org/jquery/1.12.4/jquery.min.js"></script>
   <link rel="stylesheet" href="https://cdn.staticfile.org/KaTeX/0.7.1/katex.min.css" crossorigin="anonymous">
@@ -192,8 +192,40 @@ var _hmt = _hmt || [];
 
 
   
+    <div id="header-big-imgs" data-num-img=1 data-img-src-1="https://res.cloudinary.com/imroc/image/upload/v1520952425/blog/k8s/scifi-banner.jpg" data-img-desc-1="ingress"></div>
+  
 
-  <header class="header-section ">
+  <header class="header-section has-img">
+    
+      <div class="intro-header big-img">
+        
+        
+        <div class="container">
+          <div class="row">
+              <div class="col-lg-12 col-md-12 col-md-offset-0">
+                
+                <div class="post-heading">
+                
+                  
+                     <h1>对比Kubernetes的Nodeport、Loadbalancer和Ingress，考虑什么时候该用哪种</h1>
+                     
+                    <span class="post-meta">
+  
+  Posted on March 13, 2018
+  
+  
+</span>
+
+
+                    
+                  
+                  
+              </div>
+            </div>
+          </div>
+        </div>
+        <span class="img-desc" style="display: inline;"></span>
+      </div>
     
     <div class="intro-header no-img">
       
@@ -201,7 +233,7 @@ var _hmt = _hmt || [];
         <div class="row">
           <div class="col-lg-12 col-md-12 col-md-offset-0">
             <div class="posts-heading">
-                <h1 align="center">Union-Find(golang实现)</h1>
+                <h1 align="center">对比Kubernetes的Nodeport、Loadbalancer和Ingress，考虑什么时候该用哪种</h1>
                 
                 
             </div>
@@ -221,12 +253,12 @@ var _hmt = _hmt || [];
             
 <div>
     <section id="datecount">
-        <h4 id="date"> Tue Sep 5, 2017</h4>
+        <h4 id="date"> Tue Mar 13, 2018</h4>
     </section>
-    <h5 id="wc">900 Words|Read in about 2 Min</h5>
+    <h5 id="wc">1700 Words|Read in about 4 Min</h5>
     <h5 id="tags">Tags: 
         
-        <a href="https://imroc.io/tags/%E7%AE%97%E6%B3%95/">算法</a> &nbsp;
+        <a href="https://imroc.io/tags/kubernetes/">kubernetes</a> &nbsp;
     </h5>
 </div>
 
@@ -234,201 +266,160 @@ var _hmt = _hmt || [];
             <article role="main" class="blog-post" itemprop="articleBody" id="content">
                 
 
-<p><strong>quick-find、quick-union、加权quick-union(附带路径压缩优化)</strong></p>
+<blockquote>
+<p>本文翻译自：<a href="https://medium.com/google-cloud/kubernetes-nodeport-vs-loadbalancer-vs-ingress-when-should-i-use-what-922f010849e0">https://medium.com/google-cloud/kubernetes-nodeport-vs-loadbalancer-vs-ingress-when-should-i-use-what-922f010849e0</a></p>
+</blockquote>
 
-<hr />
+<p>最近，有人问我 NodePort，LoadBalancer 和 Ingress 之间的区别是什么。 它们是将外部流量引入群集的不同方式，并且实现方式不一样。 我们来看看它们是如何工作的，以及什么时候该用哪种。</p>
 
-<p>本算法主要解决动态连通性一类问题，这里尽量用精炼简洁的话来阐述。</p>
+<p><strong>注意：</strong>本文适用于 <a href="https://cloud.google.com/kubernetes-engine/">Google Kubernetes Engine</a>。 如果你在其他公有云、混合云、minikube 等上运行，可能会略有不同。 例如，您不能在 minikube 上使用 LoadBalancer。 我也没有深入技术细节。 如果您有兴趣了解更多，<a href="https://kubernetes.io/docs/concepts/services-networking/service/">官方文档</a>是一个很好的资源！</p>
 
-<p><strong>数据结构描述:</strong></p>
+<h2 id="clusterip">ClusterIP</h2>
 
-<ul>
-<li>有N个节点（索引0~N-1），可以查询节点数量</li>
-<li>可以连接两个节点</li>
-<li>可以查询两个节点是否连通</li>
-</ul>
+<p>ClusterIP 服务是默认的 Kubernetes 服务。 它为您提供集群内部其他应用程序可以访问的服务， 外部无法访问。</p>
 
-<p><strong>算法大致设计思路：</strong></p>
+<p>ClusterIP 服务的 YAML 类似这样：</p>
 
-<ul>
-<li>每个节点初始化为不同的整数标记</li>
-<li>通过一个辅助函数查询某个节点的标记值</li>
-<li>如果两节点标记相同，说明两节点是连通的
-&mdash;&mdash;</li>
-</ul>
-
-<p>用一个包专门处理union-find算法(unionfind)</p>
-
-<p>定义接口和基类(<code>union_find.go</code>)：</p>
-
-<pre><code class="language-go">package unionfind
- 
-//union-find的quick-find实现版
-type QuickFind struct {
-	BaseUnionFind
-}
- 
-func (qf *QuickFind) Connected(p, q int) bool {
-	return qf.id[p] == qf.id[q]
-}
- 
-func (qf *QuickFind) Union(p, q int) {
-	i, j := qf.id[p], qf.id[q]
-	if i == j {
-		return
-	}
-	for k, v := range qf.id {
-		if v == j {
-			qf.id[k] = i
-		}
-	}
-	qf.count--
-}
- 
-func NewQuickFind(n int) *QuickFind {
-	return &amp;QuickFind{*NewBaseUnionFind(n)}
-}
+<pre><code class="language-yaml">apiVersion: v1
+kind: Service
+metadata:  
+  name: my-internal-service
+selector:    
+  app: my-app
+spec:
+  type: ClusterIP
+  ports:  
+  - name: http
+    port: 80
+    targetPort: 80
+    protocol: TCP
 </code></pre>
 
-<h2 id="quickfind">QuickFind</h2>
+<p>如果你不能从集群外部上访问一个 ClusterIP 服务，我为什么要谈论它？ 因为你可以使用 Kubernetes Proxy 来访问它！
+<img src="https://res.cloudinary.com/imroc/image/upload/v1520947097/blog/k8s/kubernetes-proxy.png">
+启动 Kubernetes Proxy:</p>
 
-<ul>
-<li>a和b进行union的时候，将b及与b连通节点的标记都置为和a的标记一样</li>
-<li>标记相同的节点是连通的
-<code>quick_find.go:</code></li>
-</ul>
-
-<pre><code class="language-go">package unionfind
- 
-//union-find的quick-find实现版
-type QuickFind struct {
-	BaseUnionFind
-}
- 
-func (qf *QuickFind) Connected(i, j int) bool {
-	return qf.id[i] == qf.id[j]
-}
- 
-func (qf *QuickFind) Union(i, j int) {
-	c := qf.id[j]
-	for k, v := range qf.id {
-		if v == c {
-			qf.id[k] = qf.id[i]
-		}
-	}
-	qf.count--
-}
- 
-func NewQuickFind(n int) *QuickFind {
-	return &amp;QuickFind{*NewBaseUnionFind(n)}
-}
+<pre><code class="language-bash">$ kubectl proxy --port=8080
 </code></pre>
 
-<h2 id="quickunion">QuickUnion</h2>
+<p>现在，你可以使用如下的 Kubernetes API 访问服务：</p>
 
-<ul>
-<li>连通的节点形成一棵树，根节点相同
-<code>quick_union.go:</code></li>
-</ul>
-
-<pre><code class="language-go">package unionfind
- 
-//union-find的quick-union实现版
-type QuickUnion struct {
-	BaseUnionFind
-}
- 
-//查询根节点
-func (qu *QuickUnion) findRoot(p int) int {
-	for p != qu.id[p] {
-		p = qu.id[p]
-	}
-	return p
-}
- 
-func (qu *QuickUnion) Connected(p, q int) bool {
-	return qu.findRoot(p) == qu.findRoot(q)
-}
- 
-func (qu *QuickUnion) Union(p, q int) {
-	rp := qu.findRoot(p)
-	rq := qu.findRoot(q)
-	if rp == rq {
-		return
-	}
-	qu.id[rq] = rp
-	qu.count--
-}
- 
-func NewQuickUnion(n int) *QuickUnion {
-	return &amp;QuickUnion{*NewBaseUnionFind(n)}
-}
+<pre><code>http://localhost:8080/api/v1/proxy/namespaces/&lt;NAMESPACE&gt;/services/&lt;SERVICE-NAME&gt;:&lt;PORT-NAME&gt;/
 </code></pre>
 
-<h2 id="加权quickunion-附带路径压缩优化">加权QuickUnion(附带路径压缩优化):</h2>
+<p>所以，如果要访问我们刚刚定义的服务，可以使用下面的地址：</p>
+
+<pre><code>http://localhost:8080/api/v1/proxy/namespaces/default/services/my-internal-service:http/
+</code></pre>
+
+<h3 id="什么时候用">什么时候用？</h3>
+
+<p>有几种情况可以使用 Kubernetes Proxy 来访问您的服务：</p>
 
 <ul>
-<li>union的时候小树挂在大树下</li>
-<li>查询根节点的时候顺便将该节点的父节点直接指向根节点，压缩路径
-<code>weighted_quick_union.go:</code></li>
+<li>调试您的服务，或由于某种原因直接从你笔记本电脑连接到它们</li>
+<li>允许内部流量，显示内部仪表盘等</li>
 </ul>
 
-<pre><code class="language-go">package unionfind
- 
- 
-//union-find的加权quick-union实现版，
-//另外还作了路径压缩优化
-type WeightedQuickUnion struct {
-	QuickUnion
-	sz []int
-}
- 
-//查询根节点，顺便压缩路径
-func (wqu *WeightedQuickUnion) findRoot(p int) int {
-	for p != wqu.id[p] {
-		wqu.id[p] = wqu.id[wqu.id[p]]
-		p = wqu.id[p]
-	}
-	return p
-}
- 
-func (wqu *WeightedQuickUnion) Union(p, q int) {
-	rp := wqu.findRoot(p)
-	rq := wqu.findRoot(q)
-	if rp == rq {
-		return
-	}
-	if wqu.sz[rp] &lt; wqu.sz[rq] {
-		wqu.id[rp] = rq
-		wqu.sz[rq] += wqu.sz[rp]
-	} else {
-		wqu.id[rp] = rq
-		wqu.sz[rp] += wqu.sz[rq]
-	}
-	wqu.count--
-}
- 
-func NewWeightedQuickUnion(n int) *WeightedQuickUnion {
-	sz := make([]int, n)
-	for i := 0; i &lt; n; i++ {
-		sz[i] = 1
-	}
-	return &amp;WeightedQuickUnion{QuickUnion:*NewQuickUnion(n), sz: sz}
-}
+<p>由于此方法要求您用已授权用户运行 kubectl ，因此您不应该使用此方法将您的服务公开到公网上或将其用于生产。</p>
+
+<h2 id="nodeport">NodePort</h2>
+
+<p>A NodePort service is the most primitive way to get external traffic directly to your service. NodePort, as the name implies, opens a specific port on all the Nodes (the VMs), and any traffic that is sent to this port is forwarded to the service.</p>
+
+<p>NodePort 服务是暴露服务的最原始方式。 顾名思义，NodePort 会在所有节点（VM）上打开一个特定的端口，并且发送到此端口的任何流量都将转发到该服务。
+<img src="https://res.cloudinary.com/imroc/image/upload/v1520948622/blog/k8s/kubernetes-nodeport.png">
+NodePort 服务的 YAML 类似这样：</p>
+
+<pre><code class="language-yaml">apiVersion: v1
+kind: Service
+metadata:  
+  name: my-nodeport-service
+selector:    
+  app: my-app
+spec:
+  type: NodePort
+  ports:  
+  - name: http
+    port: 80
+    targetPort: 80
+    nodePort: 30036
+    protocol: TCP
 </code></pre>
+
+<p>基本上，NodePort 服务与普通的 “ClusterIP” 服务 YAML 定义有两点区别。 首先，type 是 “NodePort”。还有一个称为 nodePort 的附加端口，指定在节点上打开哪个端口。 如果你不指定这个端口，它会选择一个随机端口。</p>
+
+<h3 id="什么时候用-1">什么时候用？</h3>
+
+<p>这种方法有许多缺点：</p>
+
+<ul>
+<li>每个端口只能有一个服务</li>
+<li>默认您只能使用端口30000-32767</li>
+<li>如果您的 节点/虚拟机IP 地址发生更改，则需要处理该问题</li>
+</ul>
+
+<p>由于这些原因，我不建议在生产中使用这种方法。 如果您运行的服务不必始终可用，或者您非常关注成本，则此方法适用于您，比如演示程序或临时应用。</p>
+
+<h2 id="loadbalancer">LoadBalancer</h2>
+
+<p>LoadBalancer 服务暴露服务的标准方式。 在 GKE 上，这将启动一个<a href="https://cloud.google.com/compute/docs/load-balancing/network/">网络负载平衡器</a>，它将为您提供一个将所有流量转发到您的服务的IP地址。
+<img src="http://res.cloudinary.com/imroc/image/upload/v1520949676/blog/k8s/kubernetes-loadbalancer.png"></p>
+
+<h3 id="什么时候用-2">什么时候用？</h3>
+
+<p>如果你想直接暴露一个服务，这是默认的方法(GKE上)。 您指定的端口上的所有流量都将被转发到该服务， 没有过滤、路由等。这意味着您可以发送几乎任何类型的流量，如 HTTP，TCP，UDP，Websockets，gRPC 或其他。</p>
+
+<p>最大的缺点是，您使用 LoadBalancer 公开的每项服务都将获得自己的 IP 地址，并且您必须为每个暴露的服务使用一个 LoadBalancer，这可能会付出比较大的代价！</p>
+
+<h2 id="ingress">Ingress</h2>
+
+<p>与以上所有例子不同，Ingress 实际上不是一种服务。相反，它位于多个服务之前，充当集群中的“智能路由器”或入口点。</p>
+
+<p>您可以使用 Ingress 做很多不同的事情，并且有许多类型的 Ingress 控制器，具有不同的功能。</p>
+
+<p>GKE 默认的 Ingress 控制器将为您启动一个 <a href="https://cloud.google.com/compute/docs/load-balancing/http/">HTTP（S）负载均衡器</a>。 这将使您可以执行基于路径和基于子域名的路由到后端服务。 例如，您可以将 foo.yourdomain.com 上的所有内容发送到 foo 服务，并将 yourdomain.com/bar/ 路径下所有内容发送到 bar 服务的。
+<img src="https://res.cloudinary.com/imroc/image/upload/v1520951161/blog/k8s/kubernetes-ingress.png">
+在 GKE 上的 <a href="https://cloud.google.com/compute/docs/load-balancing/http/">七层 HTTP 负载均衡器</a> 的 Ingress 对象 YAML 定义类似这样：</p>
+
+<pre><code class="language-yaml">apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: my-ingress
+spec:
+  backend:
+    serviceName: other
+    servicePort: 8080
+  rules:
+  - host: foo.mydomain.com
+    http:
+      paths:
+      - backend:
+          serviceName: foo
+          servicePort: 8080
+  - host: mydomain.com
+    http:
+      paths:
+      - path: /bar/*
+        backend:
+          serviceName: bar
+          servicePort: 8080
+</code></pre>
+
+<h3 id="什么时候用-3">什么时候用？</h3>
+
+<p>Ingress 可能是暴露服务最强大的方式了，但也可能是最复杂的。 来自 <a href="https://cloud.google.com/kubernetes-engine/docs/tutorials/http-balancer">Google Cloud Load Balancer</a>, <a href="https://github.com/kubernetes/ingress-nginx">Nginx</a>, <a href="https://github.com/heptio/contour">Contour</a>, <a href="https://istio.io/docs/tasks/traffic-management/ingress.html">Istio</a> 等的 Ingress 控制器类型很多。 还有用于 Ingress 控制器的插件，如 <a href="https://github.com/jetstack/cert-manager">cert-manager</a>，可以为您的服务自动提供 SSL 证书。</p>
+
+<p>如果您希望在相同的 IP 地址下暴露多个服务，并且这些服务都使用相同的L7协议（通常是HTTP），则 Ingress 是最有用的。 如果您使用原生 GCP 集成，您只需支付一个负载平衡器，由于 Ingress 很“智能”，您可以获得许多开箱即用的功能（如 SSL，Auth，路由等）</p>
 
             </article>
 
             <ul class="pager blog-pager">
                 
                 <li class="previous">
-                    <a href="https://imroc.io/posts/algorithm/golang%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92%E6%B1%82%E8%A7%A3%E6%9C%80%E5%A4%A7%E8%BF%9E%E7%BB%AD%E5%AD%90%E6%95%B0%E7%BB%84%E5%92%8C/" data-toggle="tooltip" data-placement="top" title="golang动态规划求解最大连续子数组和">&larr; Previous Post</a>
+                    <a href="https://imroc.io/posts/kubernetes/kubernetes-source-code-reading-notes-kube-apiserver-code-main-line/" data-toggle="tooltip" data-placement="top" title="kubernetes源码阅读笔记：理清 kube-apiserver 的源码主线">&larr; Previous Post</a>
                 </li>
                  
-                <li class="next">
-                    <a href="https://imroc.io/posts/algorithm/union-findjava%E5%AE%9E%E7%8E%B0/" data-toggle="tooltip" data-placement="top" title="Union-Find(Java实现)">Next Post &rarr;</a>
-                </li>
-                
             </ul>
             
             <div>
@@ -436,15 +427,13 @@ func NewWeightedQuickUnion(n int) *WeightedQuickUnion {
                 <h2>See Also</h2>
                 <ul>
                     
-                    <li><a href="/posts/algorithm/%E4%BA%8C%E5%88%86%E6%B3%95%E6%9F%A5%E6%89%BEjava%E5%AE%9E%E7%8E%B0/">二分法查找(Java实现)</a></li>
+                    <li><a href="/posts/kubernetes/kubernetes-source-code-reading-notes-kube-apiserver-code-main-line/">kubernetes源码阅读笔记：理清 kube-apiserver 的源码主线</a></li>
                     
-                    <li><a href="/posts/algorithm/%E7%BA%BF%E6%80%A7%E5%A4%8D%E6%9D%82%E5%BA%A6%E9%80%89%E5%87%BA%E7%AC%ACk%E5%B0%8F%E5%85%83%E7%B4%A0%E4%B8%AD%E4%BD%8D%E6%95%B0%E6%9C%80%E5%B0%8F%E7%9A%84k%E4%B8%AA%E5%85%83%E7%B4%A0c-c&#43;&#43;%E5%AE%9E%E7%8E%B0/">线性复杂度选出第k小元素、中位数、最小的k个元素(C-C&#43;&#43;实现)</a></li>
+                    <li><a href="/posts/kubernetes/sync-images-to-docker-hub-using-katacoda/">利用Katacoda免费同步Docker镜像到Docker Hub</a></li>
                     
-                    <li><a href="/posts/algorithm/%E7%BA%BF%E6%80%A7%E5%A4%8D%E6%9D%82%E5%BA%A6%E9%80%89%E5%87%BA%E7%AC%ACk%E5%B0%8F%E5%85%83%E7%B4%A0%E4%B8%AD%E4%BD%8D%E6%95%B0%E6%9C%80%E5%B0%8F%E7%9A%84k%E4%B8%AA%E5%85%83%E7%B4%A0golang%E5%AE%9E%E7%8E%B0/">线性复杂度选出第k小元素、中位数、最小的k个元素(golang实现)</a></li>
+                    <li><a href="/posts/kubernetes/install-kubernetes-1.9-on-centos7-with-kubeadm/">国内使用Kubeadm在CentOS 7上安装Kubernetes 1.9</a></li>
                     
-                    <li><a href="/posts/algorithm/%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8Fgolang%E5%AE%9E%E7%8E%B0/">快速排序(golang实现)</a></li>
-                    
-                    <li><a href="/posts/algorithm/%E5%A0%86%E6%8E%92%E5%BA%8Fgolang%E5%AE%9E%E7%8E%B0/">堆排序(golang实现)</a></li>
+                    <li><a href="/posts/kubernetes/kubernetes-binaries/">Kubernetes程序二进制下载集合</a></li>
                     
                 </ul>
                 
@@ -455,12 +444,12 @@ func NewWeightedQuickUnion(n int) *WeightedQuickUnion {
             
 <div>
     <section id="datecount">
-        <h4 id="date"> Tue Sep 5, 2017</h4>
+        <h4 id="date"> Tue Mar 13, 2018</h4>
     </section>
-    <h5 id="wc">900 Words|Read in about 2 Min</h5>
+    <h5 id="wc">1700 Words|Read in about 4 Min</h5>
     <h5 id="tags">Tags: 
         
-        <a href="https://imroc.io/tags/%E7%AE%97%E6%B3%95/">算法</a> &nbsp;
+        <a href="https://imroc.io/tags/kubernetes/">kubernetes</a> &nbsp;
     </h5>
 </div>
 
