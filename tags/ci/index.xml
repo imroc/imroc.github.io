@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Ci on roc</title>
+    <link>https://imroc.io/tags/ci/</link>
+    <description>Recent content in Ci on roc</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <managingEditor>roc@imroc.io (roc)</managingEditor>
+    <webMaster>roc@imroc.io (roc)</webMaster>
+    <lastBuildDate>Fri, 13 Apr 2018 22:23:22 +0800</lastBuildDate>
+    
+	<atom:link href="https://imroc.io/tags/ci/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>利用Gitlab和Jenkins做CI(持续集成)</title>
+      <link>https://imroc.io/posts/other/ci-with-gitlab-and-jenkins/</link>
+      <pubDate>Fri, 13 Apr 2018 22:23:22 +0800</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/posts/other/ci-with-gitlab-and-jenkins/</guid>
+      <description>利用Gitlab和Jenkins做CI(持续集成) 最近用到持续集成顺便总结在这里，都是用的最新版。搭建过程中还有一个demo，提交代码到 gitlab 自</description>
+    </item>
+    
+  </channel>
+</rss>
