@@ -316,8 +316,10 @@ mkdir config logs data
 
 <p>准备启动脚本 （替换想要的启动端口，ip 地址替换为访问你的 gitlab 的地址，也可以替换想要的挂载目录）</p>
 
-<pre><code class="language-bash">cat &lt;&lt; EOF &gt; run
-#! /bin/bash
+<pre><code class="language-bash">vi run
+</code></pre>
+
+<pre><code class="language-bash">#! /bin/bash
 
 sudo docker run -d --rm \
     -p 8088:8088 \
@@ -328,8 +330,11 @@ sudo docker run -d --rm \
     -v $PWD/data:/var/opt/gitlab \
     gitlab/gitlab-ee:latest
 EOF
+</code></pre>
 
-chmod +x run
+<p>赋予执行权限</p>
+
+<pre><code class="language-bash">chmod +x run
 </code></pre>
 
 <p>启动 gitlab</p>
