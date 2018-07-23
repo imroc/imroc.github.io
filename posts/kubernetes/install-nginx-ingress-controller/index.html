@@ -5,13 +5,13 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title> 安装 Nginx Ingress Controller - imroc.io|roc的博客|Cloud Native|Kubernetes|Go|Golang</title>
+  <title> 使用 Nginx Ingress Controller 导入外部流量到 Kubernetes 集群内部 - imroc.io|roc的博客|Cloud Native|Kubernetes|Go|Golang</title>
   <meta name="description" content="imroc.io|roc的博客|Cloud Native|Kubernetes|Go|Golang" />
-  <meta property="og:title" content="安装 Nginx Ingress Controller" />
-  <meta name="twitter:title" content="安装 Nginx Ingress Controller" />
-  <meta name="description" content="暴露 Kubernetes 服务到公网">
-  <meta property="og:description" content="暴露 Kubernetes 服务到公网">
-  <meta name="twitter:description" content="暴露 Kubernetes 服务到公网">
+  <meta property="og:title" content="使用 Nginx Ingress Controller 导入外部流量到 Kubernetes 集群内部" />
+  <meta name="twitter:title" content="使用 Nginx Ingress Controller 导入外部流量到 Kubernetes 集群内部" />
+  <meta name="description" content="概述 Nginx Ingress Controller 是 Kubernetes Ingress Controller 的一种实现，作为反向代理将外部流量导入集群内部，实现将 Kubernetes 内部的 Service 暴露给外部，这样我们就能通过公网或内网直接访问集群内部的服">
+  <meta property="og:description" content="概述 Nginx Ingress Controller 是 Kubernetes Ingress Controller 的一种实现，作为反向代理将外部流量导入集群内部，实现将 Kubernetes 内部的 Service 暴露给外部，这样我们就能通过公网或内网直接访问集群内部的服">
+  <meta name="twitter:description" content="概述 Nginx Ingress Controller 是 Kubernetes Ingress Controller 的一种实现，作为反向代理将外部流量导入集群内部，实现将 Kubernetes 内部的 Service 暴露给外部，这样我们就能通过公网或内网直接访问集群内部的服">
   <meta name="author" content="{Description { .Site.Author.name }}"/>
   <link href='https://imroc.io/favicon.png' rel='icon' type='image/x-icon'/>
   <meta property="og:image" content="https://res.cloudinary.com/imroc/image/upload/v1521031841/avatar.png" />
@@ -201,11 +201,7 @@ var _hmt = _hmt || [];
         <div class="row">
           <div class="col-lg-12 col-md-12 col-md-offset-0">
             <div class="posts-heading">
-                <h1 align="center">安装 Nginx Ingress Controller</h1>
-                
-                  
-                    <h2 align="center" class="posts-subheading">暴露 Kubernetes 服务到公网</h2>
-                  
+                <h1 align="center">使用 Nginx Ingress Controller 导入外部流量到 Kubernetes 集群内部</h1>
                 
                 
             </div>
@@ -243,11 +239,11 @@ var _hmt = _hmt || [];
 <li>
 <ul>
 <li><a href="#概述">概述</a></li>
-<li><a href="#暴露流量的方式">暴露流量的方式</a>
+<li><a href="#导入流量的方式">导入流量的方式</a>
 <ul>
-<li><a href="#使用-loadbalancer-暴露流量">使用 LoadBalancer 暴露流量</a></li>
+<li><a href="#使用-loadbalancer-导入流量">使用 LoadBalancer 导入流量</a></li>
 </ul></li>
-<li><a href="#使用-deamonset-hostport-暴露流量">使用 DeamonSet + hostPort 暴露流量</a></li>
+<li><a href="#使用-deamonset-hostport-导入流量">使用 DeamonSet + hostPort 导入流量</a></li>
 <li><a href="#测试">测试</a></li>
 </ul></li>
 </ul>
@@ -261,7 +257,7 @@ var _hmt = _hmt || [];
 
 <p>Nginx Ingress Controller 是 Kubernetes Ingress Controller 的一种实现，作为反向代理将外部流量导入集群内部，实现将 Kubernetes 内部的 Service 暴露给外部，这样我们就能通过公网或内网直接访问集群内部的服务。本文使用 Helm 来安装，所以请确保 Helm 已安装，安装方法参考：<a href="https://imroc.io/posts/kubernetes/install-helm/">https://imroc.io/posts/kubernetes/install-helm/</a></p>
 
-<h2 id="暴露流量的方式">暴露流量的方式</h2>
+<h2 id="导入流量的方式">导入流量的方式</h2>
 
 <p>要想暴露内部流量，就需要让 Ingress Controller 自身能够对外提供服务，主要有以下两种方式：</p>
 
@@ -275,7 +271,7 @@ var _hmt = _hmt || [];
 缺点：没有高可用保证，如果需要高可用就得自己去搞</p></li>
 </ul>
 
-<h3 id="使用-loadbalancer-暴露流量">使用 LoadBalancer 暴露流量</h3>
+<h3 id="使用-loadbalancer-导入流量">使用 LoadBalancer 导入流量</h3>
 
 <p>这种方式部署 Nginx Ingress Controller 最简单，只要保证上面说的前提：集群有 Cloud Provider 并且支持 LoadBalancer，如果你是使用云厂商的 Kubernetes 集群，保证你集群所使用的云厂商的账号有足够的余额，执行下面的命令一键安装：</p>
 
@@ -293,7 +289,7 @@ nginx-ingress-controller        LoadBalancer   10.3.255.138   119.28.121.125   8
 
 <p><code>EXTERNAL-IP</code> 就是我们需要的外部 IP 地址，通过访问它就可以访问到集群内部的服务了，我们可以将想要的域名配置这个IP的DNS记录，这样就可以直接通过域名来访问了。具体访问哪个 Service, 这个就是我们创建的 Ingress 里面所配置规则的了，可以通过匹配请求的 Host 和 路径这些来转发到不同的后端 Service.</p>
 
-<h2 id="使用-deamonset-hostport-暴露流量">使用 DeamonSet + hostPort 暴露流量</h2>
+<h2 id="使用-deamonset-hostport-导入流量">使用 DeamonSet + hostPort 导入流量</h2>
 
 <p>这种方式实际是使用集群内的某些节点来暴露流量，使用 DeamonSet 部署，保证让符合我们要求的节点都会启动一个 Nginx 的 Ingress Controller 来监听端口，这些节点我们叫它 <code>边缘节点</code>，因为它们才是真正监听端口，让外界流量进入集群内部的节点，这里我使用集群内部的一个节点来暴露流量，它有自己的公网 IP 地址，并且 80 和 443 端口没有被其它占用。</p>
 

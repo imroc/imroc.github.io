@@ -14,7 +14,7 @@
     
     
     <item>
-      <title>安装 Nginx Ingress Controller</title>
+      <title>使用 Nginx Ingress Controller 导入外部流量到 Kubernetes 集群内部</title>
       <link>https://imroc.io/posts/kubernetes/install-nginx-ingress-controller/</link>
       <pubDate>Mon, 23 Jul 2018 14:29:37 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
