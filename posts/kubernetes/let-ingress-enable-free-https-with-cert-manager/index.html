@@ -5,13 +5,13 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title> 使用 Nginx Ingress Controller 导入外部流量到 Kubernetes 集群内部 - imroc.io|roc的博客|Cloud Native|Kubernetes|Go|Golang</title>
+  <title> 利用cert-manager让Ingress启用免费的HTTPS证书 - imroc.io|roc的博客|Cloud Native|Kubernetes|Go|Golang</title>
   <meta name="description" content="imroc.io|roc的博客|Cloud Native|Kubernetes|Go|Golang" />
-  <meta property="og:title" content="使用 Nginx Ingress Controller 导入外部流量到 Kubernetes 集群内部" />
-  <meta name="twitter:title" content="使用 Nginx Ingress Controller 导入外部流量到 Kubernetes 集群内部" />
-  <meta name="description" content="概述 Nginx Ingress Controller 是 Kubernetes Ingress Controller 的一种实现，作为反向代理将外部流量导入集群内部，实现将 Kubernetes 内部的 Service 暴露给外部，这样我们就能通过公网或内网直接访问集群内部的服">
-  <meta property="og:description" content="概述 Nginx Ingress Controller 是 Kubernetes Ingress Controller 的一种实现，作为反向代理将外部流量导入集群内部，实现将 Kubernetes 内部的 Service 暴露给外部，这样我们就能通过公网或内网直接访问集群内部的服">
-  <meta name="twitter:description" content="概述 Nginx Ingress Controller 是 Kubernetes Ingress Controller 的一种实现，作为反向代理将外部流量导入集群内部，实现将 Kubernetes 内部的 Service 暴露给外部，这样我们就能通过公网或内网直接访问集群内部的服">
+  <meta property="og:title" content="利用cert-manager让Ingress启用免费的HTTPS证书" />
+  <meta name="twitter:title" content="利用cert-manager让Ingress启用免费的HTTPS证书" />
+  <meta name="description" content="概述 cert-manager 是替代 kube-lego 的一个开源项目，用于在 Kubernetes 集群中自动提供 HTTPS 证书，支持 Let’s Encrypt, HashiCorp Vault 这些免费证书的签发。 本文使用 Helm 安装，所以请确保 Helm 已安装，安装">
+  <meta property="og:description" content="概述 cert-manager 是替代 kube-lego 的一个开源项目，用于在 Kubernetes 集群中自动提供 HTTPS 证书，支持 Let’s Encrypt, HashiCorp Vault 这些免费证书的签发。 本文使用 Helm 安装，所以请确保 Helm 已安装，安装">
+  <meta name="twitter:description" content="概述 cert-manager 是替代 kube-lego 的一个开源项目，用于在 Kubernetes 集群中自动提供 HTTPS 证书，支持 Let’s Encrypt, HashiCorp Vault 这些免费证书的签发。 本文使用 Helm 安装，所以请确保 Helm 已安装，安装">
   <meta name="author" content="{Description { .Site.Author.name }}"/>
   <link href='https://imroc.io/favicon.png' rel='icon' type='image/x-icon'/>
   <meta property="og:image" content="https://res.cloudinary.com/imroc/image/upload/v1521031841/avatar.png" />
@@ -19,12 +19,12 @@
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:site" content="@imrocchan" />
   <meta name="twitter:creator" content="@imrocchan" />
-  <meta property="og:url" content="https://imroc.io/posts/kubernetes/use-nginx-ingress-controller-to-expose-service/" />
+  <meta property="og:url" content="https://imroc.io/posts/kubernetes/let-ingress-enable-free-https-with-cert-manager/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="roc" />
 
   <meta name="generator" content="Hugo 0.31.1" />
-  <link rel="canonical" href="https://imroc.io/posts/kubernetes/use-nginx-ingress-controller-to-expose-service/" />
+  <link rel="canonical" href="https://imroc.io/posts/kubernetes/let-ingress-enable-free-https-with-cert-manager/" />
   <link rel="alternate" href="https://imroc.io/index.xml" type="application/rss+xml" title="roc">
   <script src="https://cdn.staticfile.org/jquery/1.12.4/jquery.min.js"></script>
   <link rel="stylesheet" href="https://cdn.staticfile.org/KaTeX/0.7.1/katex.min.css" crossorigin="anonymous">
@@ -201,7 +201,7 @@ var _hmt = _hmt || [];
         <div class="row">
           <div class="col-lg-12 col-md-12 col-md-offset-0">
             <div class="posts-heading">
-                <h1 align="center">使用 Nginx Ingress Controller 导入外部流量到 Kubernetes 集群内部</h1>
+                <h1 align="center">利用cert-manager让Ingress启用免费的HTTPS证书</h1>
                 
                 
             </div>
@@ -223,7 +223,7 @@ var _hmt = _hmt || [];
     <section id="datecount">
         <h4 id="date"> Mon Jul 23, 2018</h4>
     </section>
-    <h5 id="wc">1400 Words|Read in about 3 Min</h5>
+    <h5 id="wc">1500 Words|Read in about 3 Min</h5>
     <h5 id="tags">Tags: 
         
         <a href="https://imroc.io/tags/kubernetes/">kubernetes</a> &nbsp;
@@ -239,12 +239,8 @@ var _hmt = _hmt || [];
 <li>
 <ul>
 <li><a href="#概述">概述</a></li>
-<li><a href="#导入流量的方式">导入流量的方式</a>
-<ul>
-<li><a href="#使用-loadbalancer-导入流量">使用 LoadBalancer 导入流量</a></li>
-</ul></li>
-<li><a href="#使用-deamonset-hostport-导入流量">使用 DeamonSet + hostPort 导入流量</a></li>
-<li><a href="#测试">测试</a></li>
+<li><a href="#安装-cert-manager">安装 cert-manager</a></li>
+<li><a href="#生成免费证书">生成免费证书</a></li>
 </ul></li>
 </ul>
 </nav>
@@ -255,102 +251,201 @@ var _hmt = _hmt || [];
 
 <h2 id="概述">概述</h2>
 
-<p>Nginx Ingress Controller 是 Kubernetes Ingress Controller 的一种实现，作为反向代理将外部流量导入集群内部，实现将 Kubernetes 内部的 Service 暴露给外部，这样我们就能通过公网或内网直接访问集群内部的服务。本文使用 Helm 来安装，所以请确保 Helm 已安装，安装方法参考：<a href="https://imroc.io/posts/kubernetes/install-helm/">https://imroc.io/posts/kubernetes/install-helm/</a></p>
-
-<h2 id="导入流量的方式">导入流量的方式</h2>
-
-<p>要想暴露内部流量，就需要让 Ingress Controller 自身能够对外提供服务，主要有以下两种方式：</p>
+<p>cert-manager 是替代 kube-lego 的一个开源项目，用于在 Kubernetes 集群中自动提供 HTTPS 证书，支持 <a href="https://letsencrypt.org/">Let’s Encrypt</a>, <a href="https://www.vaultproject.io/">HashiCorp Vault</a> 这些免费证书的签发。</p>
 
 <ul>
-<li><p>Ingress Controller 使用 Deployment 部署，Service 类型指定为 LoadBalancer<br />
-优点：最简单<br />
-缺点：需要集群有 Cloud Provider 并且支持 LoadBalancer, 一般云厂商托管的 kubernetes 集群支持，并且使用 LoadBalancer 是付费的，因为他会给你每个 LoadBalancer 类型的 Service 分配公网 IP 地址</p></li>
-
-<li><p>Ingress Controller 使用 DeamonSet 部署，Pod 指定 hostPort 来暴露端口<br />
-优点：免费<br />
-缺点：没有高可用保证，如果需要高可用就得自己去搞</p></li>
+<li>本文使用 Helm 安装，所以请确保 Helm 已安装，安装方法参考：<a href="https://imroc.io/posts/kubernetes/install-helm">https://imroc.io/posts/kubernetes/install-helm</a></li>
+<li>你的集群必须已经装有 Ingress Controller，如果还没有，参考：<a href="https://imroc.io/posts/kubernetes/use-nginx-ingress-controller-to-expose-service">https://imroc.io/posts/kubernetes/use-nginx-ingress-controller-to-expose-service</a></li>
+<li>需要颁发免费证书的域名配置DNS记录，IP 指向 Ingress Controller 对外暴露的地址</li>
+<li>开源地址：<a href="https://github.com/jetstack/cert-manager">https://github.com/jetstack/cert-manager</a></li>
+<li>文档地址：<a href="https://cert-manager.readthedocs.io">https://cert-manager.readthedocs.io</a></li>
 </ul>
 
-<h3 id="使用-loadbalancer-导入流量">使用 LoadBalancer 导入流量</h3>
+<h2 id="安装-cert-manager">安装 cert-manager</h2>
 
-<p>这种方式部署 Nginx Ingress Controller 最简单，只要保证上面说的前提：集群有 Cloud Provider 并且支持 LoadBalancer，如果你是使用云厂商的 Kubernetes 集群，保证你集群所使用的云厂商的账号有足够的余额，执行下面的命令一键安装：</p>
-
-<pre><code class="language-bash">helm install --name nginx-ingress --namespace kube-system stable/nginx-ingress
+<pre><code class="language-bash">helm install \
+    --name cert-manager \
+    --namespace kube-system \
+    stable/cert-manager
 </code></pre>
 
-<p>因为 <code>stable/nginx-ingress</code> 这个 helm 的 chart 包默认就是使用的这种方式部署。</p>
+<p>一键安装，非常简单。</p>
 
-<p>部署完了我们可以查看 LoadBalancer 给我们分配的 IP 地址：</p>
+<h2 id="生成免费证书">生成免费证书</h2>
 
-<pre><code class="language-bash">$ kubectl get svc -n kube-system
-NAME                            TYPE           CLUSTER-IP     EXTERNAL-IP      PORT(S)                      AGE
-nginx-ingress-controller        LoadBalancer   10.3.255.138   119.28.121.125   80:30113/TCP,443:32564/TCP   21h
+<p>我们需要先创建一个签发机构，cert-manager 给我们提供了 Issuer 和 ClusterIssuer 这两种用于创建签发机构的自定义资源对象，Issuer 只能用来签发自己所在 namespace 下的证书，ClusterIssuer 可以签发任意 namespace 下的证书，这里以 ClusterIssuer 为例创建一个签发机构：</p>
+
+<pre><code class="language-bash">vi issuer.yaml
 </code></pre>
 
-<p><code>EXTERNAL-IP</code> 就是我们需要的外部 IP 地址，通过访问它就可以访问到集群内部的服务了，我们可以将想要的域名配置这个IP的DNS记录，这样就可以直接通过域名来访问了。具体访问哪个 Service, 这个就是我们创建的 Ingress 里面所配置规则的了，可以通过匹配请求的 Host 和 路径这些来转发到不同的后端 Service.</p>
-
-<h2 id="使用-deamonset-hostport-导入流量">使用 DeamonSet + hostPort 导入流量</h2>
-
-<p>这种方式实际是使用集群内的某些节点来暴露流量，使用 DeamonSet 部署，保证让符合我们要求的节点都会启动一个 Nginx 的 Ingress Controller 来监听端口，这些节点我们叫它 <code>边缘节点</code>，因为它们才是真正监听端口，让外界流量进入集群内部的节点，这里我使用集群内部的一个节点来暴露流量，它有自己的公网 IP 地址，并且 80 和 443 端口没有被其它占用。</p>
-
-<p>首先，看看集群有哪些节点：</p>
-
-<pre><code class="language-bash">$ kubectl get node
-NAME       STATUS    ROLES     AGE       VERSION
-10.0.0.3   Ready     &lt;none&gt;    56d       v1.8.7-qcloud
-10.0.0.4   Ready     &lt;none&gt;    56d       v1.8.7-qcloud
-10.0.0.5   Ready     &lt;none&gt;    56d       v1.8.7-qcloud
-10.0.0.6   Ready     &lt;none&gt;    56d       v1.8.7-qcloud
+<pre><code class="language-yaml">apiVersion: certmanager.k8s.io/v1alpha1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-prod
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: roc@imroc.io
+    privateKeySecretRef:
+      name: letsencrypt-prod
+    http01: {}
 </code></pre>
 
-<p>我想要 <code>10.0.0.3</code> 这个节点作为 <code>边缘节点</code> 来暴露流量，我来给它加个 label，以便后面我们用 DeamonSet 部署 Nginx Ingress Controller 时能绑到这个节点上，我这里就加个名为 <code>node:edge</code> 的 label :</p>
+<ul>
+<li>metadata.name 是我们创建的签发机构的名称，后面我们创建证书的时候会引用它</li>
+<li>spec.acme.email 是你自己的邮箱，证书快过期的时候会有邮件提醒，不过 cert-manager 会利用 acme 协议自动给我们重新颁发证书来续期</li>
+<li>spec.acme.server 是 acme 协议的服务端，我们这里用 Let’s Encrypt，这个地址就写死成这样就行</li>
+<li>spec.acme.privateKeySecretRef 指示此签发机构的私钥将要存储到哪个 Secret 对象中，名称不重要</li>
+<li>spec.acme.http01 这里指示签发机构使用 HTTP-01 的方式进行 acme 协议 (还可以用 DNS 方式，acme 协议的目的是证明这台机器和域名都是属于你的，然后才准许给你颁发证书)</li>
+</ul>
 
-<pre><code class="language-bash">$ kubectl label node 10.0.0.3 node=edge
-node &quot;10.0.0.3&quot; labeled
+<p>创建：</p>
+
+<pre><code class="language-bash">kubectl apply -f issuer.yaml
 </code></pre>
 
-<p>如果 label 加错了可以这样删掉:</p>
+<p>有了签发机构，接下来我们就可以生成免费证书了，cert-manager 给我们提供了 Certificate 这个用于生成证书的自定义资源对象，它必须局限在某一个 namespace 下，证书最终会在这个 namespace 下以 Secret 的资源对象存储，假如我想在 <code>dashboard</code> 这个 namespace 下生成免费证书（这个 namespace 已存在)，创建一个 Certificate 对象：</p>
 
-<pre><code class="language-bash">$ kubectl label node 10.0.0.3 node-
-node &quot;10.0.0.3&quot; labeled
+<pre><code class="language-bash">vi cert.yaml
 </code></pre>
 
-<p>接下来我们覆盖一些默认配置来安装:</p>
-
-<pre><code class="language-bash">helm install stable/nginx-ingress \
-  --namespace kube-system \
-  --name nginx-ingress \
-  --version=0.23.0 \
-  --set controller.kind=DaemonSet \
-  --set controller.daemonset.useHostPort=true \
-  --set controller.nodeSelector.node=edge \
-  --set controller.service.type=ClusterIP
+<pre><code class="language-yaml">apiVersion: certmanager.k8s.io/v1alpha1
+kind: Certificate
+metadata:
+  name: dashboard-imroc-io
+  namespace: dashboard
+spec:
+  secretName: dashboard-imroc-io-tls
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  dnsNames:
+  - dashboard.imroc.io
+  acme:
+    config:
+    - http01:
+        ingressClass: nginx
+      domains:
+      - dashboard.imroc.io
 </code></pre>
 
-<p>可以看下是否成功启动:</p>
+<ul>
+<li>spec.secretName 指示证书最终存到哪个 Secret 中</li>
+<li>spec.issuerRef.kind 值为 ClusterIssuer 说明签发机构不在本 namespace 下，而是在全局</li>
+<li>spec.issuerRef.name 我们创建的签发机构的名称 (ClusterIssuer.metadata.name)</li>
+<li>spec.dnsNames 指示该证书的可以用于哪些域名</li>
+<li>spec.acme.config.http01.ingressClass 使用 HTTP-01 方式校验该域名和机器时，cert-manager 会尝试创建Ingress 对象来实现该校验，如果指定该值，会给创建的 Ingress 加上 <code>kubernetes.io/ingress.class</code> 这个 annotation，如果我们的 Ingress Controller 是 Nginx Ingress Controller，指定这个字段可以让创建的 Ingress 被 Nginx Ingress Controller 处理。</li>
+<li>spec.acme.config.http01.domains 指示该证书的可以用于哪些域名</li>
+</ul>
 
-<pre><code class="language-bash">$ kubectl get pods -n kube-system | grep nginx-ingress
-nginx-ingress-controller-b47h9                  1/1       Running   0          1h
-nginx-ingress-default-backend-9c5d6df7d-7dwll   1/1       Running   0          1h
+<p>创建：</p>
+
+<pre><code class="language-bash">kubectl apply -f cert.yaml
 </code></pre>
 
-<p>如果状态不是 <code>Running</code>  可以查看下详情:</p>
+<p>通过这些可以查看我们所创建的 Certificate 和 ClusterIssuer 对象:</p>
 
-<pre><code class="language-bash">$ kubectl describe -n kube-system po/nginx-ingress-controller-b47h9
+<pre><code class="language-bash">$ kubectl get certificate -n dashboard
+NAME                 AGE
+dashboard-imroc-io   9h
+
+$ kubectl describe -n dashboard certificate/dashboard-imroc-io
+Name:         dashboard-imroc-io
+Namespace:    dashboard
+Labels:       &lt;none&gt;
+Annotations:  kubectl.kubernetes.io/last-applied-configuration={&quot;apiVersion&quot;:&quot;certmanager.k8s.io/v1alpha1&quot;,&quot;kind&quot;:&quot;Certificate&quot;,&quot;metadata&quot;:{&quot;annotations&quot;:{},&quot;name&quot;:&quot;dashboard-imroc-io&quot;,&quot;namespace&quot;:&quot;dashboard&quot;},&quot;spe...
+API Version:  certmanager.k8s.io/v1alpha1
+Kind:         Certificate
+Metadata:
+  Cluster Name:
+  Creation Timestamp:  2018-07-23T03:57:06Z
+  Generation:          0
+  Initializers:        &lt;nil&gt;
+  Resource Version:    2305547834
+  Self Link:           /apis/certmanager.k8s.io/v1alpha1/namespaces/dashboard/certificates/dashboard-imroc-io
+  UID:                 7761c129-8e2c-11e8-bf16-525400319744
+Spec:
+  Acme:
+    Config:
+      Domains:
+        dashboard.imroc.io
+      Http 01:
+        Ingress:
+        Ingress Class:  nginx
+  Common Name:
+  Dns Names:
+    dashboard.imroc.io
+  Issuer Ref:
+    Kind:       ClusterIssuer
+    Name:       letsencrypt-prod
+  Secret Name:  dashboard-imroc-io-tls
+Status:
+  Acme:
+    Order:
+      URL:  https://acme-v02.api.letsencrypt.org/acme/order/38817431/21090610
+  Conditions:
+    Last Transition Time:  2018-07-23T03:57:56Z
+    Message:               Certificate issued successfully
+    Reason:                CertIssued
+    Status:                True
+    Type:                  Ready
+    Last Transition Time:  &lt;nil&gt;
+    Message:               Order validated
+    Reason:                OrderValidated
+    Status:                False
+    Type:                  ValidateFailed
+Events:                    &lt;none&gt;
+
+$ kubectl get clusterissuer -n dashboard
+NAME               AGE
+letsencrypt-prod   9h
+
+$ kubectl describe clusterissuer/letsencrypt-prod
+Name:         letsencrypt-prod
+Namespace:
+Labels:       &lt;none&gt;
+Annotations:  kubectl.kubernetes.io/last-applied-configuration={&quot;apiVersion&quot;:&quot;certmanager.k8s.io/v1alpha1&quot;,&quot;kind&quot;:&quot;ClusterIssuer&quot;,&quot;metadata&quot;:{&quot;annotations&quot;:{},&quot;name&quot;:&quot;letsencrypt-prod&quot;,&quot;namespace&quot;:&quot;&quot;},&quot;spec&quot;:{&quot;acme...
+API Version:  certmanager.k8s.io/v1alpha1
+Kind:         ClusterIssuer
+Metadata:
+  Cluster Name:
+  Creation Timestamp:  2018-07-23T03:41:18Z
+  Generation:          0
+  Initializers:        &lt;nil&gt;
+  Resource Version:    2305474410
+  Self Link:           /apis/certmanager.k8s.io/v1alpha1/letsencrypt-prod
+  UID:                 427459c2-8e2a-11e8-bf16-525400319744
+Spec:
+  Acme:
+    Email:  roc@imroc.io
+    Http 01:
+    Private Key Secret Ref:
+      Key:
+      Name:  letsencrypt-prod
+    Server:  https://acme-v02.api.letsencrypt.org/directory
+Status:
+  Acme:
+    Uri:  https://acme-v02.api.letsencrypt.org/acme/acct/38817431
+  Conditions:
+    Last Transition Time:  2018-07-23T03:41:25Z
+    Message:               The ACME account was registered with the ACME server
+    Reason:                ACMEAccountRegistered
+    Status:                True
+    Type:                  Ready
+Events:                    &lt;none&gt;
 </code></pre>
 
-<p>这两个 pod 的镜像在 <code>quay.io</code> 下，国内拉取可能会比较慢。</p>
+<p>生成的证书被存到 Secret 了，可以看下在不在：</p>
 
-<p>运行成功我们就可以创建 Ingress 来将外部流量导入集群内部啦，外部 IP 是我们的 <code>边缘节点</code> 的 IP，公网和内网 IP 都算，我用的 <code>10.0.0.3</code> 这个节点，并且它有公网 IP，我就可以通过公网 IP 来访问了，如果再给这个公网 IP 添加 DNS 记录，我就可以用域名访问了。</p>
+<pre><code class="language-bash">$ kubectl get secret -n dashboard
+NAME                                         TYPE                                  DATA      AGE
+dashboard-imroc-io-tls                       kubernetes.io/tls                     2         9h
+</code></pre>
 
-<h2 id="测试">测试</h2>
-
-<p>我们来创建一个服务测试一下，先创建一个 <code>my-nginx.yaml</code></p>
+<p>这个 Secret 可以被我们创建的 Ingress 使用来启用免费 HTTPS，来测试一下吧：</p>
 
 <pre><code class="language-bash">vi my-nginx.yaml
 </code></pre>
-
-<p>粘贴以下内容：</p>
 
 <pre><code class="language-yaml">apiVersion: extensions/v1beta1
 kind: Deployment
@@ -367,7 +462,7 @@ spec:
       - name: my-nginx
         image: nginx
         ports:
-        - containerPort: 80
+        - containerPort: 443
 ---
 apiVersion: v1
 kind: Service
@@ -377,9 +472,9 @@ metadata:
     app: my-nginx
 spec:
   ports:
-  - port: 80
+  - port: 443
     protocol: TCP
-    name: http
+    name: https
   selector:
     run: my-nginx
 ---
@@ -391,41 +486,47 @@ metadata:
     kubernetes.io/ingress.class: &quot;nginx&quot;
 spec:
   rules:
-  - http:
+  - host: dashboard.imroc.io
+    http:
       paths:
-      - path: /
-        backend:
+      - backend:
           serviceName: my-nginx
-          servicePort: 80
+          servicePort: 443
+        path: /
+  tls:
+   - secretName: dashboard-imroc-io-tls
+     hosts:
+       - dashboard.imroc.io
 </code></pre>
+
+<ul>
+<li>在 Ingress 定义的 spec.tls.secretName 引用生成的证书所在的 Secret 名称即可实现使用免费证书</li>
+<li>将 Ingress 定义的 spec.rules.host 和 spec.tls.hosts 里的域名都替换为你自己的域名</li>
+</ul>
 
 <p>创建：</p>
 
 <pre><code class="language-bash">kubectl apply -f my-nginx.yaml
 </code></pre>
 
-<p>然后浏览器通过 IP 或域名访问下，当你看到 <code>Welcome to nginx!</code> 这个 nginx 默认的主页说明已经成功啦。</p>
-
-<p><strong>注意</strong>：定义 Ingress 的时候最好加上 <code>kubernetes.io/ingress.class</code> 这个 annotation，在有多个 Ingress Controller 的情况下让请求能够被我们安装的这个处理（云厂商托管的 Kubernetes 集群一般会有默认的 Ingress Controller)</p>
+<p>现在通过域名访问，是不是就能看到 <code>Welcome to nginx!</code> 主页里呢？</p>
 
             </article>
 
             <ul class="pager blog-pager">
                 
                 <li class="previous">
-                    <a href="https://imroc.io/posts/kubernetes/install-helm/" data-toggle="tooltip" data-placement="top" title="快速安装 Helm">&larr; Previous Post</a>
+                    <a href="https://imroc.io/posts/kubernetes/use-nginx-ingress-controller-to-expose-service/" data-toggle="tooltip" data-placement="top" title="使用 Nginx Ingress Controller 导入外部流量到 Kubernetes 集群内部">&larr; Previous Post</a>
                 </li>
                  
-                <li class="next">
-                    <a href="https://imroc.io/posts/kubernetes/let-ingress-enable-free-https-with-cert-manager/" data-toggle="tooltip" data-placement="top" title="利用cert-manager让Ingress启用免费的HTTPS证书">Next Post &rarr;</a>
-                </li>
-                
             </ul>
             
             <div>
                  
                 <h2>See Also</h2>
                 <ul>
+                    
+                    <li><a href="/posts/kubernetes/use-nginx-ingress-controller-to-expose-service/">使用 Nginx Ingress Controller 导入外部流量到 Kubernetes 集群内部</a></li>
                     
                     <li><a href="/posts/kubernetes/install-helm/">快速安装 Helm</a></li>
                     
@@ -434,8 +535,6 @@ spec:
                     <li><a href="/posts/kubernetes/kubernetes-source-code-reading-notes-kube-apiserver-code-main-line/">kubernetes源码阅读笔记：理清 kube-apiserver 的源码主线</a></li>
                     
                     <li><a href="/posts/kubernetes/sync-images-to-docker-hub-using-katacoda/">利用Katacoda免费同步Docker镜像到Docker Hub</a></li>
-                    
-                    <li><a href="/posts/kubernetes/install-kubernetes-1.9-on-centos7-with-kubeadm/">国内使用Kubeadm在CentOS 7上安装Kubernetes 1.9</a></li>
                     
                 </ul>
                 
@@ -448,7 +547,7 @@ spec:
     <section id="datecount">
         <h4 id="date"> Mon Jul 23, 2018</h4>
     </section>
-    <h5 id="wc">1400 Words|Read in about 3 Min</h5>
+    <h5 id="wc">1500 Words|Read in about 3 Min</h5>
     <h5 id="tags">Tags: 
         
         <a href="https://imroc.io/tags/kubernetes/">kubernetes</a> &nbsp;
