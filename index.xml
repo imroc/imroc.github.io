@@ -32,7 +32,7 @@
     </item>
     
     <item>
-      <title>使用 Nginx Ingress Controller 导入外部流量到 Kubernetes 集群内部</title>
+      <title>使用Nginx Ingress Controller导入外部流量到Kubernetes集群内部</title>
       <link>https://imroc.io/posts/kubernetes/use-nginx-ingress-controller-to-expose-service/</link>
       <pubDate>Mon, 23 Jul 2018 14:29:37 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
