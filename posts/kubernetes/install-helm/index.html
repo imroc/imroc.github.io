@@ -5,13 +5,13 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title> Go语言技巧-使用for range time.Tick()固定间隔时间执行 - imroc.io|roc的博客|Cloud Native|Kubernetes|Go|Golang</title>
+  <title> 快速安装 Helm - imroc.io|roc的博客|Cloud Native|Kubernetes|Go|Golang</title>
   <meta name="description" content="imroc.io|roc的博客|Cloud Native|Kubernetes|Go|Golang" />
-  <meta property="og:title" content="Go语言技巧-使用for range time.Tick()固定间隔时间执行" />
-  <meta name="twitter:title" content="Go语言技巧-使用for range time.Tick()固定间隔时间执行" />
-  <meta name="description" content="直接上代码: for range time.Tick(30 * time.Millisecond) { doSomthing() } 因为time.Tick()返回的是一个channel,每隔指定的时间会有数据从channel中出来，for ran">
-  <meta property="og:description" content="直接上代码: for range time.Tick(30 * time.Millisecond) { doSomthing() } 因为time.Tick()返回的是一个channel,每隔指定的时间会有数据从channel中出来，for ran">
-  <meta name="twitter:description" content="直接上代码: for range time.Tick(30 * time.Millisecond) { doSomthing() } 因为time.Tick()返回的是一个channel,每隔指定的时间会有数据从channel中出来，for ran">
+  <meta property="og:title" content="快速安装 Helm" />
+  <meta name="twitter:title" content="快速安装 Helm" />
+  <meta name="description" content="kubernetes 的包管理器">
+  <meta property="og:description" content="kubernetes 的包管理器">
+  <meta name="twitter:description" content="kubernetes 的包管理器">
   <meta name="author" content="{Description { .Site.Author.name }}"/>
   <link href='https://imroc.io/favicon.png' rel='icon' type='image/x-icon'/>
   <meta property="og:image" content="https://res.cloudinary.com/imroc/image/upload/v1521031841/avatar.png" />
@@ -19,12 +19,12 @@
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:site" content="@imrocchan" />
   <meta name="twitter:creator" content="@imrocchan" />
-  <meta property="og:url" content="https://imroc.io/posts/golang/golang-for-range-time-tick/" />
+  <meta property="og:url" content="https://imroc.io/posts/kubernetes/install-helm/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="roc" />
 
   <meta name="generator" content="Hugo 0.31.1" />
-  <link rel="canonical" href="https://imroc.io/posts/golang/golang-for-range-time-tick/" />
+  <link rel="canonical" href="https://imroc.io/posts/kubernetes/install-helm/" />
   <link rel="alternate" href="https://imroc.io/index.xml" type="application/rss+xml" title="roc">
   <script src="https://cdn.staticfile.org/jquery/1.12.4/jquery.min.js"></script>
   <link rel="stylesheet" href="https://cdn.staticfile.org/KaTeX/0.7.1/katex.min.css" crossorigin="anonymous">
@@ -201,7 +201,11 @@ var _hmt = _hmt || [];
         <div class="row">
           <div class="col-lg-12 col-md-12 col-md-offset-0">
             <div class="posts-heading">
-                <h1 align="center">Go语言技巧-使用for range time.Tick()固定间隔时间执行</h1>
+                <h1 align="center">快速安装 Helm</h1>
+                
+                  
+                    <h2 align="center" class="posts-subheading">kubernetes 的包管理器</h2>
+                  
                 
                 
             </div>
@@ -221,40 +225,121 @@ var _hmt = _hmt || [];
             
 <div>
     <section id="datecount">
-        <h4 id="date"> Wed Sep 6, 2017</h4>
+        <h4 id="date"> Mon Jul 23, 2018</h4>
     </section>
-    <h5 id="wc">100 Words|Read in about 1 Min</h5>
+    <h5 id="wc">600 Words|Read in about 2 Min</h5>
     <h5 id="tags">Tags: 
         
-        <a href="https://imroc.io/tags/golang/">golang</a> &nbsp;
+        <a href="https://imroc.io/tags/kubernetes/">kubernetes</a> &nbsp;
     </h5>
 </div>
 
             
             <article role="main" class="blog-post" itemprop="articleBody" id="content">
                 
+<aside class="toc">
+  <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#概述">概述</a></li>
+<li><a href="#安装">安装</a></li>
+</ul></li>
+</ul>
+</nav>
+</aside>
 
-                <p>直接上代码:</p>
 
-<pre><code class="language-go">for range time.Tick(30 * time.Millisecond) {
-	doSomthing()
-}
+                
+
+<h2 id="概述">概述</h2>
+
+<p>Helm 是 Kubernetes 的包管理器，可以帮我们简化 kubernetes 的操作，一键部署应用。假如你的机器上已经安装了 kubectl 并且能够操作集群，那么你就可以安装 Helm 了。</p>
+
+<h2 id="安装">安装</h2>
+
+<p>执行脚本安装 helm 客户端:</p>
+
+<pre><code class="language-bash">$ curl https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get | bash
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  6737  100  6737    0     0  12491      0 --:--:-- --:--:-- --:--:-- 12475
+Downloading https://kubernetes-helm.storage.googleapis.com/helm-v2.9.1-linux-amd64.tar.gz
+Preparing to install into /usr/local/bin
+helm installed into /usr/local/bin/helm
+Run 'helm init' to configure helm.
 </code></pre>
 
-<p>因为time.Tick()返回的是一个channel,每隔指定的时间会有数据从channel中出来，for range不仅能遍历map,slice,array还能取出channel中数据，range前面可以不用变量接收，所以可以简写成上面的形式。</p>
+<p>查看客户端版本：</p>
+
+<pre><code class="language-bash">$ helm version
+Client: &amp;version.Version{SemVer:&quot;v2.9.1&quot;, GitCommit:&quot;20adb27c7c5868466912eebdf6664e7390ebe710&quot;, GitTreeState:&quot;clean&quot;}
+</code></pre>
+
+<p>安装 tiller 服务端到 kubernetes 集群：</p>
+
+<pre><code class="language-bash">$ helm init
+Creating /root/.helm
+Creating /root/.helm/repository
+Creating /root/.helm/repository/cache
+Creating /root/.helm/repository/local
+Creating /root/.helm/plugins
+Creating /root/.helm/starters
+Creating /root/.helm/cache/archive
+Creating /root/.helm/repository/repositories.yaml
+Adding stable repo with URL: https://kubernetes-charts.storage.googleapis.com
+Adding local repo with URL: http://127.0.0.1:8879/charts
+$HELM_HOME has been configured at /root/.helm.
+
+Tiller (the Helm server-side component) has been installed into your Kubernetes Cluster.
+
+Please note: by default, Tiller is deployed with an insecure 'allow unauthenticated users' policy.
+For more information on securing your installation see: https://docs.helm.sh/using_helm/#securing-your-helm-installation
+Happy Helming!
+</code></pre>
+
+<p>查看 tiller 是否启动成功:</p>
+
+<pre><code class="language-bash">$ kubectl get pods --namespace=kube-system | grep tiller
+tiller-deploy-dccdb6fd9-2df4r          0/1       ImagePullBackOff   0          14h
+</code></pre>
+
+<p>如果状态是 ImagePullBackOff ，说明是镜像问题，一般是未拉取到镜像（国内机器拉取不到 gcr.io 下的镜像) 可以查看下是什么镜像:</p>
+
+<pre><code class="language-bash">$ kubectl describe pod tiller-deploy-dccdb6fd9-2df4r --namespace=kube-system
+Events:
+  Type     Reason   Age                   From                Message
+  ----     ------   ----                  ----                -------
+  Warning  Failed   36m (x5 over 12h)     kubelet, k8s-node1  Failed to pull image &quot;gcr.io/kubernetes-helm/tiller:v2.9.1&quot;: rpc error: code = Unknown desc = Get https://gcr.io/v1/_ping: dial tcp 64.233.189.82:443: i/o timeout
+  Normal   BackOff  11m (x3221 over 14h)  kubelet, k8s-node1  Back-off pulling image &quot;gcr.io/kubernetes-helm/tiller:v2.9.1&quot;
+  Warning  Failed   6m (x3237 over 14h)   kubelet, k8s-node1  Error: ImagePullBackOff
+  Warning  Failed   1m (x15 over 14h)     kubelet, k8s-node1  Failed to pull image &quot;gcr.io/kubernetes-helm/tiller:v2.9.1&quot;: rpc error: code = Unknown desc = Get https://gcr.io/v1/_ping: dial tcp 64.233.188.82:443: i/o timeout
+</code></pre>
+
+<p>把这个没拉取到镜像想办法下载到这台机器上。当我们看到状态为 <code>Running</code> 说明 tiller 已经成功运行了:</p>
+
+<pre><code class="language-bash">$ kubectl get pods -n kube-system | grep tiller
+tiller-deploy-dccdb6fd9-2df4r                   1/1       Running   1          41d
+</code></pre>
+
+<p>默认安装的 tiller 权限很小，我们执行下面的脚本给它加最大权限，这样方便我们可以用 helm 部署应用到任意 namespace 下:</p>
+
+<p>```. bash
+kubectl create serviceaccount &ndash;namespace=kube-system tiller</p>
+
+<p>kubectl create clusterrolebinding tiller-cluster-rule &ndash;clusterrole=cluster-admin &ndash;serviceaccount=kube-system:tiller</p>
+
+<p>kubectl patch deploy &ndash;namespace=kube-system tiller-deploy -p &lsquo;{&ldquo;spec&rdquo;:{&ldquo;template&rdquo;:{&ldquo;spec&rdquo;:{&ldquo;serviceAccount&rdquo;:&ldquo;tiller&rdquo;}}}}&rsquo;
+```</p>
 
             </article>
 
             <ul class="pager blog-pager">
                 
                 <li class="previous">
-                    <a href="https://imroc.io/posts/golang/golang-select/" data-toggle="tooltip" data-placement="top" title="Go语言技巧-使用select{}阻塞main函数">&larr; Previous Post</a>
+                    <a href="https://imroc.io/posts/other/ci-with-gitlab-and-jenkins/" data-toggle="tooltip" data-placement="top" title="利用Gitlab和Jenkins做CI(持续集成)">&larr; Previous Post</a>
                 </li>
                  
-                <li class="next">
-                    <a href="https://imroc.io/posts/golang/golang-package/" data-toggle="tooltip" data-placement="top" title="Go语言(golang)包设计哲学-原则与项目结构组织最佳实践">Next Post &rarr;</a>
-                </li>
-                
             </ul>
             
             <div>
@@ -262,11 +347,15 @@ var _hmt = _hmt || [];
                 <h2>See Also</h2>
                 <ul>
                     
-                    <li><a href="/posts/golang/golang-package/">Go语言(golang)包设计哲学-原则与项目结构组织最佳实践</a></li>
+                    <li><a href="/posts/kubernetes/kubernetes-nodeport-vs-loadbalancer-vs-ingress-when-should-i-use-what/">对比Kubernetes的Nodeport、Loadbalancer和Ingress，什么时候该用哪种</a></li>
                     
-                    <li><a href="/posts/golang/golang-select/">Go语言技巧-使用select{}阻塞main函数</a></li>
+                    <li><a href="/posts/kubernetes/kubernetes-source-code-reading-notes-kube-apiserver-code-main-line/">kubernetes源码阅读笔记：理清 kube-apiserver 的源码主线</a></li>
                     
-                    <li><a href="/posts/golang/golang-append/">golang中append函数返回值必须有变量接收的原因探究</a></li>
+                    <li><a href="/posts/kubernetes/sync-images-to-docker-hub-using-katacoda/">利用Katacoda免费同步Docker镜像到Docker Hub</a></li>
+                    
+                    <li><a href="/posts/kubernetes/install-kubernetes-1.9-on-centos7-with-kubeadm/">国内使用Kubeadm在CentOS 7上安装Kubernetes 1.9</a></li>
+                    
+                    <li><a href="/posts/kubernetes/kubernetes-binaries/">Kubernetes程序二进制下载集合</a></li>
                     
                 </ul>
                 
@@ -277,12 +366,12 @@ var _hmt = _hmt || [];
             
 <div>
     <section id="datecount">
-        <h4 id="date"> Wed Sep 6, 2017</h4>
+        <h4 id="date"> Mon Jul 23, 2018</h4>
     </section>
-    <h5 id="wc">100 Words|Read in about 1 Min</h5>
+    <h5 id="wc">600 Words|Read in about 2 Min</h5>
     <h5 id="tags">Tags: 
         
-        <a href="https://imroc.io/tags/golang/">golang</a> &nbsp;
+        <a href="https://imroc.io/tags/kubernetes/">kubernetes</a> &nbsp;
     </h5>
 </div>
 

@@ -8,10 +8,19 @@
     <language>zh-cn</language>
     <managingEditor>roc@imroc.io (roc)</managingEditor>
     <webMaster>roc@imroc.io (roc)</webMaster>
-    <lastBuildDate>Tue, 13 Mar 2018 22:45:26 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 23 Jul 2018 12:49:00 +0800</lastBuildDate>
     
 	<atom:link href="https://imroc.io/categories/kubernetes/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>快速安装 Helm</title>
+      <link>https://imroc.io/posts/kubernetes/install-helm/</link>
+      <pubDate>Mon, 23 Jul 2018 12:49:00 +0800</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/posts/kubernetes/install-helm/</guid>
+      <description>概述 Helm 是 Kubernetes 的包管理器，可以帮我们简化 kubernetes 的操作，一键部署应用。假如你的机器上已经安装了 kubectl 并且能够操作集群，那么你就可以安装 Helm 了。 安装 执行脚本安</description>
+    </item>
     
     <item>
       <title>对比Kubernetes的Nodeport、Loadbalancer和Ingress，什么时候该用哪种</title>
