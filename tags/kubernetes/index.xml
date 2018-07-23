@@ -15,10 +15,10 @@
     
     <item>
       <title>使用 Nginx Ingress Controller 导入外部流量到 Kubernetes 集群内部</title>
-      <link>https://imroc.io/posts/kubernetes/install-nginx-ingress-controller/</link>
+      <link>https://imroc.io/posts/kubernetes/use-nginx-ingress-controller-to-expose-service/</link>
       <pubDate>Mon, 23 Jul 2018 14:29:37 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/kubernetes/install-nginx-ingress-controller/</guid>
+      <guid>https://imroc.io/posts/kubernetes/use-nginx-ingress-controller-to-expose-service/</guid>
       <description>概述 Nginx Ingress Controller 是 Kubernetes Ingress Controller 的一种实现，作为反向代理将外部流量导入集群内部，实现将 Kubernetes 内部的 Service 暴露给外部，这样我们就能通过公网或内网直接访问集群内部的服</description>
     </item>
     
