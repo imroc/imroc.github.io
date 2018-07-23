@@ -5,13 +5,13 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title> Union-Find(Java实现) - imroc.io|roc的博客|Cloud Native|Kubernetes|Go|Golang</title>
+  <title> 安装 Nginx Ingress Controller - imroc.io|roc的博客|Cloud Native|Kubernetes|Go|Golang</title>
   <meta name="description" content="imroc.io|roc的博客|Cloud Native|Kubernetes|Go|Golang" />
-  <meta property="og:title" content="Union-Find(Java实现)" />
-  <meta name="twitter:title" content="Union-Find(Java实现)" />
-  <meta name="description" content="quick-find、quick-union、加权quick-union(附带路径压缩优化) 本算法主要解决动态连通性一类问题，这里尽量用精炼">
-  <meta property="og:description" content="quick-find、quick-union、加权quick-union(附带路径压缩优化) 本算法主要解决动态连通性一类问题，这里尽量用精炼">
-  <meta name="twitter:description" content="quick-find、quick-union、加权quick-union(附带路径压缩优化) 本算法主要解决动态连通性一类问题，这里尽量用精炼">
+  <meta property="og:title" content="安装 Nginx Ingress Controller" />
+  <meta name="twitter:title" content="安装 Nginx Ingress Controller" />
+  <meta name="description" content="暴露 Kubernetes 服务到公网">
+  <meta property="og:description" content="暴露 Kubernetes 服务到公网">
+  <meta name="twitter:description" content="暴露 Kubernetes 服务到公网">
   <meta name="author" content="{Description { .Site.Author.name }}"/>
   <link href='https://imroc.io/favicon.png' rel='icon' type='image/x-icon'/>
   <meta property="og:image" content="https://res.cloudinary.com/imroc/image/upload/v1521031841/avatar.png" />
@@ -19,12 +19,12 @@
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:site" content="@imrocchan" />
   <meta name="twitter:creator" content="@imrocchan" />
-  <meta property="og:url" content="https://imroc.io/posts/algorithm/union-findjava%E5%AE%9E%E7%8E%B0/" />
+  <meta property="og:url" content="https://imroc.io/posts/kubernetes/install-nginx-ingress-controller/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="roc" />
 
   <meta name="generator" content="Hugo 0.31.1" />
-  <link rel="canonical" href="https://imroc.io/posts/algorithm/union-findjava%E5%AE%9E%E7%8E%B0/" />
+  <link rel="canonical" href="https://imroc.io/posts/kubernetes/install-nginx-ingress-controller/" />
   <link rel="alternate" href="https://imroc.io/index.xml" type="application/rss+xml" title="roc">
   <script src="https://cdn.staticfile.org/jquery/1.12.4/jquery.min.js"></script>
   <link rel="stylesheet" href="https://cdn.staticfile.org/KaTeX/0.7.1/katex.min.css" crossorigin="anonymous">
@@ -201,7 +201,11 @@ var _hmt = _hmt || [];
         <div class="row">
           <div class="col-lg-12 col-md-12 col-md-offset-0">
             <div class="posts-heading">
-                <h1 align="center">Union-Find(Java实现)</h1>
+                <h1 align="center">安装 Nginx Ingress Controller</h1>
+                
+                  
+                    <h2 align="center" class="posts-subheading">暴露 Kubernetes 服务到公网</h2>
+                  
                 
                 
             </div>
@@ -221,12 +225,12 @@ var _hmt = _hmt || [];
             
 <div>
     <section id="datecount">
-        <h4 id="date"> Tue Sep 5, 2017</h4>
+        <h4 id="date"> Mon Jul 23, 2018</h4>
     </section>
-    <h5 id="wc">800 Words|Read in about 2 Min</h5>
+    <h5 id="wc">1400 Words|Read in about 3 Min</h5>
     <h5 id="tags">Tags: 
         
-        <a href="https://imroc.io/tags/%E7%AE%97%E6%B3%95/">算法</a> &nbsp;
+        <a href="https://imroc.io/tags/kubernetes/">kubernetes</a> &nbsp;
     </h5>
 </div>
 
@@ -238,9 +242,13 @@ var _hmt = _hmt || [];
 <ul>
 <li>
 <ul>
-<li><a href="#quickfind">QuickFind</a></li>
-<li><a href="#quickunion">QuickUnion</a></li>
-<li><a href="#加权quickunion-附带路径压缩优化">加权QuickUnion(附带路径压缩优化)</a></li>
+<li><a href="#概述">概述</a></li>
+<li><a href="#暴露流量的方式">暴露流量的方式</a>
+<ul>
+<li><a href="#使用-loadbalancer-暴露流量">使用 LoadBalancer 暴露流量</a></li>
+</ul></li>
+<li><a href="#使用-deamonset-hostport-暴露流量">使用 DeamonSet + hostPort 暴露流量</a></li>
+<li><a href="#测试">测试</a></li>
 </ul></li>
 </ul>
 </nav>
@@ -249,205 +257,175 @@ var _hmt = _hmt || [];
 
                 
 
-<p><strong>quick-find、quick-union、加权quick-union(附带路径压缩优化)</strong></p>
+<h2 id="概述">概述</h2>
 
-<hr />
+<p>Nginx Ingress Controller 是 Kubernetes Ingress Controller 的一种实现，作为反向代理将外部流量导入集群内部，实现将 Kubernetes 内部的 Service 暴露给外部，这样我们就能通过公网或内网直接访问集群内部的服务。本文使用 Helm 来安装，所以请确保 Helm 已安装，安装方法参考：<a href="https://imroc.io/posts/kubernetes/install-helm/">https://imroc.io/posts/kubernetes/install-helm/</a></p>
 
-<p>本算法主要解决动态连通性一类问题，这里尽量用精炼简洁的话来阐述。</p>
+<h2 id="暴露流量的方式">暴露流量的方式</h2>
 
-<p><strong>数据结构描述:</strong></p>
-
-<ul>
-<li>有N个节点（索引0~N-1），可以查询节点数量</li>
-<li>可以连接两个节点</li>
-<li>可以查询两个节点是否连通</li>
-</ul>
-
-<p><strong>算法大致设计思路：</strong></p>
+<p>要想暴露内部流量，就需要让 Ingress Controller 自身能够对外提供服务，主要有以下两种方式：</p>
 
 <ul>
-<li>每个节点初始化为不同的整数标记</li>
-<li>通过一个辅助函数查询某个节点的标记值</li>
-<li>如果两节点标记相同，说明两节点是连通的
-&mdash;&mdash;</li>
+<li>Ingress Controller 使用 Deployment 部署，Service 类型指定为 LoadBalancer</li>
 </ul>
 
-<p>抽象基类：</p>
+<p>优点：最简单</p>
 
-<pre><code class="language-java">package com.roc.algorithms.unionfind;
+<p>缺点：需要集群有 Cloud Provider 并且支持 LoadBalancer, 一般云厂商托管的 kubernetes 集群支持，并且使用 LoadBalancer 是付费的，因为他会给你每个 LoadBalancer 类型的 Service 分配公网 IP 地址</p>
 
-/**
- * Union-Find算法的基类
- * @author roc
- */
-public abstract class UnionFind {
-    protected int[] id;
-    protected int count;
-    public UnionFind(int n){
-        this.count = n;
-        this.id = new int[n];
-        for (int i=0;i&lt;n;i++){
-            this.id[i] = i;
-        }
-    }
-    public int getCount(){
-        return this.count;
-    }
-    public abstract boolean isConnected(int p,int q);
-    public abstract void union(int p,int q);
-}
+<ul>
+<li>Ingress Controller 使用 DeamonSet 部署，Pod 指定 hostPort 来暴露端口</li>
+</ul>
+
+<p>优点：免费</p>
+
+<p>缺点：没有高可用保证，如果需要高可用就得自己去搞</p>
+
+<h3 id="使用-loadbalancer-暴露流量">使用 LoadBalancer 暴露流量</h3>
+
+<p>这种方式部署 Nginx Ingress Controller 最简单，只要保证上面说的前提：集群有 Cloud Provider 并且支持 LoadBalancer，如果你是使用云厂商的 Kubernetes 集群，保证你集群所使用的云厂商的账号有足够的余额，执行下面的命令一键安装：</p>
+
+<pre><code class="language-bash">helm install --name nginx-ingress --namespace kube-system stable/nginx-ingress
 </code></pre>
 
-<h2 id="quickfind">QuickFind</h2>
+<p>因为 <code>stable/nginx-ingress</code> 这个 helm 的 chart 包默认就是使用的这种方式部署。</p>
 
-<ul>
-<li>a和b进行union的时候，将b及与b连通节点的标记都置为和a的标记一样</li>
-<li>标记相同的节点是连通的</li>
-</ul>
+<p>部署完了我们可以查看 LoadBalancer 给我们分配的 IP 地址：</p>
 
-<pre><code class="language-java">package com.roc.algorithms.unionfind;
-
-/**
- * union-find算法的quick-find实现版本
- *
- * @author roc
- */
-public class QuickFind extends UnionFind {
-    public QuickFind(int n) {
-        super(n);
-    }
-
-    @Override
-    public boolean isConnected(int p, int q) {
-        return id[p] == id[q];
-    }
-
-    @Override
-    public void union(int p, int q) {
-        int i = id[p];
-        int j = id[q];
-        if (i == j) {
-            return;
-        }
-        for (int k = 0; k &lt; id.length; k++) {
-            if (id[k] == j) {
-                id[k] = i;
-            }
-        }
-        count--;
-    }
-}
+<pre><code class="language-bash">$ kubectl get svc -n kube-system
+NAME                            TYPE           CLUSTER-IP     EXTERNAL-IP      PORT(S)                      AGE
+nginx-ingress-controller        LoadBalancer   10.3.255.138   119.28.121.125   80:30113/TCP,443:32564/TCP   21h
 </code></pre>
 
-<h2 id="quickunion">QuickUnion</h2>
+<p><code>EXTERNAL-IP</code> 就是我们需要的外部 IP 地址，通过访问它就可以访问到集群内部的服务了，我们可以将想要的域名配置这个IP的DNS记录，这样就可以直接通过域名来访问了。具体访问哪个 Service, 这个就是我们创建的 Ingress 里面所配置规则的了，可以通过匹配请求的 Host 和 路径这些来转发到不同的后端 Service.</p>
 
-<ul>
-<li>连通的节点形成一棵树，根节点相同</li>
-</ul>
+<h2 id="使用-deamonset-hostport-暴露流量">使用 DeamonSet + hostPort 暴露流量</h2>
 
-<pre><code class="language-java">package com.roc.algorithms.unionfind;
+<p>这种方式实际是使用集群内的某些节点来暴露流量，使用 DeamonSet 部署，保证让符合我们要求的节点都会启动一个 Nginx 的 Ingress Controller 来监听端口，这些节点我们叫它 <code>边缘节点</code>，因为它们才是真正监听端口，让外界流量进入集群内部的节点，这里我使用集群内部的一个节点来暴露流量，它有自己的公网 IP 地址，并且 80 和 443 端口没有被其它占用。</p>
 
-/**
- * union-find算法的quick-union实现版本
- * @author roc
- */
-public class QuickUnion extends UnionFind {
-    public QuickUnion(int n) {
-        super(n);
-    }
+<p>首先，看看集群有哪些节点：</p>
 
-    private int findRoot(int p) {
-        while (p != id[p]) {
-            p = id[p];
-        }
-        return p;
-    }
-
-    @Override
-    public boolean isConnected(int p, int q) {
-        return findRoot(p) == findRoot(q);
-    }
-
-    @Override
-    public void union(int p, int q) {
-        int i = findRoot(p);
-        int j = findRoot(q);
-        if (i == j) {
-            return;
-        }
-        id[j] = id[i];
-        count--;
-    }
-}
+<pre><code class="language-bash">$ kubectl get node
+NAME       STATUS    ROLES     AGE       VERSION
+10.0.0.3   Ready     &lt;none&gt;    56d       v1.8.7-qcloud
+10.0.0.4   Ready     &lt;none&gt;    56d       v1.8.7-qcloud
+10.0.0.5   Ready     &lt;none&gt;    56d       v1.8.7-qcloud
+10.0.0.6   Ready     &lt;none&gt;    56d       v1.8.7-qcloud
 </code></pre>
 
-<h2 id="加权quickunion-附带路径压缩优化">加权QuickUnion(附带路径压缩优化)</h2>
+<p>我想要 <code>10.0.0.3</code> 这个节点作为 <code>边缘节点</code> 来暴露流量，我来给它加个 label，以便后面我们用 DeamonSet 部署 Nginx Ingress Controller 时能绑到这个节点上，我这里就加个名为 <code>node:edge</code> 的 label :</p>
 
-<ul>
-<li>union的时候小树挂在大树下</li>
-<li>查询根节点的时候顺便将该节点的父节点直接指向根节点，压缩路径</li>
-</ul>
-
-<pre><code class="language-java">package com.roc.algorithms.unionfind;
-
-/**
- * union-find算法的加权quick-union实现版本，
- * 附带路径压缩优化
- *
- * @author roc
- */
-public class WeightedQuickUnion extends QuickUnion {
-    private int[] sz;
-
-    public WeightedQuickUnion(int n) {
-        super(n);
-        this.sz = new int[n];
-        for (int i = 0; i &lt; n; i++) {
-            this.sz[i] = 1;
-        }
-    }
-
-    ////查询根节点，顺便压缩路径
-    @Override
-    protected int findRoot(int p) {
-        while (p != id[p]) {
-            id[p] = id[id[p]];
-            p = id[p];
-        }
-        return p;
-    }
-
-    @Override
-    public void union(int p, int q) {
-        int i = findRoot(p);
-        int j = findRoot(q);
-        if (i == j) {
-            return;
-        }
-        if (sz[i] &lt; sz[j]) {
-            id[i] = j;
-            sz[j] += sz[i];
-        } else {
-            id[j] = i;
-            sz[i] += sz[j];
-        }
-        count--;
-    }
-}
+<pre><code class="language-bash">$ kubectl label node 10.0.0.3 node=edge
+node &quot;10.0.0.3&quot; labeled
 </code></pre>
+
+<p>如果 label 加错了可以这样删掉:</p>
+
+<pre><code class="language-bash">$ kubectl label node 10.0.0.3 node-
+node &quot;10.0.0.3&quot; labeled
+</code></pre>
+
+<p>接下来我们覆盖一些默认配置来安装:</p>
+
+<pre><code class="language-bash">helm install stable/nginx-ingress \
+  --namespace kube-system \
+  --name nginx-ingress \
+  --version=0.23.0 \
+  --set controller.kind=DaemonSet \
+  --set controller.daemonset.useHostPort=true \
+  --set controller.nodeSelector.node=edge \
+  --set controller.service.type=ClusterIP
+</code></pre>
+
+<p>可以看下是否成功启动:</p>
+
+<pre><code class="language-bash">$ kubectl get pods -n kube-system | grep nginx-ingress
+nginx-ingress-controller-b47h9                  1/1       Running   0          1h
+nginx-ingress-default-backend-9c5d6df7d-7dwll   1/1       Running   0          1h
+</code></pre>
+
+<p>如果状态不是 <code>Running</code>  可以查看下详情:</p>
+
+<pre><code class="language-bash">$ kubectl describe -n kube-system po/nginx-ingress-controller-b47h9
+</code></pre>
+
+<p>这两个 pod 的镜像在 <code>quay.io</code> 下，国内拉取可能会比较慢。</p>
+
+<p>运行成功我们就可以创建 Ingress 来将外部流量导入集群内部啦，外部 IP 是我们的 <code>边缘节点</code> 的 IP，公网和内网 IP 都算，我用的 <code>10.0.0.3</code> 这个节点，并且它有公网 IP，我就可以通过公网 IP 来访问了，如果再给这个公网 IP 添加 DNS 记录，我就可以用域名访问了。</p>
+
+<h2 id="测试">测试</h2>
+
+<p>我们来创建一个服务测试一下，先创建一个 <code>my-nginx.yaml</code></p>
+
+<pre><code class="language-bash">vi my-nginx.yaml
+</code></pre>
+
+<p>粘贴以下内容：</p>
+
+<pre><code class="language-yaml">apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: my-nginx
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        run: my-nginx
+    spec:
+      containers:
+      - name: my-nginx
+        image: nginx
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-nginx
+  labels:
+    app: my-nginx
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    name: http
+  selector:
+    run: my-nginx
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: my-nginx
+  annotations:
+    kubernetes.io/ingress.class: &quot;nginx&quot;
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /
+        backend:
+          serviceName: my-nginx
+          servicePort: 80
+</code></pre>
+
+<p>创建：</p>
+
+<pre><code class="language-bash">kubectl apply -f my-nginx.yaml
+</code></pre>
+
+<p>然后浏览器通过 IP 或域名访问下，当你看到 <code>Welcome to nginx!</code> 这个 nginx 默认的主页说明已经成功啦。</p>
+
+<p><strong>注意</strong>：定义 Ingress 的时候最好加上 <code>kubernetes.io/ingress.class</code> 这个 annotation，在有多个 Ingress Controller 的情况下让请求能够被我们安装的这个处理（云厂商托管的 Kubernetes 集群一般会有默认的 Ingress Controller)</p>
 
             </article>
 
             <ul class="pager blog-pager">
                 
                 <li class="previous">
-                    <a href="https://imroc.io/posts/algorithm/union-findgolang%E5%AE%9E%E7%8E%B0/" data-toggle="tooltip" data-placement="top" title="Union-Find(golang实现)">&larr; Previous Post</a>
+                    <a href="https://imroc.io/posts/kubernetes/install-helm/" data-toggle="tooltip" data-placement="top" title="快速安装 Helm">&larr; Previous Post</a>
                 </li>
                  
-                <li class="next">
-                    <a href="https://imroc.io/posts/algorithm/union-findc&#43;&#43;%E5%AE%9E%E7%8E%B0%E5%AE%9E%E7%8E%B0/" data-toggle="tooltip" data-placement="top" title="Union-Find(C&#43;&#43;实现实现)">Next Post &rarr;</a>
-                </li>
-                
             </ul>
             
             <div>
@@ -455,15 +433,15 @@ public class WeightedQuickUnion extends QuickUnion {
                 <h2>See Also</h2>
                 <ul>
                     
-                    <li><a href="/posts/algorithm/%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8Fc-c&#43;&#43;%E5%AE%9E%E7%8E%B0/">快速排序(C-C&#43;&#43;实现)</a></li>
+                    <li><a href="/posts/kubernetes/install-helm/">快速安装 Helm</a></li>
                     
-                    <li><a href="/posts/algorithm/%E6%B1%82%E4%B8%A4%E5%9C%86%E7%9B%B8%E4%BA%A4%E7%9A%84%E4%BA%A4%E7%82%B9%E7%9A%84%E6%96%B9%E6%B3%95/">求两圆相交的交点的方法</a></li>
+                    <li><a href="/posts/kubernetes/kubernetes-nodeport-vs-loadbalancer-vs-ingress-when-should-i-use-what/">对比Kubernetes的Nodeport、Loadbalancer和Ingress，什么时候该用哪种</a></li>
                     
-                    <li><a href="/posts/algorithm/%E4%B8%89%E5%90%91%E5%88%87%E5%88%86%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8Fc-c&#43;&#43;%E5%AE%9E%E7%8E%B0/">三向切分快速排序(C-C&#43;&#43;实现)</a></li>
+                    <li><a href="/posts/kubernetes/kubernetes-source-code-reading-notes-kube-apiserver-code-main-line/">kubernetes源码阅读笔记：理清 kube-apiserver 的源码主线</a></li>
                     
-                    <li><a href="/posts/algorithm/%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8Fgolang%E5%AE%9E%E7%8E%B0/">冒泡排序(golang实现)</a></li>
+                    <li><a href="/posts/kubernetes/sync-images-to-docker-hub-using-katacoda/">利用Katacoda免费同步Docker镜像到Docker Hub</a></li>
                     
-                    <li><a href="/posts/algorithm/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F%E8%87%AA%E9%A1%B6%E5%90%91%E4%B8%8B%E4%B8%8E%E8%87%AA%E5%BA%95%E5%90%91%E4%B8%8A%E4%B8%A4%E7%A7%8D%E6%96%B9%E5%BC%8Fgolang%E5%AE%9E%E7%8E%B0/">归并排序,自顶向下与自底向上两种方式(golang实现)</a></li>
+                    <li><a href="/posts/kubernetes/install-kubernetes-1.9-on-centos7-with-kubeadm/">国内使用Kubeadm在CentOS 7上安装Kubernetes 1.9</a></li>
                     
                 </ul>
                 
@@ -474,12 +452,12 @@ public class WeightedQuickUnion extends QuickUnion {
             
 <div>
     <section id="datecount">
-        <h4 id="date"> Tue Sep 5, 2017</h4>
+        <h4 id="date"> Mon Jul 23, 2018</h4>
     </section>
-    <h5 id="wc">800 Words|Read in about 2 Min</h5>
+    <h5 id="wc">1400 Words|Read in about 3 Min</h5>
     <h5 id="tags">Tags: 
         
-        <a href="https://imroc.io/tags/%E7%AE%97%E6%B3%95/">算法</a> &nbsp;
+        <a href="https://imroc.io/tags/kubernetes/">kubernetes</a> &nbsp;
     </h5>
 </div>
 

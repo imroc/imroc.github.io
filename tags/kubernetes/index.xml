@@ -8,10 +8,19 @@
     <language>zh-cn</language>
     <managingEditor>roc@imroc.io (roc)</managingEditor>
     <webMaster>roc@imroc.io (roc)</webMaster>
-    <lastBuildDate>Mon, 23 Jul 2018 12:49:00 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 23 Jul 2018 14:29:37 +0800</lastBuildDate>
     
 	<atom:link href="https://imroc.io/tags/kubernetes/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>安装 Nginx Ingress Controller</title>
+      <link>https://imroc.io/posts/kubernetes/install-nginx-ingress-controller/</link>
+      <pubDate>Mon, 23 Jul 2018 14:29:37 +0800</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/posts/kubernetes/install-nginx-ingress-controller/</guid>
+      <description>概述 Nginx Ingress Controller 是 Kubernetes Ingress Controller 的一种实现，作为反向代理将外部流量导入集群内部，实现将 Kubernetes 内部的 Service 暴露给外部，这样我们就能通过公网或内网直接访问集群内部的服</description>
+    </item>
     
     <item>
       <title>快速安装 Helm</title>
