@@ -324,13 +324,12 @@ tiller-deploy-dccdb6fd9-2df4r                   1/1       Running   1          4
 
 <p>默认安装的 tiller 权限很小，我们执行下面的脚本给它加最大权限，这样方便我们可以用 helm 部署应用到任意 namespace 下:</p>
 
-<p>```. bash
-kubectl create serviceaccount &ndash;namespace=kube-system tiller</p>
+<pre><code class="language-bash">kubectl create serviceaccount --namespace=kube-system tiller
 
-<p>kubectl create clusterrolebinding tiller-cluster-rule &ndash;clusterrole=cluster-admin &ndash;serviceaccount=kube-system:tiller</p>
+kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
 
-<p>kubectl patch deploy &ndash;namespace=kube-system tiller-deploy -p &lsquo;{&ldquo;spec&rdquo;:{&ldquo;template&rdquo;:{&ldquo;spec&rdquo;:{&ldquo;serviceAccount&rdquo;:&ldquo;tiller&rdquo;}}}}&rsquo;
-```</p>
+kubectl patch deploy --namespace=kube-system tiller-deploy -p '{&quot;spec&quot;:{&quot;template&quot;:{&quot;spec&quot;:{&quot;serviceAccount&quot;:&quot;tiller&quot;}}}}'
+</code></pre>
 
             </article>
 
