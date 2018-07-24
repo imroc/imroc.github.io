@@ -249,6 +249,36 @@ var _hmt = _hmt || [];
           
           
             <article class="post-preview">
+              <a href="https://imroc.io/posts/algorithm/%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8Fgolang%E5%AE%9E%E7%8E%B0/">
+                <h2 class="post-title">快速排序(golang实现)</h2>
+                
+              </a>
+
+              <span class="post-meta">
+  
+  Posted on September 5, 2017
+  
+  
+</span>
+
+
+              <div class="post-entry">
+                
+                  封装成函数： //快速排序 func QuickSort(s []int) { sort(s, 0, len(s)-1) } func sort(s []int, lo, hi int) { if lo &gt;= hi { return } k := partition(s, lo, hi) sort(s, lo, k) sort(s, k+1, hi) } func partition(s []int, lo, hi int) int { i, j := lo, hi+1 //将lo作为中间值 for
+                  <a href="https://imroc.io/posts/algorithm/%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8Fgolang%E5%AE%9E%E7%8E%B0/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <span class="post-meta">
+                
+                  #<a href="https://imroc.io/tags/%E7%AE%97%E6%B3%95/">算法</a>&nbsp;
+                
+                </span>
+              
+            </article>
+          
+            <article class="post-preview">
               <a href="https://imroc.io/posts/algorithm/%E6%8F%92%E5%85%A5%E6%8E%92%E5%BA%8Fc-c&#43;&#43;%E5%AE%9E%E7%8E%B0/">
                 <h2 class="post-title">插入排序(C-C&#43;&#43;实现)</h2>
                 
@@ -506,36 +536,6 @@ var _hmt = _hmt || [];
                 
                   封装成函数： //选出第k小元素，k为1~len(s) func SelectKthMin(s []int, k int) int { k-- lo, hi := 0, len(s)-1 for { j := partition(s, lo, hi) if j &lt; k { lo = j + 1 } else if j &gt; k { hi = j - 1 } else
                   <a href="https://imroc.io/posts/algorithm/%E7%BA%BF%E6%80%A7%E5%A4%8D%E6%9D%82%E5%BA%A6%E9%80%89%E5%87%BA%E7%AC%ACk%E5%B0%8F%E5%85%83%E7%B4%A0%E4%B8%AD%E4%BD%8D%E6%95%B0%E6%9C%80%E5%B0%8F%E7%9A%84k%E4%B8%AA%E5%85%83%E7%B4%A0golang%E5%AE%9E%E7%8E%B0/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <span class="post-meta">
-                
-                  #<a href="https://imroc.io/tags/%E7%AE%97%E6%B3%95/">算法</a>&nbsp;
-                
-                </span>
-              
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://imroc.io/posts/algorithm/%E9%80%89%E6%8B%A9%E6%8E%92%E5%BA%8Fc-c&#43;&#43;-%E5%AE%9E%E7%8E%B0/">
-                <h2 class="post-title">选择排序(C-C&#43;&#43;-实现)</h2>
-                
-              </a>
-
-              <span class="post-meta">
-  
-  Posted on September 5, 2017
-  
-  
-</span>
-
-
-              <div class="post-entry">
-                
-                  封装成函数： //交换数组元素 void swap(int *a,int i,int j) { int t = a[i]; a[i] = a[j]; a[j] = t; } //选择排序 void selection_sort(int *a,int len) { int m = len-1; //以免每次循环判断都运算 int i,j,k; for (i=0; i&lt;m; i++) { k=i; for (j=i+1; j&lt;len;
-                  <a href="https://imroc.io/posts/algorithm/%E9%80%89%E6%8B%A9%E6%8E%92%E5%BA%8Fc-c&#43;&#43;-%E5%AE%9E%E7%8E%B0/" class="post-read-more">[Read More]</a>
                 
               </div>
 

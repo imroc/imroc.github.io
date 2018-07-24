@@ -8,10 +8,19 @@
     <language>zh-cn</language>
     <managingEditor>roc@imroc.io (roc)</managingEditor>
     <webMaster>roc@imroc.io (roc)</webMaster>
-    <lastBuildDate>Mon, 23 Jul 2018 21:49:54 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 24 Jul 2018 22:19:37 +0800</lastBuildDate>
     
 	<atom:link href="https://imroc.io/categories/kubernetes/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>通俗理解Kubernetes中Service、Ingress与Ingress Controller的作用与关系</title>
+      <link>https://imroc.io/posts/kubernetes/understand-service-ingress-and-ingress-controller/</link>
+      <pubDate>Tue, 24 Jul 2018 22:19:37 +0800</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/posts/kubernetes/understand-service-ingress-and-ingress-controller/</guid>
+      <description>通俗的讲： - Service 是后端真实服务的抽象，一个 Service 可以代表多个相同的后端服务 - Ingress 是反向代理规则，用来规定 HTTP/S 请求应该被转发到哪个 Service 上，比如根据请求中不</description>
+    </item>
     
     <item>
       <title>利用Helm一键部署Kubernetes Dashboard并启用免费HTTPS</title>
