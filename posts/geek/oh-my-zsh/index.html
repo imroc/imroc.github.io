@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title> 极客工具之 oh-my-zsh - imroc.io|roc的博客|Cloud Native|Kubernetes|Go|Golang</title>
+  <meta name="description" content="imroc.io|roc的博客|Cloud Native|Kubernetes|Go|Golang" />
+  <meta property="og:title" content="极客工具之 oh-my-zsh" />
+  <meta name="twitter:title" content="极客工具之 oh-my-zsh" />
+  <meta name="description" content="shell 有多种，大多数人接触比较多的是 bash， 不管是 mac 还是各个 linux 发行版，默认的 shell 基本都是 bash，虽然 bash 功能已经丰富了，但对于极客们来说，界面不">
+  <meta property="og:description" content="shell 有多种，大多数人接触比较多的是 bash， 不管是 mac 还是各个 linux 发行版，默认的 shell 基本都是 bash，虽然 bash 功能已经丰富了，但对于极客们来说，界面不">
+  <meta name="twitter:description" content="shell 有多种，大多数人接触比较多的是 bash， 不管是 mac 还是各个 linux 发行版，默认的 shell 基本都是 bash，虽然 bash 功能已经丰富了，但对于极客们来说，界面不">
+  <meta name="author" content="{Description { .Site.Author.name }}"/>
+  <link href='https://imroc.io/favicon.png' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://res.cloudinary.com/imroc/image/upload/v1521031841/avatar.png" />
+  <meta name="twitter:image" content="https://res.cloudinary.com/imroc/image/upload/v1521031841/avatar.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@imrocchan" />
+  <meta name="twitter:creator" content="@imrocchan" />
+  <meta property="og:url" content="https://imroc.io/posts/geek/oh-my-zsh/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="roc" />
+
+  <meta name="generator" content="Hugo 0.49.2" />
+  <link rel="canonical" href="https://imroc.io/posts/geek/oh-my-zsh/" />
+  <link rel="alternate" href="https://imroc.io/index.xml" type="application/rss+xml" title="roc">
+  <script src="https://cdn.staticfile.org/jquery/1.12.4/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.staticfile.org/KaTeX/0.7.1/katex.min.css" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" crossorigin="anonymous">
+
+  <link rel="stylesheet" href="https://imroc.io/css/main.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  
+  <link rel="stylesheet" href="https://imroc.io/static/prism/prism.css" />
+
+  <script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?05e1e8b7484a08c51cd0953664168cd7";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe.min.css" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.2/default-skin/default-skin.min.css" crossorigin="anonymous" />
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://imroc.io/">roc</a>
+    </div>
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">Categories</a>
+              <div class="navlinks-children">
+                
+                
+                  <a href="https://imroc.io/categories/kubernetes">kubernetes</a>
+                
+                
+                  <a href="https://imroc.io/categories/docker">docker</a>
+                
+                
+                  <a href="https://imroc.io/categories/golang">golang</a>
+                
+                
+                  <a href="https://imroc.io/categories/arch">架构</a>
+                
+                
+                  <a href="https://imroc.io/categories/geek">极客</a>
+                
+              </div>
+            </li>
+          
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">Books</a>
+              <div class="navlinks-children">
+                
+                
+                  <a href="https://imroc.io/kubernetes-the-gradual-way">Kubernetes The Gradual Way</a>
+                
+              </div>
+            </li>
+          
+        
+          
+            <li>
+              <a title="Tags" href="/tags">Tags</a>
+              
+              
+            </li>
+          
+        
+          
+            <li>
+              <a title="About" href="/about">About</a>
+              
+              
+            </li>
+          
+        
+
+        
+
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="roc" href="https://imroc.io/">
+            <img class="avatar-img" src="https://res.cloudinary.com/imroc/image/upload/v1521031841/avatar.png" alt="roc" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+    
+  
+  
+  
+
+
+
+
+  
+    <div id="header-big-imgs" data-num-img=1 data-img-src-1="https://res.cloudinary.com/imroc/image/upload/v1539970589/blog/geek/OMZLogo_BnW.png" data-img-desc-1="oh my zsh"></div>
+  
+
+  <header class="header-section has-img">
+    
+      <div class="intro-header big-img">
+        
+        
+        <div class="container">
+          <div class="row">
+              <div class="col-lg-12 col-md-12 col-md-offset-0">
+                
+                <div class="post-heading">
+                
+                  
+                     <h1>极客工具之 oh-my-zsh</h1>
+                     
+                    <span class="post-meta">
+  
+  Posted on October 20, 2018
+  
+  
+</span>
+
+
+                    
+                  
+                  
+              </div>
+            </div>
+          </div>
+        </div>
+        <span class="img-desc" style="display: inline;"></span>
+      </div>
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12 col-md-12 col-md-offset-0">
+            <div class="posts-heading">
+                <h1 align="center">极客工具之 oh-my-zsh</h1>
+                
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main" itemscope itemtype="http://schema.org/Article">
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            
+            
+            
+<div>
+    <section id="datecount">
+        <h4 id="date"> Sat Oct 20, 2018</h4>
+    </section>
+    <h5 id="wc">600 Words|Read in about 2 Min</h5>
+    <h5 id="tags">Tags: 
+        
+        <a href="https://imroc.io/tags/geek/">geek</a> &nbsp;
+    </h5>
+</div>
+
+            
+            <article role="main" class="blog-post" itemprop="articleBody" id="content">
+                
+<aside class="toc">
+  <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#安装">安装</a></li>
+<li><a href="#更改系统默认-shell">更改系统默认 shell</a></li>
+<li><a href="#更改zsh配置文件">更改zsh配置文件</a></li>
+<li><a href="#修改主题">修改主题</a></li>
+<li><a href="#配置插件">配置插件</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+</aside>
+
+
+                
+
+<p>shell 有多种，大多数人接触比较多的是 bash， 不管是 mac 还是各个 linux 发行版，默认的 shell 基本都是 bash，虽然 bash 功能已经丰富了，但对于极客们来说，界面不够炫，提示功能也不够强大。而 zsh 功能及其强大，只是配置过于复杂，后来就有了 oh-my-zsh 开源项目，配置难度大大降低。</p>
+
+<p>Github地址: <a href="https://github.com/robbyrussell/oh-my-zsh">https://github.com/robbyrussell/oh-my-zsh</a></p>
+
+<h3 id="安装">安装</h3>
+
+<pre><code class="language-bash">sh -c &quot;$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)&quot;
+</code></pre>
+
+<h3 id="更改系统默认-shell">更改系统默认 shell</h3>
+
+<pre><code class="language-bash">chsh -s /bin/zsh
+</code></pre>
+
+<h3 id="更改zsh配置文件">更改zsh配置文件</h3>
+
+<pre><code class="language-bash">vim ~/.zshrc
+</code></pre>
+
+<h3 id="修改主题">修改主题</h3>
+
+<pre><code class="language-bash">ZSH_THEME=&quot;robbyrussell&quot;
+</code></pre>
+
+<p>默认的 <code>robbyrussell</code> 主题也挺好看
+<img src="https://res.cloudinary.com/imroc/image/upload/v1539969862/blog/geek/zsh.png" alt="zsh" />
+更多主题看过来： <a href="https://github.com/robbyrussell/oh-my-zsh/wiki/Themes">https://github.com/robbyrussell/oh-my-zsh/wiki/Themes</a></p>
+
+<h3 id="配置插件">配置插件</h3>
+
+<p>oh-my-zsh 还支持插件，插件存放目录为：</p>
+
+<pre><code class="language-bash">~/.oh-my-zsh/plugins
+</code></pre>
+
+<p>这个目录中每个子目录都是一个插件，目录名即为插件名，默认不开启，需要在 <code>~/.zshrc</code> 中该配置开启，比如:</p>
+
+<pre><code class="language-bash">plugins=(
+  git
+  git-flow
+  docker
+  kubectl
+  brew
+  npm
+  helm
+)
+</code></pre>
+
+<p>这些插件可以给你常用的命令做用法提示，使用 tab 键触发。我这里再推荐另外三个不是内置的插件，需要将它们单独下载到 <code>~/.oh-my-zsh/plugins</code> 并且加到上面的 plugins 配置列表中以启用插件：
+|             插件             |          功能          |                           地址                            |
+| &mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;- | &mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;- | &mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash; |
+| zsh-autosuggestions          | 自动提示输入提示       | <a href="https://github.com/zsh-users/zsh-autosuggestions">https://github.com/zsh-users/zsh-autosuggestions</a>          |
+| zsh-syntax-highlighting      | 高亮命令输入           | <a href="https://github.com/zsh-users/zsh-syntax-highlighting">https://github.com/zsh-users/zsh-syntax-highlighting</a>      |
+| zsh-history-substring-search | 查找匹配前缀的历史输入 | <a href="https://github.com/zsh-users/zsh-history-substring-search">https://github.com/zsh-users/zsh-history-substring-search</a> |</p>
+
+<p><code>zsh-autosuggestions</code> 默认使用方向右键来将建议的历史填充到命令行输入，按这个键需要挪下右手，不方便，可以映射下，我这里使用 <code>ctrl+space</code></p>
+
+<pre><code class="language-bash">bindkey '^ ' autosuggest-accept
+</code></pre>
+
+<p>再给 <code>zsh-history-substring-search</code> 绑下快捷键，上下翻匹配输入前缀的历史输入，我这里使用 <code>ctrl+n</code> 和 <code>ctrl+p</code></p>
+
+<pre><code class="language-bash">bindkey -M emacs '^P' history-substring-search-up
+bindkey -M emacs '^N' history-substring-search-down
+</code></pre>
+
+<p><strong>注:</strong> 以上插件的快捷键绑定的配置写在 <code>~/.zshrc</code> 中 <code>source $ZSH/oh-my-zsh.sh</code> 这句下面的位置</p>
+
+<p>使用效果演示:</p>
+
+<p><img src="https://res.cloudinary.com/imroc/image/upload/v1539969883/blog/geek/zsh_demo.gif" alt="zsh demo" /></p>
+
+            </article>
+
+            <ul class="pager blog-pager">
+                
+                <li class="previous">
+                    <a href="https://imroc.io/posts/kubernetes/understand-service-ingress-and-ingress-controller/" data-toggle="tooltip" data-placement="top" title="通俗理解Kubernetes中Service、Ingress与Ingress Controller的作用与关系">&larr; Previous Post</a>
+                </li>
+                 
+            </ul>
+            
+            <div>
+                 
+            </div>
+            
+            
+            
+            
+<div>
+    <section id="datecount">
+        <h4 id="date"> Sat Oct 20, 2018</h4>
+    </section>
+    <h5 id="wc">600 Words|Read in about 2 Min</h5>
+    <h5 id="tags">Tags: 
+        
+        <a href="https://imroc.io/tags/geek/">geek</a> &nbsp;
+    </h5>
+</div>
+
+            
+            </div>
+            
+			
+               <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+<aside id=comments>
+    <div>
+        <h2> Comments </h2>
+    </div>
+    <div id="container"></div>
+    <link rel="stylesheet" href="https://imroc.io/static/gitment/default.css">
+    <script src="https://imroc.io/static/gitment/gitment.browser.js"></script>
+    <script>
+        var gitment = new Gitment({
+			owner: 'imroc', 
+			repo: 'imroc.github.io', 
+            oauth: {
+				client_id: 'd05b8f959b3111c6fb63',
+				client_secret: 'f30ef76ea0050ed731ace76f7fbf684ae5d28fbc',
+            },
+        })
+        gitment.render('container')
+    </script>
+</aside>
+</div>
+
+			
+        </div>
+    </div>
+    </section>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+              <li>
+                <a href="mailto:roc@imroc.io" title="Email me">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com/imroc" title="GitHub">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://twitter.com/imrocchan" title="Twitter">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+          
+          <li>
+            <a href="https://imroc.io/index.xml" title="RSS">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+        &copy;2017
+          
+            
+              <a href="imroc.io">roc</a>
+                      
+          
+          
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://imroc.io/">roc</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.49.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe-ui-default.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe.js"></script>
+<script src="https://imroc.io/js/auto-render.min.js"></script>
+<script src="https://imroc.io/js/main.js"></script>
+<script src="https://imroc.io/static/prism/prism.js"></script>
+<script src="https://cdn.staticfile.org/KaTeX/0.7.1/katex.min.js"></script>
+<script> renderMathInElement(document.body); </script>
+
+
+
+
+
+
+
+  </body>
+</html>
+
