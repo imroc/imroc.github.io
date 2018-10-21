@@ -8,10 +8,19 @@
     <language>zh-cn</language>
     <managingEditor>roc@imroc.io (roc)</managingEditor>
     <webMaster>roc@imroc.io (roc)</webMaster>
-    <lastBuildDate>Sun, 21 Oct 2018 07:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 21 Oct 2018 08:00:00 +0800</lastBuildDate>
     
 	<atom:link href="https://imroc.io/tags/geek/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>教你如何全键盘操作 Chrome 浏览器</title>
+      <link>https://imroc.io/posts/geek/chrome/</link>
+      <pubDate>Sun, 21 Oct 2018 08:00:00 +0800</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/posts/geek/chrome/</guid>
+      <description>推荐两款插件， SurfingKeys 和 Steward，让你全键盘高效操作浏览器。老规矩，附视频教学。 SurfingKeys 模拟 vim 的快捷键有两款 Chrome 插件，分别是 Vimium 和 Surfingkey</description>
+    </item>
     
     <item>
       <title>极客工具之 Alfred 与 Dash</title>
