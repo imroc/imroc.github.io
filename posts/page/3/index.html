@@ -207,6 +207,33 @@ var _hmt = _hmt || [];
         <div class="posts-list">
           
             <article class="post-preview">
+              <a href="https://imroc.io/posts/docker/understand-docker-cmd-entrypoint/">
+                <h2 class="post-title">Docker中CMD与ENTRYPOINT的简明理解</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                Posted on September 6, 2017
+              </p>
+              <div class="post-entry">
+                
+                  CMD提供容器启动的默认行为，运行不指定运行的命令及参数，会默认执行CMD中的。 例如hello镜像的Dockerfile中有 CMD [&quot;echo&quot;,&quot;'hello world'&quot;] 执行 docker run h
+                  <a href="https://imroc.io/posts/docker/understand-docker-cmd-entrypoint/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <span class="post-meta">
+                  
+                    #<a href="https://imroc.io/tags/docker/">docker</a>&nbsp;
+                  
+                </span>
+              
+
+            </article>
+          
+            <article class="post-preview">
               <a href="https://imroc.io/posts/docker/docker-network-communication/">
                 <h2 class="post-title">Docker容器间通信</h2>
 
@@ -436,50 +463,6 @@ var _hmt = _hmt || [];
                 
                   quick-find、quick-union、加权quick-union(附带路径压缩优化) 本算法主要解决动态连通性一类问题，这里尽量用精炼
                   <a href="https://imroc.io/posts/algorithm/union-findgolang%E5%AE%9E%E7%8E%B0/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <span class="post-meta">
-                  
-                    #<a href="https://imroc.io/tags/%E7%AE%97%E6%B3%95/">算法</a>&nbsp;
-                  
-                </span>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://imroc.io/posts/algorithm/golang%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92%E6%B1%82%E8%A7%A3%E6%9C%80%E5%A4%A7%E8%BF%9E%E7%BB%AD%E5%AD%90%E6%95%B0%E7%BB%84%E5%92%8C/">
-                <h2 class="post-title">golang动态规划求解最大连续子数组和</h2>
-
-                
-              </a>
-
-              <p class="post-meta">
-                Posted on September 5, 2017
-              </p>
-              <div class="post-entry">
-                
-                  <pre><code class="language-go">// 求最大连续子数组和
-func MaxSubArray(arr []int) int {
-	currSum := 0
-	maxSum := arr[0]
-
-	for _, v := range arr {
-		if currSum &gt; 0 {
-			currSum += v
-		} else {
-			currSum = v
-		}
-		if maxSum &lt; currSum {
-			maxSum = currSum
-		}
-	}
-	return maxSum
-}
-</code></pre>
-
                 
               </div>
 

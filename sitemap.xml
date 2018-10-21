@@ -7,6 +7,11 @@
   </url>
   
   <url>
+    <loc>https://imroc.io/posts/geek/alfred-and-dash/</loc>
+    <lastmod>2018-10-21T07:00:00+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://imroc.io/posts/geek/oh-my-zsh/</loc>
     <lastmod>2018-10-20T01:35:00+08:00</lastmod>
   </url>
@@ -350,14 +355,14 @@
   </url>
   
   <url>
-    <loc>https://imroc.io/categories/docker/</loc>
-    <lastmod>2017-12-20T13:12:35+08:00</lastmod>
+    <loc>https://imroc.io/tags/docker/</loc>
+    <lastmod>2018-03-09T10:39:17+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://imroc.io/tags/docker/</loc>
-    <lastmod>2018-03-09T10:39:17+08:00</lastmod>
+    <loc>https://imroc.io/categories/docker/</loc>
+    <lastmod>2017-12-20T13:12:35+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -374,20 +379,14 @@
   </url>
   
   <url>
-    <loc>https://imroc.io/categories/geek/</loc>
-    <lastmod>2018-10-20T01:35:00+08:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
     <loc>https://imroc.io/tags/geek/</loc>
-    <lastmod>2018-10-20T01:35:00+08:00</lastmod>
+    <lastmod>2018-10-21T07:00:00+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://imroc.io/categories/golang/</loc>
-    <lastmod>2017-09-06T15:35:18+08:00</lastmod>
+    <loc>https://imroc.io/categories/geek/</loc>
+    <lastmod>2018-10-21T07:00:00+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -398,13 +397,19 @@
   </url>
   
   <url>
-    <loc>https://imroc.io/categories/hugo/</loc>
-    <lastmod>2018-01-16T20:35:06+08:00</lastmod>
+    <loc>https://imroc.io/categories/golang/</loc>
+    <lastmod>2017-09-06T15:35:18+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://imroc.io/tags/hugo/</loc>
+    <lastmod>2018-01-16T20:35:06+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://imroc.io/categories/hugo/</loc>
     <lastmod>2018-01-16T20:35:06+08:00</lastmod>
     <priority>0</priority>
   </url>
@@ -416,20 +421,20 @@
   </url>
   
   <url>
-    <loc>https://imroc.io/categories/kubernetes/</loc>
-    <lastmod>2018-07-24T22:19:37+08:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
     <loc>https://imroc.io/tags/kubernetes/</loc>
     <lastmod>2018-07-24T22:19:37+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
+    <loc>https://imroc.io/categories/kubernetes/</loc>
+    <lastmod>2018-07-24T22:19:37+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>https://imroc.io/posts/</loc>
-    <lastmod>2018-10-20T01:35:00+08:00</lastmod>
+    <lastmod>2018-10-21T07:00:00+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -441,7 +446,7 @@
   
   <url>
     <loc>https://imroc.io/</loc>
-    <lastmod>2018-10-20T01:35:00+08:00</lastmod>
+    <lastmod>2018-10-21T07:00:00+08:00</lastmod>
     <priority>0</priority>
   </url>
   

@@ -8,10 +8,19 @@
     <language>zh-cn</language>
     <managingEditor>roc@imroc.io (roc)</managingEditor>
     <webMaster>roc@imroc.io (roc)</webMaster>
-    <lastBuildDate>Sat, 20 Oct 2018 01:35:00 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 21 Oct 2018 07:00:00 +0800</lastBuildDate>
     
 	<atom:link href="https://imroc.io/categories/geek/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>极客工具之 Alfred 与 Dash</title>
+      <link>https://imroc.io/posts/geek/alfred-and-dash/</link>
+      <pubDate>Sun, 21 Oct 2018 07:00:00 +0800</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/posts/geek/alfred-and-dash/</guid>
+      <description>Alfred 使用 Alfred 可以让你在 macOS 程序间自由切换、快速查找或打开文件、调起浏览器进行网页搜索、 还可以做计算器。 另外，还有许多其它搜索功能以及付费的工作流特</description>
+    </item>
     
     <item>
       <title>极客工具之 oh-my-zsh</title>
