@@ -8,7 +8,7 @@
     <language>zh-cn</language>
     <managingEditor>roc@imroc.io (roc)</managingEditor>
     <webMaster>roc@imroc.io (roc)</webMaster>
-    <lastBuildDate>Sun, 21 Oct 2018 23:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 04 Nov 2018 00:30:00 +0800</lastBuildDate>
     
 	<atom:link href="https://imroc.io/index.xml" rel="self" type="application/rss+xml" />
     
@@ -20,6 +20,15 @@
       <author>roc@imroc.io (roc)</author>
       <guid>https://imroc.io/about/about/</guid>
       <description>I&amp;rsquo;m roc: https://imroc.io/scifi</description>
+    </item>
+    
+    <item>
+      <title>宇宙最强编辑器: vscode</title>
+      <link>https://imroc.io/posts/geek/vscode-1/</link>
+      <pubDate>Sun, 04 Nov 2018 00:30:00 +0800</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/posts/geek/vscode-1/</guid>
+      <description>宇宙最强编辑器: vscode 为什么选择 vscode 程序圈经常会引发关于编辑器的圣战，争论哪一个才是世界上最好的编辑器，有人说：世界上只有三种编辑器，一种叫 vim</description>
     </item>
     
     <item>
