@@ -52,9 +52,18 @@
     <item>
       <title>Geek</title>
       <link>https://imroc.io/tags/geek/</link>
-      <pubDate>Sun, 04 Nov 2018 00:30:00 +0800</pubDate>
+      <pubDate>Fri, 07 Dec 2018 18:05:00 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
       <guid>https://imroc.io/tags/geek/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Git</title>
+      <link>https://imroc.io/tags/git/</link>
+      <pubDate>Fri, 07 Dec 2018 18:05:00 +0800</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/tags/git/</guid>
       <description></description>
     </item>
     
