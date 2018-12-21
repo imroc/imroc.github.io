@@ -5,13 +5,13 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title> Kubernetes 问题定位技巧：分析 ExitCode - imroc.io|roc的博客|Cloud Native|Kubernetes|Go|Golang</title>
+  <title> Kubernetes 泛域名动态 Service 转发解决方案 - imroc.io|roc的博客|Cloud Native|Kubernetes|Go|Golang</title>
   <meta name="description" content="imroc.io|roc的博客|Cloud Native|Kubernetes|Go|Golang" />
-  <meta property="og:title" content="Kubernetes 问题定位技巧：分析 ExitCode" />
-  <meta name="twitter:title" content="Kubernetes 问题定位技巧：分析 ExitCode" />
-  <meta name="description" content="使用 kubectl describe pod 查看异常的 pod 的状态，在容器列表里看 State 字段，其中 ExitCode 即程序退出时的状态码，正常退出时为0。如果不为0，表示异常退出，我们可以分析下原因">
-  <meta property="og:description" content="使用 kubectl describe pod 查看异常的 pod 的状态，在容器列表里看 State 字段，其中 ExitCode 即程序退出时的状态码，正常退出时为0。如果不为0，表示异常退出，我们可以分析下原因">
-  <meta name="twitter:description" content="使用 kubectl describe pod 查看异常的 pod 的状态，在容器列表里看 State 字段，其中 ExitCode 即程序退出时的状态码，正常退出时为0。如果不为0，表示异常退出，我们可以分析下原因">
+  <meta property="og:title" content="Kubernetes 泛域名动态 Service 转发解决方案" />
+  <meta name="twitter:title" content="Kubernetes 泛域名动态 Service 转发解决方案" />
+  <meta name="description" content="需求 集群对外暴露了一个公网IP作为流量入口(可以是 Ingress 或 Service)，DNS 解析配置了一个泛域名指向该IP（比如 *.test.imroc.">
+  <meta property="og:description" content="需求 集群对外暴露了一个公网IP作为流量入口(可以是 Ingress 或 Service)，DNS 解析配置了一个泛域名指向该IP（比如 *.test.imroc.">
+  <meta name="twitter:description" content="需求 集群对外暴露了一个公网IP作为流量入口(可以是 Ingress 或 Service)，DNS 解析配置了一个泛域名指向该IP（比如 *.test.imroc.">
   <meta name="author" content="{Description { .Site.Author.name }}"/>
   <link href='https://imroc.io/favicon.png' rel='icon' type='image/x-icon'/>
   <meta property="og:image" content="https://res.cloudinary.com/imroc/image/upload/v1521031841/avatar.png" />
@@ -19,12 +19,12 @@
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:site" content="@imrocchan" />
   <meta name="twitter:creator" content="@imrocchan" />
-  <meta property="og:url" content="https://imroc.io/posts/kubernetes/analysis-exitcode/" />
+  <meta property="og:url" content="https://imroc.io/posts/kubernetes/wildcard-domain-forward/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="roc" />
 
   <meta name="generator" content="Hugo 0.49.2" />
-  <link rel="canonical" href="https://imroc.io/posts/kubernetes/analysis-exitcode/" />
+  <link rel="canonical" href="https://imroc.io/posts/kubernetes/wildcard-domain-forward/" />
   <link rel="alternate" href="https://imroc.io/index.xml" type="application/rss+xml" title="roc">
   <script src="https://cdn.staticfile.org/jquery/1.12.4/jquery.min.js"></script>
   <link rel="stylesheet" href="https://cdn.staticfile.org/KaTeX/0.7.1/katex.min.css" crossorigin="anonymous">
@@ -210,11 +210,11 @@ var _hmt = _hmt || [];
                 <div class="post-heading">
                 
                   
-                     <h1>Kubernetes 问题定位技巧：分析 ExitCode</h1>
+                     <h1>Kubernetes 泛域名动态 Service 转发解决方案</h1>
                      
                     <span class="post-meta">
   
-  Posted on December 21, 2018
+  Posted on December 22, 2018
   
   
 </span>
@@ -236,7 +236,7 @@ var _hmt = _hmt || [];
         <div class="row">
           <div class="col-lg-12 col-md-12 col-md-offset-0">
             <div class="posts-heading">
-                <h1 align="center">Kubernetes 问题定位技巧：分析 ExitCode</h1>
+                <h1 align="center">Kubernetes 泛域名动态 Service 转发解决方案</h1>
                 
                 
             </div>
@@ -256,7 +256,7 @@ var _hmt = _hmt || [];
             
 <div>
     <section id="datecount">
-        <h4 id="date"> Fri Dec 21, 2018</h4>
+        <h4 id="date"> Sat Dec 22, 2018</h4>
     </section>
     <h5 id="wc">1200 Words|Read in about 3 Min</h5>
     <h5 id="tags">Tags: 
@@ -275,11 +275,9 @@ var _hmt = _hmt || [];
 <ul>
 <li>
 <ul>
-<li><a href="#退出状态码的区间">退出状态码的区间</a></li>
-<li><a href="#常见异常状态码">常见异常状态码</a></li>
-<li><a href="#状态码参考">状态码参考</a></li>
-<li><a href="#linux-标准中断信号">Linux 标准中断信号</a></li>
-<li><a href="#c-c-退出状态码">C/C++ 退出状态码</a></li>
+<li><a href="#需求">需求</a></li>
+<li><a href="#简单做法">简单做法</a></li>
+<li><a href="#正确姿势">正确姿势</a></li>
 </ul></li>
 </ul></li>
 </ul>
@@ -289,115 +287,249 @@ var _hmt = _hmt || [];
 
                 
 
-<p>使用 <code>kubectl describe pod</code> 查看异常的 pod 的状态，在容器列表里看 <code>State</code> 字段，其中 <code>ExitCode</code> 即程序退出时的状态码，正常退出时为0。如果不为0，表示异常退出，我们可以分析下原因。</p>
+<h3 id="需求">需求</h3>
 
-<p><img src="https://res.cloudinary.com/imroc/image/upload/v1545380096/blog/k8s/exitcode-pod.png" alt="exitcode-pod" /></p>
+<p>集群对外暴露了一个公网IP作为流量入口(可以是 Ingress 或 Service)，DNS 解析配置了一个泛域名指向该IP（比如 <code>*.test.imroc.io</code>），现希望根据请求中不同 Host 转发到不同的后端 Service。比如 <code>a.test.imroc.io</code> 的请求被转发到 <code>my-svc-a</code>，<code>b.test.imroc.io</code> 的请求转发到 <code>my-svc-b</code></p>
 
-<h3 id="退出状态码的区间">退出状态码的区间</h3>
+<h3 id="简单做法">简单做法</h3>
 
-<ul>
-<li>必须在 0-255 之间</li>
-<li>0 表示正常退出</li>
-<li>外界中断将程序退出的时候状态码区间在 129-255，(操作系统给程序发送中断信号，比如 <code>kill -9</code> 是 <code>SIGKILL</code>，<code>ctrl+c</code> 是 <code>SIGINT</code>)</li>
-<li>一般程序自身原因导致的异常退出状态区间在 1-128 (这只是一般约定，程序如果一定要用129-255的状态码也是可以的)</li>
-</ul>
+<p>先说一种简单的方法，这也是大多数人的第一反应：<strong>配置 Ingress 规则</strong></p>
 
-<p>假如写代码指定的退出状态码时不在 0-255 之间，例如: <code>exit(-1)</code>，这时会自动做一个转换，最终呈现的状态码还是会在 0-255 之间。我们把状态码记为 <code>code</code></p>
+<p>假如泛域名有两个不同 Host 分别转发到不同 Service，Ingress 类似这样写:</p>
 
-<ul>
-<li>当指定的退出时状态码为负数，那么转换公式如下:</li>
-</ul>
-
-<pre><code>256 - (|code| % 256)
+<pre><code class="language-yaml">apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: my-ingress
+spec:
+  rules:
+  - host: a.test.imroc.io
+    http:
+      paths:
+      - backend:
+          serviceName: my-svc-a
+          servicePort: 80
+        path: /
+  - host: b.test.imroc.io
+    http:
+      paths:
+      - backend:
+          serviceName: my-svc-b
+          servicePort: 80
+        path: /
 </code></pre>
 
+<p>但是！如果 Host 非常多会怎样？（比如200+）</p>
+
 <ul>
-<li>当指定的退出时状态码为正数，那么转换公式如下:</li>
+<li>每次新增 Host 都要改 Ingress 规则，太麻烦</li>
+<li>单个 Ingress 上面的规则越来越多，更改规则对 LB 的压力变大，可能会导致偶尔访问不了</li>
 </ul>
 
-<pre><code>code % 256
+<h3 id="正确姿势">正确姿势</h3>
+
+<p>我们可以约定请求中泛域名 Host 通配符的 <code>*</code> 号匹配到的字符跟 Service 的名字相关联（可以是相等，或者 Service 统一在前面加个前缀，比如 <code>a.test.imroc.io</code> 转发到 <code>my-svc-a</code> 这个 Service)，集群内起一个反向代理服务，匹配泛域名的请求全部转发到这个代理服务上，这个代理服务只做一件简单的事，解析 Host，正则匹配抓取泛域名中 <code>*</code> 号这部分，把它转换为 Service 名字，然后在集群里转发（集群 DNS 解析)</p>
+
+<p>这个反向代理服务可以是 Nginx+Lua脚本 来实现，或者自己写个简单程序来做反向代理，这里我用 <a href="https://openresty.org">OpenResty</a> 来实现，它可以看成是 Nginx 的发行版，自带 lua 支持。</p>
+
+<p>有几点需要说明下：</p>
+
+<ul>
+<li>我们使用 nginx 的  <code>proxy_pass</code> 来反向代理到后端服务，<code>proxy_pass</code> 后面跟的变量，我们需要用 lua 来判断 Host 修改变量</li>
+<li>nginx 的 <code>proxy_pass</code> 后面跟的如果是可变的域名（非IP，需要 dns 解析)，它需要一个域名解析器，不会走默认的 dns 解析，需要在 <code>nginx.conf</code> 里添加 <code>resolver</code> 配置项来设置一个外部的 dns 解析器</li>
+<li>这个解析器我们是用 go-dnsmasq 来实现，它可以将集群的 dns 解析代理给 nginx，以 sidecar 的形式注入到 pod 中，监听 53 端口</li>
+</ul>
+
+<p><code>nginx.conf</code> 里关键的配置如下图所示：</p>
+
+<p><img src="https://imroc.io/assets/blog/nginx-wilcard-conf.png" alt="nginx.conf" /></p>
+
+<p>下面给出完整的 yaml 示例</p>
+
+<p><code>proxy.yaml</code>:</p>
+
+<pre><code class="language-yaml">apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    component: nginx
+  name: proxy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: nginx
+  template:
+    metadata:
+      labels:
+        component: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: &quot;openresty/openresty:centos&quot;
+        ports:
+        - name: http
+          containerPort: 80
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /usr/local/openresty/nginx/conf/nginx.conf
+          name: config
+          subPath: nginx.conf
+      - name: dnsmasq
+        image: &quot;janeczku/go-dnsmasq:release-1.0.7&quot;
+        args:
+          - --listen
+          - &quot;127.0.0.1:53&quot;
+          - --default-resolver
+          - --append-search-domains
+          - --hostsfile=/etc/hosts
+          - --verbose
+      volumes:
+      - name: config
+        configMap:
+          name: configmap-nginx
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    component: nginx
+  name: configmap-nginx
+data:
+  nginx.conf: |-
+    worker_processes  1;
+
+    error_log  /error.log;
+
+    events {
+        accept_mutex on;
+        multi_accept on;
+        use epoll;
+        worker_connections  1024;
+    }
+
+
+    http {
+        include       mime.types;
+        default_type  application/octet-stream;
+        log_format  main  '$time_local $remote_user $remote_addr $host $request_uri $request_method $http_cookie '
+                          '$status $body_bytes_sent &quot;$http_referer&quot; '
+                          '&quot;$http_user_agent&quot; &quot;$http_x_forwarded_for&quot; '
+                          '$request_time $upstream_response_time &quot;$upstream_cache_status&quot;';
+
+        log_format  browser '$time_iso8601 $cookie_km_uid $remote_addr $host $request_uri $request_method '
+                          '$status $body_bytes_sent &quot;$http_referer&quot; '
+                          '&quot;$http_user_agent&quot; &quot;$http_x_forwarded_for&quot; '
+                          '$request_time $upstream_response_time &quot;$upstream_cache_status&quot; $http_x_requested_with $http_x_real_ip $upstream_addr $request_body';
+
+        log_format client '{&quot;@timestamp&quot;:&quot;$time_iso8601&quot;,'
+                          '&quot;time_local&quot;:&quot;$time_local&quot;,'
+                          '&quot;remote_user&quot;:&quot;$remote_user&quot;,'
+                          '&quot;http_x_forwarded_for&quot;:&quot;$http_x_forwarded_for&quot;,'
+                          '&quot;host&quot;:&quot;$server_addr&quot;,'
+                          '&quot;remote_addr&quot;:&quot;$remote_addr&quot;,'
+                          '&quot;http_x_real_ip&quot;:&quot;$http_x_real_ip&quot;,'
+                          '&quot;body_bytes_sent&quot;:$body_bytes_sent,'
+                          '&quot;request_time&quot;:$request_time,'
+                          '&quot;status&quot;:$status,'
+                          '&quot;upstream_response_time&quot;:&quot;$upstream_response_time&quot;,'
+                          '&quot;upstream_response_status&quot;:&quot;$upstream_status&quot;,'
+                          '&quot;request&quot;:&quot;$request&quot;,'
+                          '&quot;http_referer&quot;:&quot;$http_referer&quot;,'
+                          '&quot;http_user_agent&quot;:&quot;$http_user_agent&quot;}';
+
+        access_log  /access.log  main;
+
+        sendfile        on;
+
+        keepalive_timeout 120s 100s;
+        keepalive_requests 500;
+        send_timeout 60000s;
+        client_header_buffer_size 4k;
+        proxy_ignore_client_abort on;
+        proxy_buffers 16 32k;
+        proxy_buffer_size 64k;
+
+        proxy_busy_buffers_size 64k;
+
+        proxy_send_timeout 60000;
+        proxy_read_timeout 60000;
+        proxy_connect_timeout 60000;
+        proxy_cache_valid 200 304 2h;
+        proxy_cache_valid 500 404 2s;
+        proxy_cache_key $host$request_uri$cookie_user;
+        proxy_cache_methods GET HEAD POST;
+
+        proxy_redirect off;
+        proxy_http_version 1.1;
+        proxy_set_header Host                $http_host;
+        proxy_set_header X-Real-IP           $remote_addr;
+        proxy_set_header X-Forwarded-For     $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto   $scheme;
+        proxy_set_header X-Frame-Options     SAMEORIGIN;
+
+        server_tokens off;
+        client_max_body_size 50G;
+        add_header X-Cache $upstream_cache_status;
+        autoindex off;
+
+        resolver      127.0.0.1:53 ipv6=off;
+  
+        server {
+            listen 80;
+
+            location / {
+                set $service  '';
+                rewrite_by_lua '
+                    local host = ngx.var.host
+                    local m = ngx.re.match(host, &quot;(.+).test.imroc.io&quot;)
+                    if m then
+                        ngx.var.service = m[1]
+                    end
+                ';
+                proxy_pass http://$service;
+            }
+        }
+    }
 </code></pre>
 
-<h3 id="常见异常状态码">常见异常状态码</h3>
+<p>让该代理服务暴露公网访问可以用 Service 或 Ingress</p>
 
-<ul>
-<li><p>137</p>
+<p>用 Service 的示例 (<code>service.yaml</code>):</p>
 
-<ul>
-<li>此状态码一般是因为 pod 中容器内存达到了它的资源限制(<code>resources.limits</code>)，一般是内存溢出(OOM)，CPU达到限制只需要不分时间片给程序就可以。因为限制资源是通过 linux 的 cgroup 实现的，所以 cgroup 会将此容器强制杀掉，类似于 <code>kill -9</code></li>
-<li>还可能是宿主机本身资源不够用了(OOM)，内核会选取一些进程杀掉来释放内存</li>
-<li>不管是 cgroup 限制杀掉进程还是因为节点机器本身资源不够导致进程死掉，都可以从系统日志中找到记录:</li>
-</ul>
-
-<blockquote>
-<p>ubuntu 的系统日志在 <code>/var/log/syslog</code>，centos 的系统日志在 <code>/var/log/messages</code>，都可以用 <code>journalctl -k</code> 来查看系统日志</p>
-</blockquote></li>
-
-<li><p>1 和 255</p>
-
-<ul>
-<li>这种可能是一般错误，具体错误原因只能看容器日志，因为很多程序员写异常退出时习惯用 <code>exit(1)</code> 或 <code>exit(-1)</code>，-1 会根据转换规则转成 255</li>
-</ul></li>
-</ul>
-
-<h3 id="状态码参考">状态码参考</h3>
-
-<p>这里罗列了一些状态码的含义：<a href="http://tldp.org/LDP/abs/html/exitcodes.html">Appendix E. Exit Codes With Special Meanings</a></p>
-
-<h3 id="linux-标准中断信号">Linux 标准中断信号</h3>
-
-<p>Linux 程序被外界中断时会发送中断信号，程序退出时的状态码就是中断信号值加上 128 得到的，比如 <code>SIGKILL</code> 的中断信号值为 9，那么程序退出状态码就为 9+128=137。以下是标准信号值参考：</p>
-
-<pre><code>Signal     Value     Action   Comment
-──────────────────────────────────────────────────────────────────────
-SIGHUP        1       Term    Hangup detected on controlling terminal
-                                     or death of controlling process
-SIGINT        2       Term    Interrupt from keyboard
-SIGQUIT       3       Core    Quit from keyboard
-SIGILL        4       Core    Illegal Instruction
-SIGABRT       6       Core    Abort signal from abort(3)
-SIGFPE        8       Core    Floating-point exception
-SIGKILL       9       Term    Kill signal
-SIGSEGV      11       Core    Invalid memory reference
-SIGPIPE      13       Term    Broken pipe: write to pipe with no
-                                     readers; see pipe(7)
-SIGALRM      14       Term    Timer signal from alarm(2)
-SIGTERM      15       Term    Termination signal
-SIGUSR1   30,10,16    Term    User-defined signal 1
-SIGUSR2   31,12,17    Term    User-defined signal 2
-SIGCHLD   20,17,18    Ign     Child stopped or terminated
-SIGCONT   19,18,25    Cont    Continue if stopped
-SIGSTOP   17,19,23    Stop    Stop process
-SIGTSTP   18,20,24    Stop    Stop typed at terminal
-SIGTTIN   21,21,26    Stop    Terminal input for background process
-SIGTTOU   22,22,27    Stop    Terminal output for background process
+<pre><code class="language-yaml">apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    component: nginx
+  name: service-nginx
+spec:
+  type: LoadBalancer
+  ports:
+  - name: http
+    port: 80
+    targetPort: http
+  selector:
+    component: nginx
 </code></pre>
 
-<h3 id="c-c-退出状态码">C/C++ 退出状态码</h3>
+<p>用 Ingress 的示例 (<code>ingress.yaml</code>):</p>
 
-<p><code>/usr/include/sysexits.h</code> 试图将退出状态码标准化(仅限 C/C++):</p>
-
-<pre><code>#define EX_OK           0       /* successful termination */
-
-#define EX__BASE        64      /* base value for error messages */
-
-#define EX_USAGE        64      /* command line usage error */
-#define EX_DATAERR      65      /* data format error */
-#define EX_NOINPUT      66      /* cannot open input */
-#define EX_NOUSER       67      /* addressee unknown */
-#define EX_NOHOST       68      /* host name unknown */
-#define EX_UNAVAILABLE  69      /* service unavailable */
-#define EX_SOFTWARE     70      /* internal software error */
-#define EX_OSERR        71      /* system error (e.g., can't fork) */
-#define EX_OSFILE       72      /* critical OS file missing */
-#define EX_CANTCREAT    73      /* can't create (user) output file */
-#define EX_IOERR        74      /* input/output error */
-#define EX_TEMPFAIL     75      /* temp failure; user is invited to retry */
-#define EX_PROTOCOL     76      /* remote error in protocol */
-#define EX_NOPERM       77      /* permission denied */
-#define EX_CONFIG       78      /* configuration error */
-
-#define EX__MAX 78      /* maximum listed value */
+<pre><code class="language-yaml">apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ingress-nginx
+spec:
+  rules:
+  - host: &quot;*.test.imroc.io&quot;
+    http:
+      paths:
+      - backend:
+          serviceName: service-nginx
+          servicePort: 80
+        path: /
 </code></pre>
 
             </article>
@@ -405,19 +537,17 @@ SIGTTOU   22,22,27    Stop    Terminal output for background process
             <ul class="pager blog-pager">
                 
                 <li class="previous">
-                    <a href="https://imroc.io/posts/geek/git-trick-modify-history/" data-toggle="tooltip" data-placement="top" title="Git技巧：修改历史">&larr; Previous Post</a>
+                    <a href="https://imroc.io/posts/kubernetes/analysis-exitcode/" data-toggle="tooltip" data-placement="top" title="Kubernetes 问题定位技巧：分析 ExitCode">&larr; Previous Post</a>
                 </li>
                  
-                <li class="next">
-                    <a href="https://imroc.io/posts/kubernetes/wildcard-domain-forward/" data-toggle="tooltip" data-placement="top" title="Kubernetes 泛域名动态 Service 转发解决方案">Next Post &rarr;</a>
-                </li>
-                
             </ul>
             
             <div>
                  
                 <h2>See Also</h2>
                 <ul>
+                    
+                    <li><a href="/posts/kubernetes/analysis-exitcode/">Kubernetes 问题定位技巧：分析 ExitCode</a></li>
                     
                     <li><a href="/posts/kubernetes/understand-service-ingress-and-ingress-controller/">通俗理解Kubernetes中Service、Ingress与Ingress Controller的作用与关系</a></li>
                     
@@ -426,8 +556,6 @@ SIGTTOU   22,22,27    Stop    Terminal output for background process
                     <li><a href="/posts/kubernetes/let-ingress-enable-free-https-with-cert-manager/">利用cert-manager让Ingress启用免费的HTTPS证书</a></li>
                     
                     <li><a href="/posts/kubernetes/use-nginx-ingress-controller-to-expose-service/">使用Nginx Ingress Controller导入外部流量到Kubernetes集群内部</a></li>
-                    
-                    <li><a href="/posts/kubernetes/install-helm/">快速安装 Helm</a></li>
                     
                 </ul>
                 
@@ -438,7 +566,7 @@ SIGTTOU   22,22,27    Stop    Terminal output for background process
             
 <div>
     <section id="datecount">
-        <h4 id="date"> Fri Dec 21, 2018</h4>
+        <h4 id="date"> Sat Dec 22, 2018</h4>
     </section>
     <h5 id="wc">1200 Words|Read in about 3 Min</h5>
     <h5 id="tags">Tags: 
