@@ -486,7 +486,7 @@ data:
                     local host = ngx.var.host
                     local m = ngx.re.match(host, &quot;(.+).test.imroc.io&quot;)
                     if m then
-                        ngx.var.service = m[1]
+                        ngx.var.service = &quot;my-svc-&quot; .. m[1]
                     end
                 ';
                 proxy_pass http://$service;
