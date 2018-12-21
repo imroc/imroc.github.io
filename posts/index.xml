@@ -8,10 +8,19 @@
     <language>zh-cn</language>
     <managingEditor>roc@imroc.io (roc)</managingEditor>
     <webMaster>roc@imroc.io (roc)</webMaster>
-    <lastBuildDate>Fri, 07 Dec 2018 18:05:00 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 11 Dec 2018 16:10:00 +0800</lastBuildDate>
     
 	<atom:link href="https://imroc.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Kubernetes 问题定位技巧：分析 ExitCode</title>
+      <link>https://imroc.io/posts/kubernetes/analysis-exitcode/</link>
+      <pubDate>Tue, 11 Dec 2018 16:10:00 +0800</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/posts/kubernetes/analysis-exitcode/</guid>
+      <description>使用 kubectl describe pod 查看异常的 pod 的状态，在容器列表里看 State 字段，其中 ExitCode 即程序退出时的状态码，正常退出时为0。如果不为0，表示异常退出，我们可以分析下原因</description>
+    </item>
     
     <item>
       <title>Git技巧：修改历史</title>

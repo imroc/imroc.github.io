@@ -252,6 +252,36 @@ var _hmt = _hmt || [];
           
           
             <article class="post-preview">
+              <a href="https://imroc.io/posts/kubernetes/analysis-exitcode/">
+                <h2 class="post-title">Kubernetes 问题定位技巧：分析 ExitCode</h2>
+                
+              </a>
+
+              <span class="post-meta">
+  
+  Posted on December 11, 2018
+  
+  
+</span>
+
+
+              <div class="post-entry">
+                
+                  使用 kubectl describe pod 查看异常的 pod 的状态，在容器列表里看 State 字段，其中 ExitCode 即程序退出时的状态码，正常退出时为0。如果不为0，表示异常退出，我们可以分析下原因
+                  <a href="https://imroc.io/posts/kubernetes/analysis-exitcode/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <span class="post-meta">
+                
+                  #<a href="https://imroc.io/tags/kubernetes/">kubernetes</a>&nbsp;
+                
+                </span>
+              
+            </article>
+          
+            <article class="post-preview">
               <a href="https://imroc.io/posts/geek/git-trick-modify-history/">
                 <h2 class="post-title">Git技巧：修改历史</h2>
                 
@@ -527,40 +557,6 @@ var _hmt = _hmt || [];
                 
                   概述 Nginx Ingress Controller 是 Kubernetes Ingress Controller 的一种实现，作为反向代理将外部流量导入集群内部，实现将 Kubernetes 内部的 Service 暴露给外部，这样我们就能通过公网或内网直接访问集群内部的服
                   <a href="https://imroc.io/posts/kubernetes/use-nginx-ingress-controller-to-expose-service/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <span class="post-meta">
-                
-                  #<a href="https://imroc.io/tags/kubernetes/">kubernetes</a>&nbsp;
-                
-                </span>
-              
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://imroc.io/posts/kubernetes/install-helm/">
-                <h2 class="post-title">快速安装 Helm</h2>
-                
-                  <h3 class="post-subtitle">
-                  kubernetes 的包管理器
-                  </h3>
-                
-              </a>
-
-              <span class="post-meta">
-  
-  Posted on July 23, 2018
-  
-  
-</span>
-
-
-              <div class="post-entry">
-                
-                  概述 Helm 是 Kubernetes 的包管理器，可以帮我们简化 kubernetes 的操作，一键部署应用。假如你的机器上已经安装了 kubectl 并且能够操作集群，那么你就可以安装 Helm 了。 安装 执行脚本安
-                  <a href="https://imroc.io/posts/kubernetes/install-helm/" class="post-read-more">[Read More]</a>
                 
               </div>
 

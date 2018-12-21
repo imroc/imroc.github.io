@@ -5,13 +5,13 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title> Docker快速入门（三）在国内如何快速安装Docker与镜像加速器配置 - imroc.io|roc的博客|Cloud Native|Kubernetes|Go|Golang</title>
+  <title> Kubernetes 问题定位技巧：分析 ExitCode - imroc.io|roc的博客|Cloud Native|Kubernetes|Go|Golang</title>
   <meta name="description" content="imroc.io|roc的博客|Cloud Native|Kubernetes|Go|Golang" />
-  <meta property="og:title" content="Docker快速入门（三）在国内如何快速安装Docker与镜像加速器配置" />
-  <meta name="twitter:title" content="Docker快速入门（三）在国内如何快速安装Docker与镜像加速器配置" />
-  <meta name="description" content="前言 使用docker最常用的系统莫过于ubuntu和centos了，一般有两种方式，一种是直接用系统自带的源安装，另一种是官方的源安装。前者">
-  <meta property="og:description" content="前言 使用docker最常用的系统莫过于ubuntu和centos了，一般有两种方式，一种是直接用系统自带的源安装，另一种是官方的源安装。前者">
-  <meta name="twitter:description" content="前言 使用docker最常用的系统莫过于ubuntu和centos了，一般有两种方式，一种是直接用系统自带的源安装，另一种是官方的源安装。前者">
+  <meta property="og:title" content="Kubernetes 问题定位技巧：分析 ExitCode" />
+  <meta name="twitter:title" content="Kubernetes 问题定位技巧：分析 ExitCode" />
+  <meta name="description" content="使用 kubectl describe pod 查看异常的 pod 的状态，在容器列表里看 State 字段，其中 ExitCode 即程序退出时的状态码，正常退出时为0。如果不为0，表示异常退出，我们可以分析下原因">
+  <meta property="og:description" content="使用 kubectl describe pod 查看异常的 pod 的状态，在容器列表里看 State 字段，其中 ExitCode 即程序退出时的状态码，正常退出时为0。如果不为0，表示异常退出，我们可以分析下原因">
+  <meta name="twitter:description" content="使用 kubectl describe pod 查看异常的 pod 的状态，在容器列表里看 State 字段，其中 ExitCode 即程序退出时的状态码，正常退出时为0。如果不为0，表示异常退出，我们可以分析下原因">
   <meta name="author" content="{Description { .Site.Author.name }}"/>
   <link href='https://imroc.io/favicon.png' rel='icon' type='image/x-icon'/>
   <meta property="og:image" content="https://res.cloudinary.com/imroc/image/upload/v1521031841/avatar.png" />
@@ -19,12 +19,12 @@
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:site" content="@imrocchan" />
   <meta name="twitter:creator" content="@imrocchan" />
-  <meta property="og:url" content="https://imroc.io/posts/docker/quick-start-for-docker-3/" />
+  <meta property="og:url" content="https://imroc.io/posts/kubernetes/analysis-exitcode/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="roc" />
 
   <meta name="generator" content="Hugo 0.49.2" />
-  <link rel="canonical" href="https://imroc.io/posts/docker/quick-start-for-docker-3/" />
+  <link rel="canonical" href="https://imroc.io/posts/kubernetes/analysis-exitcode/" />
   <link rel="alternate" href="https://imroc.io/index.xml" type="application/rss+xml" title="roc">
   <script src="https://cdn.staticfile.org/jquery/1.12.4/jquery.min.js"></script>
   <link rel="stylesheet" href="https://cdn.staticfile.org/KaTeX/0.7.1/katex.min.css" crossorigin="anonymous">
@@ -195,8 +195,40 @@ var _hmt = _hmt || [];
 
 
   
+    <div id="header-big-imgs" data-num-img=1 data-img-src-1="https://res.cloudinary.com/imroc/image/upload/v1515849754/blog/banner/hacker.jpg" data-img-desc-1="Hacker"></div>
+  
 
-  <header class="header-section ">
+  <header class="header-section has-img">
+    
+      <div class="intro-header big-img">
+        
+        
+        <div class="container">
+          <div class="row">
+              <div class="col-lg-12 col-md-12 col-md-offset-0">
+                
+                <div class="post-heading">
+                
+                  
+                     <h1>Kubernetes 问题定位技巧：分析 ExitCode</h1>
+                     
+                    <span class="post-meta">
+  
+  Posted on December 11, 2018
+  
+  
+</span>
+
+
+                    
+                  
+                  
+              </div>
+            </div>
+          </div>
+        </div>
+        <span class="img-desc" style="display: inline;"></span>
+      </div>
     
     <div class="intro-header no-img">
       
@@ -204,7 +236,7 @@ var _hmt = _hmt || [];
         <div class="row">
           <div class="col-lg-12 col-md-12 col-md-offset-0">
             <div class="posts-heading">
-                <h1 align="center">Docker快速入门（三）在国内如何快速安装Docker与镜像加速器配置</h1>
+                <h1 align="center">Kubernetes 问题定位技巧：分析 ExitCode</h1>
                 
                 
             </div>
@@ -224,14 +256,12 @@ var _hmt = _hmt || [];
             
 <div>
     <section id="datecount">
-        <h4 id="date"> Tue Dec 19, 2017</h4>
+        <h4 id="date"> Tue Dec 11, 2018</h4>
     </section>
-    <h5 id="wc">900 Words|Read in about 2 Min</h5>
+    <h5 id="wc">1200 Words|Read in about 3 Min</h5>
     <h5 id="tags">Tags: 
         
-        <a href="https://imroc.io/tags/docker/">docker</a> &nbsp;
-        
-        <a href="https://imroc.io/tags/docker%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/">Docker快速入门</a> &nbsp;
+        <a href="https://imroc.io/tags/kubernetes/">kubernetes</a> &nbsp;
     </h5>
 </div>
 
@@ -241,27 +271,16 @@ var _hmt = _hmt || [];
 <aside class="toc">
   <nav id="TableOfContents">
 <ul>
-<li><a href="#前言">前言</a></li>
-<li><a href="#自带源安装-稳定可靠但非最新版">自带源安装(稳定可靠但非最新版)</a>
+<li>
 <ul>
 <li>
 <ul>
-<li><a href="#ubuntu">Ubuntu</a></li>
-<li><a href="#centos">CentOS</a></li>
+<li><a href="#退出状态码的区间">退出状态码的区间</a></li>
+<li><a href="#常见异常状态码">常见异常状态码</a></li>
+<li><a href="#状态码参考">状态码参考</a></li>
+<li><a href="#linux-标准中断信号">Linux 标准中断信号</a></li>
+<li><a href="#c-c-退出状态码">C/C++ 退出状态码</a></li>
 </ul></li>
-</ul></li>
-<li><a href="#官方源安装-最新版">官方源安装(最新版)</a>
-<ul>
-<li>
-<ul>
-<li><a href="#ubuntu-14-04-16-04">Ubuntu 14.04/16.04</a></li>
-<li><a href="#centos-7">CentOS 7</a></li>
-</ul></li>
-</ul></li>
-<li><a href="#配置加速器">配置加速器</a>
-<ul>
-<li><a href="#阿里云">阿里云</a></li>
-<li><a href="#daocloud">Daocloud</a></li>
 </ul></li>
 </ul>
 </nav>
@@ -270,107 +289,125 @@ var _hmt = _hmt || [];
 
                 
 
-<h1 id="前言">前言</h1>
+<p>使用 <code>kubectl describe pod</code> 查看异常的 pod 的状态，在容器列表里看 <code>State</code> 字段，其中 <code>ExitCode</code> 即程序退出时的状态码，正常退出时为0。如果不为0，表示异常退出，我们可以分析下原因。</p>
 
-<p>使用docker最常用的系统莫过于ubuntu和centos了，一般有两种方式，一种是直接用系统自带的源安装，另一种是官方的源安装。前者安装方便，但不是最新版，后者是最新版，但在国内安装会比较慢，后面会将快速安装的方法。</p>
+<p><img src="https://res.cloudinary.com/imroc/image/upload/v1545380096/blog/k8s/exitcode-pod.png" alt="exitcode-pod" /></p>
 
-<h1 id="自带源安装-稳定可靠但非最新版">自带源安装(稳定可靠但非最新版)</h1>
+<h3 id="退出状态码的区间">退出状态码的区间</h3>
 
-<h3 id="ubuntu">Ubuntu</h3>
+<ul>
+<li>必须在 0-255 之间</li>
+<li>0 表示正常退出</li>
+<li>外界中断将程序退出的时候状态码区间在 129-255，(操作系统给程序发送中断信号，比如 <code>kill -9</code> 是 <code>SIGKILL</code>，<code>ctrl+c</code> 是 <code>SIGINT</code>)</li>
+<li>一般程序自身原因导致的异常退出状态区间在 1-128 (这只是一般约定，程序如果一定要用129-255的状态码也是可以的)</li>
+</ul>
 
-<pre><code class="language-sh">sudo apt-get install -y docker
+<p>假如写代码指定的退出状态码时不在 0-255 之间，例如: <code>exit(-1)</code>，这时会自动做一个转换，最终呈现的状态码还是会在 0-255 之间。我们把状态码记为 <code>code</code></p>
+
+<ul>
+<li>当指定的退出时状态码为负数，那么转换公式如下:</li>
+</ul>
+
+<pre><code>256 - (|code| % 256)
 </code></pre>
 
-<h3 id="centos">CentOS</h3>
+<ul>
+<li>当指定的退出时状态码为正数，那么转换公式如下:</li>
+</ul>
 
-<pre><code class="language-sh">sudo yum install -y docker
+<pre><code>code % 256
 </code></pre>
 
-<h1 id="官方源安装-最新版">官方源安装(最新版)</h1>
+<h3 id="常见异常状态码">常见异常状态码</h3>
 
-<p>此方式装的是<code>docker-ce</code>，即docker社区版，利用国内的docker官方源镜像，加速下载安装。<br />
-注：Docker官方文档给出的安装方式会比较慢，因为提供软件源的服务器在国外，下载速度有时慢的像蜗牛，简直不能忍，现在就给大家介绍如何在国内愉快的安装Docker</p>
+<ul>
+<li><p>137</p>
 
-<h3 id="ubuntu-14-04-16-04">Ubuntu 14.04/16.04</h3>
+<ul>
+<li>此状态码一般是因为 pod 中容器内存达到了它的资源限制(<code>resources.limits</code>)，一般是内存溢出(OOM)，CPU达到限制只需要不分时间片给程序就可以。因为限制资源是通过 linux 的 cgroup 实现的，所以 cgroup 会将此容器强制杀掉，类似于 <code>kill -9</code></li>
+<li>还可能是宿主机本身资源不够用了(OOM)，内核会选取一些进程杀掉来释放内存</li>
+<li>不管是 cgroup 限制杀掉进程还是因为节点机器本身资源不够导致进程死掉，都可以从系统日志中找到记录:</li>
+</ul>
 
-<pre><code class="language-sh"># step 1: 安装必要的一些系统工具
-sudo apt-get update
-sudo apt-get -y install apt-transport-https ca-certificates curl software-properties-common
-# step 2: 安装GPG证书
-curl -fsSL http://mirrors.aliyun.com/docker-ce/linux/ubuntu/gpg | sudo apt-key add -
-# Step 3: 写入软件源信息
-sudo add-apt-repository &quot;deb [arch=amd64] http://mirrors.aliyun.com/docker-ce/linux/ubuntu $(lsb_release -cs) stable&quot;
-# Step 4: 更新并安装 Docker-CE
-sudo apt-get -y update
-sudo apt-get -y install docker-ce
+<blockquote>
+<p>ubuntu 的系统日志在 <code>/var/log/syslog</code>，centos 的系统日志在 <code>/var/log/messages</code>，都可以用 <code>journalctl -k</code> 来查看系统日志</p>
+</blockquote></li>
 
-# 安装指定版本的Docker-CE:
-# Step 1: 查找Docker-CE的版本:
-# apt-cache madison docker-ce
-#   docker-ce | 17.03.1~ce-0~ubuntu-xenial | http://mirrors.aliyun.com/docker-ce/linux/ubuntu xenial/stable amd64 Packages
-#   docker-ce | 17.03.0~ce-0~ubuntu-xenial | http://mirrors.aliyun.com/docker-ce/linux/ubuntu xenial/stable amd64 Packages
-# Step 2: 安装指定版本的Docker-CE: (VERSION 例如上面的 17.03.1~ce-0~ubuntu-xenial)
-# sudo apt-get -y install docker-ce=[VERSION]
+<li><p>1 和 255</p>
+
+<ul>
+<li>这种可能是一般错误，具体错误原因只能看容器日志，因为很多程序员写异常退出时习惯用 <code>exit(1)</code> 或 <code>exit(-1)</code>，-1 会根据转换规则转成 255</li>
+</ul></li>
+</ul>
+
+<h3 id="状态码参考">状态码参考</h3>
+
+<p>这里罗列了一些状态码的含义：<a href="http://tldp.org/LDP/abs/html/exitcodes.html">Appendix E. Exit Codes With Special Meanings</a></p>
+
+<h3 id="linux-标准中断信号">Linux 标准中断信号</h3>
+
+<p>Linux 程序被外界中断时会发送中断信号，程序退出时的状态码就是中断信号值加上 128 得到的，比如 <code>SIGKILL</code> 的中断信号值为 9，那么程序退出状态码就为 9+128=137。以下是标准信号值参考：</p>
+
+<pre><code>Signal     Value     Action   Comment
+──────────────────────────────────────────────────────────────────────
+SIGHUP        1       Term    Hangup detected on controlling terminal
+                                     or death of controlling process
+SIGINT        2       Term    Interrupt from keyboard
+SIGQUIT       3       Core    Quit from keyboard
+SIGILL        4       Core    Illegal Instruction
+SIGABRT       6       Core    Abort signal from abort(3)
+SIGFPE        8       Core    Floating-point exception
+SIGKILL       9       Term    Kill signal
+SIGSEGV      11       Core    Invalid memory reference
+SIGPIPE      13       Term    Broken pipe: write to pipe with no
+                                     readers; see pipe(7)
+SIGALRM      14       Term    Timer signal from alarm(2)
+SIGTERM      15       Term    Termination signal
+SIGUSR1   30,10,16    Term    User-defined signal 1
+SIGUSR2   31,12,17    Term    User-defined signal 2
+SIGCHLD   20,17,18    Ign     Child stopped or terminated
+SIGCONT   19,18,25    Cont    Continue if stopped
+SIGSTOP   17,19,23    Stop    Stop process
+SIGTSTP   18,20,24    Stop    Stop typed at terminal
+SIGTTIN   21,21,26    Stop    Terminal input for background process
+SIGTTOU   22,22,27    Stop    Terminal output for background process
 </code></pre>
 
-<h3 id="centos-7">CentOS 7</h3>
+<h3 id="c-c-退出状态码">C/C++ 退出状态码</h3>
 
-<pre><code class="language-sh"># step 1: 安装必要的一些系统工具
-sudo yum install -y yum-utils device-mapper-persistent-data lvm2
-# Step 2: 添加软件源信息
-sudo yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
-# Step 3: 更新并安装 Docker-CE
-sudo yum makecache fast
-sudo yum -y install docker-ce
-# Step 4: 开启Docker服务
-sudo service docker start
+<p><code>/usr/include/sysexits.h</code> 试图将退出状态码标准化(仅限 C/C++):</p>
 
-# 注意：
-# 官方软件源默认启用了最新的软件，您可以通过编辑软件源的方式获取各个版本的软件包。例如官方并没有将测试版本的软件源置为可用，你可以通过以下方式开启。同理可以开启各种测试版本等。
-# vim /etc/yum.repos.d/docker-ee.repo
-#   将 [docker-ce-test] 下方的 enabled=0 修改为 enabled=1
-#
-# 安装指定版本的Docker-CE:
-# Step 1: 查找Docker-CE的版本:
-# yum list docker-ce.x86_64 --showduplicates | sort -r
-#   Loading mirror speeds from cached hostfile
-#   Loaded plugins: branch, fastestmirror, langpacks
-#   docker-ce.x86_64            17.03.1.ce-1.el7.centos            docker-ce-stable
-#   docker-ce.x86_64            17.03.1.ce-1.el7.centos            @docker-ce-stable
-#   docker-ce.x86_64            17.03.0.ce-1.el7.centos            docker-ce-stable
-#   Available Packages
-# Step2 : 安装指定版本的Docker-CE: (VERSION 例如上面的 17.03.0.ce.1-1.el7.centos)
-# sudo yum -y install docker-ce-[VERSION]
+<pre><code>#define EX_OK           0       /* successful termination */
+
+#define EX__BASE        64      /* base value for error messages */
+
+#define EX_USAGE        64      /* command line usage error */
+#define EX_DATAERR      65      /* data format error */
+#define EX_NOINPUT      66      /* cannot open input */
+#define EX_NOUSER       67      /* addressee unknown */
+#define EX_NOHOST       68      /* host name unknown */
+#define EX_UNAVAILABLE  69      /* service unavailable */
+#define EX_SOFTWARE     70      /* internal software error */
+#define EX_OSERR        71      /* system error (e.g., can't fork) */
+#define EX_OSFILE       72      /* critical OS file missing */
+#define EX_CANTCREAT    73      /* can't create (user) output file */
+#define EX_IOERR        74      /* input/output error */
+#define EX_TEMPFAIL     75      /* temp failure; user is invited to retry */
+#define EX_PROTOCOL     76      /* remote error in protocol */
+#define EX_NOPERM       77      /* permission denied */
+#define EX_CONFIG       78      /* configuration error */
+
+#define EX__MAX 78      /* maximum listed value */
 </code></pre>
-
-<h1 id="配置加速器">配置加速器</h1>
-
-<p>比较常用的镜像加速器是阿里云和Daocloud的，都是免费的，不过加速器地址并不是公有的，每个人不一样，要获取你自己的加速地址前提是需要登录。</p>
-
-<h2 id="阿里云">阿里云</h2>
-
-<p>登录后进入 <a href="https://cr.console.aliyun.com/#/accelerator">https://cr.console.aliyun.com/#/accelerator</a></p>
-
-<p><img src="https://res.cloudinary.com/imroc/image/upload/v1513735608/blog/docker/aliyun-accelerator.png" alt="aliyun" /></p>
-
-<h2 id="daocloud">Daocloud</h2>
-
-<p>登录后进入 <a href="https://www.daocloud.io/mirror#accelerator-doc">https://www.daocloud.io/mirror#accelerator-doc</a></p>
-
-<p><img src="https://res.cloudinary.com/imroc/image/upload/v1513734634/blog/docker/daocloud-accelerator.png" alt="daocloud" /></p>
 
             </article>
 
             <ul class="pager blog-pager">
                 
                 <li class="previous">
-                    <a href="https://imroc.io/posts/docker/quick-start-for-docker-2/" data-toggle="tooltip" data-placement="top" title="Docker快速入门（二）容器、镜像与镜像仓库">&larr; Previous Post</a>
+                    <a href="https://imroc.io/posts/geek/git-trick-modify-history/" data-toggle="tooltip" data-placement="top" title="Git技巧：修改历史">&larr; Previous Post</a>
                 </li>
                  
-                <li class="next">
-                    <a href="https://imroc.io/posts/docker/quick-start-for-docker-4/" data-toggle="tooltip" data-placement="top" title="Docker快速入门（四）常用命令与技巧">Next Post &rarr;</a>
-                </li>
-                
             </ul>
             
             <div>
@@ -378,13 +415,15 @@ sudo service docker start
                 <h2>See Also</h2>
                 <ul>
                     
-                    <li><a href="/posts/docker/quick-start-for-docker-2/">Docker快速入门（二）容器、镜像与镜像仓库</a></li>
+                    <li><a href="/posts/kubernetes/understand-service-ingress-and-ingress-controller/">通俗理解Kubernetes中Service、Ingress与Ingress Controller的作用与关系</a></li>
                     
-                    <li><a href="/posts/docker/quick-start-for-docker-1/">Docker快速入门（一）认识Docker</a></li>
+                    <li><a href="/posts/kubernetes/deploy-kubernetes-dashboard-and-enable-free-https/">利用Helm一键部署Kubernetes Dashboard并启用免费HTTPS</a></li>
                     
-                    <li><a href="/posts/docker/understand-docker-cmd-entrypoint/">Docker中CMD与ENTRYPOINT的简明理解</a></li>
+                    <li><a href="/posts/kubernetes/let-ingress-enable-free-https-with-cert-manager/">利用cert-manager让Ingress启用免费的HTTPS证书</a></li>
                     
-                    <li><a href="/posts/docker/docker-network-communication/">Docker容器间通信</a></li>
+                    <li><a href="/posts/kubernetes/use-nginx-ingress-controller-to-expose-service/">使用Nginx Ingress Controller导入外部流量到Kubernetes集群内部</a></li>
+                    
+                    <li><a href="/posts/kubernetes/install-helm/">快速安装 Helm</a></li>
                     
                 </ul>
                 
@@ -395,14 +434,12 @@ sudo service docker start
             
 <div>
     <section id="datecount">
-        <h4 id="date"> Tue Dec 19, 2017</h4>
+        <h4 id="date"> Tue Dec 11, 2018</h4>
     </section>
-    <h5 id="wc">900 Words|Read in about 2 Min</h5>
+    <h5 id="wc">1200 Words|Read in about 3 Min</h5>
     <h5 id="tags">Tags: 
         
-        <a href="https://imroc.io/tags/docker/">docker</a> &nbsp;
-        
-        <a href="https://imroc.io/tags/docker%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/">Docker快速入门</a> &nbsp;
+        <a href="https://imroc.io/tags/kubernetes/">kubernetes</a> &nbsp;
     </h5>
 </div>
 
