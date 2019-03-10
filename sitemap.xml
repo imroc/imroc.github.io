@@ -7,6 +7,11 @@
   </url>
   
   <url>
+    <loc>https://imroc.io/posts/kubernetes/efficient-kubectl/</loc>
+    <lastmod>2019-03-10T14:05:00+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://imroc.io/posts/kubernetes/wildcard-domain-forward/</loc>
     <lastmod>2018-12-22T01:09:00+08:00</lastmod>
   </url>
@@ -453,19 +458,19 @@
   
   <url>
     <loc>https://imroc.io/tags/kubernetes/</loc>
-    <lastmod>2018-12-22T01:09:00+08:00</lastmod>
+    <lastmod>2019-03-10T14:05:00+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://imroc.io/categories/kubernetes/</loc>
-    <lastmod>2018-12-22T01:09:00+08:00</lastmod>
+    <lastmod>2019-03-10T14:05:00+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://imroc.io/posts/</loc>
-    <lastmod>2018-12-22T01:09:00+08:00</lastmod>
+    <lastmod>2019-03-10T14:05:00+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -477,7 +482,7 @@
   
   <url>
     <loc>https://imroc.io/</loc>
-    <lastmod>2018-12-22T01:09:00+08:00</lastmod>
+    <lastmod>2019-03-10T14:05:00+08:00</lastmod>
     <priority>0</priority>
   </url>
   

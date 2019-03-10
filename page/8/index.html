@@ -5,13 +5,10 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title> 堆排序(C-C&#43;&#43;实现) - imroc.io|roc的博客|Cloud Native|Kubernetes|Go|Golang</title>
+  <title> roc - imroc.io|roc的博客|Cloud Native|Kubernetes|Go|Golang</title>
   <meta name="description" content="imroc.io|roc的博客|Cloud Native|Kubernetes|Go|Golang" />
-  <meta property="og:title" content="堆排序(C-C&#43;&#43;实现)" />
-  <meta name="twitter:title" content="堆排序(C-C&#43;&#43;实现)" />
-  <meta name="description" content="封装成函数： //交换数组元素 void swap(int *a,int i,int j) { int t = a[i]; a[i] = a[j]; a[j] = t; } //下沉（由上至下的堆有序化） void sink(int *a,int k,int N) { while (1) { int i = 2 * k; if (i &gt; N) //保证该">
-  <meta property="og:description" content="封装成函数： //交换数组元素 void swap(int *a,int i,int j) { int t = a[i]; a[i] = a[j]; a[j] = t; } //下沉（由上至下的堆有序化） void sink(int *a,int k,int N) { while (1) { int i = 2 * k; if (i &gt; N) //保证该">
-  <meta name="twitter:description" content="封装成函数： //交换数组元素 void swap(int *a,int i,int j) { int t = a[i]; a[i] = a[j]; a[j] = t; } //下沉（由上至下的堆有序化） void sink(int *a,int k,int N) { while (1) { int i = 2 * k; if (i &gt; N) //保证该">
+  <meta property="og:title" content="roc" />
+  <meta name="twitter:title" content="roc" />
   <meta name="author" content="{Description { .Site.Author.name }}"/>
   <link href='https://imroc.io/favicon.png' rel='icon' type='image/x-icon'/>
   <meta property="og:image" content="https://res.cloudinary.com/imroc/image/upload/v1521031841/avatar.png" />
@@ -19,12 +16,12 @@
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:site" content="@imrocchan" />
   <meta name="twitter:creator" content="@imrocchan" />
-  <meta property="og:url" content="https://imroc.io/posts/algorithm/%E5%A0%86%E6%8E%92%E5%BA%8Fc-c&#43;&#43;%E5%AE%9E%E7%8E%B0/" />
+  <meta property="og:url" content="https://imroc.io/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="roc" />
 
   <meta name="generator" content="Hugo 0.49.2" />
-  <link rel="canonical" href="https://imroc.io/posts/algorithm/%E5%A0%86%E6%8E%92%E5%BA%8Fc-c&#43;&#43;%E5%AE%9E%E7%8E%B0/" />
+  <link rel="canonical" href="https://imroc.io/" />
   <link rel="alternate" href="https://imroc.io/index.xml" type="application/rss+xml" title="roc">
   <script src="https://cdn.staticfile.org/jquery/1.12.4/jquery.min.js"></script>
   <link rel="stylesheet" href="https://cdn.staticfile.org/KaTeX/0.7.1/katex.min.css" crossorigin="anonymous">
@@ -190,22 +187,52 @@ var _hmt = _hmt || [];
   
   
   
+  
 
 
 
 
   
+    <div id="header-big-imgs" data-num-img=1 data-img-src-1="https://res.cloudinary.com/imroc/image/upload/v1515849754/blog/banner/hacker.jpg" data-img-desc-1="Hacker"></div>
+  
 
-  <header class="header-section ">
+  <header class="header-section has-img">
+    
+      <div class="intro-header big-img">
+        
+        
+        <div class="container">
+          <div class="row">
+              <div class="col-lg-12 col-md-12 col-md-offset-0">
+                
+                <div class="page-heading">
+                
+                  
+                     <h1 align="center">Hi,I&#39;m Roc</h1>
+                  
+                  
+              </div>
+            </div>
+          </div>
+        </div>
+        <span class="img-desc" style="display: inline;"></span>
+      </div>
     
     <div class="intro-header no-img">
       
       <div class="container">
         <div class="row">
           <div class="col-lg-12 col-md-12 col-md-offset-0">
-            <div class="posts-heading">
-                <h1 align="center">堆排序(C-C&#43;&#43;实现)</h1>
+            <div class="page-heading">
+                <h1 align="center">roc</h1>
                 
+                
+                  <span class="post-meta">
+  
+  
+</span>
+
+
                 
             </div>
           </div>
@@ -216,209 +243,170 @@ var _hmt = _hmt || [];
 
 
     
-<div class="container" role="main" itemscope itemtype="http://schema.org/Article">
+  <div role="main" class="container">
     <div class="row">
-        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-            
-            
-            
-<div>
-    <section id="datecount">
-        <h4 id="date"> Tue Sep 5, 2017</h4>
-    </section>
-    <h5 id="wc">600 Words|Read in about 2 Min</h5>
-    <h5 id="tags">Tags: 
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
         
-        <a href="https://imroc.io/tags/%E7%AE%97%E6%B3%95/">算法</a> &nbsp;
-    </h5>
-</div>
 
-            
-            <article role="main" class="blog-post" itemprop="articleBody" id="content">
+        <div class="posts-list">
+          
+          
+            <article class="post-preview">
+              <a href="https://imroc.io/posts/algorithm/%E9%80%89%E6%8B%A9%E6%8E%92%E5%BA%8Fgolang%E5%AE%9E%E7%8E%B0/">
+                <h2 class="post-title">选择排序(golang实现)</h2>
                 
-<aside class="toc">
+              </a>
+
+              <span class="post-meta">
   
-</aside>
+  Posted on September 5, 2017
+  
+  
+</span>
 
 
-                <p>封装成函数：</p>
+              <div class="post-entry">
+                
+                  封装成函数： //交换数组元素 func swap(slice []int, i int, j int) { slice[i], slice[j] = slice[j], slice[i] } //选择排序 func SelectionSort(s []int) { l := len(s) //以免每次循环判断都运算 m := len(s)-1 for i:=0;i&lt;m;i++ { k:=i for j:=i+1;j&lt;l;j++ { if s[j]&lt;s[k] { k = j
+                  <a href="https://imroc.io/posts/algorithm/%E9%80%89%E6%8B%A9%E6%8E%92%E5%BA%8Fgolang%E5%AE%9E%E7%8E%B0/" class="post-read-more">[Read More]</a>
+                
+              </div>
 
-<pre><code class="language-c">//交换数组元素
-void swap(int *a,int i,int j)
-{
-    int t = a[i];
-    a[i] = a[j];
-    a[j] = t;
-}
-//下沉（由上至下的堆有序化）
-void sink(int *a,int k,int N)
-{
-    while (1)
-    {
-        int i = 2 * k;
-        if (i &gt; N)   //保证该节点是非叶子节点
-        {
-            break;
-        }
-        if (i &lt; N &amp;&amp; a[i + 1] &gt; a[i])   //选择较大的子节点
-        {
-            i++;
-        }
-        if (a[k] &gt;= a[i])   //没下沉到底就构造好堆了
-        {
-            break;
-        }
-        swap(a, k, i);
-        k = i;
-    }
-}
-//堆排序
-//a[0]不用，实际元素从角标1开始
-//父节点元素大于子节点元素
-//左子节点角标为2*k
-//右子节点角标为2*k+1
-//父节点角标为k/2
-void heap_sort(int *a,int len)
-{
-    int N,k;
-    //s[0]不用，实际元素数量和最后一个元素的角标都为N
-    N = len - 1;
-    //构造堆
-    //如果给两个已构造好的堆添加一个共同父节点，
-    //将新添加的节点作一次下沉将构造一个新堆，
-    //由于叶子节点都可看作一个构造好的堆，所以
-    //可以从最后一个非叶子节点开始下沉，直至
-    //根节点，最后一个非叶子节点是最后一个叶子
-    //节点的父节点，角标为N/2
-    for (k = N / 2; k &gt;= 1; k--)
-    {
-        sink(a, k, N);
-    }
-    //下沉排序
-    while (N &gt; 1)
-    {
-        swap(a, 1, N--); //将大的放在数组后面，升序排序
-        sink(a, 1, N);
-    }
-}
-</code></pre>
-
-<p>测试：</p>
-
-<pre><code class="language-c">#include &lt;stdio.h&gt;
-
-//打印输出数组
-void print_arr(int *a,int len)
-{
-    int i;
-    if(len&lt;1)  //数组长度必须大于0
-    {
-        printf(&quot;length greater than 0&quot;);
-        return;
-    }
-    //打印整个数组
-    printf(&quot;[&quot;);
-    for(i=0; i&lt;len-1; i++)
-    {
-        printf(&quot;%d &quot;,a[i]);
-    }
-    printf(&quot;%d]\n&quot;,a[len-1]);
-}
-
-int main()
-{
-    int a[] = {-1,9,0,6,5,8,2,1,7,4,3};
-    int len = sizeof(a)/sizeof(int);
-    print_arr(&amp;a[1],len-1);
-    heap_sort(a,len);
-    print_arr(&amp;a[1],len-1);
-    return 0;
-}
-</code></pre>
-
-<p>输出：</p>
-
-<p>[9 0 6 5 8 2 1 7 4 3]<br />
-[0 1 2 3 4 5 6 7 8 9]</p>
-
+              
+                <span class="post-meta">
+                
+                  #<a href="https://imroc.io/tags/%E7%AE%97%E6%B3%95/">算法</a>&nbsp;
+                
+                </span>
+              
             </article>
-
-            <ul class="pager blog-pager">
-                
-                <li class="previous">
-                    <a href="https://imroc.io/posts/algorithm/%E5%A0%86%E6%8E%92%E5%BA%8Fjava%E5%AE%9E%E7%8E%B0/" data-toggle="tooltip" data-placement="top" title="堆排序(Java实现)">&larr; Previous Post</a>
-                </li>
-                 
-                <li class="next">
-                    <a href="https://imroc.io/posts/algorithm/%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8Fgolang%E5%AE%9E%E7%8E%B0/" data-toggle="tooltip" data-placement="top" title="冒泡排序(golang实现)">Next Post &rarr;</a>
-                </li>
-                
-            </ul>
-            
-            <div>
-                 
-                <h2>See Also</h2>
-                <ul>
-                    
-                    <li><a href="/posts/algorithm/%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8Fjava%E5%AE%9E%E7%8E%B0/">快速排序(Java实现)</a></li>
-                    
-                    <li><a href="/posts/algorithm/%E6%B1%82%E4%B8%A4%E5%9C%86%E7%9B%B8%E4%BA%A4%E7%9A%84%E4%BA%A4%E7%82%B9%E7%9A%84%E6%96%B9%E6%B3%95/">求两圆相交的交点的方法</a></li>
-                    
-                    <li><a href="/posts/algorithm/%E4%BA%8C%E5%88%86%E6%B3%95%E6%9F%A5%E6%89%BEc-c&#43;&#43;%E5%AE%9E%E7%8E%B0/">二分法查找(C-C&#43;&#43;实现)</a></li>
-                    
-                    <li><a href="/posts/algorithm/%E5%A0%86%E6%8E%92%E5%BA%8Fjava%E5%AE%9E%E7%8E%B0/">堆排序(Java实现)</a></li>
-                    
-                    <li><a href="/posts/algorithm/%E4%B8%89%E5%90%91%E5%88%87%E5%88%86%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8Fc-c&#43;&#43;%E5%AE%9E%E7%8E%B0/">三向切分快速排序(C-C&#43;&#43;实现)</a></li>
-                    
-                </ul>
-                
-            </div>
-            
-            
-            
-            
-<div>
-    <section id="datecount">
-        <h4 id="date"> Tue Sep 5, 2017</h4>
-    </section>
-    <h5 id="wc">600 Words|Read in about 2 Min</h5>
-    <h5 id="tags">Tags: 
-        
-        <a href="https://imroc.io/tags/%E7%AE%97%E6%B3%95/">算法</a> &nbsp;
-    </h5>
-</div>
-
-            
-            </div>
-            
-			
-               <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-<aside id=comments>
-    <div>
-        <h2> Comments </h2>
-    </div>
-    <div id="container"></div>
-    <link rel="stylesheet" href="https://imroc.io/static/gitment/default.css">
-    <script src="https://imroc.io/static/gitment/gitment.browser.js"></script>
-    <script>
-        var gitment = new Gitment({
-			owner: 'imroc', 
-			repo: 'imroc.github.io', 
-            oauth: {
-				client_id: 'd05b8f959b3111c6fb63',
-				client_secret: 'f30ef76ea0050ed731ace76f7fbf684ae5d28fbc',
-            },
-        })
-        gitment.render('container')
-    </script>
-</aside>
-</div>
-
-			
+          
         </div>
+
+        
+          <ul class="pager main-pager">
+            
+              <li class="previous">
+                <a href="/page/7">&larr; Newer Posts</a>
+              </li>
+            
+            
+          </ul>
+        
+      </div>
+      <div align="center" class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        
+
+<ul class="pagination">
+    
+    <li class="page-item">
+        <a href="/" class="page-link" aria-label="First"><span aria-hidden="true">&laquo;&laquo;</span></a>
+    </li>
+    
+    <li class="page-item">
+    <a href="/page/7/" class="page-link" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a>
+    </li>
+    
+    
+    
+    
+    
+    
+        
+        
+    
+    
+    <li class="page-item"><a class="page-link" href="/">1</a></li>
+    
+    
+    
+    
+    
+    
+        
+        
+    
+    
+    <li class="page-item"><a class="page-link" href="/page/2/">2</a></li>
+    
+    
+    
+    
+    
+    
+        
+        
+    
+    
+    <li class="page-item"><a class="page-link" href="/page/3/">3</a></li>
+    
+    
+    
+    
+    
+    
+        
+        
+    
+    
+    <li class="page-item disabled"><span aria-hidden="true">&nbsp;&hellip;&nbsp;</span></li>
+    
+    
+    
+    
+    
+    
+        
+        
+    
+    
+    
+    
+    
+    
+    
+        
+        
+    
+    
+    
+    
+    
+    
+    
+        
+        
+    
+    
+    <li class="page-item"><a class="page-link" href="/page/7/">7</a></li>
+    
+    
+    
+    
+    
+    
+        
+        
+    
+    
+    <li class="page-item active"><a class="page-link" href="/page/8/">8</a></li>
+    
+    
+    <li class="page-item disabled">
+    <a href="" class="page-link" aria-label="Next"><span aria-hidden="true">&raquo;</span></a>
+    </li>
+    
+    <li class="page-item">
+        <a href="/page/8/" class="page-link" aria-label="Last"><span aria-hidden="true">&raquo;&raquo;</span></a>
+    </li>
+    
+</ul>
+
+        
+        
+      </div>
     </div>
-    </section>
-</div>
+  </div>
 
     <footer>
   <div class="container">

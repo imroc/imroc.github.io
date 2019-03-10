@@ -8,10 +8,19 @@
     <language>zh-cn</language>
     <managingEditor>roc@imroc.io (roc)</managingEditor>
     <webMaster>roc@imroc.io (roc)</webMaster>
-    <lastBuildDate>Sat, 22 Dec 2018 01:09:00 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 10 Mar 2019 14:05:00 +0800</lastBuildDate>
     
 	<atom:link href="https://imroc.io/tags/kubernetes/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>kubectl 高效技巧</title>
+      <link>https://imroc.io/posts/kubernetes/efficient-kubectl/</link>
+      <pubDate>Sun, 10 Mar 2019 14:05:00 +0800</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/posts/kubernetes/efficient-kubectl/</guid>
+      <description>是否有过因为使用 kubectl 经常需要重复输入命名空间而苦恼？是否觉得应该要有个记住命名空间的功能，自动记住上次使用的命名空间，不需要每次都输入？可惜没</description>
+    </item>
     
     <item>
       <title>Kubernetes 泛域名动态 Service 转发解决方案</title>
