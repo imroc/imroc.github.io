@@ -140,6 +140,15 @@
     </item>
     
     <item>
+      <title>kubernetes 最佳实践：优雅热更新</title>
+      <link>https://imroc.io/posts/kubernetes/kubernetes-best-practice-grace-update/</link>
+      <pubDate>Tue, 08 May 2018 19:54:00 +0800</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/posts/kubernetes/kubernetes-best-practice-grace-update/</guid>
+      <description>当kubernetes对服务滚动更新的期间，默认配置的情况下可能会让部分连接异常（比如连接被拒绝），我们来分析下原因并给出最佳实践 滚动更新场</description>
+    </item>
+    
+    <item>
       <title>利用Gitlab和Jenkins做CI(持续集成)</title>
       <link>https://imroc.io/posts/other/ci-with-gitlab-and-jenkins/</link>
       <pubDate>Fri, 13 Apr 2018 22:23:22 +0800</pubDate>
