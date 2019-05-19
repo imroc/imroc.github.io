@@ -210,6 +210,33 @@ var _hmt = _hmt || [];
         <div class="posts-list">
           
             <article class="post-preview">
+              <a href="https://imroc.io/posts/algorithm/golang%E5%AE%9E%E7%8E%B0%E4%BA%8C%E5%8F%89%E6%9F%A5%E6%89%BE%E6%A0%91/">
+                <h2 class="post-title">golang实现二叉查找树</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                Posted on September 5, 2017
+              </p>
+              <div class="post-entry">
+                
+                  为简单起见，键值均为整型。 定义接口(tree.go)： type Tree interface { Put(k, v int) //新增或修改 Get(k int) int //查询 Delete(k int) //删除 Size() int //树的大小 Min() int //最小键 DeleteMin()
+                  <a href="https://imroc.io/posts/algorithm/golang%E5%AE%9E%E7%8E%B0%E4%BA%8C%E5%8F%89%E6%9F%A5%E6%89%BE%E6%A0%91/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <span class="post-meta">
+                  
+                    #<a href="https://imroc.io/tags/%E7%AE%97%E6%B3%95/">算法</a>&nbsp;
+                  
+                </span>
+              
+
+            </article>
+          
+            <article class="post-preview">
               <a href="https://imroc.io/posts/algorithm/%E4%B8%89%E5%90%91%E5%88%87%E5%88%86%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8Fc-c&#43;&#43;%E5%AE%9E%E7%8E%B0/">
                 <h2 class="post-title">三向切分快速排序(C-C&#43;&#43;实现)</h2>
 
@@ -439,33 +466,6 @@ var _hmt = _hmt || [];
                 
                   有两种相似的方式： func swap(slice []int, i int, j int) { slice[i], slice[j] = slice[j], slice[i] } //第一种冒泡排序 func BubbleSort1(slice []int) { length := len(slice) max := length - 1 for i := 0; i &lt; max; i++ { for j := 0; j &lt; max-i; j++ { if slice[j+1] &lt; slice[j] { swap(slice, j, j+1)
                   <a href="https://imroc.io/posts/algorithm/%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8Fgolang%E5%AE%9E%E7%8E%B0/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <span class="post-meta">
-                  
-                    #<a href="https://imroc.io/tags/%E7%AE%97%E6%B3%95/">算法</a>&nbsp;
-                  
-                </span>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://imroc.io/posts/algorithm/%E5%A0%86%E6%8E%92%E5%BA%8Fc-c&#43;&#43;%E5%AE%9E%E7%8E%B0/">
-                <h2 class="post-title">堆排序(C-C&#43;&#43;实现)</h2>
-
-                
-              </a>
-
-              <p class="post-meta">
-                Posted on September 5, 2017
-              </p>
-              <div class="post-entry">
-                
-                  封装成函数： //交换数组元素 void swap(int *a,int i,int j) { int t = a[i]; a[i] = a[j]; a[j] = t; } //下沉（由上至下的堆有序化） void sink(int *a,int k,int N) { while (1) { int i = 2 * k; if (i &gt; N) //保证该
-                  <a href="https://imroc.io/posts/algorithm/%E5%A0%86%E6%8E%92%E5%BA%8Fc-c&#43;&#43;%E5%AE%9E%E7%8E%B0/" class="post-read-more">[Read More]</a>
                 
               </div>
 

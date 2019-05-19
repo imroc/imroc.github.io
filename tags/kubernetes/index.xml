@@ -8,10 +8,19 @@
     <language>zh-cn</language>
     <managingEditor>roc@imroc.io (roc)</managingEditor>
     <webMaster>roc@imroc.io (roc)</webMaster>
-    <lastBuildDate>Wed, 08 May 2019 19:54:00 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 19 May 2019 11:24:00 +0800</lastBuildDate>
     
 	<atom:link href="https://imroc.io/tags/kubernetes/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Kubernetes 问题定位技巧：容器内抓包</title>
+      <link>https://imroc.io/posts/kubernetes/capture-packets-in-container/</link>
+      <pubDate>Sun, 19 May 2019 11:24:00 +0800</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/posts/kubernetes/capture-packets-in-container/</guid>
+      <description>在使用 kubernetes 跑应用的时候，可能会遇到一些网络问题，比较常见的是服务端无响应(超时)或回包内容不正常，如果没找出各种配置上有问题，这时我们需要确认</description>
+    </item>
     
     <item>
       <title>kubernetes 最佳实践：优雅热更新</title>
