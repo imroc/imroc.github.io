@@ -293,41 +293,52 @@ var _hmt = _hmt || [];
 <h2 id="使用脚本一键进入-pod-netns-抓包">使用脚本一键进入 pod netns 抓包</h2>
 
 <ul>
-<li>发现某个服务不通，最好将其副本数调为1，并找到这个副本 pod 所在节点和 pod 名称
-<code>bash
-kubectl get pod -o wide
-</code></li>
-<li>登录 pod 所在节点，将如下脚本粘贴到 shell (注册函数到当前登录的 shell，我们后面用)
-<code>bash
-function e() {
-  set -eu
-  ns=${2-&quot;default&quot;}
-  pod=`kubectl -n $ns describe pod $1 | grep -Eo 'docker://.*$' | head -n 1 | sed 's/docker:\/\/\(.*\)$/\1/'`
-  pid=`docker inspect -f {{.State.Pid}} $pod`
-  echo &quot;enter pod netns successfully for $ns/$1&quot;
-  nsenter -n --target $pid
-}
-</code></li>
-<li>一键进入 pod 所在的 netns，格式：<code>e POD_NAME NAMESPACE</code>，示例：
-<code>bash
-e istio-galley-58c7c7c646-m6568 istio-system
-e proxy-5546768954-9rxg6 # 省略 NAMESPACE 默认为 default
-</code></li>
-<li>这时已经进入 pod 的 netns，可以执行宿主机上的 <code>ip a</code> 或 <code>ifconfig</code> 来查看容器的网卡，执行 <code>netstat -tunlp</code> 查看当前容器监听了哪些端口，再通过 <code>tcpdump</code> 抓包：
-<code>bash
-tcpdump -i eth0 -w test.pcap port 80
-</code></li>
-
-<li><p><code>ctrl-c</code> 停止抓包，再用 <code>scp</code> 或 <code>sz</code> 将抓下来的包下载到本地使用 <code>wireshark</code> 分析，提供一些常用的 <code>wireshark</code> 过滤语法：</p>
-
-<pre><code class="language-bash"># 使用 telnet 连上并发送一些测试文本，比如 &quot;lbtest&quot;，
-# 用下面语句可以看发送的测试报文有没有到容器
-tcp contains &quot;lbtest&quot;
-# 如果容器提供的是http服务，可以使用 curl 发送一些测试路径的请求，
-# 通过下面语句过滤 uri 看报文有没有都容器
-http.request.uri==&quot;/mytest&quot;
-</code></pre></li>
+<li>发现某个服务不通，最好将其副本数调为1，并找到这个副本 pod 所在节点和 pod 名称</li>
 </ul>
+
+<pre><code class="language-bash">  kubectl get pod -o wide
+</code></pre>
+
+<ul>
+<li>登录 pod 所在节点，将如下脚本粘贴到 shell (注册函数到当前登录的 shell，我们后面用)</li>
+</ul>
+
+<pre><code class="language-bash">  function e() {
+      set -eu
+      ns=${2-&quot;default&quot;}
+      pod=`kubectl -n $ns describe pod $1 | grep -Eo 'docker://.*$' | head -n 1 | sed 's/docker:\/\/\(.*\)$/\1/'`
+      pid=`docker inspect -f {{.State.Pid}} $pod`
+      echo &quot;enter pod netns successfully for $ns/$1&quot;
+      nsenter -n --target $pid
+  }
+</code></pre>
+
+<ul>
+<li>一键进入 pod 所在的 netns，格式：<code>e POD_NAME NAMESPACE</code>，示例：</li>
+</ul>
+
+<pre><code class="language-bash">  e istio-galley-58c7c7c646-m6568 istio-system
+  e proxy-5546768954-9rxg6 # 省略 NAMESPACE 默认为 default
+</code></pre>
+
+<ul>
+<li>这时已经进入 pod 的 netns，可以执行宿主机上的 <code>ip a</code> 或 <code>ifconfig</code> 来查看容器的网卡，执行 <code>netstat -tunlp</code> 查看当前容器监听了哪些端口，再通过 <code>tcpdump</code> 抓包：</li>
+</ul>
+
+<pre><code class="language-bash">  tcpdump -i eth0 -w test.pcap port 80
+</code></pre>
+
+<ul>
+<li><code>ctrl-c</code> 停止抓包，再用 <code>scp</code> 或 <code>sz</code> 将抓下来的包下载到本地使用 <code>wireshark</code> 分析，提供一些常用的 <code>wireshark</code> 过滤语法：</li>
+</ul>
+
+<pre><code class="language-bash">  # 使用 telnet 连上并发送一些测试文本，比如 &quot;lbtest&quot;，
+  # 用下面语句可以看发送的测试报文有没有到容器
+  tcp contains &quot;lbtest&quot;
+  # 如果容器提供的是http服务，可以使用 curl 发送一些测试路径的请求，
+  # 通过下面语句过滤 uri 看报文有没有都容器
+  http.request.uri==&quot;/mytest&quot;
+</code></pre>
 
 <h3 id="脚本原理">脚本原理</h3>
 
@@ -338,15 +349,18 @@ http.request.uri==&quot;/mytest&quot;
 </code></pre>
 
 <ul>
-<li>获得容器进程的 pid
-<code>bash
-docker inspect -f {{.State.Pid}} &lt;container&gt;
-</code></li>
-<li>进入该容器的 network namespace
-<code>bash
-nsenter -n --target &lt;PID&gt;
-</code></li>
+<li>获得容器进程的 pid</li>
 </ul>
+
+<pre><code class="language-bash">  docker inspect -f {{.State.Pid}} &lt;container&gt;
+</code></pre>
+
+<ul>
+<li>进入该容器的 network namespace</li>
+</ul>
+
+<pre><code class="language-bash">  nsenter -n --target &lt;PID&gt;
+</code></pre>
 
 <p>依赖宿主机的命名：<code>kubectl</code>, <code>docker</code>, <code>nsenter</code>, <code>grep</code>, <code>head</code>, <code>sed</code></p>
 
