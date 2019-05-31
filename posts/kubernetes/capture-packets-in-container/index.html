@@ -303,14 +303,16 @@ var _hmt = _hmt || [];
 <li>登录 pod 所在节点，将如下脚本粘贴到 shell (注册函数到当前登录的 shell，我们后面用)</li>
 </ul>
 
-<pre><code class="language-bash">  function e() {
-      set -eu
-      ns=${2-&quot;default&quot;}
-      pod=`kubectl -n $ns describe pod $1 | grep -Eo 'docker://.*$' | head -n 1 | sed 's/docker:\/\/\(.*\)$/\1/'`
-      pid=`docker inspect -f {{.State.Pid}} $pod`
-      echo &quot;enter pod netns successfully for $ns/$1&quot;
-      nsenter -n --target $pid
-  }
+<pre><code class="language-bash">    function e() {
+        set -eu
+        ns=${2-&quot;default&quot;}
+        pod=`kubectl -n $ns describe pod $1 | grep -A10 &quot;^Containers:&quot; | grep -Eo 'docker://.*$' | head -n 1 | sed 's/docker:\/\/\(.*\)$/\1/'`
+        pid=`docker inspect -f {{.State.Pid}} $pod`
+        echo &quot;entering pod netns for $ns/$1&quot;
+        cmd=&quot;nsenter -n --target $pid&quot;
+        echo $cmd
+        $cmd
+    }
 </code></pre>
 
 <ul>
