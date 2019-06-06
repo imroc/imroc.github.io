@@ -255,6 +255,36 @@ var _hmt = _hmt || [];
           
           
             <article class="post-preview">
+              <a href="https://imroc.io/posts/algorithm/%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8Fc-c&#43;&#43;%E5%AE%9E%E7%8E%B0/">
+                <h2 class="post-title">快速排序(C-C&#43;&#43;实现)</h2>
+                
+              </a>
+
+              <span class="post-meta">
+  
+  Posted on September 5, 2017
+  
+  
+</span>
+
+
+              <div class="post-entry">
+                
+                  封装成函数： //快速排序 void quick_sort(int *a,int len) { sort(a,0,len-1); } void sort(int *a,int lo,int hi) { int i,j,k; if(lo&gt;=hi) { return; } k = partition(a,lo,hi); sort(a,lo,k); sort(a,k+1,hi); } //交换数组元素 void swap(int *a,int i,int j) { int t = a[i]; a[i] = a[j]; a[j] = t; } int partition(int *a,int lo,int hi) { int i,j;
+                  <a href="https://imroc.io/posts/algorithm/%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8Fc-c&#43;&#43;%E5%AE%9E%E7%8E%B0/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <span class="post-meta">
+                
+                  #<a href="https://imroc.io/tags/%E7%AE%97%E6%B3%95/">算法</a>&nbsp;
+                
+                </span>
+              
+            </article>
+          
+            <article class="post-preview">
               <a href="https://imroc.io/posts/algorithm/%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8Fjava%E5%AE%9E%E7%8E%B0/">
                 <h2 class="post-title">快速排序(Java实现)</h2>
                 
@@ -512,36 +542,6 @@ var _hmt = _hmt || [];
                 
                   封装成函数： #include &lt;malloc.h&gt; void swap(int *a,int i,int j) { int t = a[i]; a[i] = a[j]; a[j] = t; } int partition(int *a,int lo,int hi) { int i,j; i=lo; j=hi+1; while(1) { while(a[++i]&lt;=a[lo]) { if(i==hi) { break; } } while(a[--j]&gt;a[lo]) { if(j==lo) { break; } } if(i&gt;=j) { break; } swap(a,i,j); } swap(a,lo,j); return j; } int* copy_of(int *a,int len) { int *ret = (int*)malloc(sizeof(int)*len);
                   <a href="https://imroc.io/posts/algorithm/%E7%BA%BF%E6%80%A7%E5%A4%8D%E6%9D%82%E5%BA%A6%E9%80%89%E5%87%BA%E7%AC%ACk%E5%B0%8F%E5%85%83%E7%B4%A0%E4%B8%AD%E4%BD%8D%E6%95%B0%E6%9C%80%E5%B0%8F%E7%9A%84k%E4%B8%AA%E5%85%83%E7%B4%A0c-c&#43;&#43;%E5%AE%9E%E7%8E%B0/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <span class="post-meta">
-                
-                  #<a href="https://imroc.io/tags/%E7%AE%97%E6%B3%95/">算法</a>&nbsp;
-                
-                </span>
-              
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://imroc.io/posts/algorithm/%E7%BA%BF%E6%80%A7%E5%A4%8D%E6%9D%82%E5%BA%A6%E9%80%89%E5%87%BA%E7%AC%ACk%E5%B0%8F%E5%85%83%E7%B4%A0%E4%B8%AD%E4%BD%8D%E6%95%B0%E6%9C%80%E5%B0%8F%E7%9A%84k%E4%B8%AA%E5%85%83%E7%B4%A0java%E5%AE%9E%E7%8E%B0/">
-                <h2 class="post-title">线性复杂度选出第k小元素、中位数、最小的k个元素(Java实现)</h2>
-                
-              </a>
-
-              <span class="post-meta">
-  
-  Posted on September 5, 2017
-  
-  
-</span>
-
-
-              <div class="post-entry">
-                
-                  封装成类： package com.roc.algorithms.common; import java.util.Arrays; /** * 选出第k小元素、中位数、最小的k个元素(线性复杂度) * * @author imroc */ public class Select { //选出第k小元素，k为1~a.length public static
-                  <a href="https://imroc.io/posts/algorithm/%E7%BA%BF%E6%80%A7%E5%A4%8D%E6%9D%82%E5%BA%A6%E9%80%89%E5%87%BA%E7%AC%ACk%E5%B0%8F%E5%85%83%E7%B4%A0%E4%B8%AD%E4%BD%8D%E6%95%B0%E6%9C%80%E5%B0%8F%E7%9A%84k%E4%B8%AA%E5%85%83%E7%B4%A0java%E5%AE%9E%E7%8E%B0/" class="post-read-more">[Read More]</a>
                 
               </div>
 

@@ -8,7 +8,7 @@
     <language>zh-cn</language>
     <managingEditor>roc@imroc.io (roc)</managingEditor>
     <webMaster>roc@imroc.io (roc)</webMaster>
-    <lastBuildDate>Sun, 19 May 2019 11:24:00 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 06 Jun 2019 17:06:00 +0800</lastBuildDate>
     
 	<atom:link href="https://imroc.io/index.xml" rel="self" type="application/rss+xml" />
     
@@ -20,6 +20,15 @@
       <author>roc@imroc.io (roc)</author>
       <guid>https://imroc.io/about/about/</guid>
       <description>I&amp;rsquo;m roc: https://imroc.io/scifi</description>
+    </item>
+    
+    <item>
+      <title>Kubernetes 最佳实践：解决长连接服务扩容失效</title>
+      <link>https://imroc.io/posts/kubernetes/scale-keepalive-service/</link>
+      <pubDate>Thu, 06 Jun 2019 17:06:00 +0800</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/posts/kubernetes/scale-keepalive-service/</guid>
+      <description>在现网运营中，有很多场景为了提高效率，一般都采用建立长连接的方式来请求。我们发现在客户端以长连接请求服务端的场景下，K8S的自动扩容会失效。</description>
     </item>
     
     <item>

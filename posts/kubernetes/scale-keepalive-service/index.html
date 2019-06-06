@@ -5,13 +5,13 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title> Union-Find(C&#43;&#43;实现实现) - imroc.io|roc的博客|Cloud Native|Kubernetes|Go|Golang</title>
+  <title> Kubernetes 最佳实践：解决长连接服务扩容失效 - imroc.io|roc的博客|Cloud Native|Kubernetes|Go|Golang</title>
   <meta name="description" content="imroc.io|roc的博客|Cloud Native|Kubernetes|Go|Golang" />
-  <meta property="og:title" content="Union-Find(C&#43;&#43;实现实现)" />
-  <meta name="twitter:title" content="Union-Find(C&#43;&#43;实现实现)" />
-  <meta name="description" content="quick-find、quick-union、加权quick-union(附带路径压缩优化) 本算法主要解决动态连通性一类问题，这里尽量用精炼">
-  <meta property="og:description" content="quick-find、quick-union、加权quick-union(附带路径压缩优化) 本算法主要解决动态连通性一类问题，这里尽量用精炼">
-  <meta name="twitter:description" content="quick-find、quick-union、加权quick-union(附带路径压缩优化) 本算法主要解决动态连通性一类问题，这里尽量用精炼">
+  <meta property="og:title" content="Kubernetes 最佳实践：解决长连接服务扩容失效" />
+  <meta name="twitter:title" content="Kubernetes 最佳实践：解决长连接服务扩容失效" />
+  <meta name="description" content="在现网运营中，有很多场景为了提高效率，一般都采用建立长连接的方式来请求。我们发现在客户端以长连接请求服务端的场景下，K8S的自动扩容会失效。">
+  <meta property="og:description" content="在现网运营中，有很多场景为了提高效率，一般都采用建立长连接的方式来请求。我们发现在客户端以长连接请求服务端的场景下，K8S的自动扩容会失效。">
+  <meta name="twitter:description" content="在现网运营中，有很多场景为了提高效率，一般都采用建立长连接的方式来请求。我们发现在客户端以长连接请求服务端的场景下，K8S的自动扩容会失效。">
   <meta name="author" content="{Description { .Site.Author.name }}"/>
   <link href='https://imroc.io/favicon.png' rel='icon' type='image/x-icon'/>
   <meta property="og:image" content="https://res.cloudinary.com/imroc/image/upload/v1521031841/avatar.png" />
@@ -19,12 +19,12 @@
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:site" content="@imrocchan" />
   <meta name="twitter:creator" content="@imrocchan" />
-  <meta property="og:url" content="https://imroc.io/posts/algorithm/union-findc&#43;&#43;%E5%AE%9E%E7%8E%B0%E5%AE%9E%E7%8E%B0/" />
+  <meta property="og:url" content="https://imroc.io/posts/kubernetes/scale-keepalive-service/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="roc" />
 
   <meta name="generator" content="Hugo 0.49.2" />
-  <link rel="canonical" href="https://imroc.io/posts/algorithm/union-findc&#43;&#43;%E5%AE%9E%E7%8E%B0%E5%AE%9E%E7%8E%B0/" />
+  <link rel="canonical" href="https://imroc.io/posts/kubernetes/scale-keepalive-service/" />
   <link rel="alternate" href="https://imroc.io/index.xml" type="application/rss+xml" title="roc">
   <script src="https://cdn.staticfile.org/jquery/1.12.4/jquery.min.js"></script>
   <link rel="stylesheet" href="https://cdn.staticfile.org/KaTeX/0.7.1/katex.min.css" crossorigin="anonymous">
@@ -198,8 +198,40 @@ var _hmt = _hmt || [];
 
 
   
+    <div id="header-big-imgs" data-num-img=1 data-img-src-1="https://res.cloudinary.com/imroc/image/upload/v1515849754/blog/banner/hacker.jpg" data-img-desc-1="Hacker"></div>
+  
 
-  <header class="header-section ">
+  <header class="header-section has-img">
+    
+      <div class="intro-header big-img">
+        
+        
+        <div class="container">
+          <div class="row">
+              <div class="col-lg-12 col-md-12 col-md-offset-0">
+                
+                <div class="post-heading">
+                
+                  
+                     <h1>Kubernetes 最佳实践：解决长连接服务扩容失效</h1>
+                     
+                    <span class="post-meta">
+  
+  Posted on June 6, 2019
+  
+  
+</span>
+
+
+                    
+                  
+                  
+              </div>
+            </div>
+          </div>
+        </div>
+        <span class="img-desc" style="display: inline;"></span>
+      </div>
     
     <div class="intro-header no-img">
       
@@ -207,7 +239,7 @@ var _hmt = _hmt || [];
         <div class="row">
           <div class="col-lg-12 col-md-12 col-md-offset-0">
             <div class="posts-heading">
-                <h1 align="center">Union-Find(C&#43;&#43;实现实现)</h1>
+                <h1 align="center">Kubernetes 最佳实践：解决长连接服务扩容失效</h1>
                 
                 
             </div>
@@ -227,12 +259,12 @@ var _hmt = _hmt || [];
             
 <div>
     <section id="datecount">
-        <h4 id="date"> Tue Sep 5, 2017</h4>
+        <h4 id="date"> Thu Jun 6, 2019</h4>
     </section>
-    <h5 id="wc">700 Words|Read in about 2 Min</h5>
+    <h5 id="wc">1000 Words|Read in about 2 Min</h5>
     <h5 id="tags">Tags: 
         
-        <a href="https://imroc.io/tags/%E7%AE%97%E6%B3%95/">算法</a> &nbsp;
+        <a href="https://imroc.io/tags/kubernetes/">kubernetes</a> &nbsp;
     </h5>
 </div>
 
@@ -240,217 +272,83 @@ var _hmt = _hmt || [];
             <article role="main" class="blog-post" itemprop="articleBody" id="content">
                 
 <aside class="toc">
-  <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#quickfind">QuickFind</a></li>
-<li><a href="#quickunion">QuickUnion</a></li>
-<li><a href="#加权quickunion-附带路径压缩优化">加权QuickUnion(附带路径压缩优化)</a></li>
-</ul></li>
-</ul>
-</nav>
+  
 </aside>
 
 
-                
+                <p>在现网运营中，有很多场景为了提高效率，一般都采用建立长连接的方式来请求。我们发现在客户端以长连接请求服务端的场景下，K8S的自动扩容会失效。原因是客户端长连接一直保留在老的Pod容器中，新扩容的Pod没有新的连接过来，导致K8S按照步长扩容第一批Pod之后就停止了扩容操作，而且新扩容的Pod没能承载请求，进而出现服务过载的情况，自动扩容失去了意义。</p>
 
-<p><strong>quick-find、quick-union、加权quick-union(附带路径压缩优化)</strong></p>
+<p>对长连接扩容失效的问题，我们的解决方法是将长连接转换为短连接。我们参考了 nginx keepalive 的设计，nginx 中 keepalive_requests 这个配置项设定了一个TCP连接能处理的最大请求数，达到设定值(比如1000)之后服务端会在 http 的 Header 头标记 “<code>Connection:close</code>”，通知客户端处理完当前的请求后关闭连接，新的请求需要重新建立TCP连接，所以这个过程中不会出现请求失败，同时又达到了将长连接按需转换为短连接的目的。通过这个办法客户端和云K8S服务端处理完一批请求后不断的更新TCP连接，自动扩容的新Pod能接收到新的连接请求，从而解决了自动扩容失效的问题。</p>
 
-<hr />
+<p>由于Golang并没有提供方法可以获取到每个连接处理过的请求数，我们重写了 <code>net.Listener</code> 和 <code>net.Conn</code>，注入请求计数器，对每个连接处理的请求做计数，并通过 <code>net.Conn.LocalAddr()</code> 获得计数值，判断达到阈值 1000 后在返回的 Header 中插入 “<code>Connection:close</code>” 通知客户端关闭连接，重新建立连接来发起请求。以上处理逻辑用 Golang 实现示例代码如下：</p>
 
-<p>本算法主要解决动态连通性一类问题，这里尽量用精炼简洁的话来阐述。</p>
+<pre><code class="language-go">package main
 
-<p><strong>数据结构描述:</strong></p>
+import (
+ &quot;net&quot;
+ &quot;github.com/gin-gonic/gin&quot;
+ &quot;net/http&quot;
+)
 
-<ul>
-<li>有N个节点（索引0~N-1），可以查询节点数量</li>
-<li>可以连接两个节点</li>
-<li>可以查询两个节点是否连通</li>
-</ul>
+//重新定义net.Listener
+type counterListener struct {
+ net.Listener
+}
+//重写net.Listener.Accept(),对接收到的连接注入请求计数器
+func (c *counterListener) Accept() (net.Conn, error) {
+ conn, err := c.Listener.Accept()
+ if err != nil {
+  return nil, err
+ }
+ return &amp;counterConn{Conn: conn}, nil
+}
+//定义计数器counter和计数方法Increment()
+type counter int
+func (c *counter) Increment() int {
+ *c++
+ return int(*c)
+}
 
-<p><strong>算法大致设计思路：</strong></p>
+//重新定义net.Conn,注入计数器ct
+type counterConn struct {
+ net.Conn
+ ct counter
+}
 
-<ul>
-<li>每个节点初始化为不同的整数标记</li>
-<li>通过一个辅助函数查询某个节点的标记值</li>
-<li>如果两节点标记相同，说明两节点是连通的
-&mdash;&mdash;</li>
-</ul>
+//重写net.Conn.LocalAddr()，返回本地网络地址的同时返回该连接累计处理过的请求数
+func (c *counterConn) LocalAddr() net.Addr {
+ return &amp;counterAddr{c.Conn.LocalAddr(), &amp;c.ct}
+}
 
-<p>抽象基类：</p>
+//定义TCP连接计数器,指向连接累计请求的计数器
+type counterAddr struct {
+ net.Addr
+ *counter
+}
 
-<pre><code class="language-cpp">class UnionFind
-{
-public:
-    UnionFind(int n);
-    ~UnionFind();
-    int Count();
-    virtual bool Connected(int p,int q)=0;
-    virtual void Union(int p,int q)=0;
-protected:
-    int *id;
-    int sz;
-    int num;
-};
-UnionFind::UnionFind(int n)
-{
-    this-&gt;num = this-&gt;sz = n;
-    this-&gt;id = new int[n];
-    for(int i=0; i&lt;n; i++)
-    {
-        this-&gt;id[i] = i;
-    }
-};
-UnionFind::~UnionFind()
-{
-    delete this-&gt;id;
-    delete &amp;this-&gt;num;
-    delete &amp;this-&gt;sz;
-};
-
-int UnionFind::Count()
-{
-    return this-&gt;num;
-};
-</code></pre>
-
-<h2 id="quickfind">QuickFind</h2>
-
-<ul>
-<li>a和b进行union的时候，将b及与b连通节点的标记都置为和a的标记一样</li>
-<li>标记相同的节点是连通的</li>
-</ul>
-
-<pre><code class="language-cpp">class QuickFind : public UnionFind
-{
-public:
-    QuickFind(int n);
-    bool Connected(int p,int q);
-    void Union(int p,int q);
-};
-QuickFind::QuickFind(int n):UnionFind(n) {};
-
-
-bool QuickFind::Connected(int p,int q)
-{
-    return this-&gt;id[p] == this-&gt;id[q];
-};
-
-void QuickFind::Union(int p,int q)
-{
-    int k = this-&gt;id[q];
-    for(int i=0; i&lt;this-&gt;sz; i++)
-    {
-        if(this-&gt;id[i]==k)
-        {
-            this-&gt;id[i]=this-&gt;id[p];
-        }
-    }
-    this-&gt;num--;
-};
-</code></pre>
-
-<h2 id="quickunion">QuickUnion</h2>
-
-<ul>
-<li>连通的节点形成一棵树，根节点相同</li>
-</ul>
-
-<pre><code class="language-cpp">class QuickUnion : public UnionFind
-{
-public:
-    QuickUnion(int n);
-    bool Connected(int p,int q);
-    void Union(int p,int q);
-protected:
-    int findRoot(int p);
-};
-QuickUnion::QuickUnion(int n):UnionFind(n) {};
-int QuickUnion::findRoot(int p)
-{
-    while(p!=this-&gt;id[p])
-    {
-        p = this-&gt;id[p];
-    }
-    return p;
-};
-bool QuickUnion::Connected(int p,int q)
-{
-    return this-&gt;findRoot(p)==this-&gt;findRoot(q);
-};
-void QuickUnion::Union(int p,int q)
-{
-    int i = this-&gt;findRoot(p);
-    int j = this-&gt;findRoot(q);
-    if (i == j)
-    {
-        return;
-    }
-    this-&gt;id[j] = this-&gt;id[i];
-    this-&gt;num--;
-};
-</code></pre>
-
-<h2 id="加权quickunion-附带路径压缩优化">加权QuickUnion(附带路径压缩优化)</h2>
-
-<ul>
-<li>union的时候小树挂在大树下</li>
-<li>查询根节点的时候顺便将该节点的父节点直接指向根节点，压缩路径</li>
-</ul>
-
-<pre><code class="language-cpp">class WeightedQuickUnion : public QuickUnion
-{
-public:
-    WeightedQuickUnion(int n);
-    ~WeightedQuickUnion();
-    void Union(int p,int q);
-protected:
-    int findRoot(int p);
-private:
-    int *sz;
-};
-WeightedQuickUnion::WeightedQuickUnion(int n):QuickUnion(n)
-{
-    this-&gt;sz = new int[n];
-    for(int i=0; i&lt;n; i++)
-    {
-        this-&gt;sz[i] = 1;
-    }
-};
-WeightedQuickUnion::~WeightedQuickUnion()
-{
-    delete this-&gt;sz;
-};
-int WeightedQuickUnion::findRoot(int p)
-{
-    while (p != this-&gt;id[p])
-    {
-        this-&gt;id[p] = this-&gt;id[this-&gt;id[p]];
-        p = this-&gt;id[p];
-    }
-    return p;
-};
-void WeightedQuickUnion::Union(int p,int q)
-{
-    int i = this-&gt;findRoot(p);
-    int j = this-&gt;findRoot(q);
-    if (i == j)
-    {
-        return;
-    }
-    if (this-&gt;sz[i] &lt; this-&gt;sz[j])
-    {
-        this-&gt;id[i] = j;
-        this-&gt;sz[j] += this-&gt;sz[i];
-    }
-    else
-    {
-        this-&gt;id[j] = i;
-        this-&gt;sz[i] += this-&gt;sz[j];
-    }
-    this-&gt;num--;
-};
+func main() {
+ r := gin.New()
+ r.Use(func(c *gin.Context) {
+  localAddr := c.Request.Context().Value(http.LocalAddrContextKey)
+  if ct, ok := localAddr.(interface{ Increment() int }); ok {
+   if ct.Increment() &gt;= 1000 {
+    c.Header(&quot;Connection&quot;, &quot;close&quot;)
+   }
+  }
+  c.Next()
+ })
+ r.GET(&quot;/&quot;, func(c *gin.Context) {
+  c.String(200, &quot;plain/text&quot;, &quot;hello&quot;)
+ })
+ l, err := net.Listen(&quot;tcp&quot;, &quot;:8080&quot;)
+ if err != nil {
+  panic(err)
+ }
+ err = http.Serve(&amp;counterListener{l}, r)
+ if err != nil {
+  panic(err)
+ }
+}
 </code></pre>
 
             </article>
@@ -458,13 +356,9 @@ void WeightedQuickUnion::Union(int p,int q)
             <ul class="pager blog-pager">
                 
                 <li class="previous">
-                    <a href="https://imroc.io/posts/algorithm/union-findjava%E5%AE%9E%E7%8E%B0/" data-toggle="tooltip" data-placement="top" title="Union-Find(Java实现)">&larr; Previous Post</a>
+                    <a href="https://imroc.io/posts/kubernetes/capture-packets-in-container/" data-toggle="tooltip" data-placement="top" title="Kubernetes 问题定位技巧：容器内抓包">&larr; Previous Post</a>
                 </li>
                  
-                <li class="next">
-                    <a href="https://imroc.io/posts/golang/golang-append/" data-toggle="tooltip" data-placement="top" title="golang中append函数返回值必须有变量接收的原因探究">Next Post &rarr;</a>
-                </li>
-                
             </ul>
             
             <div>
@@ -472,15 +366,15 @@ void WeightedQuickUnion::Union(int p,int q)
                 <h2>See Also</h2>
                 <ul>
                     
-                    <li><a href="/posts/algorithm/union-findgolang%E5%AE%9E%E7%8E%B0/">Union-Find(golang实现)</a></li>
+                    <li><a href="/posts/kubernetes/capture-packets-in-container/">Kubernetes 问题定位技巧：容器内抓包</a></li>
                     
-                    <li><a href="/posts/algorithm/%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8Fjava%E5%AE%9E%E7%8E%B0/">冒泡排序(Java实现)</a></li>
+                    <li><a href="/posts/kubernetes/kubernetes-best-practice-grace-update/">kubernetes 最佳实践：优雅热更新</a></li>
                     
-                    <li><a href="/posts/algorithm/%E6%B1%82%E4%B8%A4%E5%9C%86%E4%BA%A4%E7%82%B9%E7%AE%97%E6%B3%95%E4%BB%A3%E7%A0%81golang%E5%AE%9E%E7%8E%B0/">求两圆交点算法代码(golang实现)</a></li>
+                    <li><a href="/posts/kubernetes/efficient-kubectl/">kubectl 高效技巧</a></li>
                     
-                    <li><a href="/posts/algorithm/%E4%BA%8C%E5%88%86%E6%B3%95%E6%9F%A5%E6%89%BEjava%E5%AE%9E%E7%8E%B0/">二分法查找(Java实现)</a></li>
+                    <li><a href="/posts/kubernetes/wildcard-domain-forward/">Kubernetes 泛域名动态 Service 转发解决方案</a></li>
                     
-                    <li><a href="/posts/algorithm/%E5%A0%86%E6%8E%92%E5%BA%8Fjava%E5%AE%9E%E7%8E%B0/">堆排序(Java实现)</a></li>
+                    <li><a href="/posts/kubernetes/analysis-exitcode/">Kubernetes 问题定位技巧：分析 ExitCode</a></li>
                     
                 </ul>
                 
@@ -491,12 +385,12 @@ void WeightedQuickUnion::Union(int p,int q)
             
 <div>
     <section id="datecount">
-        <h4 id="date"> Tue Sep 5, 2017</h4>
+        <h4 id="date"> Thu Jun 6, 2019</h4>
     </section>
-    <h5 id="wc">700 Words|Read in about 2 Min</h5>
+    <h5 id="wc">1000 Words|Read in about 2 Min</h5>
     <h5 id="tags">Tags: 
         
-        <a href="https://imroc.io/tags/%E7%AE%97%E6%B3%95/">算法</a> &nbsp;
+        <a href="https://imroc.io/tags/kubernetes/">kubernetes</a> &nbsp;
     </h5>
 </div>
 
