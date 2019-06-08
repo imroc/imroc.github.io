@@ -8,7 +8,7 @@
     <language>zh-cn</language>
     <managingEditor>roc@imroc.io (roc)</managingEditor>
     <webMaster>roc@imroc.io (roc)</webMaster>
-    <lastBuildDate>Fri, 07 Jun 2019 19:54:00 +0800</lastBuildDate>
+    <lastBuildDate>Sat, 08 Jun 2019 13:59:00 +0800</lastBuildDate>
     
 	<atom:link href="https://imroc.io/index.xml" rel="self" type="application/rss+xml" />
     
@@ -23,7 +23,16 @@
     </item>
     
     <item>
-      <title>kubernetes 最佳实践：处理容器数据磁盘被写满</title>
+      <title>Kubernetes 最佳实践：处理内存碎片化</title>
+      <link>https://imroc.io/posts/kubernetes/handle-memory-fragmentation/</link>
+      <pubDate>Sat, 08 Jun 2019 13:59:00 +0800</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/posts/kubernetes/handle-memory-fragmentation/</guid>
+      <description>内存碎片化造成的危害 节点的内存碎片化严重，导致docker运行容器时，无法分到大的内存块，导致start docker失败。最终导致服务更新时</description>
+    </item>
+    
+    <item>
+      <title>Kubernetes 最佳实践：处理容器数据磁盘被写满</title>
       <link>https://imroc.io/posts/kubernetes/kubernetes-best-practice-handle-disk-full/</link>
       <pubDate>Fri, 07 Jun 2019 19:54:00 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
