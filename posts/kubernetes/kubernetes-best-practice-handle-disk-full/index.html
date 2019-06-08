@@ -5,13 +5,13 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title> roc - imroc.io|roc的博客|Cloud Native|Kubernetes|Go|Golang</title>
+  <title> kubernetes 最佳实践：处理容器数据磁盘被写满 - imroc.io|roc的博客|Cloud Native|Kubernetes|Go|Golang</title>
   <meta name="description" content="imroc.io|roc的博客|Cloud Native|Kubernetes|Go|Golang" />
-  <meta property="og:title" content="roc" />
-  <meta name="twitter:title" content="roc" />
-  <meta name="description" content="处理容器数据磁盘被写满 容器数据磁盘被写满造成的危害: - 不能创建 Pod (一直 ContainerCreating) - 不能删除 Pod (一直 Terminating) - 无法 exec 到容器 判断是否被写满: 容器数据目录大多会">
-  <meta property="og:description" content="处理容器数据磁盘被写满 容器数据磁盘被写满造成的危害: - 不能创建 Pod (一直 ContainerCreating) - 不能删除 Pod (一直 Terminating) - 无法 exec 到容器 判断是否被写满: 容器数据目录大多会">
-  <meta name="twitter:description" content="处理容器数据磁盘被写满 容器数据磁盘被写满造成的危害: - 不能创建 Pod (一直 ContainerCreating) - 不能删除 Pod (一直 Terminating) - 无法 exec 到容器 判断是否被写满: 容器数据目录大多会">
+  <meta property="og:title" content="kubernetes 最佳实践：处理容器数据磁盘被写满" />
+  <meta name="twitter:title" content="kubernetes 最佳实践：处理容器数据磁盘被写满" />
+  <meta name="description" content="容器数据磁盘被写满造成的危害: - 不能创建 Pod (一直 ContainerCreating) - 不能删除 Pod (一直 Terminating) - 无法 exec 到容器 判断是否被写满: 容器数据目录大多会单独挂数据盘，路径一般">
+  <meta property="og:description" content="容器数据磁盘被写满造成的危害: - 不能创建 Pod (一直 ContainerCreating) - 不能删除 Pod (一直 Terminating) - 无法 exec 到容器 判断是否被写满: 容器数据目录大多会单独挂数据盘，路径一般">
+  <meta name="twitter:description" content="容器数据磁盘被写满造成的危害: - 不能创建 Pod (一直 ContainerCreating) - 不能删除 Pod (一直 Terminating) - 无法 exec 到容器 判断是否被写满: 容器数据目录大多会单独挂数据盘，路径一般">
   <meta name="author" content="{Description { .Site.Author.name }}"/>
   <link href='https://imroc.io/favicon.png' rel='icon' type='image/x-icon'/>
   <meta property="og:image" content="https://res.cloudinary.com/imroc/image/upload/v1521031841/avatar.png" />
@@ -197,7 +197,57 @@ var _hmt = _hmt || [];
 
 
 
-  <div class="intro-header"></div>
+  
+    <div id="header-big-imgs" data-num-img=1 data-img-src-1="https://res.cloudinary.com/imroc/image/upload/v1515849754/blog/banner/hacker.jpg" data-img-desc-1="Hacker"></div>
+  
+
+  <header class="header-section has-img">
+    
+      <div class="intro-header big-img">
+        
+        
+        <div class="container">
+          <div class="row">
+              <div class="col-lg-12 col-md-12 col-md-offset-0">
+                
+                <div class="post-heading">
+                
+                  
+                     <h1>kubernetes 最佳实践：处理容器数据磁盘被写满</h1>
+                     
+                    <span class="post-meta">
+  
+  Posted on June 7, 2019
+  
+  
+</span>
+
+
+                    
+                  
+                  
+              </div>
+            </div>
+          </div>
+        </div>
+        <span class="img-desc" style="display: inline;"></span>
+      </div>
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12 col-md-12 col-md-offset-0">
+            <div class="posts-heading">
+                <h1 align="center">kubernetes 最佳实践：处理容器数据磁盘被写满</h1>
+                
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
 
 
     
@@ -209,10 +259,12 @@ var _hmt = _hmt || [];
             
 <div>
     <section id="datecount">
-        <h4 id="date"> Mon Jan 1, 0001</h4>
+        <h4 id="date"> Fri Jun 7, 2019</h4>
     </section>
     <h5 id="wc">1300 Words|Read in about 3 Min</h5>
     <h5 id="tags">Tags: 
+        
+        <a href="https://imroc.io/tags/kubernetes/">kubernetes</a> &nbsp;
     </h5>
 </div>
 
@@ -222,7 +274,7 @@ var _hmt = _hmt || [];
 <aside class="toc">
   <nav id="TableOfContents">
 <ul>
-<li><a href="#处理容器数据磁盘被写满">处理容器数据磁盘被写满</a>
+<li>
 <ul>
 <li><a href="#解决方法">解决方法</a>
 <ul>
@@ -244,8 +296,6 @@ var _hmt = _hmt || [];
 
 
                 
-
-<h1 id="处理容器数据磁盘被写满">处理容器数据磁盘被写满</h1>
 
 <p>容器数据磁盘被写满造成的危害:
 - 不能创建 Pod (一直 ContainerCreating)
@@ -420,15 +470,30 @@ $ du -sh *
             </article>
 
             <ul class="pager blog-pager">
-                 
-                <li class="next">
-                    <a href="https://imroc.io/posts/algorithm/%E9%80%89%E6%8B%A9%E6%8E%92%E5%BA%8Fgolang%E5%AE%9E%E7%8E%B0/" data-toggle="tooltip" data-placement="top" title="选择排序(golang实现)">Next Post &rarr;</a>
-                </li>
                 
+                <li class="previous">
+                    <a href="https://imroc.io/posts/kubernetes/scale-keepalive-service/" data-toggle="tooltip" data-placement="top" title="Kubernetes 最佳实践：解决长连接服务扩容失效">&larr; Previous Post</a>
+                </li>
+                 
             </ul>
             
             <div>
                  
+                <h2>See Also</h2>
+                <ul>
+                    
+                    <li><a href="/posts/kubernetes/scale-keepalive-service/">Kubernetes 最佳实践：解决长连接服务扩容失效</a></li>
+                    
+                    <li><a href="/posts/kubernetes/capture-packets-in-container/">Kubernetes 问题定位技巧：容器内抓包</a></li>
+                    
+                    <li><a href="/posts/kubernetes/kubernetes-best-practice-grace-update/">kubernetes 最佳实践：优雅热更新</a></li>
+                    
+                    <li><a href="/posts/kubernetes/efficient-kubectl/">kubectl 高效技巧</a></li>
+                    
+                    <li><a href="/posts/kubernetes/wildcard-domain-forward/">Kubernetes 泛域名动态 Service 转发解决方案</a></li>
+                    
+                </ul>
+                
             </div>
             
             
@@ -436,10 +501,12 @@ $ du -sh *
             
 <div>
     <section id="datecount">
-        <h4 id="date"> Mon Jan 1, 0001</h4>
+        <h4 id="date"> Fri Jun 7, 2019</h4>
     </section>
     <h5 id="wc">1300 Words|Read in about 3 Min</h5>
     <h5 id="tags">Tags: 
+        
+        <a href="https://imroc.io/tags/kubernetes/">kubernetes</a> &nbsp;
     </h5>
 </div>
 

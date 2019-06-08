@@ -8,10 +8,19 @@
     <language>zh-cn</language>
     <managingEditor>roc@imroc.io (roc)</managingEditor>
     <webMaster>roc@imroc.io (roc)</webMaster>
-    <lastBuildDate>Thu, 06 Jun 2019 17:06:00 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 07 Jun 2019 19:54:00 +0800</lastBuildDate>
     
 	<atom:link href="https://imroc.io/categories/kubernetes/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>kubernetes 最佳实践：处理容器数据磁盘被写满</title>
+      <link>https://imroc.io/posts/kubernetes/kubernetes-best-practice-handle-disk-full/</link>
+      <pubDate>Fri, 07 Jun 2019 19:54:00 +0800</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/posts/kubernetes/kubernetes-best-practice-handle-disk-full/</guid>
+      <description>容器数据磁盘被写满造成的危害: - 不能创建 Pod (一直 ContainerCreating) - 不能删除 Pod (一直 Terminating) - 无法 exec 到容器 判断是否被写满: 容器数据目录大多会单独挂数据盘，路径一般</description>
+    </item>
     
     <item>
       <title>Kubernetes 最佳实践：解决长连接服务扩容失效</title>
