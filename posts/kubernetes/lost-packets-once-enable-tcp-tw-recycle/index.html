@@ -5,13 +5,13 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title> 二分法查找(Java实现) - imroc.io|roc的博客|Cloud Native|Kubernetes|Go|Golang</title>
+  <title> Kubernetes 踩坑分享：开启tcp_tw_recycle内核参数在NAT环境会丢包 - imroc.io|roc的博客|Cloud Native|Kubernetes|Go|Golang</title>
   <meta name="description" content="imroc.io|roc的博客|Cloud Native|Kubernetes|Go|Golang" />
-  <meta property="og:title" content="二分法查找(Java实现)" />
-  <meta name="twitter:title" content="二分法查找(Java实现)" />
-  <meta name="description" content="封装成类： package com.roc.algorithms.search; /** * 二分法查找 * * @author imroc */ public class BinarySearch { /** * @param a 升序排列的数组 * @param k 待查找的整数 * @return 如果查到有就返回对应角标，没有就返回-1 */ public static int search(int[]">
-  <meta property="og:description" content="封装成类： package com.roc.algorithms.search; /** * 二分法查找 * * @author imroc */ public class BinarySearch { /** * @param a 升序排列的数组 * @param k 待查找的整数 * @return 如果查到有就返回对应角标，没有就返回-1 */ public static int search(int[]">
-  <meta name="twitter:description" content="封装成类： package com.roc.algorithms.search; /** * 二分法查找 * * @author imroc */ public class BinarySearch { /** * @param a 升序排列的数组 * @param k 待查找的整数 * @return 如果查到有就返回对应角标，没有就返回-1 */ public static int …">
+  <meta property="og:title" content="Kubernetes 踩坑分享：开启tcp_tw_recycle内核参数在NAT环境会丢包" />
+  <meta name="twitter:title" content="Kubernetes 踩坑分享：开启tcp_tw_recycle内核参数在NAT环境会丢包" />
+  <meta name="description" content="原因 tcp_tw_recycle参数。它用来快速回收TIME_WAIT连接，不过如果在NAT环境下会引发问题。 RFC1323中有如下一段描述">
+  <meta property="og:description" content="原因 tcp_tw_recycle参数。它用来快速回收TIME_WAIT连接，不过如果在NAT环境下会引发问题。 RFC1323中有如下一段描述">
+  <meta name="twitter:description" content="原因 tcp_tw_recycle参数。它用来快速回收TIME_WAIT连接，不过如果在NAT环境下会引发问题。 RFC1323中有如下一段描述">
   <meta name="author" content="{Description { .Site.Author.name }}"/>
   <link href='https://imroc.io/favicon.png' rel='icon' type='image/x-icon'/>
   <meta property="og:image" content="https://res.cloudinary.com/imroc/image/upload/v1521031841/avatar.png" />
@@ -19,12 +19,12 @@
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:site" content="@imrocchan" />
   <meta name="twitter:creator" content="@imrocchan" />
-  <meta property="og:url" content="https://imroc.io/posts/algorithm/%E4%BA%8C%E5%88%86%E6%B3%95%E6%9F%A5%E6%89%BEjava%E5%AE%9E%E7%8E%B0/" />
+  <meta property="og:url" content="https://imroc.io/posts/kubernetes/lost-packets-once-enable-tcp-tw-recycle/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="roc" />
 
   <meta name="generator" content="Hugo 0.49.2" />
-  <link rel="canonical" href="https://imroc.io/posts/algorithm/%E4%BA%8C%E5%88%86%E6%B3%95%E6%9F%A5%E6%89%BEjava%E5%AE%9E%E7%8E%B0/" />
+  <link rel="canonical" href="https://imroc.io/posts/kubernetes/lost-packets-once-enable-tcp-tw-recycle/" />
   <link rel="alternate" href="https://imroc.io/index.xml" type="application/rss+xml" title="roc">
   <script src="https://cdn.staticfile.org/jquery/1.12.4/jquery.min.js"></script>
   <link rel="stylesheet" href="https://cdn.staticfile.org/KaTeX/0.7.1/katex.min.css" crossorigin="anonymous">
@@ -198,8 +198,40 @@ var _hmt = _hmt || [];
 
 
   
+    <div id="header-big-imgs" data-num-img=1 data-img-src-1="https://res.cloudinary.com/imroc/image/upload/v1515849754/blog/banner/hacker.jpg" data-img-desc-1="Hacker"></div>
+  
 
-  <header class="header-section ">
+  <header class="header-section has-img">
+    
+      <div class="intro-header big-img">
+        
+        
+        <div class="container">
+          <div class="row">
+              <div class="col-lg-12 col-md-12 col-md-offset-0">
+                
+                <div class="post-heading">
+                
+                  
+                     <h1>Kubernetes 踩坑分享：开启tcp_tw_recycle内核参数在NAT环境会丢包</h1>
+                     
+                    <span class="post-meta">
+  
+  Posted on June 9, 2019
+  
+  
+</span>
+
+
+                    
+                  
+                  
+              </div>
+            </div>
+          </div>
+        </div>
+        <span class="img-desc" style="display: inline;"></span>
+      </div>
     
     <div class="intro-header no-img">
       
@@ -207,7 +239,7 @@ var _hmt = _hmt || [];
         <div class="row">
           <div class="col-lg-12 col-md-12 col-md-offset-0">
             <div class="posts-heading">
-                <h1 align="center">二分法查找(Java实现)</h1>
+                <h1 align="center">Kubernetes 踩坑分享：开启tcp_tw_recycle内核参数在NAT环境会丢包</h1>
                 
                 
             </div>
@@ -227,73 +259,64 @@ var _hmt = _hmt || [];
             
 <div>
     <section id="datecount">
-        <h4 id="date"> Tue Sep 5, 2017</h4>
+        <h4 id="date"> Sun Jun 9, 2019</h4>
     </section>
-    <h5 id="wc">200 Words|Read in about 1 Min</h5>
+    <h5 id="wc">700 Words|Read in about 2 Min</h5>
     <h5 id="tags">Tags: 
         
-        <a href="https://imroc.io/tags/%E7%AE%97%E6%B3%95/">算法</a> &nbsp;
+        <a href="https://imroc.io/tags/kubernetes/">kubernetes</a> &nbsp;
     </h5>
 </div>
 
             
             <article role="main" class="blog-post" itemprop="articleBody" id="content">
                 
+<aside class="toc">
+  <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#原因">原因</a></li>
+<li><a href="#tke中-使用-nat-的场景">TKE中 使用 NAT 的场景</a></li>
+</ul></li>
+</ul>
+</nav>
+</aside>
 
-                <p>封装成类：</p>
 
-<pre><code class="language-java">package com.roc.algorithms.search;
+                
 
-/**
- * 二分法查找
- *
- * @author imroc
- */
-public class BinarySearch {
+<h2 id="原因">原因</h2>
 
-    /**
-     * @param a 升序排列的数组
-     * @param k 待查找的整数
-     * @return 如果查到有就返回对应角标，没有就返回-1
-     */
-    public static int search(int[] a, int k) {
-        int lo = 0, hi = a.length - 1;
-        while (lo &lt;= hi) {
-            int m = (lo + hi) &gt;&gt; 1;
-            if (a[m] &lt; k) {
-                lo = m + 1;
-            } else if (a[m] &gt; k) {
-                hi = m - 1;
-            } else {
-                return m;
-            }
-        }
-        return -1;
-    }
-}
-</code></pre>
+<p>tcp_tw_recycle参数。它用来快速回收TIME_WAIT连接，不过如果在NAT环境下会引发问题。
+RFC1323中有如下一段描述：</p>
 
-<p>测试：</p>
+<p><code>An additional mechanism could be added to the TCP, a per-host cache of the last timestamp received from any connection. This value could then be used in the PAWS mechanism to reject old duplicate segments from earlier incarnations of the connection, if the timestamp clock can be guaranteed to have ticked at least once since the old connection was open. This would require that the TIME-WAIT delay plus the RTT together must be at least one tick of the sender’s timestamp clock. Such an extension is not part of the proposal of this RFC.</code></p>
 
-<pre><code class="language-java">int[] a = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
-System.out.println(BinarySearch.search(a, 6));
-</code></pre>
+<ul>
+<li><p>大概意思是说TCP有一种行为，可以缓存每个连接最新的时间戳，后续请求中如果时间戳小于缓存的时间戳，即视为无效，相应的数据包会被丢弃。</p></li>
 
-<p>输出：
-6</p>
+<li><p>Linux是否启用这种行为取决于tcp_timestamps和tcp_tw_recycle，因为tcp_timestamps缺省就是开启的，所以当tcp_tw_recycle被开启后，实际上这种行为就被激活了，当客户端或服务端以NAT方式构建的时候就可能出现问题，下面以客户端NAT为例来说明：</p></li>
+
+<li><p>当多个客户端通过NAT方式联网并与服务端交互时，服务端看到的是同一个IP，也就是说对服务端而言这些客户端实际上等同于一个，可惜由于这些客户端的时间戳可能存在差异，于是乎从服务端的视角看，便可能出现时间戳错乱的现象，进而直接导致时间戳小的数据包被丢弃。如果发生了此类问题，具体的表现通常是是客户端明明发送的SYN，但服务端就是不响应ACK。</p></li>
+
+<li><p>在4.12之后的内核已移除tcp_tw_recycle内核参数: <a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=4396e46187ca5070219b81773c4e65088dac50cc">https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=4396e46187ca5070219b81773c4e65088dac50cc</a> <a href="https://github.com/torvalds/linux/commit/4396e46187ca5070219b81773c4e65088dac50cc">https://github.com/torvalds/linux/commit/4396e46187ca5070219b81773c4e65088dac50cc</a></p></li>
+</ul>
+
+<h2 id="tke中-使用-nat-的场景">TKE中 使用 NAT 的场景</h2>
+
+<ul>
+<li>跨 VPC 访问(通过对等连接、云联网、专线等方式打通)，会做 SNAT</li>
+</ul>
 
             </article>
 
             <ul class="pager blog-pager">
                 
                 <li class="previous">
-                    <a href="https://imroc.io/posts/algorithm/%E4%BA%8C%E5%88%86%E6%B3%95%E6%9F%A5%E6%89%BEgolang%E5%AE%9E%E7%8E%B0/" data-toggle="tooltip" data-placement="top" title="二分法查找(golang实现)">&larr; Previous Post</a>
+                    <a href="https://imroc.io/posts/kubernetes/handle-memory-fragmentation/" data-toggle="tooltip" data-placement="top" title="Kubernetes 最佳实践：处理内存碎片化">&larr; Previous Post</a>
                 </li>
                  
-                <li class="next">
-                    <a href="https://imroc.io/posts/algorithm/%E4%BA%8C%E5%88%86%E6%B3%95%E6%9F%A5%E6%89%BEc-c&#43;&#43;%E5%AE%9E%E7%8E%B0/" data-toggle="tooltip" data-placement="top" title="二分法查找(C-C&#43;&#43;实现)">Next Post &rarr;</a>
-                </li>
-                
             </ul>
             
             <div>
@@ -301,15 +324,15 @@ System.out.println(BinarySearch.search(a, 6));
                 <h2>See Also</h2>
                 <ul>
                     
-                    <li><a href="/posts/algorithm/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F%E8%87%AA%E9%A1%B6%E5%90%91%E4%B8%8B%E4%B8%8E%E8%87%AA%E5%BA%95%E5%90%91%E4%B8%8A%E4%B8%A4%E7%A7%8D%E6%96%B9%E5%BC%8Fjava%E5%AE%9E%E7%8E%B0/">归并排序,自顶向下与自底向上两种方式(Java实现)</a></li>
+                    <li><a href="/posts/kubernetes/handle-memory-fragmentation/">Kubernetes 最佳实践：处理内存碎片化</a></li>
                     
-                    <li><a href="/posts/algorithm/%E6%8F%92%E5%85%A5%E6%8E%92%E5%BA%8Fgolang%E5%AE%9E%E7%8E%B0/">插入排序(golang实现)</a></li>
+                    <li><a href="/posts/kubernetes/kubernetes-best-practice-handle-disk-full/">Kubernetes 最佳实践：处理容器数据磁盘被写满</a></li>
                     
-                    <li><a href="/posts/algorithm/%E7%BA%BF%E6%80%A7%E5%A4%8D%E6%9D%82%E5%BA%A6%E9%80%89%E5%87%BA%E7%AC%ACk%E5%B0%8F%E5%85%83%E7%B4%A0%E4%B8%AD%E4%BD%8D%E6%95%B0%E6%9C%80%E5%B0%8F%E7%9A%84k%E4%B8%AA%E5%85%83%E7%B4%A0java%E5%AE%9E%E7%8E%B0/">线性复杂度选出第k小元素、中位数、最小的k个元素(Java实现)</a></li>
+                    <li><a href="/posts/kubernetes/scale-keepalive-service/">Kubernetes 最佳实践：解决长连接服务扩容失效</a></li>
                     
-                    <li><a href="/posts/algorithm/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F%E8%87%AA%E9%A1%B6%E5%90%91%E4%B8%8B%E4%B8%8E%E8%87%AA%E5%BA%95%E5%90%91%E4%B8%8A%E4%B8%A4%E7%A7%8D%E6%96%B9%E5%BC%8Fgolang%E5%AE%9E%E7%8E%B0/">归并排序,自顶向下与自底向上两种方式(golang实现)</a></li>
+                    <li><a href="/posts/kubernetes/capture-packets-in-container/">Kubernetes 问题定位技巧：容器内抓包</a></li>
                     
-                    <li><a href="/posts/algorithm/%E7%BA%BF%E6%80%A7%E5%A4%8D%E6%9D%82%E5%BA%A6%E9%80%89%E5%87%BA%E7%AC%ACk%E5%B0%8F%E5%85%83%E7%B4%A0%E4%B8%AD%E4%BD%8D%E6%95%B0%E6%9C%80%E5%B0%8F%E7%9A%84k%E4%B8%AA%E5%85%83%E7%B4%A0c-c&#43;&#43;%E5%AE%9E%E7%8E%B0/">线性复杂度选出第k小元素、中位数、最小的k个元素(C-C&#43;&#43;实现)</a></li>
+                    <li><a href="/posts/kubernetes/kubernetes-best-practice-grace-update/">kubernetes 最佳实践：优雅热更新</a></li>
                     
                 </ul>
                 
@@ -320,12 +343,12 @@ System.out.println(BinarySearch.search(a, 6));
             
 <div>
     <section id="datecount">
-        <h4 id="date"> Tue Sep 5, 2017</h4>
+        <h4 id="date"> Sun Jun 9, 2019</h4>
     </section>
-    <h5 id="wc">200 Words|Read in about 1 Min</h5>
+    <h5 id="wc">700 Words|Read in about 2 Min</h5>
     <h5 id="tags">Tags: 
         
-        <a href="https://imroc.io/tags/%E7%AE%97%E6%B3%95/">算法</a> &nbsp;
+        <a href="https://imroc.io/tags/kubernetes/">kubernetes</a> &nbsp;
     </h5>
 </div>
 

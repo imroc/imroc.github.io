@@ -210,6 +210,33 @@ var _hmt = _hmt || [];
         <div class="posts-list">
           
             <article class="post-preview">
+              <a href="https://imroc.io/posts/kubernetes/lost-packets-once-enable-tcp-tw-recycle/">
+                <h2 class="post-title">Kubernetes 踩坑分享：开启tcp_tw_recycle内核参数在NAT环境会丢包</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                Posted on June 9, 2019
+              </p>
+              <div class="post-entry">
+                
+                  原因 tcp_tw_recycle参数。它用来快速回收TIME_WAIT连接，不过如果在NAT环境下会引发问题。 RFC1323中有如下一段描述
+                  <a href="https://imroc.io/posts/kubernetes/lost-packets-once-enable-tcp-tw-recycle/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <span class="post-meta">
+                  
+                    #<a href="https://imroc.io/tags/kubernetes/">kubernetes</a>&nbsp;
+                  
+                </span>
+              
+
+            </article>
+          
+            <article class="post-preview">
               <a href="https://imroc.io/posts/kubernetes/handle-memory-fragmentation/">
                 <h2 class="post-title">Kubernetes 最佳实践：处理内存碎片化</h2>
 
@@ -443,33 +470,6 @@ var _hmt = _hmt || [];
                 
                   通俗的讲: Service 是后端真实服务的抽象，一个 Service 可以代表多个相同的后端服务 Ingress 是反向代理规则，用来规定 HTTP/S 请求应该被转发到哪个 Service 上，比如根据请求中不同的
                   <a href="https://imroc.io/posts/kubernetes/understand-service-ingress-and-ingress-controller/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <span class="post-meta">
-                  
-                    #<a href="https://imroc.io/tags/kubernetes/">kubernetes</a>&nbsp;
-                  
-                </span>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://imroc.io/posts/kubernetes/deploy-kubernetes-dashboard-and-enable-free-https/">
-                <h2 class="post-title">利用Helm一键部署Kubernetes Dashboard并启用免费HTTPS</h2>
-
-                
-              </a>
-
-              <p class="post-meta">
-                Posted on July 23, 2018
-              </p>
-              <div class="post-entry">
-                
-                  概述 Kubernetes Dashboard 是一个可以可视化查看和操作 Kubernetes 集群的一个插件 本文利用 Helm 部署它，所以请确保 Helm 已安装，安装方法参考：https://imroc.io/po
-                  <a href="https://imroc.io/posts/kubernetes/deploy-kubernetes-dashboard-and-enable-free-https/" class="post-read-more">[Read More]</a>
                 
               </div>
 
