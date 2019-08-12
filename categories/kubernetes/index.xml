@@ -8,10 +8,19 @@
     <language>zh-cn</language>
     <managingEditor>roc@imroc.io (roc)</managingEditor>
     <webMaster>roc@imroc.io (roc)</webMaster>
-    <lastBuildDate>Sun, 09 Jun 2019 22:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 12 Aug 2019 16:59:00 +0800</lastBuildDate>
     
 	<atom:link href="https://imroc.io/categories/kubernetes/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Kubernetes 网络疑难杂症排查分享</title>
+      <link>https://imroc.io/posts/kubernetes/troubleshooting-with-kubernetes-network/</link>
+      <pubDate>Mon, 12 Aug 2019 16:59:00 +0800</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/posts/kubernetes/troubleshooting-with-kubernetes-network/</guid>
+      <description>大家好，我是 roc，来自腾讯云容器服务(TKE)团队，经常帮助用户解决各种 K8S 的疑难杂症，积累了比较丰富的经验，本文分享几个比较复杂的网络方面</description>
+    </item>
     
     <item>
       <title>Kubernetes 踩坑分享：开启tcp_tw_recycle内核参数在NAT环境会丢包</title>
