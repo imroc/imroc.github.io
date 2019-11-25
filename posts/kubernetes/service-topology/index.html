@@ -362,11 +362,11 @@ var _hmt = _hmt || [];
 <li><code>*</code>: 忽略拓扑域，匹配所有 endpoint，相当于一个保底策略，避免丢包，只能放在列表末尾。</li>
 </ul>
 
-<p>除此之外，有以下约束:</p>
+<p>除此之外，还有以下约束:</p>
 
 <ul>
 <li><code>topologyKeys</code> 与 <code>externalTrafficPolicy=Local</code> 不兼容，是互斥的，如果 <code>externalTrafficPolicy</code> 为 <code>Local</code>，就不能定义 <code>topologyKeys</code>，反之亦然。</li>
-<li>topology key 必须是合法的 label 格式，并且最多定义 16 个 key.</li>
+<li>topology key 必须是合法的 label 格式，并且最多定义 16 个 key。</li>
 </ul>
 
 <p>这里给出一个简单的 Service 示例:</p>
