@@ -261,7 +261,7 @@ var _hmt = _hmt || [];
     <section id="datecount">
         <h4 id="date"> Wed Nov 23, 2016</h4>
     </section>
-    <h5 id="wc">3800 Words|Read in about 8 Min</h5>
+    <h5 id="wc">3900 Words|Read in about 8 Min</h5>
     <h5 id="tags">Tags: 
         
         <a href="https://imroc.io/tags/kubernetes/">kubernetes</a> &nbsp;
@@ -328,7 +328,7 @@ var _hmt = _hmt || [];
 
 <p>如何根据 endpoint 查到它所在节点的这些 label 呢？答案是通过 <code>Endpoint Slice</code>，该特性在 v1.16 发布了 alpha，在 v1.17 将会进入 beta，它相当于 Endpoint API 增强版，通过将 endpoint 做数据分片来解决大规模 endpoint 的性能问题，并且可以携带更多的信息，包括 endpoint 所在节点的拓扑信息，拓扑感知服务路由特性会通过 <code>Endpoint Slice</code> 获取这些拓扑信息实现 endpoint 筛选 (过滤出在同一拓扑域的 endpoint)，然后再转换为 iptables 或 ipvs 规则写入节点以实现拓扑感知的转发。</p>
 
-<p>细心的你可能已经发现，之前每个节点上的转发 service 的 iptables/ipvs 规则基本是一样的，但启用了拓扑感知服务路由特性之后，每个节点上的转发规则就可能不一样了，因为不同节点的拓扑信息不一样，导致过滤出的 endpoint 就不一样，也正是因为这样，灵活的就近转发才得以实现。</p>
+<p>细心的你可能已经发现，之前每个节点上的转发 service 的 iptables/ipvs 规则基本是一样的，但启用了拓扑感知服务路由特性之后，每个节点上的转发规则就可能不一样了，因为不同节点的拓扑信息不一样，导致过滤出的 endpoint 就不一样，也正是因为这样，service 转发变得不再等概率，灵活的就近转发才得以实现。</p>
 
 <p>当前还不支持 headless service 的拓扑路由，计划在 beta 阶段支持。由于 headless service 不是通过 kube-proxy 生成转发规则，而是通过 dns 动态解析实现的，所以需要改 kube-dns/coredns 来支持这个特性。</p>
 
@@ -444,7 +444,7 @@ spec:
     <section id="datecount">
         <h4 id="date"> Wed Nov 23, 2016</h4>
     </section>
-    <h5 id="wc">3800 Words|Read in about 8 Min</h5>
+    <h5 id="wc">3900 Words|Read in about 8 Min</h5>
     <h5 id="tags">Tags: 
         
         <a href="https://imroc.io/tags/kubernetes/">kubernetes</a> &nbsp;
