@@ -261,7 +261,7 @@ var _hmt = _hmt || [];
     <section id="datecount">
         <h4 id="date"> Wed Nov 23, 2016</h4>
     </section>
-    <h5 id="wc">3600 Words|Read in about 8 Min</h5>
+    <h5 id="wc">3800 Words|Read in about 8 Min</h5>
     <h5 id="tags">Tags: 
         
         <a href="https://imroc.io/tags/kubernetes/">kubernetes</a> &nbsp;
@@ -306,7 +306,7 @@ var _hmt = _hmt || [];
 
 <h2 id="背景">背景</h2>
 
-<p>拓扑感知服务路由，此特性最初由杜军大佬提出并设计。为什么要设计此特性呢？想象一下，k8s 集群节点分布在不同的地方，service 对应的 endpoints 分布在不同节点，当访问 service 时，流量就可能被转发到这些不同的地方。如果 endpoint 距离比较远，网络延时就相对比较高，会影响网络性能，在某些情况下甚至还可能会付出额外的流量费用。要是如能实现 service 就近转发 endpoint，是不是就可以实现降低网络时延，提升网络性能了呢？是的！这也正是该特性所提出的目的。</p>
+<p>拓扑感知服务路由，此特性最初由杜军大佬提出并设计。为什么要设计此特性呢？想象一下，k8s 集群节点分布在不同的地方，service 对应的 endpoints 分布在不同节点，当前转发策略会对所有 endpoint 做负载均衡，通常会等概率转发，当访问 service 时，流量就可能被转发到这些不同的地方。虽然 service 转发做了负载均衡，但如果 endpoint 距离比较远，转发过去网络延时就相对比较高，会影响网络性能，在某些情况下甚至还可能会付出额外的流量费用。要是如能实现 service 就近转发 endpoint，是不是就可以实现降低网络时延，提升网络性能了呢？是的！这也正是该特性所提出的目的。</p>
 
 <h2 id="k8s-亲和性">k8s 亲和性</h2>
 
@@ -320,20 +320,24 @@ var _hmt = _hmt || [];
 <li>数据卷拓扑感知动态创建 (Topology-Aware Volume Dynamic Provisioning): 先调度 Pod，再根据 Pod 所在节点的拓扑域来创建存储，这算是存储与调度的亲和，存储的创建取决于调度的结果。</li>
 </ul>
 
-<p>而 k8s 目前在网络方面还没有亲和性能力，拓扑感知服务路由这个新特性恰好可以补齐这个的空缺，此特性使得 service 可以实现就近转发而不是任意转发。</p>
+<p>而 k8s 目前在网络方面还没有亲和性能力，拓扑感知服务路由这个新特性恰好可以补齐这个的空缺，此特性使得 service 可以实现就近转发而不是所有 endpoint 等概率转发。</p>
 
 <h2 id="如何实现">如何实现</h2>
 
-<p>我们知道，service 转发主要是 node 上的 kube-proxy 进程通过 watch apiserver 获取 service 对应的 endpoint，再写入 iptables 或 ipvs 规则来实现的; 对于 headless service，主要是通过 kube-dns 或 coredns 动态解析到不同 endpoint ip 来实现的。实现 service 就近转发的关键点在于如何将其转发到跟当前节点在同一拓扑域的 endpoint 上，也就是会进行一次 endpoint 筛选，选出一部分符合当前节点拓扑域的 endpoint 进行转发。那么如何判断 endpoint 跟当前节点是否在同一拓扑域里呢？获取到 endpoint 的拓扑信息跟当前节点节点对比就可以知道了。那如何获取 endpoint 的拓扑信息呢？答案是通过 endpoint 所在节点的 label，我们可以使用 node label 来描述拓扑域。通常在节点初始化的时候，controller-manager 就会为节点打上许多 label，比如 <code>kubernetes.io/hostname</code> 表示节点的 hostname 来区分节点；另外，在云厂商提供的 k8s 服务，或者使用 cloud-controller-manager 的自建集群，通常还会给节点打上 <code>failure-domain.beta.kubernetes.io/zone</code> 和 <code>failure-domain.beta.kubernetes.io/region</code> 以区分节点所在可用区和所在地域，但自 v1.17 开始会改成 <code>topology.kubernetes.io/zone</code> 和 <code>topology.kubernetes.io/region</code>，参见 <a href="https://github.com/kubernetes/kubernetes/pull/81431">PR #81431</a>。</p>
+<p>我们知道，service 转发主要是 node 上的 kube-proxy 进程通过 watch apiserver 获取 service 对应的 endpoint，再写入 iptables 或 ipvs 规则来实现的; 对于 headless service，主要是通过 kube-dns 或 coredns 动态解析到不同 endpoint ip 来实现的。实现 service 就近转发的关键点就在于如何将流量转发到跟当前节点在同一拓扑域的 endpoint 上，也就是会进行一次 endpoint 筛选，选出一部分符合当前节点拓扑域的 endpoint 进行转发。那么如何判断 endpoint 跟当前节点是否在同一拓扑域里呢？只要能获取到 endpoint 的拓扑信息，用它跟当前节点拓扑对比下就可以知道了。那如何获取 endpoint 的拓扑信息呢？答案是通过 endpoint 所在节点的 label，我们可以使用 node label 来描述拓扑域。通常在节点初始化的时候，controller-manager 就会为节点打上许多 label，比如 <code>kubernetes.io/hostname</code> 表示节点的 hostname 来区分节点；另外，在云厂商提供的 k8s 服务，或者使用 cloud-controller-manager 的自建集群，通常还会给节点打上 <code>failure-domain.beta.kubernetes.io/zone</code> 和 <code>failure-domain.beta.kubernetes.io/region</code> 以区分节点所在可用区和所在地域，但自 v1.17 开始将会改成 <code>topology.kubernetes.io/zone</code> 和 <code>topology.kubernetes.io/region</code>，参见 <a href="https://github.com/kubernetes/kubernetes/pull/81431">PR #81431</a>。</p>
 
-<p>如何根据 endpoint 查到它所在节点的这些 label 呢？答案是通过 <code>Endpoint Slice</code>，该特性在 v1.16 发布了 alpha，在 v1.17 将会进入 beta，它相当于 Endpoint API 增强版，通过将 endpoint 做数据分片解决大规模 endpoint 的性能问题，并且可以携带更多的信息，包括 endpoint 所在节点的拓扑信息，拓扑感知服务路由特性会通过 <code>Endpoint Slice</code> 获取这些拓扑信息实现 endpoint 筛选 (过滤出在同一拓扑域的 endpoint)。</p>
+<p>如何根据 endpoint 查到它所在节点的这些 label 呢？答案是通过 <code>Endpoint Slice</code>，该特性在 v1.16 发布了 alpha，在 v1.17 将会进入 beta，它相当于 Endpoint API 增强版，通过将 endpoint 做数据分片来解决大规模 endpoint 的性能问题，并且可以携带更多的信息，包括 endpoint 所在节点的拓扑信息，拓扑感知服务路由特性会通过 <code>Endpoint Slice</code> 获取这些拓扑信息实现 endpoint 筛选 (过滤出在同一拓扑域的 endpoint)，然后再转换为 iptables 或 ipvs 规则写入节点以实现拓扑感知的转发。</p>
+
+<p>细心的你可能已经发现，之前每个节点上的转发 service 的 iptables/ipvs 规则基本是一样的，但启用了拓扑感知服务路由特性之后，每个节点上的转发规则就可能不一样了，因为不同节点的拓扑信息不一样，导致过滤出的 endpoint 就不一样，也正是因为这样，灵活的就近转发才得以实现。</p>
+
+<p>当前还不支持 headless service 的拓扑路由，计划在 beta 阶段支持。由于 headless service 不是通过 kube-proxy 生成转发规则，而是通过 dns 动态解析实现的，所以需要改 kube-dns/coredns 来支持这个特性。</p>
 
 <h2 id="前提条件">前提条件</h2>
 
 <p>启用当前 alpha 实现的拓扑感知服务路由特性需要满足以下前提条件:</p>
 
 <ul>
-<li>集群版本是 Kubernetes 1.17 以上。</li>
+<li>集群版本在 v1.17 及其以上。</li>
 <li>Kube-proxy 以 iptables 或 IPVS 模式运行 (alpha 阶段暂时只实现了这两种模式)。</li>
 <li>启用了 <a href="https://kubernetes.io/docs/concepts/services-networking/endpoint-slices/">Endpoint Slices</a> (此特性虽然在 v1.17 进入 beta，但没有默认开启)。</li>
 </ul>
@@ -440,7 +444,7 @@ spec:
     <section id="datecount">
         <h4 id="date"> Wed Nov 23, 2016</h4>
     </section>
-    <h5 id="wc">3600 Words|Read in about 8 Min</h5>
+    <h5 id="wc">3800 Words|Read in about 8 Min</h5>
     <h5 id="tags">Tags: 
         
         <a href="https://imroc.io/tags/kubernetes/">kubernetes</a> &nbsp;
