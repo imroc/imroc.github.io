@@ -313,11 +313,11 @@ var _hmt = _hmt || [];
 <p>service 的就近转发实际就是一种网络的亲和性，倾向于转发到离自己比较近的 endpoint。在此特性之前，已经在调度和存储方面有一些亲和性的设计与实现:</p>
 
 <ul>
-<li>节点亲和性 (Node Affinity): 让 Pod 被调度到符合一些期望条件的 Node 上，比如限制调度到某一可用区，或者拥有 GPU 的节点， 算是调度亲和，调度结果取决于节点属性。</li>
-<li>Pod 亲和性与反亲和性 (Pod Affinity/AntiAffinity): 让一组 Pod 调度到同一拓扑域的节点上，或者打散到不同拓扑域的节点， 也算是调度亲和，调度结果取决于其它 Pod。</li>
-<li>数据卷拓扑感知调度 (Volume Topology-aware Scheduling): 让 Pod 只被调度到符合其绑定的存储所在拓扑域的节点上，算是调度与存储的亲和，调度结果取决于存储的拓扑域。</li>
-<li>本地数据卷 (Local Persistent Volume): 让 Pod 使用本地数据卷，比如高性能 SSD，在某些需要高 IOPS 低时延的场景很有用，它还会保证 Pod 始终被调度到同一节点，数据就不会不丢失，算是调度与存储的亲和，调度结果取决于存储所在节点。</li>
-<li>数据卷拓扑感知动态创建 (Topology-Aware Volume Dynamic Provisioning): 先调度 Pod，再根据 Pod 所在节点的拓扑域来创建存储，算是存储与调度的亲和，存储的创建取决于调度的结果。</li>
+<li>节点亲和性 (Node Affinity): 让 Pod 被调度到符合一些期望条件的 Node 上，比如限制调度到某一可用区，或者要求节点支持 GPU，这算是调度亲和，调度结果取决于节点属性。</li>
+<li>Pod 亲和性与反亲和性 (Pod Affinity/AntiAffinity): 让一组 Pod 调度到同一拓扑域的节点上，或者打散到不同拓扑域的节点， 这也算是调度亲和，调度结果取决于其它 Pod。</li>
+<li>数据卷拓扑感知调度 (Volume Topology-aware Scheduling): 让 Pod 只被调度到符合其绑定的存储所在拓扑域的节点上，这算是调度与存储的亲和，调度结果取决于存储的拓扑域。</li>
+<li>本地数据卷 (Local Persistent Volume): 让 Pod 使用本地数据卷，比如高性能 SSD，在某些需要高 IOPS 低时延的场景很有用，它还会保证 Pod 始终被调度到同一节点，数据就不会不丢失，这也算是调度与存储的亲和，调度结果取决于存储所在节点。</li>
+<li>数据卷拓扑感知动态创建 (Topology-Aware Volume Dynamic Provisioning): 先调度 Pod，再根据 Pod 所在节点的拓扑域来创建存储，这算是存储与调度的亲和，存储的创建取决于调度的结果。</li>
 </ul>
 
 <p>而 k8s 目前在网络方面还没有亲和性能力，拓扑感知服务路由这个新特性恰好可以补齐这个的空缺，此特性使得 service 可以实现就近转发而不是任意转发。</p>
