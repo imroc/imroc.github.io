@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title> k8s v1.17 新特性预告: 拓扑感知服务路由 - imroc.io|roc的博客|Cloud Native|Kubernetes|Go|Golang</title>
+  <meta name="description" content="imroc.io|roc的博客|Cloud Native|Kubernetes|Go|Golang" />
+  <meta property="og:title" content="k8s v1.17 新特性预告: 拓扑感知服务路由" />
+  <meta name="twitter:title" content="k8s v1.17 新特性预告: 拓扑感知服务路由" />
+  <meta name="description" content="大家好，我是 roc，来自腾讯云容器服务(TKE)团队，今天给大家介绍下我参与开发的一个 k8s v1.17 新特性: 拓扑感知服务路由。 名词解释 拓扑域: 表示在集">
+  <meta property="og:description" content="大家好，我是 roc，来自腾讯云容器服务(TKE)团队，今天给大家介绍下我参与开发的一个 k8s v1.17 新特性: 拓扑感知服务路由。 名词解释 拓扑域: 表示在集">
+  <meta name="twitter:description" content="大家好，我是 roc，来自腾讯云容器服务(TKE)团队，今天给大家介绍下我参与开发的一个 k8s v1.17 新特性: 拓扑感知服务路由。 名词解释 拓扑域: 表示在集">
+  <meta name="author" content="{Description { .Site.Author.name }}"/>
+  <link href='https://imroc.io/favicon.png' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://res.cloudinary.com/imroc/image/upload/v1521031841/avatar.png" />
+  <meta name="twitter:image" content="https://res.cloudinary.com/imroc/image/upload/v1521031841/avatar.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@imrocchan" />
+  <meta name="twitter:creator" content="@imrocchan" />
+  <meta property="og:url" content="https://imroc.io/posts/kubernetes/service-topology/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="roc" />
+
+  <meta name="generator" content="Hugo 0.49.2" />
+  <link rel="canonical" href="https://imroc.io/posts/kubernetes/service-topology/" />
+  <link rel="alternate" href="https://imroc.io/index.xml" type="application/rss+xml" title="roc">
+  <script src="https://cdn.staticfile.org/jquery/1.12.4/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.staticfile.org/KaTeX/0.7.1/katex.min.css" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" crossorigin="anonymous">
+
+  <link rel="stylesheet" href="https://imroc.io/css/main.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  
+  <link rel="stylesheet" href="https://imroc.io/static/prism/prism.css" />
+
+  <script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?05e1e8b7484a08c51cd0953664168cd7";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe.min.css" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.2/default-skin/default-skin.min.css" crossorigin="anonymous" />
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://imroc.io/">roc</a>
+    </div>
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">Categories</a>
+              <div class="navlinks-children">
+                
+                
+                  <a href="https://imroc.io/categories/kubernetes">kubernetes</a>
+                
+                
+                  <a href="https://imroc.io/categories/docker">docker</a>
+                
+                
+                  <a href="https://imroc.io/categories/golang">golang</a>
+                
+                
+                  <a href="https://imroc.io/categories/arch">架构</a>
+                
+                
+                  <a href="https://imroc.io/categories/istio">istio</a>
+                
+                
+                  <a href="https://imroc.io/categories/geek">极客</a>
+                
+              </div>
+            </li>
+          
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">Books</a>
+              <div class="navlinks-children">
+                
+                
+                  <a href="https://k8s.imroc.io">Kubernetes 实践指南</a>
+                
+              </div>
+            </li>
+          
+        
+          
+            <li>
+              <a title="Tags" href="/tags">Tags</a>
+              
+              
+            </li>
+          
+        
+          
+            <li>
+              <a title="About" href="/about">About</a>
+              
+              
+            </li>
+          
+        
+
+        
+
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="roc" href="https://imroc.io/">
+            <img class="avatar-img" src="https://res.cloudinary.com/imroc/image/upload/v1521031841/avatar.png" alt="roc" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+    
+  
+  
+  
+
+
+
+
+  
+    <div id="header-big-imgs" data-num-img=1 data-img-src-1="https://res.cloudinary.com/imroc/image/upload/v1515849754/blog/banner/hacker.jpg" data-img-desc-1="Hacker"></div>
+  
+
+  <header class="header-section has-img">
+    
+      <div class="intro-header big-img">
+        
+        
+        <div class="container">
+          <div class="row">
+              <div class="col-lg-12 col-md-12 col-md-offset-0">
+                
+                <div class="post-heading">
+                
+                  
+                     <h1>k8s v1.17 新特性预告: 拓扑感知服务路由</h1>
+                     
+                    <span class="post-meta">
+  
+  Posted on November 23, 2016
+  
+  
+</span>
+
+
+                    
+                  
+                  
+              </div>
+            </div>
+          </div>
+        </div>
+        <span class="img-desc" style="display: inline;"></span>
+      </div>
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12 col-md-12 col-md-offset-0">
+            <div class="posts-heading">
+                <h1 align="center">k8s v1.17 新特性预告: 拓扑感知服务路由</h1>
+                
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main" itemscope itemtype="http://schema.org/Article">
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            
+            
+            
+<div>
+    <section id="datecount">
+        <h4 id="date"> Wed Nov 23, 2016</h4>
+    </section>
+    <h5 id="wc">3600 Words|Read in about 8 Min</h5>
+    <h5 id="tags">Tags: 
+        
+        <a href="https://imroc.io/tags/kubernetes/">kubernetes</a> &nbsp;
+    </h5>
+</div>
+
+            
+            <article role="main" class="blog-post" itemprop="articleBody" id="content">
+                
+<aside class="toc">
+  <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#名词解释">名词解释</a></li>
+<li><a href="#背景">背景</a></li>
+<li><a href="#k8s-亲和性">k8s 亲和性</a></li>
+<li><a href="#如何实现">如何实现</a></li>
+<li><a href="#前提条件">前提条件</a></li>
+<li><a href="#如何启用此特性">如何启用此特性</a></li>
+<li><a href="#如何使用">如何使用</a></li>
+<li><a href="#背后小故事">背后小故事</a></li>
+<li><a href="#结尾">结尾</a></li>
+<li><a href="#参考资料">参考资料</a></li>
+</ul></li>
+</ul>
+</nav>
+</aside>
+
+
+                
+
+<p>大家好，我是 roc，来自腾讯云容器服务(TKE)团队，今天给大家介绍下我参与开发的一个 k8s v1.17 新特性: 拓扑感知服务路由。</p>
+
+<h2 id="名词解释">名词解释</h2>
+
+<ul>
+<li>拓扑域: 表示在集群中的某一个 &ldquo;地方&rdquo;，比如某个节点、某个机架、某个可用区或某个地域等。</li>
+<li>endpoint: k8s 某个服务的某个 ip+port，通常是 pod 的 ip+port。</li>
+<li>service: k8s 的 service 资源(服务)，关联一组 endpoint ，访问 service 会被转发到关联的某个 endpoint 上。转发规则通常是由 kube-proxy 写入的 iptables/ipvs 规则实现，对于 headless service，是由 kube-dns/coredns 动态解析到不同 endpoint ip 实现。</li>
+</ul>
+
+<h2 id="背景">背景</h2>
+
+<p>拓扑感知服务路由，此特性最初由杜军大佬提出并设计。为什么要设计此特性呢？想象一下，k8s 集群节点分布在不同的地方，service 对应的 endpoints 分布在不同节点，当访问 service 时，流量就可能被转发到这些不同的地方。如果 endpoint 距离比较远，网络延迟就会比较高，影响网络性能，在某些情况下甚至还可能会付出额外的流量费用。要是如能实现 service 就近转发 endpoint，是不是就可以实现降低网络时延，提升网络性能了呢？是的！这也正是该特性所提出的目的。</p>
+
+<h2 id="k8s-亲和性">k8s 亲和性</h2>
+
+<p>service 的就近转发实际就是一种网络的亲和性，倾向于转发到离自己比较近的 endpoint。在此特性之前，已经在调度和存储方面有一些亲和性的设计与实现:</p>
+
+<ul>
+<li>节点亲和性 (Node Affinity): 让 Pod 被调度到符合一些期望条件的 Node 上，比如限制调度到某一可用区，或者拥有 GPU 的节点， 算是调度亲和，调度结果取决于节点属性。</li>
+<li>Pod 亲和性与反亲和性 (Pod Affinity/AntiAffinity): 让一组 Pod 调度到同一拓扑域的节点上，或者打散到不同拓扑域的节点， 也算是调度亲和，调度结果取决于其它 Pod。</li>
+<li>数据卷拓扑感知调度 (Volume Topology-aware Scheduling): 让 Pod 只被调度到符合其绑定的存储所在拓扑域的节点上，算是调度与存储的亲和，调度结果取决于存储的拓扑域。</li>
+<li>本地数据卷 (Local Persistent Volume): 让 Pod 使用本地数据卷，比如高性能 SSD，在某些需要高 IOPS 低时延的场景很有用，它还会保证 Pod 始终被调度到同一节点，数据就不会不丢失，算是调度与存储的亲和，调度结果取决于存储所在节点。</li>
+<li>数据卷拓扑感知动态创建 (Topology-Aware Volume Dynamic Provisioning): 先调度 Pod，再根据 Pod 所在节点的拓扑域来创建存储，算是存储与调度的亲和，存储的创建取决于调度的结果。</li>
+</ul>
+
+<p>而 k8s 目前在网络方面还没有亲和性能力，拓扑感知服务路由这个新特性恰好可以补齐这个的空缺，此特性使得 service 可以实现就近转发而不是任意转发。</p>
+
+<h2 id="如何实现">如何实现</h2>
+
+<p>此特性的实现方案从最初的设计到最终实现代码合并，实现方案历经一变再变，但同时也推动了其它特性的发展。</p>
+
+<p>我们知道，service 转发主要是 node 上的 kube-proxy 进程通过 watch apiserver 获取 service 对应的 endpoint，再写入 iptables 或 ipvs 规则来实现的; 对于 headless service，主要是通过 kube-dns 或 coredns 动态解析到不同 endpoint ip 来实现的。实现 service 就近转发的关键点在于如何将其转发到跟当前节点在同一拓扑域的 endpoint 上，也就是会进行一次 endpoint 筛选，选出一部分符合当前节点拓扑域的 endpoint 进行转发。那么如何判断 endpoint 跟当前节点是否在同一拓扑域里呢？获取到 endpoint 的拓扑信息跟当前节点节点对比就可以知道了。那如何获取 endpoint 的拓扑信息呢？答案是通过 endpoint 所在节点的 label，我们可以使用 node label 来描述拓扑域。通常在节点初始化的时候，controller-manager 就会为节点打上许多 label，比如 <code>kubernetes.io/hostname</code> 表示节点的 hostname 来区分节点；另外，在云厂商提供的 k8s 服务，或者使用 cloud-controller-manager 的自建集群，通常还会给节点打上 <code>failure-domain.beta.kubernetes.io/zone</code> 和 <code>failure-domain.beta.kubernetes.io/region</code> 以区分节点所在可用区和所在地域，但自 v1.17 开始会改成 <code>topology.kubernetes.io/zone</code> 和 <code>topology.kubernetes.io/region</code>，参见 <a href="https://github.com/kubernetes/kubernetes/pull/81431">PR #81431</a>。</p>
+
+<p>如何根据 endpoint 查到它所在节点的这些 label 呢？答案是通过 <code>Endpoint Slice</code>，该特性在 v1.16 发布了 alpha，在 v1.17 将会进入 beta，它相当于 Endpoint API 增强版，通过将 endpoint 做数据分片解决大规模 endpoint 的性能问题，并且可以携带更多的信息，包括 endpoint 所在节点的拓扑信息，拓扑感知服务路由特性会通过 <code>Endpoint Slice</code> 获取这些拓扑信息实现 endpoint 筛选 (过滤出在同一拓扑域的 endpoint)。</p>
+
+<h2 id="前提条件">前提条件</h2>
+
+<p>启用当前 alpha 实现的拓扑感知服务路由特性需要满足以下前提条件:</p>
+
+<ul>
+<li>集群版本是 Kubernetes 1.17 以上。</li>
+<li>Kube-proxy 以 iptables 或 IPVS 模式运行 (alpha 阶段暂时只实现了这两种模式)。</li>
+<li>启用了 <a href="https://kubernetes.io/docs/concepts/services-networking/endpoint-slices/">Endpoint Slices</a> (此特性虽然在 v1.17 进入 beta，但没有默认开启)。</li>
+</ul>
+
+<h2 id="如何启用此特性">如何启用此特性</h2>
+
+<p>此特性的启用方式是给 kube-apiserver 和 kube-proxy 打开 <code>ServiceTopology</code> 这个 feature gate:</p>
+
+<pre><code>--feature-gates=&quot;ServiceTopology=true&quot;
+</code></pre>
+
+<h2 id="如何使用">如何使用</h2>
+
+<p>在 Service spec 里加上 <code>topologyKeys</code> 字段，表示该 Service 优先顺序选用的拓扑域列表，对应节点标签的 key；当访问此 Service 时，会找是否有 endpoint 对应节点的标签跟第一个 topology key 一样并且 value 也一样，如果是，那就选定此 topology key 作为当前转发的拓扑域，并且筛选出其余所有在这个拓扑域的 endpoint 选取来转发；如果没有找到任何 endpoint 满足拓扑域条件，就会尝试第二个 topology key，依此类推；如果遍历完所有 topology key 也没有匹配到 endpoint 就会拒绝转发，就像此 service 没有后端 endpoint 一样；有一个特殊的 topology key &ldquo;<code>*</code>&ldquo;，它可以匹配所有 endpoint，如果 <code>topologyKeys</code> 包含了 <code>*</code>，它必须在列表末尾，通常是在没有匹配到合适的拓扑域来实现就近转发时，就打消就近转发的念头，可以转发到任意 endpoint 上。</p>
+
+<p>当前 topology key 支持以下可能的值（未来会增加更多）:</p>
+
+<ul>
+<li><code>kubernetes.io/hostname</code>: 节点的 hostname，通常将它放列表中第一个，表示如果本机有 endpoint 就直接转发到本机的 endpoint。</li>
+<li><code>topology.kubernetes.io/zone</code>: 节点所在的可用区，通常将它放在 <code>kubernetes.io/hostname</code> 后面，表示如果本机没有对应 endpoint，就转发到当前可用区其它节点上的 endpoint（部分云厂商跨可用区通信会收取额外的流量费用）。</li>
+<li><code>topology.kubernetes.io/region</code>: 表示节点所在的地域，表示转发到当前地域的 endpoint，这个用的应该会比较少，因为通常集群所有节点都只会在同一个地域，如果节点跨地域了，节点之间通信延时将会很高。</li>
+<li><code>*</code>: 忽略拓扑域，匹配所有 endpoint，相当于一个保底策略，避免丢包，只能放在列表末尾。</li>
+</ul>
+
+<p>除此之外，有以下约束:</p>
+
+<ul>
+<li><code>topologyKeys</code> 与 <code>externalTrafficPolicy=Local</code> 不兼容，是互斥的，如果 <code>externalTrafficPolicy</code> 为 <code>Local</code>，就不能定义 <code>topologyKeys</code>，反之亦然。</li>
+<li>topology key 必须是合法的 label 格式，并且最多定义 16 个 key.</li>
+</ul>
+
+<p>这里给出一个简单的 Service 示例:</p>
+
+<pre><code class="language-yaml">apiVersion: v1
+kind: Service
+metadata:
+  name: nginx
+spec:
+  type: ClusterIP
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: nginx
+  topologyKeys: [&quot;kubernetes.io/hostname&quot;, &quot;topology.kubernetes.io/zone&quot;, &quot;*&quot;]
+</code></pre>
+
+<p>解释: 当访问 nginx 服务时，首先看本机是否有这个服务的 endpoint，如果有就直接本机路由过去；如果没有，就看是否有 endpoint 位于当前节点所在可用区，如果有，就转发过去，如果还是没有，就转发给任意 endpoint。</p>
+
+<p><img src="https://imroc.io/assets/blog/service-topology.png" alt="" /></p>
+
+<p>上图就是其中一次转发的例子：Pod 访问 nginx 这个 service 时，发现本机没有 endpoint，就找当前可用区的，找到了就转发过去，也就不会考虑转发给另一可用区的 endpoint。</p>
+
+<h2 id="背后小故事">背后小故事</h2>
+
+<p>此特性的 KEP Proposal 最终被认可（合并）时的设计与当前最终的代码实现已经有一些差别，我来讲下这其中的故事。</p>
+
+<p>一开始设计是在 alpha 时，让 kube-proxy 直接暴力 watch node，每个节点都有一份全局的 node 的缓存，通过 endpoint 的 <code>nodeName</code> 字段找到对应的 node 缓存，再查 node 包含的 label 就可以知道该 endpoint 的拓扑域了，但在集群节点数量多的情况下，kube-proxy 将会消耗大量资源，不过优点是实现上很简单，可以作为 alpha 阶段的实现，beta 时再从 watch node 切换到 watch 一个新设计的 PodLocator API，作为拓扑信息存储的中介，避免 watch 庞大的 node。</p>
+
+<p>实际上一开始我也是按照 watch node 的方式，花了九牛二虎之力终于实现了这个特性，后来 v1.15 时 k8s 又支持了 metadata-only watch，参见 <a href="https://github.com/kubernetes/kubernetes/pull/71548">PR #71548</a>，利用此特性可以仅仅 watch node 的 metadata，而不用 watch 整个 node，可以极大减小传输和缓存的数据量，然后我就将实现切成了 watch node metadata; 即便如此，metadata 还是会更新比较频繁，主要是 <code>resourceVersion</code> 会经常变 (kubelet 经常上报 node 状态)，所以虽然 watch node metadata 比 watch node 要好，但也还是可能会造成大量不必要的网络流量，但作为 alpha 实现是可以接受的。</p>
+
+<p>可惜在 v1.16 code freeze 之前没能将此特性合进去，只因有一点小细节还没讨论清楚。 实际在实现 watch node 方案期间，Endpoint Slice 特性就提出来了，在这个特性讨论的阶段，我们就想到了可以利用它来携带拓扑信息，以便让拓扑感知服务路由这个特性后续可以直接利用 Endpoint Slice 来获取拓扑信息，也就可以替代之前设计的 PodLocator API，但由于它还处于很早期阶段，并且代码还未合并进去，所以 alpha 阶段先不考虑 watch Endpint Slice。后来，Endpoint Slice 特性在 v1.16 发布了 alpha。</p>
+
+<p>由于 v1.16 没能将拓扑感知服务路由特性合进去，在 v1.17 周期开始后，有更多时间来讨论小细节，并且 Endpoint Slice 代码已经合并，我就干脆直接又将实现从 watch node metadata 切成了 watch Endpint Slice，在 alpha 阶段就做了打算在 beta 阶段做的事情，终于，此特性实现代码最终合进了主干。</p>
+
+<h2 id="结尾">结尾</h2>
+
+<p>拓扑感知服务路由可以实现 service 就近转发，减少网络延时，进一步提升 k8s 的网络性能，此特性将于 k8s v1.17 发布 alpha，时间是 12 月上旬，让我们一起期待吧！k8s 网络是块硬骨头，感兴趣的同学可以看下杜军的新书 《Kubernetes 网络权威指南》，啃下这块硬骨头将使你受益终生。</p>
+
+<h2 id="参考资料">参考资料</h2>
+
+<ul>
+<li>KEP: EndpintSlice - <a href="https://github.com/kubernetes/enhancements/blob/master/keps/sig-network/20190603-EndpointSlice-API.md">https://github.com/kubernetes/enhancements/blob/master/keps/sig-network/20190603-EndpointSlice-API.md</a></li>
+<li>Proposal: Volume Topology-aware Scheduling - <a href="https://github.com/kubernetes/community/blob/master/contributors/design-proposals/storage/volume-topology-scheduling.md">https://github.com/kubernetes/community/blob/master/contributors/design-proposals/storage/volume-topology-scheduling.md</a></li>
+<li>PR: Service Topology implementation for Kubernetes - <a href="https://github.com/kubernetes/kubernetes/pull/72046">https://github.com/kubernetes/kubernetes/pull/72046</a></li>
+<li>Proposal: Inter-pod topological affinity and anti-affinity - <a href="https://github.com/kubernetes/community/blob/master/contributors/design-proposals/scheduling/podaffinity.md">https://github.com/kubernetes/community/blob/master/contributors/design-proposals/scheduling/podaffinity.md</a></li>
+<li>Topology-Aware Volume Provisioning in Kubernetes - <a href="https://kubernetes.io/blog/2018/10/11/topology-aware-volume-provisioning-in-kubernetes/">https://kubernetes.io/blog/2018/10/11/topology-aware-volume-provisioning-in-kubernetes/</a></li>
+<li>Kubernetes 1.14: Local Persistent Volumes GA - <a href="https://kubernetes.io/blog/2019/04/04/kubernetes-1.14-local-persistent-volumes-ga/">https://kubernetes.io/blog/2019/04/04/kubernetes-1.14-local-persistent-volumes-ga/</a></li>
+<li>KubeCon 演讲: 面向 k8s 的拓扑感知服务路由即将推出! - <a href="https://v.qq.com/x/page/t0893nn9zqa.html">https://v.qq.com/x/page/t0893nn9zqa.html</a></li>
+<li>拓扑感知服务路由官方文档(等v1.17发布后才能看到) - <a href="https://kubernetes.io/docs/concepts/services-networking/service-topology/">https://kubernetes.io/docs/concepts/services-networking/service-topology/</a></li>
+<li>KEP: Topology-aware service routing - <a href="https://github.com/kubernetes/enhancements/blob/master/keps/sig-network/20181024-service-topology.md">https://github.com/kubernetes/enhancements/blob/master/keps/sig-network/20181024-service-topology.md</a> (此文档后续会更新，因为实现跟设计已经不一样了)</li>
+</ul>
+
+            </article>
+
+            <ul class="pager blog-pager">
+                 
+                <li class="next">
+                    <a href="https://imroc.io/posts/algorithm/%E9%80%89%E6%8B%A9%E6%8E%92%E5%BA%8Fgolang%E5%AE%9E%E7%8E%B0/" data-toggle="tooltip" data-placement="top" title="选择排序(golang实现)">Next Post &rarr;</a>
+                </li>
+                
+            </ul>
+            
+            <div>
+                 
+            </div>
+            
+            
+            
+            
+<div>
+    <section id="datecount">
+        <h4 id="date"> Wed Nov 23, 2016</h4>
+    </section>
+    <h5 id="wc">3600 Words|Read in about 8 Min</h5>
+    <h5 id="tags">Tags: 
+        
+        <a href="https://imroc.io/tags/kubernetes/">kubernetes</a> &nbsp;
+    </h5>
+</div>
+
+            
+            </div>
+            
+			
+               <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+<aside id=comments>
+    <div>
+        <h2> Comments </h2>
+    </div>
+    <div id="container"></div>
+    <link rel="stylesheet" href="https://imroc.io/static/gitment/default.css">
+    <script src="https://imroc.io/static/gitment/gitment.browser.js"></script>
+    <script>
+        var gitment = new Gitment({
+			owner: 'imroc', 
+			repo: 'imroc.github.io', 
+            oauth: {
+				client_id: 'd05b8f959b3111c6fb63',
+				client_secret: 'f30ef76ea0050ed731ace76f7fbf684ae5d28fbc',
+            },
+        })
+        gitment.render('container')
+    </script>
+</aside>
+</div>
+
+			
+        </div>
+    </div>
+    </section>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+              <li>
+                <a href="mailto:roc@imroc.io" title="Email me">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com/imroc" title="GitHub">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://twitter.com/imrocchan" title="Twitter">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+          
+          <li>
+            <a href="https://imroc.io/index.xml" title="RSS">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+        &copy;2017
+          
+            
+              <a href="imroc.io">roc</a>
+                      
+          
+          
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://imroc.io/">roc</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.49.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe-ui-default.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe.js"></script>
+<script src="https://imroc.io/js/auto-render.min.js"></script>
+<script src="https://imroc.io/js/main.js"></script>
+<script src="https://imroc.io/static/prism/prism.js"></script>
+<script src="https://cdn.staticfile.org/KaTeX/0.7.1/katex.min.js"></script>
+<script> renderMathInElement(document.body); </script>
+
+
+
+
+
+
+
+  </body>
+</html>
+

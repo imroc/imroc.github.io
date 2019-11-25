@@ -402,6 +402,11 @@
   </url>
   
   <url>
+    <loc>https://imroc.io/posts/kubernetes/service-topology/</loc>
+    <lastmod>2016-11-23T16:59:00+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://imroc.io/about/</loc>
     <priority>0</priority>
   </url>
