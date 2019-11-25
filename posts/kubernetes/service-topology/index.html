@@ -324,8 +324,6 @@ var _hmt = _hmt || [];
 
 <h2 id="如何实现">如何实现</h2>
 
-<p>此特性的实现方案从最初的设计到最终实现代码合并，实现方案历经一变再变，但同时也推动了其它特性的发展。</p>
-
 <p>我们知道，service 转发主要是 node 上的 kube-proxy 进程通过 watch apiserver 获取 service 对应的 endpoint，再写入 iptables 或 ipvs 规则来实现的; 对于 headless service，主要是通过 kube-dns 或 coredns 动态解析到不同 endpoint ip 来实现的。实现 service 就近转发的关键点在于如何将其转发到跟当前节点在同一拓扑域的 endpoint 上，也就是会进行一次 endpoint 筛选，选出一部分符合当前节点拓扑域的 endpoint 进行转发。那么如何判断 endpoint 跟当前节点是否在同一拓扑域里呢？获取到 endpoint 的拓扑信息跟当前节点节点对比就可以知道了。那如何获取 endpoint 的拓扑信息呢？答案是通过 endpoint 所在节点的 label，我们可以使用 node label 来描述拓扑域。通常在节点初始化的时候，controller-manager 就会为节点打上许多 label，比如 <code>kubernetes.io/hostname</code> 表示节点的 hostname 来区分节点；另外，在云厂商提供的 k8s 服务，或者使用 cloud-controller-manager 的自建集群，通常还会给节点打上 <code>failure-domain.beta.kubernetes.io/zone</code> 和 <code>failure-domain.beta.kubernetes.io/region</code> 以区分节点所在可用区和所在地域，但自 v1.17 开始会改成 <code>topology.kubernetes.io/zone</code> 和 <code>topology.kubernetes.io/region</code>，参见 <a href="https://github.com/kubernetes/kubernetes/pull/81431">PR #81431</a>。</p>
 
 <p>如何根据 endpoint 查到它所在节点的这些 label 呢？答案是通过 <code>Endpoint Slice</code>，该特性在 v1.16 发布了 alpha，在 v1.17 将会进入 beta，它相当于 Endpoint API 增强版，通过将 endpoint 做数据分片解决大规模 endpoint 的性能问题，并且可以携带更多的信息，包括 endpoint 所在节点的拓扑信息，拓扑感知服务路由特性会通过 <code>Endpoint Slice</code> 获取这些拓扑信息实现 endpoint 筛选 (过滤出在同一拓扑域的 endpoint)。</p>
@@ -393,7 +391,7 @@ spec:
 
 <h2 id="背后小故事">背后小故事</h2>
 
-<p>此特性的 KEP Proposal 最终被认可（合并）时的设计与当前最终的代码实现已经有一些差别，我来讲下这其中的故事。</p>
+<p>此特性的 KEP Proposal 最终被认可（合并）时的设计与当前最终的代码实现已经有一些差别，实现方案历经一变再变，但同时也推动了其它特性的发展，我来讲下这其中的故事。</p>
 
 <p>一开始设计是在 alpha 时，让 kube-proxy 直接暴力 watch node，每个节点都有一份全局的 node 的缓存，通过 endpoint 的 <code>nodeName</code> 字段找到对应的 node 缓存，再查 node 包含的 label 就可以知道该 endpoint 的拓扑域了，但在集群节点数量多的情况下，kube-proxy 将会消耗大量资源，不过优点是实现上很简单，可以作为 alpha 阶段的实现，beta 时再从 watch node 切换到 watch 一个新设计的 PodLocator API，作为拓扑信息存储的中介，避免 watch 庞大的 node。</p>
 
