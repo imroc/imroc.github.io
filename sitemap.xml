@@ -7,6 +7,11 @@
   </url>
   
   <url>
+    <loc>https://imroc.io/posts/kubernetes/service-topology/</loc>
+    <lastmod>2019-11-26T16:49:00+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://imroc.io/posts/kubernetes/troubleshooting-with-kubernetes-network/</loc>
     <lastmod>2019-08-12T16:59:00+08:00</lastmod>
   </url>
@@ -402,11 +407,6 @@
   </url>
   
   <url>
-    <loc>https://imroc.io/posts/kubernetes/service-topology/</loc>
-    <lastmod>2016-11-23T16:59:00+08:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://imroc.io/about/</loc>
     <priority>0</priority>
   </url>
@@ -515,19 +515,19 @@
   
   <url>
     <loc>https://imroc.io/tags/kubernetes/</loc>
-    <lastmod>2019-08-12T16:59:00+08:00</lastmod>
+    <lastmod>2019-11-26T16:49:00+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://imroc.io/categories/kubernetes/</loc>
-    <lastmod>2019-08-12T16:59:00+08:00</lastmod>
+    <lastmod>2019-11-26T16:49:00+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://imroc.io/posts/</loc>
-    <lastmod>2019-08-12T16:59:00+08:00</lastmod>
+    <lastmod>2019-11-26T16:49:00+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -539,7 +539,7 @@
   
   <url>
     <loc>https://imroc.io/</loc>
-    <lastmod>2019-08-12T16:59:00+08:00</lastmod>
+    <lastmod>2019-11-26T16:49:00+08:00</lastmod>
     <priority>0</priority>
   </url>
   

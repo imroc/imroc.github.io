@@ -8,7 +8,7 @@
     <language>zh-cn</language>
     <managingEditor>roc@imroc.io (roc)</managingEditor>
     <webMaster>roc@imroc.io (roc)</webMaster>
-    <lastBuildDate>Mon, 12 Aug 2019 16:59:00 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 26 Nov 2019 16:49:00 +0800</lastBuildDate>
     
 	<atom:link href="https://imroc.io/index.xml" rel="self" type="application/rss+xml" />
     
@@ -20,6 +20,15 @@
       <author>roc@imroc.io (roc)</author>
       <guid>https://imroc.io/about/about/</guid>
       <description>I&amp;rsquo;m roc: https://imroc.io/scifi</description>
+    </item>
+    
+    <item>
+      <title>k8s v1.17 新特性预告: 拓扑感知服务路由</title>
+      <link>https://imroc.io/posts/kubernetes/service-topology/</link>
+      <pubDate>Tue, 26 Nov 2019 16:49:00 +0800</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/posts/kubernetes/service-topology/</guid>
+      <description>大家好，我是 roc，来自腾讯云容器服务(TKE)团队，今天给大家介绍下我参与开发的一个 k8s v1.17 新特性: 拓扑感知服务路由。 名词解释 拓扑域: 表示在集</description>
     </item>
     
     <item>
@@ -731,15 +740,6 @@
       <author>roc@imroc.io (roc)</author>
       <guid>https://imroc.io/posts/algorithm/%E9%80%89%E6%8B%A9%E6%8E%92%E5%BA%8Fgolang%E5%AE%9E%E7%8E%B0/</guid>
       <description>封装成函数： //交换数组元素 func swap(slice []int, i int, j int) { slice[i], slice[j] = slice[j], slice[i] } //选择排序 func SelectionSort(s []int) { l := len(s) //以免每次循环判断都运算 m := len(s)-1 for i:=0;i&amp;lt;m;i++ { k:=i for j:=i+1;j&amp;lt;l;j++ { if s[j]&amp;lt;s[k] { k = j</description>
-    </item>
-    
-    <item>
-      <title>k8s v1.17 新特性预告: 拓扑感知服务路由</title>
-      <link>https://imroc.io/posts/kubernetes/service-topology/</link>
-      <pubDate>Wed, 23 Nov 2016 16:59:00 +0800</pubDate>
-      <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/kubernetes/service-topology/</guid>
-      <description>大家好，我是 roc，来自腾讯云容器服务(TKE)团队，今天给大家介绍下我参与开发的一个 k8s v1.17 新特性: 拓扑感知服务路由。 名词解释 拓扑域: 表示在集</description>
     </item>
     
   </channel>

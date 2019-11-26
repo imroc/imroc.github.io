@@ -8,10 +8,19 @@
     <language>zh-cn</language>
     <managingEditor>roc@imroc.io (roc)</managingEditor>
     <webMaster>roc@imroc.io (roc)</webMaster>
-    <lastBuildDate>Mon, 12 Aug 2019 16:59:00 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 26 Nov 2019 16:49:00 +0800</lastBuildDate>
     
 	<atom:link href="https://imroc.io/categories/kubernetes/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>k8s v1.17 新特性预告: 拓扑感知服务路由</title>
+      <link>https://imroc.io/posts/kubernetes/service-topology/</link>
+      <pubDate>Tue, 26 Nov 2019 16:49:00 +0800</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/posts/kubernetes/service-topology/</guid>
+      <description>大家好，我是 roc，来自腾讯云容器服务(TKE)团队，今天给大家介绍下我参与开发的一个 k8s v1.17 新特性: 拓扑感知服务路由。 名词解释 拓扑域: 表示在集</description>
+    </item>
     
     <item>
       <title>Kubernetes 网络疑难杂症排查分享</title>
@@ -191,15 +200,6 @@
       <author>roc@imroc.io (roc)</author>
       <guid>https://imroc.io/posts/kubernetes/kubernetes-binaries/</guid>
       <description>前言 由于国内网络的特殊性，安装Kubernetes很多时候会采用二进制方式部署，我将涉及到的二进制利用脚本传到百度云，方便大家下载，脚本开源</description>
-    </item>
-    
-    <item>
-      <title>k8s v1.17 新特性预告: 拓扑感知服务路由</title>
-      <link>https://imroc.io/posts/kubernetes/service-topology/</link>
-      <pubDate>Wed, 23 Nov 2016 16:59:00 +0800</pubDate>
-      <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/kubernetes/service-topology/</guid>
-      <description>大家好，我是 roc，来自腾讯云容器服务(TKE)团队，今天给大家介绍下我参与开发的一个 k8s v1.17 新特性: 拓扑感知服务路由。 名词解释 拓扑域: 表示在集</description>
     </item>
     
   </channel>
