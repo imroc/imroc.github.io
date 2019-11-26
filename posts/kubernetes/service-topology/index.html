@@ -355,7 +355,9 @@ var _hmt = _hmt || [];
 
 <h2 id="如何使用">如何使用</h2>
 
-<p>在 Service spec 里加上 <code>topologyKeys</code> 字段，表示该 Service 优先顺序选用的拓扑域列表，对应节点标签的 key；当访问此 Service 时，会找是否有 endpoint 对应节点的标签跟第一个 topology key 一样并且 value 也一样，如果是，那就选定此 topology key 作为当前转发的拓扑域，并且筛选出其余所有在这个拓扑域的 endpoint 选取来转发；如果没有找到任何 endpoint 满足拓扑域条件，就会尝试第二个 topology key，依此类推；如果遍历完所有 topology key 也没有匹配到 endpoint 就会拒绝转发，就像此 service 没有后端 endpoint 一样；有一个特殊的 topology key &ldquo;<code>*</code>&ldquo;，它可以匹配所有 endpoint，如果 <code>topologyKeys</code> 包含了 <code>*</code>，它必须在列表末尾，通常是在没有匹配到合适的拓扑域来实现就近转发时，就打消就近转发的念头，可以转发到任意 endpoint 上。</p>
+<p>在 Service spec 里加上 <code>topologyKeys</code> 字段，表示该 Service 优先顺序选用的拓扑域列表，对应节点标签的 key；当访问此 Service 时，会找是否有 endpoint 有对应 topology key 的拓扑信息并且 value 跟当前节点也一样，如果是，那就选定此 topology key 作为当前转发的拓扑域，并且筛选出其余所有在这个拓扑域的 endpoint 来进行转发；如果没有找到任何 endpoint 在当前 topology key 对应拓扑域，就会尝试第二个 topology key，依此类推；如果遍历完所有 topology key 也没有匹配到 endpoint 就会拒绝转发，就像此 service 没有后端 endpoint 一样。</p>
+
+<p>有一个特殊的 topology key &ldquo;<code>*</code>&ldquo;，它可以匹配所有 endpoint，如果 <code>topologyKeys</code> 包含了 <code>*</code>，它必须在列表末尾，通常是在没有匹配到合适的拓扑域来实现就近转发时，就打消就近转发的念头，可以转发到任意 endpoint 上。</p>
 
 <p>当前 topology key 支持以下可能的值（未来会增加更多）:</p>
 
