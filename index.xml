@@ -28,7 +28,7 @@
       <pubDate>Sat, 30 Nov 2019 15:32:00 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
       <guid>https://imroc.io/posts/kubernetes/service-topology-en/</guid>
-      <description>Hello everyone, I&amp;rsquo;m roc, from the Tencent Kubernetes Engine (TKE) team. Today I will introduce a new feature of kubernetes v1.17 that I am involved in: topology-aware service routing.
+      <description>Hello everyone, I&amp;rsquo;m roc, from the Tencent Kubernetes Engine (TKE) team. Today I will introduce a new feature of kubernetes in v1.17 that I am involved in: topology-aware service routing.
  This article is translated from my Chinese blog post, which received a great response in China and was reprinted by many well-known Chinese container technology media accounts.
  Glossary  Topological domain: Indicates a certain type of &amp;ldquo;place&amp;rdquo; in the cluster, such as node, rack, zone or region etc.</description>
     </item>
