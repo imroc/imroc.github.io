@@ -327,7 +327,7 @@ var _hmt = _hmt || [];
 </code></pre>
 
 <ul>
-<li><code>Connection timed out</code>: 连接超时。通常是连接还没建立，client 发 SYN 请求建立连接一直等到超时时间都没有收到 ACK，然后就报错连接超时。这个可能场景跟前面 <code>Connection refused</code> 可能的场景类似，不同点在于端口有监听，但进程无法正常响应了: 转发规则还么更新，旧 Pod 的进程正在停止过程中，虽然端口有监听，但已经不响应了；或者转发规则更新了，新 Pod 端口也监听了，但还没有真正就绪，还没有能力处理新请求。针对这些情况的建议跟前面一样：加 preStop 和 readinessProbe。</li>
+<li><code>Connection timed out</code>: 连接超时。通常是连接还没建立，client 发 SYN 请求建立连接一直等到超时时间都没有收到 ACK，然后就报错连接超时。这个可能场景跟前面 <code>Connection refused</code> 可能的场景类似，不同点在于端口有监听，但进程无法正常响应了: 转发规则还没更新，旧 Pod 的进程正在停止过程中，虽然端口有监听，但已经不响应了；或者转发规则更新了，新 Pod 端口也监听了，但还没有真正就绪，还没有能力处理新请求。针对这些情况的建议跟前面一样：加 preStop 和 readinessProbe。</li>
 </ul>
 
 <p>下面我们来继续分析下滚动更新时发生 <code>No route to host</code> 的可能情况。</p>
