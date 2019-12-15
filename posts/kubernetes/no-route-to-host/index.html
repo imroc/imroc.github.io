@@ -261,7 +261,7 @@ var _hmt = _hmt || [];
     <section id="datecount">
         <h4 id="date"> Sun Dec 15, 2019</h4>
     </section>
-    <h5 id="wc">4200 Words|Read in about 9 Min</h5>
+    <h5 id="wc">4300 Words|Read in about 9 Min</h5>
     <h5 id="tags">Tags: 
         
         <a href="https://imroc.io/tags/kubernetes/">kubernetes</a> &nbsp;
@@ -297,7 +297,7 @@ var _hmt = _hmt || [];
 
 <h2 id="分析">分析</h2>
 
-<p>我们先看下滚动更新导致连接异常有哪些常见的报错:</p>
+<p>之前没遇到滚动更新会报 &ldquo;No route to host&rdquo; 的问题，我们先看下滚动更新导致连接异常有哪些常见的报错:</p>
 
 <ul>
 <li><code>Connection reset by peer</code>: 连接被重置。通常是连接建立过，但 server 端发现 client 发的包不对劲就返回 RST，应用层就报错连接被重置。比如在 server 滚动更新过程中，client 给 server 发的请求还没完全结束，或者本身是一个类似 grpc 的多路复用长连接，当 server 对应的旧 Pod 删除(没有做优雅停止，停止时没有关闭连接)，新 Pod 很快创建启动并且刚好有跟之前旧 Pod 一样的 IP，这时 kube-proxy 也没感知到这个 IP 其实已经被删除然后又被重建了，针对这个 IP 的规则就不会更新，旧的连接依然发往这个 IP，但旧 Pod 已经不在了，后面继续发包时依然转发给这个 Pod IP，最终会被转发到这个有相同 IP 的新 Pod 上，而新 Pod 收到此包时检查报文发现不对劲，就返回 RST 给 client 告知将连接重置。针对这种情况，建议应用自身处理好优雅停止：Pod 进入 Terminating 状态后会发送 <code>SIGTERM</code> 信号给业务进程，业务进程的代码需处理这个信号，在进程退出前关闭所有连接。</li>
@@ -441,7 +441,7 @@ listening on eth0, link-type EN10MB (Ethernet), capture size 262144 bytes
     <section id="datecount">
         <h4 id="date"> Sun Dec 15, 2019</h4>
     </section>
-    <h5 id="wc">4200 Words|Read in about 9 Min</h5>
+    <h5 id="wc">4300 Words|Read in about 9 Min</h5>
     <h5 id="tags">Tags: 
         
         <a href="https://imroc.io/tags/kubernetes/">kubernetes</a> &nbsp;
