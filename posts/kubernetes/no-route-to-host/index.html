@@ -393,7 +393,7 @@ listening on eth0, link-type EN10MB (Ethernet), capture size 262144 bytes
 
 <h2 id="总结">总结</h2>
 
-<p>这个问题通常发生的场景就是类似于我们测试环境这种：ServiceA 对外提供服务，当外部发起请求，ServiceA 会通过 rpc 或 http 调用 ServiceB，如果外部请求量变大，ServiceA 调用 ServiceB 的量也会跟着变大，大到一定程度，ServiceA 所在节点源端口不够用，复用 <code>TIME_WAIT</code> 状态连接的源端口，导致五元组跟 IPVS 里连接转发表中的 <code>TIME_WAIT</code> 连接相同，认为是一个存量连接，就不判断权重直接转发给之前的 rs，导致转发到已销毁的 Pod，从而发生 &ldquo;No route to host&rdquo;。</p>
+<p>这个问题通常发生的场景就是类似于我们测试环境这种：ServiceA 对外提供服务，当外部发起请求，ServiceA 会通过 rpc 或 http 调用 ServiceB，如果外部请求量变大，ServiceA 调用 ServiceB 的量也会跟着变大，大到一定程度，ServiceA 所在节点源端口不够用，复用 <code>TIME_WAIT</code> 状态连接的源端口，导致五元组跟 IPVS 里连接转发表中的 <code>TIME_WAIT</code> 连接相同，IPVS 就认为这是一个存量连接的报文，就不判断权重直接转发给之前的 rs，导致转发到已销毁的 Pod，从而发生 &ldquo;No route to host&rdquo;。</p>
 
 <p>如何规避？集群规模小可以使用 iptables 模式，如果需要使用 ipvs 模式，可以增加 ServiceA 的副本，并且配置反亲和性 (podAntiAffinity)，让 ServiceA 的 Pod 部署到不同节点，分摊流量，避免流量集中到某一个节点，导致调用 ServiceB 时源端口复用。</p>
 
