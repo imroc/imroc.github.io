@@ -8,10 +8,19 @@
     <language>zh-cn</language>
     <managingEditor>roc@imroc.io (roc)</managingEditor>
     <webMaster>roc@imroc.io (roc)</webMaster>
-    <lastBuildDate>Sat, 30 Nov 2019 15:32:00 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 15 Dec 2019 12:03:00 +0800</lastBuildDate>
     
 	<atom:link href="https://imroc.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Kubernetes 疑难杂症排查分享: 诡异的 No route to host</title>
+      <link>https://imroc.io/posts/kubernetes/no-route-to-host/</link>
+      <pubDate>Sun, 15 Dec 2019 12:03:00 +0800</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/posts/kubernetes/no-route-to-host/</guid>
+      <description>大家好，我是 roc，来自腾讯云容器服务(TKE)团队，之前发过一篇干货满满的爆火文章 Kubernetes 网络疑难杂症排查分享，包含多个疑难杂症的排查案例分享，</description>
+    </item>
     
     <item>
       <title>Kubernetes v1.17 new feature preview: topology-aware service routing</title>
