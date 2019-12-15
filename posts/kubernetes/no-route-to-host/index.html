@@ -403,7 +403,7 @@ listening on eth0, link-type EN10MB (Ethernet), capture size 262144 bytes
 
 <p>Issue 81308 讨论 IVPS 的优雅结束是否不考虑不活跃的连接 (包括 <code>TIME_WAIT</code> 状态的连接)，也就是只考虑活跃连接，当活跃连接数为 0 之后立即踢掉 rs。这个确实可以更快的踢掉 rs，但无法让优雅结束做到那么优雅了，并且有人测试了，即便是不考虑不活跃连接，当请求量很大，还是不能很快踢掉 rs，因为源端口复用还是会导致不断有新的连接占用旧的连接，在较新的内核版本，<code>SYN_RECV</code> 状态也被视为活跃连接，所以活跃连接数还是不会很快降到 0。</p>
 
-<p>这个问题最终解决方案该走向何方，我们拭目以待，感兴趣的同学可以持续关注 issue 81775 并参与讨论。想学习更多 K8S 知识，可以关注本人的开源书《Kubernetes实践指南》: <a href="https://k8s.imroc.io">https://k8s.imroc.io</a></p>
+<p>这个问题的终极解决方案该走向何方，我们拭目以待，感兴趣的同学可以持续关注 issue 81775 并参与讨论。想学习更多 K8S 知识，可以关注本人的开源书《Kubernetes实践指南》: <a href="https://k8s.imroc.io">https://k8s.imroc.io</a></p>
 
             </article>
 
