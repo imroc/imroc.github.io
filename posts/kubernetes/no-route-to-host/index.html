@@ -333,27 +333,28 @@ listening on eth0, link-type EN10MB <span style="color:#f92672">(</span>Ethernet
                 
             </div>
             
+          
+<div id="gitalk-container"></div>
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+<script>
+  var gitalk = new Gitalk({
+      clientID: 'd05b8f959b3111c6fb63',
+      clientSecret: 'f30ef76ea0050ed731ace76f7fbf684ae5d28fbc',
+      repo: 'blog',
+      owner: 'imroc',
+      admin: 'imroc',
+      labels: ['Gitalk'],
+      title: 'Kubernetes 疑难杂症排查分享: 诡异的 No route to host',
+      createIssueManually: false,
+      id: 'no-route-to-host',
+      distractionFreeMode: true
+  });
+  gitalk.render('gitalk-container');
+</script>
+
         </div>
     </div>
-    
-    <div id="gitalk-container"></div>
-    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
-    <script>
-      var gitalk = new Gitalk({
-          clientID: 'd05b8f959b3111c6fb63',
-          clientSecret: 'f30ef76ea0050ed731ace76f7fbf684ae5d28fbc',
-          repo: 'blog',
-          owner: 'imroc',
-          admin: 'imroc',
-          labels: ['Gitalk'],
-          title: 'Kubernetes 疑难杂症排查分享: 诡异的 No route to host',
-          createIssueManually: false,
-          id: 'no-route-to-host',
-          distractionFreeMode: true
-      });
-      gitalk.render('gitalk-container');
-    </script>
-
 </div>
 
     <footer>
