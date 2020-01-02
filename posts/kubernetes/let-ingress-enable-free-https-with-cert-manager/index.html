@@ -484,7 +484,6 @@ spec:
     </div>
     
     <div id="gitalk-container"></div>
-    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
     <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
     <script>
       var gitalk = new Gitalk({
@@ -493,7 +492,7 @@ spec:
           repo: 'blog',
           owner: 'imroc',
           admin: 'imroc',
-        
+          labels: ['Gitalk'],
           title: '利用cert-manager让Ingress启用免费的HTTPS证书',
           createIssueManually: false,
           id: '',

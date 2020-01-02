@@ -322,7 +322,6 @@ http.request.uri<span style="color:#f92672">=</span><span style="color:#f92672">
     </div>
     
     <div id="gitalk-container"></div>
-    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
     <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
     <script>
       var gitalk = new Gitalk({
@@ -331,7 +330,7 @@ http.request.uri<span style="color:#f92672">=</span><span style="color:#f92672">
           repo: 'blog',
           owner: 'imroc',
           admin: 'imroc',
-        
+          labels: ['Gitalk'],
           title: 'Kubernetes 问题定位技巧：容器内抓包',
           createIssueManually: false,
           id: '',

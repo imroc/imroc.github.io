@@ -329,7 +329,6 @@ bindkey -M emacs <span style="color:#e6db74">&#39;^N&#39;</span> history-substri
     </div>
     
     <div id="gitalk-container"></div>
-    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
     <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
     <script>
       var gitalk = new Gitalk({
@@ -338,7 +337,7 @@ bindkey -M emacs <span style="color:#e6db74">&#39;^N&#39;</span> history-substri
           repo: 'blog',
           owner: 'imroc',
           admin: 'imroc',
-        
+          labels: ['Gitalk'],
           title: '极客工具之 oh-my-zsh',
           createIssueManually: false,
           id: '',

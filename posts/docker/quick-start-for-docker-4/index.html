@@ -371,7 +371,6 @@ docker inspect name
     </div>
     
     <div id="gitalk-container"></div>
-    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
     <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
     <script>
       var gitalk = new Gitalk({
@@ -380,7 +379,7 @@ docker inspect name
           repo: 'blog',
           owner: 'imroc',
           admin: 'imroc',
-        
+          labels: ['Gitalk'],
           title: 'Docker快速入门（四）常用命令与技巧',
           createIssueManually: false,
           id: '',

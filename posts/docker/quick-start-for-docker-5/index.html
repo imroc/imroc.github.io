@@ -281,7 +281,6 @@ services:
     </div>
     
     <div id="gitalk-container"></div>
-    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
     <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
     <script>
       var gitalk = new Gitalk({
@@ -290,7 +289,7 @@ services:
           repo: 'blog',
           owner: 'imroc',
           admin: 'imroc',
-        
+          labels: ['Gitalk'],
           title: 'Docker快速入门（五）docker-compose安装与基础用法',
           createIssueManually: false,
           id: '',
