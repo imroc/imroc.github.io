@@ -23,21 +23,15 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="roc" />
 
-  <meta name="generator" content="Hugo 0.49.2" />
+  <meta name="generator" content="Hugo 0.62.0" />
   <link rel="canonical" href="https://imroc.io/posts/istio/istio-cni/" />
   <link rel="alternate" href="https://imroc.io/index.xml" type="application/rss+xml" title="roc">
-  <script src="https://cdn.staticfile.org/jquery/1.12.4/jquery.min.js"></script>
-  <link rel="stylesheet" href="https://cdn.staticfile.org/KaTeX/0.7.1/katex.min.css" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" crossorigin="anonymous">
 
-  <link rel="stylesheet" href="https://imroc.io/css/main.css" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
   
-  <link rel="stylesheet" href="https://imroc.io/static/prism/prism.css" />
 
-  <script>
+
+<link rel="stylesheet" href='/css/bundle.min.2971c990ae9e3036a2e09462d93d94829b857b7235a2b5eac8896bdad8a8fdb6.css' integrity='sha256-KXHJkK6eMDai4JRi2T2UgpuFe3I1orXqyIlr2tio/bY='>
+  --><script>
 var _hmt = _hmt || [];
 (function() {
   var hm = document.createElement("script");
@@ -46,56 +40,6 @@ var _hmt = _hmt || [];
   s.parentNode.insertBefore(hm, s);
 })();
 </script>
-
-
-
-<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe.min.css" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.2/default-skin/default-skin.min.css" crossorigin="anonymous" />
-
-
-<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
-
-<div class="pswp__bg"></div>
-
-<div class="pswp__scroll-wrap">
-    
-    <div class="pswp__container">
-      <div class="pswp__item"></div>
-      <div class="pswp__item"></div>
-      <div class="pswp__item"></div>
-    </div>
-    
-    <div class="pswp__ui pswp__ui--hidden">
-    <div class="pswp__top-bar">
-      
-      <div class="pswp__counter"></div>
-      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
-      <button class="pswp__button pswp__button--share" title="Share"></button>
-      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
-      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
-      
-      
-      <div class="pswp__preloader">
-        <div class="pswp__preloader__icn">
-          <div class="pswp__preloader__cut">
-            <div class="pswp__preloader__donut"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
-      <div class="pswp__share-tooltip"></div>
-    </div>
-    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
-    </button>
-    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
-    </button>
-    <div class="pswp__caption">
-      <div class="pswp__caption__center"></div>
-    </div>
-    </div>
-    </div>
-</div>
 
 
 </head>
@@ -273,45 +217,33 @@ var _hmt = _hmt || [];
                 
 <aside class="toc">
   <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#设计目标">设计目标</a></li>
-<li><a href="#原理">原理</a></li>
-<li><a href="#实现方式">实现方式</a></li>
-<li><a href="#istio-cni-node-工作流程">istio-cni-node 工作流程</a></li>
-<li><a href="#设计提案">设计提案</a></li>
-<li><a href="#参考资料">参考资料</a></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#heading">设计目标</a></li>
+    <li><a href="#heading-1">原理</a></li>
+    <li><a href="#heading-2">实现方式</a></li>
+    <li><a href="#istio-cni-node-">istio-cni-node 工作流程</a></li>
+    <li><a href="#heading-3">设计提案</a></li>
+    <li><a href="#heading-4">参考资料</a></li>
+  </ul>
 </nav>
 </aside>
 
 
-                
-
-<h2 id="设计目标">设计目标</h2>
-
+                <h2 id="heading">设计目标</h2>
 <p>当前实现将用户 pod 流量转发到 proxy 的默认方式是使用 privileged 权限的 istio-init 这个 init container 来做的（运行脚本写入 iptables），Istio CNI 插件的主要设计目标是消除这个 privileged 权限的 init container，换成利用 k8s CNI 机制来实现相同功能的替代方案</p>
-
-<h2 id="原理">原理</h2>
-
+<h2 id="heading-1">原理</h2>
 <ul>
 <li>Istio CNI Plugin 不是 istio 提出类似 k8s CNI 的插件扩展机制，而是 k8s CNI 的一个具体实现</li>
 <li>k8s CNI 插件是一条链，在创建和销毁pod的时候会调用链上所有插件来安装和卸载容器的网络，istio CNI Plugin 即为 CNI 插件的一个实现，相当于在创建销毁pod这些hook点来针对istio的pod做网络配置：写入iptables，让该 pod 所在的 network namespace 的网络流量转发到 proxy 进程</li>
 <li>当然也就要求集群启用 CNI，kubelet 启动参数: <code>--network-plugin=cni</code> （该参数只有两个可选项：<code>kubenet</code>, <code>cni</code>）</li>
 </ul>
-
-<h2 id="实现方式">实现方式</h2>
-
+<h2 id="heading-2">实现方式</h2>
 <ul>
 <li>运行一个名为 istio-cni-node 的 daemonset 运行在每个节点，用于安装 istio CNI 插件</li>
 <li>该 CNI 插件负责写入 iptables 规则，让用户 pod 所在 netns 的流量都转发到这个 pod 中 proxy 的进程</li>
 <li>当启用 istio cni 后，sidecar 的自动注入或<code>istioctl kube-inject</code>将不再注入 initContainers (istio-init)</li>
 </ul>
-
-<h2 id="istio-cni-node-工作流程">istio-cni-node 工作流程</h2>
-
+<h2 id="istio-cni-node-">istio-cni-node 工作流程</h2>
 <ul>
 <li>复制 Istio CNI 插件二进制程序到CNI的bin目录（即kubelet启动参数<code>--cni-bin-dir</code>指定的路径，默认是<code>/opt/cni/bin</code>）</li>
 <li>使用istio-cni-node自己的ServiceAccount信息为CNI插件生成kubeconfig，让插件能与apiserver通信(ServiceAccount信息会被自动挂载到<code>/var/run/secrets/kubernetes.io/serviceaccount</code>)</li>
@@ -319,26 +251,22 @@ var _hmt = _hmt || [];
 <li>watch CNI 配置(<code>cni-conf-dir</code>)，如果检测到被修改就重新改回来</li>
 <li>watch istio-cni-node 自身的配置(configmap)，检测到有修改就重新执行CNI配置生成与下发流程（当前写这篇文章的时候是istio 1.1.1，还没实现此功能）</li>
 </ul>
-
-<h2 id="设计提案">设计提案</h2>
-
+<h2 id="heading-3">设计提案</h2>
 <ul>
 <li>Istio CNI Plugin 提案创建时间：2018-09-28</li>
 <li>Istio CNI Plugin 提案文档存放在：Istio 的 Google Team Drive
-
 <ul>
-<li>Istio TeamDrive 地址：<a href="https://drive.google.com/corp/drive/u/0/folders/0AIS5p3eW9BCtUk9PVA">https://drive.google.com/corp/drive/u/0/folders/0AIS5p3eW9BCtUk9PVA</a></li>
+<li>Istio TeamDrive 地址：https://drive.google.com/corp/drive/u/0/folders/0AIS5p3eW9BCtUk9PVA</li>
 <li>Istio CNI Plugin 提案文档路径：<code>Working Groups/Networking/Istio CNI Plugin</code></li>
 <li>查看文件需要申请权限，申请方法：加入istio-team-drive-access这个google网上论坛group</li>
 <li>istio-team-drive-access group 地址: <a href="https://groups.google.com/forum/#!forum/istio-team-drive-access">https://groups.google.com/forum/#!forum/istio-team-drive-access</a></li>
-</ul></li>
 </ul>
-
-<h2 id="参考资料">参考资料</h2>
-
+</li>
+</ul>
+<h2 id="heading-4">参考资料</h2>
 <ul>
 <li>Install Istio with the Istio CNI plugin: <a href="https://istio.io/docs/setup/kubernetes/additional-setup/cni/">https://istio.io/docs/setup/kubernetes/additional-setup/cni/</a></li>
-<li>istio-cni 项目地址：<a href="https://github.com/istio/cni">https://github.com/istio/cni</a></li>
+<li>istio-cni 项目地址：https://github.com/istio/cni</li>
 </ul>
 
             </article>
@@ -359,50 +287,28 @@ var _hmt = _hmt || [];
                  
             </div>
             
-            
-            
-            
-<div>
-    <section id="datecount">
-        <h4 id="date"> Sun Apr 7, 2019</h4>
-    </section>
-    <h5 id="wc">1100 Words|Read in about 3 Min</h5>
-    <h5 id="tags">Tags: 
-        
-        <a href="https://imroc.io/tags/istio/">istio</a> &nbsp;
-    </h5>
-</div>
-
-            
-            </div>
-            
-			
-               <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-<aside id=comments>
-    <div>
-        <h2> Comments </h2>
-    </div>
-    <div id="container"></div>
-    <link rel="stylesheet" href="https://imroc.io/static/gitment/default.css">
-    <script src="https://imroc.io/static/gitment/gitment.browser.js"></script>
-    <script>
-        var gitment = new Gitment({
-			owner: 'imroc', 
-			repo: 'imroc.github.io', 
-            oauth: {
-				client_id: 'd05b8f959b3111c6fb63',
-				client_secret: 'f30ef76ea0050ed731ace76f7fbf684ae5d28fbc',
-            },
-        })
-        gitment.render('container')
-    </script>
-</aside>
-</div>
-
-			
         </div>
     </div>
-    </section>
+    
+    <div id="gitalk-container"></div>
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+      var gitalk = new Gitalk({
+          clientID: 'd05b8f959b3111c6fb63',
+          clientSecret: 'f30ef76ea0050ed731ace76f7fbf684ae5d28fbc',
+          repo: 'blog',
+          owner: 'imroc',
+          admin: ['imroc'],
+          labels: ['Gitalk'],
+          title: 'Istio 学习笔记：Istio CNI 插件',
+          createIssueManually: false,
+          id: '',
+          distractionFreeMode: true
+      });
+      gitalk.render('gitalk-container');
+    </script>
+
 </div>
 
     <footer>
@@ -461,7 +367,7 @@ var _hmt = _hmt || [];
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.49.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.62.0</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>
@@ -469,15 +375,7 @@ var _hmt = _hmt || [];
   </div>
 </footer>
 
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script src="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe-ui-default.min.js"></script>
-<script src="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe.js"></script>
-<script src="https://imroc.io/js/auto-render.min.js"></script>
-<script src="https://imroc.io/js/main.js"></script>
-<script src="https://imroc.io/static/prism/prism.js"></script>
-<script src="https://cdn.staticfile.org/KaTeX/0.7.1/katex.min.js"></script>
-<script> renderMathInElement(document.body); </script>
-
+<script src='/js/bundle.min.879361cd590eb97fa7b7459c2fecb6f66e7b5c798ccdbbad966b1d4d0adce056.js' integrity='sha256-h5NhzVkOuX&#43;nt0WcL&#43;y29m57XHmMzbutlmsdTQrc4FY='></script>
 
 
 

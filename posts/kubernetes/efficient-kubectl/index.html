@@ -23,21 +23,15 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="roc" />
 
-  <meta name="generator" content="Hugo 0.49.2" />
+  <meta name="generator" content="Hugo 0.62.0" />
   <link rel="canonical" href="https://imroc.io/posts/kubernetes/efficient-kubectl/" />
   <link rel="alternate" href="https://imroc.io/index.xml" type="application/rss+xml" title="roc">
-  <script src="https://cdn.staticfile.org/jquery/1.12.4/jquery.min.js"></script>
-  <link rel="stylesheet" href="https://cdn.staticfile.org/KaTeX/0.7.1/katex.min.css" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" crossorigin="anonymous">
 
-  <link rel="stylesheet" href="https://imroc.io/css/main.css" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
   
-  <link rel="stylesheet" href="https://imroc.io/static/prism/prism.css" />
 
-  <script>
+
+<link rel="stylesheet" href='/css/bundle.min.2971c990ae9e3036a2e09462d93d94829b857b7235a2b5eac8896bdad8a8fdb6.css' integrity='sha256-KXHJkK6eMDai4JRi2T2UgpuFe3I1orXqyIlr2tio/bY='>
+  --><script>
 var _hmt = _hmt || [];
 (function() {
   var hm = document.createElement("script");
@@ -46,56 +40,6 @@ var _hmt = _hmt || [];
   s.parentNode.insertBefore(hm, s);
 })();
 </script>
-
-
-
-<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe.min.css" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.2/default-skin/default-skin.min.css" crossorigin="anonymous" />
-
-
-<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
-
-<div class="pswp__bg"></div>
-
-<div class="pswp__scroll-wrap">
-    
-    <div class="pswp__container">
-      <div class="pswp__item"></div>
-      <div class="pswp__item"></div>
-      <div class="pswp__item"></div>
-    </div>
-    
-    <div class="pswp__ui pswp__ui--hidden">
-    <div class="pswp__top-bar">
-      
-      <div class="pswp__counter"></div>
-      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
-      <button class="pswp__button pswp__button--share" title="Share"></button>
-      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
-      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
-      
-      
-      <div class="pswp__preloader">
-        <div class="pswp__preloader__icn">
-          <div class="pswp__preloader__cut">
-            <div class="pswp__preloader__donut"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
-      <div class="pswp__share-tooltip"></div>
-    </div>
-    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
-    </button>
-    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
-    </button>
-    <div class="pswp__caption">
-      <div class="pswp__caption__center"></div>
-    </div>
-    </div>
-    </div>
-</div>
 
 
 </head>
@@ -286,62 +230,45 @@ var _hmt = _hmt || [];
                 
 <aside class="toc">
   <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#k-命令">k 命令</a></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#k-">k 命令</a></li>
+  </ul>
 </nav>
 </aside>
 
 
-                
-
-<p>是否有过因为使用 kubectl 经常需要重复输入命名空间而苦恼？是否觉得应该要有个记住命名空间的功能，自动记住上次使用的命名空间，不需要每次都输入？可惜没有这种功能，但是，本文会教你一个非常巧妙的方法完美帮你解决这个痛点。</p>
-
-<h2 id="k-命令">k 命令</h2>
-
+                <p>是否有过因为使用 kubectl 经常需要重复输入命名空间而苦恼？是否觉得应该要有个记住命名空间的功能，自动记住上次使用的命名空间，不需要每次都输入？可惜没有这种功能，但是，本文会教你一个非常巧妙的方法完美帮你解决这个痛点。</p>
+<h2 id="k-">k 命令</h2>
 <p>将如下脚本粘贴到当前shell(注册k命令到当前终端session):</p>
-
-<pre><code class="language-bash">function k() {
-    cmdline=`HISTTIMEFORMAT=&quot;&quot; history | awk '$2 == &quot;kubectl&quot; &amp;&amp; (/-n/ || /--namespace/) {for(i=2;i&lt;=NF;i++)printf(&quot;%s &quot;,$i);print &quot;&quot;}' | tail -n 1`
-    regs=('\-n [\w\-\d]+' '\-n=[\w\-\d]+' '\-\-namespace [\w\-\d]+' '\-\-namespace=[\w\-\d]+')
-    for i in &quot;${!regs[@]}&quot;; do
-        reg=${regs[i]}
-        nsarg=`echo $cmdline | grep -o -P &quot;$reg&quot;`
-        if [[ &quot;$nsarg&quot; == &quot;&quot; ]]; then
-            continue
-        fi
-        cmd=&quot;kubectl $nsarg $@&quot;
-        echo &quot;$cmd&quot;
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#66d9ef">function</span> k<span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    cmdline<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>HISTTIMEFORMAT<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;&#34;</span> history | awk <span style="color:#e6db74">&#39;$2 == &#34;kubectl&#34; &amp;&amp; (/-n/ || /--namespace/) {for(i=2;i&lt;=NF;i++)printf(&#34;%s &#34;,$i);print &#34;&#34;}&#39;</span> | tail -n 1<span style="color:#e6db74">`</span>
+    regs<span style="color:#f92672">=</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#39;\-n [\w\-\d]+&#39;</span> <span style="color:#e6db74">&#39;\-n=[\w\-\d]+&#39;</span> <span style="color:#e6db74">&#39;\-\-namespace [\w\-\d]+&#39;</span> <span style="color:#e6db74">&#39;\-\-namespace=[\w\-\d]+&#39;</span><span style="color:#f92672">)</span>
+    <span style="color:#66d9ef">for</span> i in <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>!regs[@]<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>; <span style="color:#66d9ef">do</span>
+        reg<span style="color:#f92672">=</span><span style="color:#e6db74">${</span>regs[i]<span style="color:#e6db74">}</span>
+        nsarg<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>echo $cmdline | grep -o -P <span style="color:#e6db74">&#34;</span>$reg<span style="color:#e6db74">&#34;</span><span style="color:#e6db74">`</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span><span style="color:#f92672">[</span> <span style="color:#e6db74">&#34;</span>$nsarg<span style="color:#e6db74">&#34;</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;&#34;</span> <span style="color:#f92672">]</span><span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
+            <span style="color:#66d9ef">continue</span>
+        <span style="color:#66d9ef">fi</span>
+        cmd<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">kubectl </span>$nsarg<span style="color:#e6db74"> </span>$@<span style="color:#e6db74">&#34;</span>
+        echo <span style="color:#e6db74">&#34;</span>$cmd<span style="color:#e6db74">&#34;</span>
         $cmd
-        return
-    done
-    cmd=&quot;kubectl $@&quot;
-    echo &quot;$cmd&quot;
+        <span style="color:#66d9ef">return</span>
+    <span style="color:#66d9ef">done</span>
+    cmd<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">kubectl </span>$@<span style="color:#e6db74">&#34;</span>
+    echo <span style="color:#e6db74">&#34;</span>$cmd<span style="color:#e6db74">&#34;</span>
     $cmd
-}
+<span style="color:#f92672">}</span>
 
-</code></pre>
-
-<p>mac 用户可以使用 dash 的 snippets 功能快速将上面的函数粘贴，使用 <code>kk.</code> 作为触发键 (dash snippets可以全局监听键盘输入，使用指定的输入作为触发而展开配置的内容，相当于是全局代码片段)，以后在某个终端想使用 <code>k</code> 的时候按下 <code>kk.</code> 就可以将 <code>k</code> 命令注册到当前终端，dash snippets 配置如图所示：</p>
-
-<p><img src="https://imroc.io/assets/blog/dash_kk.png" alt="kk" /></p>
-
+</code></pre></div><p>mac 用户可以使用 dash 的 snippets 功能快速将上面的函数粘贴，使用 <code>kk.</code> 作为触发键 (dash snippets可以全局监听键盘输入，使用指定的输入作为触发而展开配置的内容，相当于是全局代码片段)，以后在某个终端想使用 <code>k</code> 的时候按下 <code>kk.</code> 就可以将 <code>k</code> 命令注册到当前终端，dash snippets 配置如图所示：</p>
+<p><img src="https://imroc.io/assets/blog/dash_kk.png" alt="kk"></p>
 <p>将 <code>k</code> 当作 <code>kubectl</code> 来用，只是不需要输入命名空间，它会调用 kubectl 并自动加上上次使用的非默认的命名空间，如果想切换命名空间，再常规的使用一次 kubectl 就行，下面是示范：</p>
-
-<p><img src="https://imroc.io/assets/blog/k.gif" alt="demo" /></p>
-
+<p><img src="https://imroc.io/assets/blog/k.gif" alt="demo"></p>
 <p>哈哈，是否感觉可以少输入很多字符，提高 kubectl 使用效率了？这是目前我探索解决 kubectl 重复输入命名空间的最好方案，一开始是受 <a href="https://github.com/nvbn/thefuck">fuck命令</a> 的启发，想用 go 语言开发个 k 命令，但是发现两个缺点：</p>
-
 <ul>
 <li>需要安装二进制才可以使用（对于需要在多个地方用kubectl管理多个集群的人来说实在太麻烦）</li>
 <li>如果当前 shell 默认没有将历史输入记录到 history 文件( bash 的 history 文件默认是 <code>~/.bash_history</code>)，那么将无法准确知道上一次 kubectl 使用的哪个命名空间</li>
 </ul>
-
 <p>这里解释下第二个缺点的原因：ssh 连上服务器会启动一个 shell 进程，通常是 bash，大多 bash 默认配置会实时将历史输入追加到 <code>~/.bash_history</code>里，所以开多个ssh使用history命令看到的历史输入是一样的，但有些默认不会实时记录历史到<code>~/.bash_history</code>，而是记在当前 shell 进程的内存中，在 shell 退出时才会写入到文件。这种情况新起的进程是无法知道当前 shell 的最近历史输入的，<a href="https://github.com/nvbn/thefuck">fuck命令</a> 也不例外。</p>
-
 <p>所以最完美的解决方案就是注册函数到当前shell来调用，配合 dash 的 snippets 功能可以实现快速注册，解决复制粘贴的麻烦</p>
 
             </article>
@@ -377,50 +304,28 @@ var _hmt = _hmt || [];
                 
             </div>
             
-            
-            
-            
-<div>
-    <section id="datecount">
-        <h4 id="date"> Sun Mar 10, 2019</h4>
-    </section>
-    <h5 id="wc">900 Words|Read in about 2 Min</h5>
-    <h5 id="tags">Tags: 
-        
-        <a href="https://imroc.io/tags/kubernetes/">kubernetes</a> &nbsp;
-    </h5>
-</div>
-
-            
-            </div>
-            
-			
-               <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-<aside id=comments>
-    <div>
-        <h2> Comments </h2>
-    </div>
-    <div id="container"></div>
-    <link rel="stylesheet" href="https://imroc.io/static/gitment/default.css">
-    <script src="https://imroc.io/static/gitment/gitment.browser.js"></script>
-    <script>
-        var gitment = new Gitment({
-			owner: 'imroc', 
-			repo: 'imroc.github.io', 
-            oauth: {
-				client_id: 'd05b8f959b3111c6fb63',
-				client_secret: 'f30ef76ea0050ed731ace76f7fbf684ae5d28fbc',
-            },
-        })
-        gitment.render('container')
-    </script>
-</aside>
-</div>
-
-			
         </div>
     </div>
-    </section>
+    
+    <div id="gitalk-container"></div>
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+      var gitalk = new Gitalk({
+          clientID: 'd05b8f959b3111c6fb63',
+          clientSecret: 'f30ef76ea0050ed731ace76f7fbf684ae5d28fbc',
+          repo: 'blog',
+          owner: 'imroc',
+          admin: ['imroc'],
+          labels: ['Gitalk'],
+          title: 'kubectl 高效技巧',
+          createIssueManually: false,
+          id: '',
+          distractionFreeMode: true
+      });
+      gitalk.render('gitalk-container');
+    </script>
+
 </div>
 
     <footer>
@@ -479,7 +384,7 @@ var _hmt = _hmt || [];
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.49.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.62.0</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>
@@ -487,15 +392,7 @@ var _hmt = _hmt || [];
   </div>
 </footer>
 
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script src="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe-ui-default.min.js"></script>
-<script src="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe.js"></script>
-<script src="https://imroc.io/js/auto-render.min.js"></script>
-<script src="https://imroc.io/js/main.js"></script>
-<script src="https://imroc.io/static/prism/prism.js"></script>
-<script src="https://cdn.staticfile.org/KaTeX/0.7.1/katex.min.js"></script>
-<script> renderMathInElement(document.body); </script>
-
+<script src='/js/bundle.min.879361cd590eb97fa7b7459c2fecb6f66e7b5c798ccdbbad966b1d4d0adce056.js' integrity='sha256-h5NhzVkOuX&#43;nt0WcL&#43;y29m57XHmMzbutlmsdTQrc4FY='></script>
 
 
 

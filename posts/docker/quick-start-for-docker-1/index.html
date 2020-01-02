@@ -23,21 +23,15 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="roc" />
 
-  <meta name="generator" content="Hugo 0.49.2" />
+  <meta name="generator" content="Hugo 0.62.0" />
   <link rel="canonical" href="https://imroc.io/posts/docker/quick-start-for-docker-1/" />
   <link rel="alternate" href="https://imroc.io/index.xml" type="application/rss+xml" title="roc">
-  <script src="https://cdn.staticfile.org/jquery/1.12.4/jquery.min.js"></script>
-  <link rel="stylesheet" href="https://cdn.staticfile.org/KaTeX/0.7.1/katex.min.css" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" crossorigin="anonymous">
 
-  <link rel="stylesheet" href="https://imroc.io/css/main.css" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
   
-  <link rel="stylesheet" href="https://imroc.io/static/prism/prism.css" />
 
-  <script>
+
+<link rel="stylesheet" href='/css/bundle.min.2971c990ae9e3036a2e09462d93d94829b857b7235a2b5eac8896bdad8a8fdb6.css' integrity='sha256-KXHJkK6eMDai4JRi2T2UgpuFe3I1orXqyIlr2tio/bY='>
+  --><script>
 var _hmt = _hmt || [];
 (function() {
   var hm = document.createElement("script");
@@ -46,56 +40,6 @@ var _hmt = _hmt || [];
   s.parentNode.insertBefore(hm, s);
 })();
 </script>
-
-
-
-<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe.min.css" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.2/default-skin/default-skin.min.css" crossorigin="anonymous" />
-
-
-<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
-
-<div class="pswp__bg"></div>
-
-<div class="pswp__scroll-wrap">
-    
-    <div class="pswp__container">
-      <div class="pswp__item"></div>
-      <div class="pswp__item"></div>
-      <div class="pswp__item"></div>
-    </div>
-    
-    <div class="pswp__ui pswp__ui--hidden">
-    <div class="pswp__top-bar">
-      
-      <div class="pswp__counter"></div>
-      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
-      <button class="pswp__button pswp__button--share" title="Share"></button>
-      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
-      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
-      
-      
-      <div class="pswp__preloader">
-        <div class="pswp__preloader__icn">
-          <div class="pswp__preloader__cut">
-            <div class="pswp__preloader__donut"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
-      <div class="pswp__share-tooltip"></div>
-    </div>
-    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
-    </button>
-    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
-    </button>
-    <div class="pswp__caption">
-      <div class="pswp__caption__center"></div>
-    </div>
-    </div>
-    </div>
-</div>
 
 
 </head>
@@ -243,51 +187,29 @@ var _hmt = _hmt || [];
                 
 <aside class="toc">
   <nav id="TableOfContents">
-<ul>
-<li><a href="#前言">前言</a></li>
-<li><a href="#什么是-docker">什么是 Docker</a>
-<ul>
-<li><a href="#docker-vs-vm">Docker vs VM</a></li>
-</ul></li>
-<li><a href="#docker-的历史-精简版">Docker 的历史（精简版）</a></li>
-</ul>
+  <ul>
+    <li><a href="#docker-vs-vm">Docker vs VM</a></li>
+  </ul>
 </nav>
 </aside>
 
 
-                
-
-<h1 id="前言">前言</h1>
-
+                <h1 id="heading">前言</h1>
 <p>Docker现在可以说是火的一塌糊涂，做技术的几乎都听过这个名词，只是有些小伙伴还没理解Docker到底是个什么东西，能够用来做些什么，解决什么问题以及到底怎么用。</p>
-
 <p>现在就来给大家介绍下，不用怕，我会去除不重要的细节，用最简洁直白的语言表述，也不会深入复杂的底层原理，不准确，但能让你快速理解。</p>
-
-<h1 id="什么是-docker">什么是 Docker</h1>
-
-<p>Docker其实就是容器，那什么是容器？很多回答和定义都太复杂了，通俗的讲，容器就是可以把你的程序以及所需要的运行时环境打包成镜像，只要机器上装了docker，那你的程序就一定能运行，不会因为环境不同导致程序运行不了这种常见又让人头疼的问题。就像它的logo一样，它就是一个集装箱，把你程序所需要的东西都打包在一起，实现 &ldquo;一次封装，到处运行&rdquo; 。<br />
-<img src="https://www.docker.com/sites/default/files/Whale%20Logo332%402x_5.png" alt="logo" /></p>
-
+<h1 id="-docker">什么是 Docker</h1>
+<p>Docker其实就是容器，那什么是容器？很多回答和定义都太复杂了，通俗的讲，容器就是可以把你的程序以及所需要的运行时环境打包成镜像，只要机器上装了docker，那你的程序就一定能运行，不会因为环境不同导致程序运行不了这种常见又让人头疼的问题。就像它的logo一样，它就是一个集装箱，把你程序所需要的东西都打包在一起，实现 &ldquo;一次封装，到处运行&rdquo; 。<br>
+<img src="https://www.docker.com/sites/default/files/Whale%20Logo332%402x_5.png" alt="logo"></p>
 <h2 id="docker-vs-vm">Docker vs VM</h2>
-
 <p>容器技术与虚拟机技术都属于虚拟化技术，但又不同。通俗来讲，容器很轻，虚拟机很重。秒秒钟就能轻松启动一个容器，并且资源占用很低，主要取决于你的程序本身，而虚拟机除开你的程序还需要运行一大堆其它东西，启动慢并且资源占用很高。</p>
-
 <p>容器相比虚拟机，去除了硬件与内核的高成本虚拟化，利用容器引擎让你的程序直接跑在宿主机的硬件与内核之上，运行成本大大降低。</p>
-
-<p><img src="http://img3.tbcdn.cn/L1/461/1/75b502be6bc8585968f9895bf086cf7b7cdab9c8" width="80%"></p>
-
-<h1 id="docker-的历史-精简版">Docker 的历史（精简版）</h1>
-
+<!-- raw HTML omitted -->
+<h1 id="docker-">Docker 的历史（精简版）</h1>
 <p>2010年，几个大胡子年轻人在旧金山成立了一家做PaaS平台的公司，起名为「dotCloud」，dotCloud主要是基于PaaS平台为开发者或开发商提供技术服务。</p>
-
 <p>2013年3月， Docker正式作为公开项目发布。</p>
-
 <p>2013年10月， DotCloud公司改名为Docker Inc，转型专注于Docker引擎和Docker生态系统。</p>
-
 <p>2015年6月， DockerCon 2015大会上，Docker与CoreOS联合推出Open Container Project，目标是实现容器镜像格式与运行时的标准化。</p>
-
 <p>2017年4月， DockerCon 2017大会宣布Docker项目更名为Moby，产品名保持Docker不变，同时开源LinuxKit。旨在更加开放，开发者可利用它们做出类似Docker的东西。</p>
-
 <p>2017年10月， DockerCon Europe大会宣布Docker官方将支持Kubernetes，容器编排大战Kubernetes胜出，成为事实标准。</p>
 
             </article>
@@ -309,60 +231,36 @@ var _hmt = _hmt || [];
                 <h2>See Also</h2>
                 <ul>
                     
-                    <li><a href="/posts/docker/docker-network-communication/">Docker容器间通信</a></li>
-                    
                     <li><a href="/posts/docker/understand-docker-cmd-entrypoint/">Docker中CMD与ENTRYPOINT的简明理解</a></li>
+                    
+                    <li><a href="/posts/docker/docker-network-communication/">Docker容器间通信</a></li>
                     
                 </ul>
                 
             </div>
             
-            
-            
-            
-<div>
-    <section id="datecount">
-        <h4 id="date"> Mon Dec 18, 2017</h4>
-    </section>
-    <h5 id="wc">1000 Words|Read in about 2 Min</h5>
-    <h5 id="tags">Tags: 
-        
-        <a href="https://imroc.io/tags/docker/">docker</a> &nbsp;
-        
-        <a href="https://imroc.io/tags/docker%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/">Docker快速入门</a> &nbsp;
-    </h5>
-</div>
-
-            
-            </div>
-            
-			
-               <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-<aside id=comments>
-    <div>
-        <h2> Comments </h2>
-    </div>
-    <div id="container"></div>
-    <link rel="stylesheet" href="https://imroc.io/static/gitment/default.css">
-    <script src="https://imroc.io/static/gitment/gitment.browser.js"></script>
-    <script>
-        var gitment = new Gitment({
-			owner: 'imroc', 
-			repo: 'imroc.github.io', 
-            oauth: {
-				client_id: 'd05b8f959b3111c6fb63',
-				client_secret: 'f30ef76ea0050ed731ace76f7fbf684ae5d28fbc',
-            },
-        })
-        gitment.render('container')
-    </script>
-</aside>
-</div>
-
-			
         </div>
     </div>
-    </section>
+    
+    <div id="gitalk-container"></div>
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+      var gitalk = new Gitalk({
+          clientID: 'd05b8f959b3111c6fb63',
+          clientSecret: 'f30ef76ea0050ed731ace76f7fbf684ae5d28fbc',
+          repo: 'blog',
+          owner: 'imroc',
+          admin: ['imroc'],
+          labels: ['Gitalk'],
+          title: 'Docker快速入门（一）认识Docker',
+          createIssueManually: false,
+          id: '',
+          distractionFreeMode: true
+      });
+      gitalk.render('gitalk-container');
+    </script>
+
 </div>
 
     <footer>
@@ -421,7 +319,7 @@ var _hmt = _hmt || [];
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.49.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.62.0</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>
@@ -429,15 +327,7 @@ var _hmt = _hmt || [];
   </div>
 </footer>
 
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script src="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe-ui-default.min.js"></script>
-<script src="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe.js"></script>
-<script src="https://imroc.io/js/auto-render.min.js"></script>
-<script src="https://imroc.io/js/main.js"></script>
-<script src="https://imroc.io/static/prism/prism.js"></script>
-<script src="https://cdn.staticfile.org/KaTeX/0.7.1/katex.min.js"></script>
-<script> renderMathInElement(document.body); </script>
-
+<script src='/js/bundle.min.879361cd590eb97fa7b7459c2fecb6f66e7b5c798ccdbbad966b1d4d0adce056.js' integrity='sha256-h5NhzVkOuX&#43;nt0WcL&#43;y29m57XHmMzbutlmsdTQrc4FY='></script>
 
 
 

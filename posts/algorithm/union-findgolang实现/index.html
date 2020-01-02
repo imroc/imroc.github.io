@@ -23,21 +23,15 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="roc" />
 
-  <meta name="generator" content="Hugo 0.49.2" />
+  <meta name="generator" content="Hugo 0.62.0" />
   <link rel="canonical" href="https://imroc.io/posts/algorithm/union-findgolang%E5%AE%9E%E7%8E%B0/" />
   <link rel="alternate" href="https://imroc.io/index.xml" type="application/rss+xml" title="roc">
-  <script src="https://cdn.staticfile.org/jquery/1.12.4/jquery.min.js"></script>
-  <link rel="stylesheet" href="https://cdn.staticfile.org/KaTeX/0.7.1/katex.min.css" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" crossorigin="anonymous">
 
-  <link rel="stylesheet" href="https://imroc.io/css/main.css" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
   
-  <link rel="stylesheet" href="https://imroc.io/static/prism/prism.css" />
 
-  <script>
+
+<link rel="stylesheet" href='/css/bundle.min.2971c990ae9e3036a2e09462d93d94829b857b7235a2b5eac8896bdad8a8fdb6.css' integrity='sha256-KXHJkK6eMDai4JRi2T2UgpuFe3I1orXqyIlr2tio/bY='>
+  --><script>
 var _hmt = _hmt || [];
 (function() {
   var hm = document.createElement("script");
@@ -46,56 +40,6 @@ var _hmt = _hmt || [];
   s.parentNode.insertBefore(hm, s);
 })();
 </script>
-
-
-
-<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe.min.css" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.2/default-skin/default-skin.min.css" crossorigin="anonymous" />
-
-
-<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
-
-<div class="pswp__bg"></div>
-
-<div class="pswp__scroll-wrap">
-    
-    <div class="pswp__container">
-      <div class="pswp__item"></div>
-      <div class="pswp__item"></div>
-      <div class="pswp__item"></div>
-    </div>
-    
-    <div class="pswp__ui pswp__ui--hidden">
-    <div class="pswp__top-bar">
-      
-      <div class="pswp__counter"></div>
-      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
-      <button class="pswp__button pswp__button--share" title="Share"></button>
-      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
-      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
-      
-      
-      <div class="pswp__preloader">
-        <div class="pswp__preloader__icn">
-          <div class="pswp__preloader__cut">
-            <div class="pswp__preloader__donut"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
-      <div class="pswp__share-tooltip"></div>
-    </div>
-    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
-    </button>
-    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
-    </button>
-    <div class="pswp__caption">
-      <div class="pswp__caption__center"></div>
-    </div>
-    </div>
-    </div>
-</div>
 
 
 </head>
@@ -241,213 +185,186 @@ var _hmt = _hmt || [];
                 
 <aside class="toc">
   <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#quickfind">QuickFind</a></li>
-<li><a href="#quickunion">QuickUnion</a></li>
-<li><a href="#加权quickunion-附带路径压缩优化">加权QuickUnion(附带路径压缩优化):</a></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#quickfind">QuickFind</a></li>
+    <li><a href="#quickunion">QuickUnion</a></li>
+    <li><a href="#quickunion-1">加权QuickUnion(附带路径压缩优化):</a></li>
+  </ul>
 </nav>
 </aside>
 
 
-                
-
-<p><strong>quick-find、quick-union、加权quick-union(附带路径压缩优化)</strong></p>
-
-<hr />
-
+                <p><strong>quick-find、quick-union、加权quick-union(附带路径压缩优化)</strong></p>
+<hr>
 <p>本算法主要解决动态连通性一类问题，这里尽量用精炼简洁的话来阐述。</p>
-
 <p><strong>数据结构描述:</strong></p>
-
 <ul>
 <li>有N个节点（索引0~N-1），可以查询节点数量</li>
 <li>可以连接两个节点</li>
 <li>可以查询两个节点是否连通</li>
 </ul>
-
 <p><strong>算法大致设计思路：</strong></p>
-
 <ul>
 <li>每个节点初始化为不同的整数标记</li>
 <li>通过一个辅助函数查询某个节点的标记值</li>
-<li>如果两节点标记相同，说明两节点是连通的
-&mdash;&mdash;</li>
+<li>如果两节点标记相同，说明两节点是连通的</li>
 </ul>
-
+<hr>
 <p>用一个包专门处理union-find算法(unionfind)</p>
-
 <p>定义接口和基类(<code>union_find.go</code>)：</p>
-
-<pre><code class="language-go">package unionfind
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#f92672">package</span> <span style="color:#a6e22e">unionfind</span>
  
-//union-find的quick-find实现版
-type QuickFind struct {
-	BaseUnionFind
+<span style="color:#75715e">//union-find的quick-find实现版
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">QuickFind</span> <span style="color:#66d9ef">struct</span> {
+	<span style="color:#a6e22e">BaseUnionFind</span>
 }
  
-func (qf *QuickFind) Connected(p, q int) bool {
-	return qf.id[p] == qf.id[q]
+<span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">qf</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">QuickFind</span>) <span style="color:#a6e22e">Connected</span>(<span style="color:#a6e22e">p</span>, <span style="color:#a6e22e">q</span> <span style="color:#66d9ef">int</span>) <span style="color:#66d9ef">bool</span> {
+	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">qf</span>.<span style="color:#a6e22e">id</span>[<span style="color:#a6e22e">p</span>] <span style="color:#f92672">==</span> <span style="color:#a6e22e">qf</span>.<span style="color:#a6e22e">id</span>[<span style="color:#a6e22e">q</span>]
 }
  
-func (qf *QuickFind) Union(p, q int) {
-	i, j := qf.id[p], qf.id[q]
-	if i == j {
-		return
+<span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">qf</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">QuickFind</span>) <span style="color:#a6e22e">Union</span>(<span style="color:#a6e22e">p</span>, <span style="color:#a6e22e">q</span> <span style="color:#66d9ef">int</span>) {
+	<span style="color:#a6e22e">i</span>, <span style="color:#a6e22e">j</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">qf</span>.<span style="color:#a6e22e">id</span>[<span style="color:#a6e22e">p</span>], <span style="color:#a6e22e">qf</span>.<span style="color:#a6e22e">id</span>[<span style="color:#a6e22e">q</span>]
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">==</span> <span style="color:#a6e22e">j</span> {
+		<span style="color:#66d9ef">return</span>
 	}
-	for k, v := range qf.id {
-		if v == j {
-			qf.id[k] = i
+	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">k</span>, <span style="color:#a6e22e">v</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">qf</span>.<span style="color:#a6e22e">id</span> {
+		<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">v</span> <span style="color:#f92672">==</span> <span style="color:#a6e22e">j</span> {
+			<span style="color:#a6e22e">qf</span>.<span style="color:#a6e22e">id</span>[<span style="color:#a6e22e">k</span>] = <span style="color:#a6e22e">i</span>
 		}
 	}
-	qf.count--
+	<span style="color:#a6e22e">qf</span>.<span style="color:#a6e22e">count</span><span style="color:#f92672">--</span>
 }
  
-func NewQuickFind(n int) *QuickFind {
-	return &amp;QuickFind{*NewBaseUnionFind(n)}
+<span style="color:#66d9ef">func</span> <span style="color:#a6e22e">NewQuickFind</span>(<span style="color:#a6e22e">n</span> <span style="color:#66d9ef">int</span>) <span style="color:#f92672">*</span><span style="color:#a6e22e">QuickFind</span> {
+	<span style="color:#66d9ef">return</span> <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">QuickFind</span>{<span style="color:#f92672">*</span><span style="color:#a6e22e">NewBaseUnionFind</span>(<span style="color:#a6e22e">n</span>)}
 }
-</code></pre>
-
-<h2 id="quickfind">QuickFind</h2>
-
+</code></pre></div><h2 id="quickfind">QuickFind</h2>
 <ul>
 <li>a和b进行union的时候，将b及与b连通节点的标记都置为和a的标记一样</li>
 <li>标记相同的节点是连通的
 <code>quick_find.go:</code></li>
 </ul>
-
-<pre><code class="language-go">package unionfind
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#f92672">package</span> <span style="color:#a6e22e">unionfind</span>
  
-//union-find的quick-find实现版
-type QuickFind struct {
-	BaseUnionFind
+<span style="color:#75715e">//union-find的quick-find实现版
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">QuickFind</span> <span style="color:#66d9ef">struct</span> {
+	<span style="color:#a6e22e">BaseUnionFind</span>
 }
  
-func (qf *QuickFind) Connected(i, j int) bool {
-	return qf.id[i] == qf.id[j]
+<span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">qf</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">QuickFind</span>) <span style="color:#a6e22e">Connected</span>(<span style="color:#a6e22e">i</span>, <span style="color:#a6e22e">j</span> <span style="color:#66d9ef">int</span>) <span style="color:#66d9ef">bool</span> {
+	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">qf</span>.<span style="color:#a6e22e">id</span>[<span style="color:#a6e22e">i</span>] <span style="color:#f92672">==</span> <span style="color:#a6e22e">qf</span>.<span style="color:#a6e22e">id</span>[<span style="color:#a6e22e">j</span>]
 }
  
-func (qf *QuickFind) Union(i, j int) {
-	c := qf.id[j]
-	for k, v := range qf.id {
-		if v == c {
-			qf.id[k] = qf.id[i]
+<span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">qf</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">QuickFind</span>) <span style="color:#a6e22e">Union</span>(<span style="color:#a6e22e">i</span>, <span style="color:#a6e22e">j</span> <span style="color:#66d9ef">int</span>) {
+	<span style="color:#a6e22e">c</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">qf</span>.<span style="color:#a6e22e">id</span>[<span style="color:#a6e22e">j</span>]
+	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">k</span>, <span style="color:#a6e22e">v</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">qf</span>.<span style="color:#a6e22e">id</span> {
+		<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">v</span> <span style="color:#f92672">==</span> <span style="color:#a6e22e">c</span> {
+			<span style="color:#a6e22e">qf</span>.<span style="color:#a6e22e">id</span>[<span style="color:#a6e22e">k</span>] = <span style="color:#a6e22e">qf</span>.<span style="color:#a6e22e">id</span>[<span style="color:#a6e22e">i</span>]
 		}
 	}
-	qf.count--
+	<span style="color:#a6e22e">qf</span>.<span style="color:#a6e22e">count</span><span style="color:#f92672">--</span>
 }
  
-func NewQuickFind(n int) *QuickFind {
-	return &amp;QuickFind{*NewBaseUnionFind(n)}
+<span style="color:#66d9ef">func</span> <span style="color:#a6e22e">NewQuickFind</span>(<span style="color:#a6e22e">n</span> <span style="color:#66d9ef">int</span>) <span style="color:#f92672">*</span><span style="color:#a6e22e">QuickFind</span> {
+	<span style="color:#66d9ef">return</span> <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">QuickFind</span>{<span style="color:#f92672">*</span><span style="color:#a6e22e">NewBaseUnionFind</span>(<span style="color:#a6e22e">n</span>)}
 }
-</code></pre>
-
-<h2 id="quickunion">QuickUnion</h2>
-
+</code></pre></div><h2 id="quickunion">QuickUnion</h2>
 <ul>
 <li>连通的节点形成一棵树，根节点相同
 <code>quick_union.go:</code></li>
 </ul>
-
-<pre><code class="language-go">package unionfind
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#f92672">package</span> <span style="color:#a6e22e">unionfind</span>
  
-//union-find的quick-union实现版
-type QuickUnion struct {
-	BaseUnionFind
+<span style="color:#75715e">//union-find的quick-union实现版
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">QuickUnion</span> <span style="color:#66d9ef">struct</span> {
+	<span style="color:#a6e22e">BaseUnionFind</span>
 }
  
-//查询根节点
-func (qu *QuickUnion) findRoot(p int) int {
-	for p != qu.id[p] {
-		p = qu.id[p]
+<span style="color:#75715e">//查询根节点
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">qu</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">QuickUnion</span>) <span style="color:#a6e22e">findRoot</span>(<span style="color:#a6e22e">p</span> <span style="color:#66d9ef">int</span>) <span style="color:#66d9ef">int</span> {
+	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">p</span> <span style="color:#f92672">!=</span> <span style="color:#a6e22e">qu</span>.<span style="color:#a6e22e">id</span>[<span style="color:#a6e22e">p</span>] {
+		<span style="color:#a6e22e">p</span> = <span style="color:#a6e22e">qu</span>.<span style="color:#a6e22e">id</span>[<span style="color:#a6e22e">p</span>]
 	}
-	return p
+	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">p</span>
 }
  
-func (qu *QuickUnion) Connected(p, q int) bool {
-	return qu.findRoot(p) == qu.findRoot(q)
+<span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">qu</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">QuickUnion</span>) <span style="color:#a6e22e">Connected</span>(<span style="color:#a6e22e">p</span>, <span style="color:#a6e22e">q</span> <span style="color:#66d9ef">int</span>) <span style="color:#66d9ef">bool</span> {
+	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">qu</span>.<span style="color:#a6e22e">findRoot</span>(<span style="color:#a6e22e">p</span>) <span style="color:#f92672">==</span> <span style="color:#a6e22e">qu</span>.<span style="color:#a6e22e">findRoot</span>(<span style="color:#a6e22e">q</span>)
 }
  
-func (qu *QuickUnion) Union(p, q int) {
-	rp := qu.findRoot(p)
-	rq := qu.findRoot(q)
-	if rp == rq {
-		return
+<span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">qu</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">QuickUnion</span>) <span style="color:#a6e22e">Union</span>(<span style="color:#a6e22e">p</span>, <span style="color:#a6e22e">q</span> <span style="color:#66d9ef">int</span>) {
+	<span style="color:#a6e22e">rp</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">qu</span>.<span style="color:#a6e22e">findRoot</span>(<span style="color:#a6e22e">p</span>)
+	<span style="color:#a6e22e">rq</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">qu</span>.<span style="color:#a6e22e">findRoot</span>(<span style="color:#a6e22e">q</span>)
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">rp</span> <span style="color:#f92672">==</span> <span style="color:#a6e22e">rq</span> {
+		<span style="color:#66d9ef">return</span>
 	}
-	qu.id[rq] = rp
-	qu.count--
+	<span style="color:#a6e22e">qu</span>.<span style="color:#a6e22e">id</span>[<span style="color:#a6e22e">rq</span>] = <span style="color:#a6e22e">rp</span>
+	<span style="color:#a6e22e">qu</span>.<span style="color:#a6e22e">count</span><span style="color:#f92672">--</span>
 }
  
-func NewQuickUnion(n int) *QuickUnion {
-	return &amp;QuickUnion{*NewBaseUnionFind(n)}
+<span style="color:#66d9ef">func</span> <span style="color:#a6e22e">NewQuickUnion</span>(<span style="color:#a6e22e">n</span> <span style="color:#66d9ef">int</span>) <span style="color:#f92672">*</span><span style="color:#a6e22e">QuickUnion</span> {
+	<span style="color:#66d9ef">return</span> <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">QuickUnion</span>{<span style="color:#f92672">*</span><span style="color:#a6e22e">NewBaseUnionFind</span>(<span style="color:#a6e22e">n</span>)}
 }
-</code></pre>
-
-<h2 id="加权quickunion-附带路径压缩优化">加权QuickUnion(附带路径压缩优化):</h2>
-
+</code></pre></div><h2 id="quickunion-1">加权QuickUnion(附带路径压缩优化):</h2>
 <ul>
 <li>union的时候小树挂在大树下</li>
 <li>查询根节点的时候顺便将该节点的父节点直接指向根节点，压缩路径
 <code>weighted_quick_union.go:</code></li>
 </ul>
-
-<pre><code class="language-go">package unionfind
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#f92672">package</span> <span style="color:#a6e22e">unionfind</span>
  
  
-//union-find的加权quick-union实现版，
-//另外还作了路径压缩优化
-type WeightedQuickUnion struct {
-	QuickUnion
-	sz []int
+<span style="color:#75715e">//union-find的加权quick-union实现版，
+</span><span style="color:#75715e"></span><span style="color:#75715e">//另外还作了路径压缩优化
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">WeightedQuickUnion</span> <span style="color:#66d9ef">struct</span> {
+	<span style="color:#a6e22e">QuickUnion</span>
+	<span style="color:#a6e22e">sz</span> []<span style="color:#66d9ef">int</span>
 }
  
-//查询根节点，顺便压缩路径
-func (wqu *WeightedQuickUnion) findRoot(p int) int {
-	for p != wqu.id[p] {
-		wqu.id[p] = wqu.id[wqu.id[p]]
-		p = wqu.id[p]
+<span style="color:#75715e">//查询根节点，顺便压缩路径
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">wqu</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">WeightedQuickUnion</span>) <span style="color:#a6e22e">findRoot</span>(<span style="color:#a6e22e">p</span> <span style="color:#66d9ef">int</span>) <span style="color:#66d9ef">int</span> {
+	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">p</span> <span style="color:#f92672">!=</span> <span style="color:#a6e22e">wqu</span>.<span style="color:#a6e22e">id</span>[<span style="color:#a6e22e">p</span>] {
+		<span style="color:#a6e22e">wqu</span>.<span style="color:#a6e22e">id</span>[<span style="color:#a6e22e">p</span>] = <span style="color:#a6e22e">wqu</span>.<span style="color:#a6e22e">id</span>[<span style="color:#a6e22e">wqu</span>.<span style="color:#a6e22e">id</span>[<span style="color:#a6e22e">p</span>]]
+		<span style="color:#a6e22e">p</span> = <span style="color:#a6e22e">wqu</span>.<span style="color:#a6e22e">id</span>[<span style="color:#a6e22e">p</span>]
 	}
-	return p
+	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">p</span>
 }
  
-func (wqu *WeightedQuickUnion) Union(p, q int) {
-	rp := wqu.findRoot(p)
-	rq := wqu.findRoot(q)
-	if rp == rq {
-		return
+<span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">wqu</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">WeightedQuickUnion</span>) <span style="color:#a6e22e">Union</span>(<span style="color:#a6e22e">p</span>, <span style="color:#a6e22e">q</span> <span style="color:#66d9ef">int</span>) {
+	<span style="color:#a6e22e">rp</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">wqu</span>.<span style="color:#a6e22e">findRoot</span>(<span style="color:#a6e22e">p</span>)
+	<span style="color:#a6e22e">rq</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">wqu</span>.<span style="color:#a6e22e">findRoot</span>(<span style="color:#a6e22e">q</span>)
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">rp</span> <span style="color:#f92672">==</span> <span style="color:#a6e22e">rq</span> {
+		<span style="color:#66d9ef">return</span>
 	}
-	if wqu.sz[rp] &lt; wqu.sz[rq] {
-		wqu.id[rp] = rq
-		wqu.sz[rq] += wqu.sz[rp]
-	} else {
-		wqu.id[rp] = rq
-		wqu.sz[rp] += wqu.sz[rq]
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">wqu</span>.<span style="color:#a6e22e">sz</span>[<span style="color:#a6e22e">rp</span>] &lt; <span style="color:#a6e22e">wqu</span>.<span style="color:#a6e22e">sz</span>[<span style="color:#a6e22e">rq</span>] {
+		<span style="color:#a6e22e">wqu</span>.<span style="color:#a6e22e">id</span>[<span style="color:#a6e22e">rp</span>] = <span style="color:#a6e22e">rq</span>
+		<span style="color:#a6e22e">wqu</span>.<span style="color:#a6e22e">sz</span>[<span style="color:#a6e22e">rq</span>] <span style="color:#f92672">+=</span> <span style="color:#a6e22e">wqu</span>.<span style="color:#a6e22e">sz</span>[<span style="color:#a6e22e">rp</span>]
+	} <span style="color:#66d9ef">else</span> {
+		<span style="color:#a6e22e">wqu</span>.<span style="color:#a6e22e">id</span>[<span style="color:#a6e22e">rp</span>] = <span style="color:#a6e22e">rq</span>
+		<span style="color:#a6e22e">wqu</span>.<span style="color:#a6e22e">sz</span>[<span style="color:#a6e22e">rp</span>] <span style="color:#f92672">+=</span> <span style="color:#a6e22e">wqu</span>.<span style="color:#a6e22e">sz</span>[<span style="color:#a6e22e">rq</span>]
 	}
-	wqu.count--
+	<span style="color:#a6e22e">wqu</span>.<span style="color:#a6e22e">count</span><span style="color:#f92672">--</span>
 }
  
-func NewWeightedQuickUnion(n int) *WeightedQuickUnion {
-	sz := make([]int, n)
-	for i := 0; i &lt; n; i++ {
-		sz[i] = 1
+<span style="color:#66d9ef">func</span> <span style="color:#a6e22e">NewWeightedQuickUnion</span>(<span style="color:#a6e22e">n</span> <span style="color:#66d9ef">int</span>) <span style="color:#f92672">*</span><span style="color:#a6e22e">WeightedQuickUnion</span> {
+	<span style="color:#a6e22e">sz</span> <span style="color:#f92672">:=</span> make([]<span style="color:#66d9ef">int</span>, <span style="color:#a6e22e">n</span>)
+	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">i</span> &lt; <span style="color:#a6e22e">n</span>; <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span> {
+		<span style="color:#a6e22e">sz</span>[<span style="color:#a6e22e">i</span>] = <span style="color:#ae81ff">1</span>
 	}
-	return &amp;WeightedQuickUnion{QuickUnion:*NewQuickUnion(n), sz: sz}
+	<span style="color:#66d9ef">return</span> <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">WeightedQuickUnion</span>{<span style="color:#a6e22e">QuickUnion</span>:<span style="color:#f92672">*</span><span style="color:#a6e22e">NewQuickUnion</span>(<span style="color:#a6e22e">n</span>), <span style="color:#a6e22e">sz</span>: <span style="color:#a6e22e">sz</span>}
 }
-</code></pre>
-
+</code></pre></div>
             </article>
 
             <ul class="pager blog-pager">
                 
                 <li class="previous">
-                    <a href="https://imroc.io/posts/algorithm/golang%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92%E6%B1%82%E8%A7%A3%E6%9C%80%E5%A4%A7%E8%BF%9E%E7%BB%AD%E5%AD%90%E6%95%B0%E7%BB%84%E5%92%8C/" data-toggle="tooltip" data-placement="top" title="golang动态规划求解最大连续子数组和">&larr; Previous Post</a>
+                    <a href="https://imroc.io/posts/algorithm/union-findjava%E5%AE%9E%E7%8E%B0/" data-toggle="tooltip" data-placement="top" title="Union-Find(Java实现)">&larr; Previous Post</a>
                 </li>
                  
                 <li class="next">
-                    <a href="https://imroc.io/posts/algorithm/union-findjava%E5%AE%9E%E7%8E%B0/" data-toggle="tooltip" data-placement="top" title="Union-Find(Java实现)">Next Post &rarr;</a>
+                    <a href="https://imroc.io/posts/algorithm/union-findc&#43;&#43;%E5%AE%9E%E7%8E%B0%E5%AE%9E%E7%8E%B0/" data-toggle="tooltip" data-placement="top" title="Union-Find(C&#43;&#43;实现实现)">Next Post &rarr;</a>
                 </li>
                 
             </ul>
@@ -457,64 +374,42 @@ func NewWeightedQuickUnion(n int) *WeightedQuickUnion {
                 <h2>See Also</h2>
                 <ul>
                     
-                    <li><a href="/posts/algorithm/%E5%A0%86%E6%8E%92%E5%BA%8Fc-c&#43;&#43;%E5%AE%9E%E7%8E%B0/">堆排序(C-C&#43;&#43;实现)</a></li>
-                    
                     <li><a href="/posts/algorithm/union-findc&#43;&#43;%E5%AE%9E%E7%8E%B0%E5%AE%9E%E7%8E%B0/">Union-Find(C&#43;&#43;实现实现)</a></li>
                     
                     <li><a href="/posts/algorithm/union-findjava%E5%AE%9E%E7%8E%B0/">Union-Find(Java实现)</a></li>
                     
-                    <li><a href="/posts/algorithm/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F%E8%87%AA%E9%A1%B6%E5%90%91%E4%B8%8B%E4%B8%8E%E8%87%AA%E5%BA%95%E5%90%91%E4%B8%8A%E4%B8%A4%E7%A7%8D%E6%96%B9%E5%BC%8Fc-c&#43;&#43;%E5%AE%9E%E7%8E%B0/">归并排序,自顶向下与自底向上两种方式(C-C&#43;&#43;实现)</a></li>
+                    <li><a href="/posts/algorithm/golang%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92%E6%B1%82%E8%A7%A3%E6%9C%80%E5%A4%A7%E8%BF%9E%E7%BB%AD%E5%AD%90%E6%95%B0%E7%BB%84%E5%92%8C/">golang动态规划求解最大连续子数组和</a></li>
                     
-                    <li><a href="/posts/algorithm/%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8Fgolang%E5%AE%9E%E7%8E%B0/">冒泡排序(golang实现)</a></li>
+                    <li><a href="/posts/algorithm/golang%E5%AE%9E%E7%8E%B0%E4%BA%8C%E5%8F%89%E6%9F%A5%E6%89%BE%E6%A0%91/">golang实现二叉查找树</a></li>
+                    
+                    <li><a href="/posts/algorithm/%E4%B8%89%E5%90%91%E5%88%87%E5%88%86%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8Fc-c&#43;&#43;%E5%AE%9E%E7%8E%B0/">三向切分快速排序(C-C&#43;&#43;实现)</a></li>
                     
                 </ul>
                 
             </div>
             
-            
-            
-            
-<div>
-    <section id="datecount">
-        <h4 id="date"> Tue Sep 5, 2017</h4>
-    </section>
-    <h5 id="wc">900 Words|Read in about 2 Min</h5>
-    <h5 id="tags">Tags: 
-        
-        <a href="https://imroc.io/tags/%E7%AE%97%E6%B3%95/">算法</a> &nbsp;
-    </h5>
-</div>
-
-            
-            </div>
-            
-			
-               <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-<aside id=comments>
-    <div>
-        <h2> Comments </h2>
-    </div>
-    <div id="container"></div>
-    <link rel="stylesheet" href="https://imroc.io/static/gitment/default.css">
-    <script src="https://imroc.io/static/gitment/gitment.browser.js"></script>
-    <script>
-        var gitment = new Gitment({
-			owner: 'imroc', 
-			repo: 'imroc.github.io', 
-            oauth: {
-				client_id: 'd05b8f959b3111c6fb63',
-				client_secret: 'f30ef76ea0050ed731ace76f7fbf684ae5d28fbc',
-            },
-        })
-        gitment.render('container')
-    </script>
-</aside>
-</div>
-
-			
         </div>
     </div>
-    </section>
+    
+    <div id="gitalk-container"></div>
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+      var gitalk = new Gitalk({
+          clientID: 'd05b8f959b3111c6fb63',
+          clientSecret: 'f30ef76ea0050ed731ace76f7fbf684ae5d28fbc',
+          repo: 'blog',
+          owner: 'imroc',
+          admin: ['imroc'],
+          labels: ['Gitalk'],
+          title: 'Union-Find(golang实现)',
+          createIssueManually: false,
+          id: '',
+          distractionFreeMode: true
+      });
+      gitalk.render('gitalk-container');
+    </script>
+
 </div>
 
     <footer>
@@ -573,7 +468,7 @@ func NewWeightedQuickUnion(n int) *WeightedQuickUnion {
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.49.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.62.0</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>
@@ -581,15 +476,7 @@ func NewWeightedQuickUnion(n int) *WeightedQuickUnion {
   </div>
 </footer>
 
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script src="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe-ui-default.min.js"></script>
-<script src="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe.js"></script>
-<script src="https://imroc.io/js/auto-render.min.js"></script>
-<script src="https://imroc.io/js/main.js"></script>
-<script src="https://imroc.io/static/prism/prism.js"></script>
-<script src="https://cdn.staticfile.org/KaTeX/0.7.1/katex.min.js"></script>
-<script> renderMathInElement(document.body); </script>
-
+<script src='/js/bundle.min.879361cd590eb97fa7b7459c2fecb6f66e7b5c798ccdbbad966b1d4d0adce056.js' integrity='sha256-h5NhzVkOuX&#43;nt0WcL&#43;y29m57XHmMzbutlmsdTQrc4FY='></script>
 
 
 

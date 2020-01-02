@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Filebeat on roc</title>
+    <title>filebeat on roc</title>
     <link>https://imroc.io/tags/filebeat/</link>
-    <description>Recent content in Filebeat on roc</description>
+    <description>Recent content in filebeat on roc</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <managingEditor>roc@imroc.io (roc)</managingEditor>

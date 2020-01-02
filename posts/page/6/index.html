@@ -20,21 +20,15 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="roc" />
 
-  <meta name="generator" content="Hugo 0.49.2" />
+  <meta name="generator" content="Hugo 0.62.0" />
   <link rel="canonical" href="https://imroc.io/posts/" />
   <link rel="alternate" href="https://imroc.io/index.xml" type="application/rss+xml" title="roc">
-  <script src="https://cdn.staticfile.org/jquery/1.12.4/jquery.min.js"></script>
-  <link rel="stylesheet" href="https://cdn.staticfile.org/KaTeX/0.7.1/katex.min.css" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" crossorigin="anonymous">
 
-  <link rel="stylesheet" href="https://imroc.io/css/main.css" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
   
-  <link rel="stylesheet" href="https://imroc.io/static/prism/prism.css" />
 
-  <script>
+
+<link rel="stylesheet" href='/css/bundle.min.2971c990ae9e3036a2e09462d93d94829b857b7235a2b5eac8896bdad8a8fdb6.css' integrity='sha256-KXHJkK6eMDai4JRi2T2UgpuFe3I1orXqyIlr2tio/bY='>
+  --><script>
 var _hmt = _hmt || [];
 (function() {
   var hm = document.createElement("script");
@@ -43,56 +37,6 @@ var _hmt = _hmt || [];
   s.parentNode.insertBefore(hm, s);
 })();
 </script>
-
-
-
-<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe.min.css" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.2/default-skin/default-skin.min.css" crossorigin="anonymous" />
-
-
-<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
-
-<div class="pswp__bg"></div>
-
-<div class="pswp__scroll-wrap">
-    
-    <div class="pswp__container">
-      <div class="pswp__item"></div>
-      <div class="pswp__item"></div>
-      <div class="pswp__item"></div>
-    </div>
-    
-    <div class="pswp__ui pswp__ui--hidden">
-    <div class="pswp__top-bar">
-      
-      <div class="pswp__counter"></div>
-      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
-      <button class="pswp__button pswp__button--share" title="Share"></button>
-      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
-      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
-      
-      
-      <div class="pswp__preloader">
-        <div class="pswp__preloader__icn">
-          <div class="pswp__preloader__cut">
-            <div class="pswp__preloader__donut"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
-      <div class="pswp__share-tooltip"></div>
-    </div>
-    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
-    </button>
-    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
-    </button>
-    <div class="pswp__caption">
-      <div class="pswp__caption__center"></div>
-    </div>
-    </div>
-    </div>
-</div>
 
 
 </head>
@@ -210,8 +154,8 @@ var _hmt = _hmt || [];
         <div class="posts-list">
           
             <article class="post-preview">
-              <a href="https://imroc.io/posts/algorithm/%E4%B8%89%E5%90%91%E5%88%87%E5%88%86%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8Fjava%E5%AE%9E%E7%8E%B0/">
-                <h2 class="post-title">三向切分快速排序(Java实现)</h2>
+              <a href="https://imroc.io/posts/algorithm/%E4%B8%89%E5%90%91%E5%88%87%E5%88%86%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8Fgolang%E5%AE%9E%E7%8E%B0/">
+                <h2 class="post-title">三向切分快速排序(golang实现)</h2>
 
                 
               </a>
@@ -221,8 +165,8 @@ var _hmt = _hmt || [];
               </p>
               <div class="post-entry">
                 
-                  封装成类： package com.roc.algorithms.sort; /** * 三向切分快速排序 * 适合有较多重复元素的排序算法 * * @author imroc */ public class ThreeWayQuickSort { public static void sort(int[] a) { sort(a, 0, a.length - 1); } //在lt之前的(lo~lt-1)
-                  <a href="https://imroc.io/posts/algorithm/%E4%B8%89%E5%90%91%E5%88%87%E5%88%86%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8Fjava%E5%AE%9E%E7%8E%B0/" class="post-read-more">[Read More]</a>
+                  封装成函数： //三向切分快速排序 func ThreeWayQuickSort(s []int) { sort3way(s, 0, len(s)-1) } //在lt之前的(lo~lt-1)都小于中间值 //在gt之前的(gt+1~hi)都大于中间值
+                  <a href="https://imroc.io/posts/algorithm/%E4%B8%89%E5%90%91%E5%88%87%E5%88%86%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8Fgolang%E5%AE%9E%E7%8E%B0/" class="post-read-more">[Read More]</a>
                 
               </div>
 
@@ -237,8 +181,8 @@ var _hmt = _hmt || [];
             </article>
           
             <article class="post-preview">
-              <a href="https://imroc.io/posts/algorithm/%E4%B8%89%E5%90%91%E5%88%87%E5%88%86%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8Fgolang%E5%AE%9E%E7%8E%B0/">
-                <h2 class="post-title">三向切分快速排序(golang实现)</h2>
+              <a href="https://imroc.io/posts/algorithm/%E4%B8%89%E5%90%91%E5%88%87%E5%88%86%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8Fjava%E5%AE%9E%E7%8E%B0/">
+                <h2 class="post-title">三向切分快速排序(Java实现)</h2>
 
                 
               </a>
@@ -248,8 +192,8 @@ var _hmt = _hmt || [];
               </p>
               <div class="post-entry">
                 
-                  封装成函数： //三向切分快速排序 func ThreeWayQuickSort(s []int) { sort3way(s, 0, len(s)-1) } //在lt之前的(lo~lt-1)都小于中间值 //在gt之前的(gt+1~hi)都大于中间值
-                  <a href="https://imroc.io/posts/algorithm/%E4%B8%89%E5%90%91%E5%88%87%E5%88%86%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8Fgolang%E5%AE%9E%E7%8E%B0/" class="post-read-more">[Read More]</a>
+                  封装成类： package com.roc.algorithms.sort; /** * 三向切分快速排序 * 适合有较多重复元素的排序算法 * * @author imroc */ public class ThreeWayQuickSort { public static void sort(int[] a) { sort(a, 0, a.length - 1); } //在lt之前的(lo~lt-1)
+                  <a href="https://imroc.io/posts/algorithm/%E4%B8%89%E5%90%91%E5%88%87%E5%88%86%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8Fjava%E5%AE%9E%E7%8E%B0/" class="post-read-more">[Read More]</a>
                 
               </div>
 
@@ -291,8 +235,8 @@ var _hmt = _hmt || [];
             </article>
           
             <article class="post-preview">
-              <a href="https://imroc.io/posts/algorithm/%E4%BA%8C%E5%88%86%E6%B3%95%E6%9F%A5%E6%89%BEjava%E5%AE%9E%E7%8E%B0/">
-                <h2 class="post-title">二分法查找(Java实现)</h2>
+              <a href="https://imroc.io/posts/algorithm/%E4%BA%8C%E5%88%86%E6%B3%95%E6%9F%A5%E6%89%BEgolang%E5%AE%9E%E7%8E%B0/">
+                <h2 class="post-title">二分法查找(golang实现)</h2>
 
                 
               </a>
@@ -302,8 +246,8 @@ var _hmt = _hmt || [];
               </p>
               <div class="post-entry">
                 
-                  封装成类： package com.roc.algorithms.search; /** * 二分法查找 * * @author imroc */ public class BinarySearch { /** * @param a 升序排列的数组 * @param k 待查找的整数 * @return 如果查到有就返回对应角标，没有就返回-1 */ public static int search(int[]
-                  <a href="https://imroc.io/posts/algorithm/%E4%BA%8C%E5%88%86%E6%B3%95%E6%9F%A5%E6%89%BEjava%E5%AE%9E%E7%8E%B0/" class="post-read-more">[Read More]</a>
+                  封装成函数： //二分法查找 //切片s是升序的 //k为待查找的整数 //如果查到有就返回对应角标, //没有就返回-1 func BinarySearch(s []int, k int) int { lo, hi := 0, len(s)-1 for lo
+                  <a href="https://imroc.io/posts/algorithm/%E4%BA%8C%E5%88%86%E6%B3%95%E6%9F%A5%E6%89%BEgolang%E5%AE%9E%E7%8E%B0/" class="post-read-more">[Read More]</a>
                 
               </div>
 
@@ -318,8 +262,8 @@ var _hmt = _hmt || [];
             </article>
           
             <article class="post-preview">
-              <a href="https://imroc.io/posts/algorithm/%E4%BA%8C%E5%88%86%E6%B3%95%E6%9F%A5%E6%89%BEgolang%E5%AE%9E%E7%8E%B0/">
-                <h2 class="post-title">二分法查找(golang实现)</h2>
+              <a href="https://imroc.io/posts/algorithm/%E4%BA%8C%E5%88%86%E6%B3%95%E6%9F%A5%E6%89%BEjava%E5%AE%9E%E7%8E%B0/">
+                <h2 class="post-title">二分法查找(Java实现)</h2>
 
                 
               </a>
@@ -329,8 +273,8 @@ var _hmt = _hmt || [];
               </p>
               <div class="post-entry">
                 
-                  封装成函数： //二分法查找 //切片s是升序的 //k为待查找的整数 //如果查到有就返回对应角标, //没有就返回-1 func BinarySearch(s []int, k int) int { lo, hi := 0, len(s)-1 for lo
-                  <a href="https://imroc.io/posts/algorithm/%E4%BA%8C%E5%88%86%E6%B3%95%E6%9F%A5%E6%89%BEgolang%E5%AE%9E%E7%8E%B0/" class="post-read-more">[Read More]</a>
+                  封装成类： package com.roc.algorithms.search; /** * 二分法查找 * * @author imroc */ public class BinarySearch { /** * @param a 升序排列的数组 * @param k 待查找的整数 * @return 如果查到有就返回对应角标，没有就返回-1 */ public static int search(int[]
+                  <a href="https://imroc.io/posts/algorithm/%E4%BA%8C%E5%88%86%E6%B3%95%E6%9F%A5%E6%89%BEjava%E5%AE%9E%E7%8E%B0/" class="post-read-more">[Read More]</a>
                 
               </div>
 
@@ -372,8 +316,8 @@ var _hmt = _hmt || [];
             </article>
           
             <article class="post-preview">
-              <a href="https://imroc.io/posts/algorithm/%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8Fjava%E5%AE%9E%E7%8E%B0/">
-                <h2 class="post-title">冒泡排序(Java实现)</h2>
+              <a href="https://imroc.io/posts/algorithm/%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8Fgolang%E5%AE%9E%E7%8E%B0/">
+                <h2 class="post-title">冒泡排序(golang实现)</h2>
 
                 
               </a>
@@ -383,8 +327,8 @@ var _hmt = _hmt || [];
               </p>
               <div class="post-entry">
                 
-                  两种类似的方式： /** * 冒泡排序 * @author roc */ public class BubbleSort { //交换数组元素 private static void swap(int[] a,int i,int j){ int t = a[i]; a[i] = a[j]; a[j] = t; } //第一种冒泡排序 public static void sort1(int[] a){ int max = a.length-1; int i,j; for(i=0;i&lt;max;i++){ for(j=0;j&lt;max-i;j++){
-                  <a href="https://imroc.io/posts/algorithm/%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8Fjava%E5%AE%9E%E7%8E%B0/" class="post-read-more">[Read More]</a>
+                  有两种相似的方式： func swap(slice []int, i int, j int) { slice[i], slice[j] = slice[j], slice[i] } //第一种冒泡排序 func BubbleSort1(slice []int) { length := len(slice) max := length - 1 for i := 0; i &lt; max; i++ { for j := 0; j &lt; max-i; j++ { if slice[j+1] &lt; slice[j] { swap(slice, j, j+1)
+                  <a href="https://imroc.io/posts/algorithm/%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8Fgolang%E5%AE%9E%E7%8E%B0/" class="post-read-more">[Read More]</a>
                 
               </div>
 
@@ -399,8 +343,8 @@ var _hmt = _hmt || [];
             </article>
           
             <article class="post-preview">
-              <a href="https://imroc.io/posts/algorithm/%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8Fgolang%E5%AE%9E%E7%8E%B0/">
-                <h2 class="post-title">冒泡排序(golang实现)</h2>
+              <a href="https://imroc.io/posts/algorithm/%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8Fjava%E5%AE%9E%E7%8E%B0/">
+                <h2 class="post-title">冒泡排序(Java实现)</h2>
 
                 
               </a>
@@ -410,8 +354,8 @@ var _hmt = _hmt || [];
               </p>
               <div class="post-entry">
                 
-                  有两种相似的方式： func swap(slice []int, i int, j int) { slice[i], slice[j] = slice[j], slice[i] } //第一种冒泡排序 func BubbleSort1(slice []int) { length := len(slice) max := length - 1 for i := 0; i &lt; max; i++ { for j := 0; j &lt; max-i; j++ { if slice[j+1] &lt; slice[j] { swap(slice, j, j+1)
-                  <a href="https://imroc.io/posts/algorithm/%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8Fgolang%E5%AE%9E%E7%8E%B0/" class="post-read-more">[Read More]</a>
+                  两种类似的方式： /** * 冒泡排序 * @author roc */ public class BubbleSort { //交换数组元素 private static void swap(int[] a,int i,int j){ int t = a[i]; a[i] = a[j]; a[j] = t; } //第一种冒泡排序 public static void sort1(int[] a){ int max = a.length-1; int i,j; for(i=0;i&lt;max;i++){ for(j=0;j&lt;max-i;j++){
+                  <a href="https://imroc.io/posts/algorithm/%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8Fjava%E5%AE%9E%E7%8E%B0/" class="post-read-more">[Read More]</a>
                 
               </div>
 
@@ -453,8 +397,8 @@ var _hmt = _hmt || [];
             </article>
           
             <article class="post-preview">
-              <a href="https://imroc.io/posts/algorithm/%E5%A0%86%E6%8E%92%E5%BA%8Fjava%E5%AE%9E%E7%8E%B0/">
-                <h2 class="post-title">堆排序(Java实现)</h2>
+              <a href="https://imroc.io/posts/algorithm/%E5%A0%86%E6%8E%92%E5%BA%8Fgolang%E5%AE%9E%E7%8E%B0/">
+                <h2 class="post-title">堆排序(golang实现)</h2>
 
                 
               </a>
@@ -464,8 +408,8 @@ var _hmt = _hmt || [];
               </p>
               <div class="post-entry">
                 
-                  封装成类： package com.roc.algorithms.sort; /** * 堆排序 * a[0]不用，实际元素从角标1开始 * 父节点元素大于子节点元素 * 左子节点角标为2*k * 右子节点角标为2*k+1 * 父节
-                  <a href="https://imroc.io/posts/algorithm/%E5%A0%86%E6%8E%92%E5%BA%8Fjava%E5%AE%9E%E7%8E%B0/" class="post-read-more">[Read More]</a>
+                  封装成函数： //堆排序 //s[0]不用，实际元素从角标1开始 //父节点元素大于子节点元素 //左子节点角标为2*k //右子节点角标为2*k+1
+                  <a href="https://imroc.io/posts/algorithm/%E5%A0%86%E6%8E%92%E5%BA%8Fgolang%E5%AE%9E%E7%8E%B0/" class="post-read-more">[Read More]</a>
                 
               </div>
 
@@ -507,6 +451,7 @@ var _hmt = _hmt || [];
     <li class="page-item">
     <a href="/posts/page/5/" class="page-link" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a>
     </li>
+    
     
     
     
@@ -618,6 +563,7 @@ var _hmt = _hmt || [];
     
 </ul>
 
+
         
         
         
@@ -689,7 +635,7 @@ var _hmt = _hmt || [];
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.49.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.62.0</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>
@@ -697,15 +643,7 @@ var _hmt = _hmt || [];
   </div>
 </footer>
 
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script src="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe-ui-default.min.js"></script>
-<script src="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe.js"></script>
-<script src="https://imroc.io/js/auto-render.min.js"></script>
-<script src="https://imroc.io/js/main.js"></script>
-<script src="https://imroc.io/static/prism/prism.js"></script>
-<script src="https://cdn.staticfile.org/KaTeX/0.7.1/katex.min.js"></script>
-<script> renderMathInElement(document.body); </script>
-
+<script src='/js/bundle.min.879361cd590eb97fa7b7459c2fecb6f66e7b5c798ccdbbad966b1d4d0adce056.js' integrity='sha256-h5NhzVkOuX&#43;nt0WcL&#43;y29m57XHmMzbutlmsdTQrc4FY='></script>
 
 
 

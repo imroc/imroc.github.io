@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Categories on roc</title>
@@ -8,58 +8,22 @@
     <language>zh-cn</language>
     <managingEditor>roc@imroc.io (roc)</managingEditor>
     <webMaster>roc@imroc.io (roc)</webMaster>
-    <lastBuildDate>Wed, 06 Sep 2017 15:52:18 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 15 Dec 2019 12:03:00 +0800</lastBuildDate>
     
 	<atom:link href="https://imroc.io/categories/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>Arch</title>
-      <link>https://imroc.io/categories/arch/</link>
-      <pubDate>Wed, 06 Sep 2017 15:52:18 +0800</pubDate>
+      <title>kubernetes</title>
+      <link>https://imroc.io/categories/kubernetes/</link>
+      <pubDate>Sun, 15 Dec 2019 12:03:00 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/categories/arch/</guid>
+      <guid>https://imroc.io/categories/kubernetes/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Docker</title>
-      <link>https://imroc.io/categories/docker/</link>
-      <pubDate>Wed, 20 Dec 2017 13:12:35 +0800</pubDate>
-      <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/categories/docker/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Geek</title>
-      <link>https://imroc.io/categories/geek/</link>
-      <pubDate>Fri, 07 Dec 2018 18:05:00 +0800</pubDate>
-      <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/categories/geek/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Golang</title>
-      <link>https://imroc.io/categories/golang/</link>
-      <pubDate>Wed, 06 Sep 2017 15:35:18 +0800</pubDate>
-      <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/categories/golang/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Hugo</title>
-      <link>https://imroc.io/categories/hugo/</link>
-      <pubDate>Tue, 16 Jan 2018 20:35:06 +0800</pubDate>
-      <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/categories/hugo/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Istio</title>
+      <title>istio</title>
       <link>https://imroc.io/categories/istio/</link>
       <pubDate>Sun, 07 Apr 2019 11:54:00 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
@@ -68,11 +32,47 @@
     </item>
     
     <item>
-      <title>Kubernetes</title>
-      <link>https://imroc.io/categories/kubernetes/</link>
-      <pubDate>Sun, 15 Dec 2019 12:03:00 +0800</pubDate>
+      <title>geek</title>
+      <link>https://imroc.io/categories/geek/</link>
+      <pubDate>Fri, 07 Dec 2018 18:05:00 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/categories/kubernetes/</guid>
+      <guid>https://imroc.io/categories/geek/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>hugo</title>
+      <link>https://imroc.io/categories/hugo/</link>
+      <pubDate>Tue, 16 Jan 2018 20:35:06 +0800</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/categories/hugo/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>docker</title>
+      <link>https://imroc.io/categories/docker/</link>
+      <pubDate>Wed, 20 Dec 2017 13:12:35 +0800</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/categories/docker/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>arch</title>
+      <link>https://imroc.io/categories/arch/</link>
+      <pubDate>Wed, 06 Sep 2017 15:52:18 +0800</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/categories/arch/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>golang</title>
+      <link>https://imroc.io/categories/golang/</link>
+      <pubDate>Wed, 06 Sep 2017 15:35:18 +0800</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/categories/golang/</guid>
       <description></description>
     </item>
     

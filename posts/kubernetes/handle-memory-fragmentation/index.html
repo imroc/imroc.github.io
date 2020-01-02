@@ -23,21 +23,15 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="roc" />
 
-  <meta name="generator" content="Hugo 0.49.2" />
+  <meta name="generator" content="Hugo 0.62.0" />
   <link rel="canonical" href="https://imroc.io/posts/kubernetes/handle-memory-fragmentation/" />
   <link rel="alternate" href="https://imroc.io/index.xml" type="application/rss+xml" title="roc">
-  <script src="https://cdn.staticfile.org/jquery/1.12.4/jquery.min.js"></script>
-  <link rel="stylesheet" href="https://cdn.staticfile.org/KaTeX/0.7.1/katex.min.css" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" crossorigin="anonymous">
 
-  <link rel="stylesheet" href="https://imroc.io/css/main.css" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
   
-  <link rel="stylesheet" href="https://imroc.io/static/prism/prism.css" />
 
-  <script>
+
+<link rel="stylesheet" href='/css/bundle.min.2971c990ae9e3036a2e09462d93d94829b857b7235a2b5eac8896bdad8a8fdb6.css' integrity='sha256-KXHJkK6eMDai4JRi2T2UgpuFe3I1orXqyIlr2tio/bY='>
+  --><script>
 var _hmt = _hmt || [];
 (function() {
   var hm = document.createElement("script");
@@ -46,56 +40,6 @@ var _hmt = _hmt || [];
   s.parentNode.insertBefore(hm, s);
 })();
 </script>
-
-
-
-<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe.min.css" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.2/default-skin/default-skin.min.css" crossorigin="anonymous" />
-
-
-<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
-
-<div class="pswp__bg"></div>
-
-<div class="pswp__scroll-wrap">
-    
-    <div class="pswp__container">
-      <div class="pswp__item"></div>
-      <div class="pswp__item"></div>
-      <div class="pswp__item"></div>
-    </div>
-    
-    <div class="pswp__ui pswp__ui--hidden">
-    <div class="pswp__top-bar">
-      
-      <div class="pswp__counter"></div>
-      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
-      <button class="pswp__button pswp__button--share" title="Share"></button>
-      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
-      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
-      
-      
-      <div class="pswp__preloader">
-        <div class="pswp__preloader__icn">
-          <div class="pswp__preloader__cut">
-            <div class="pswp__preloader__donut"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
-      <div class="pswp__share-tooltip"></div>
-    </div>
-    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
-    </button>
-    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
-    </button>
-    <div class="pswp__caption">
-      <div class="pswp__caption__center"></div>
-    </div>
-    </div>
-    </div>
-</div>
 
 
 </head>
@@ -272,45 +216,27 @@ var _hmt = _hmt || [];
             <article role="main" class="blog-post" itemprop="articleBody" id="content">
                 
 
-                
-
-<h2 id="内存碎片化造成的危害">内存碎片化造成的危害</h2>
-
+                <h2 id="heading">内存碎片化造成的危害</h2>
 <p>节点的内存碎片化严重，导致docker运行容器时，无法分到大的内存块，导致start docker失败。最终导致服务更新时，状态一直都是启动中</p>
-
-<h2 id="判断是否内存碎片化严重">判断是否内存碎片化严重</h2>
-
+<h2 id="heading-1">判断是否内存碎片化严重</h2>
 <p>内核日志显示：</p>
-
-<p><img src="https://imroc.io/assets/blog/handle-memory-fragmentation-1.png" alt="" /></p>
-
-<p><img src="https://imroc.io/assets/blog/handle-memory-fragmentation-2.png" alt="" /></p>
-
+<p><img src="https://imroc.io/assets/blog/handle-memory-fragmentation-1.png" alt=""></p>
+<p><img src="https://imroc.io/assets/blog/handle-memory-fragmentation-2.png" alt=""></p>
 <p>进一步查看的系统内存(cache多可能是io导致的，为了提高io效率留下的缓存，这部分内存实际是可以释放的)：</p>
-
-<p><img src="https://imroc.io/assets/blog/handle-memory-fragmentation-3.png" alt="" /></p>
-
+<p><img src="https://imroc.io/assets/blog/handle-memory-fragmentation-3.png" alt=""></p>
 <p>查看slab (后面的0多表示伙伴系统没有大块内存了)：</p>
-
-<p><img src="https://imroc.io/assets/blog/handle-memory-fragmentation-4.png" alt="" /></p>
-
-<h2 id="解决方法">解决方法</h2>
-
+<p><img src="https://imroc.io/assets/blog/handle-memory-fragmentation-4.png" alt=""></p>
+<h2 id="heading-2">解决方法</h2>
 <ul>
-<li>周期性地或者在发现大块内存不足时，先进行drop_cache操作:
-<code>bash
-echo 3 &gt; /proc/sys/vm/drop_caches
-</code></li>
-<li>必要时候进行内存整理，开销会比较大，会造成业务卡住一段时间(慎用):
-<code>bash
-echo 1 &gt; /proc/sys/vm/compact_memory
-</code></li>
+<li>周期性地或者在发现大块内存不足时，先进行drop_cache操作:</li>
 </ul>
-
-<h2 id="附录">附录</h2>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">echo <span style="color:#ae81ff">3</span> &gt; /proc/sys/vm/drop_caches
+</code></pre></div><ul>
+<li>必要时候进行内存整理，开销会比较大，会造成业务卡住一段时间(慎用):</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">echo <span style="color:#ae81ff">1</span> &gt; /proc/sys/vm/compact_memory
+</code></pre></div><h2 id="heading-3">附录</h2>
 <p>相关链接：</p>
-
 <ul>
 <li><a href="https://www.lijiaocn.com/%E9%97%AE%E9%A2%98/2017/11/13/problem-unable-create-nf-conn.html">https://www.lijiaocn.com/%E9%97%AE%E9%A2%98/2017/11/13/problem-unable-create-nf-conn.html</a></li>
 <li><a href="https://blog.csdn.net/wqhlmark64/article/details/79143975">https://blog.csdn.net/wqhlmark64/article/details/79143975</a></li>
@@ -350,50 +276,28 @@ echo 1 &gt; /proc/sys/vm/compact_memory
                 
             </div>
             
-            
-            
-            
-<div>
-    <section id="datecount">
-        <h4 id="date"> Sat Jun 8, 2019</h4>
-    </section>
-    <h5 id="wc">300 Words|Read in about 1 Min</h5>
-    <h5 id="tags">Tags: 
-        
-        <a href="https://imroc.io/tags/kubernetes/">kubernetes</a> &nbsp;
-    </h5>
-</div>
-
-            
-            </div>
-            
-			
-               <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-<aside id=comments>
-    <div>
-        <h2> Comments </h2>
-    </div>
-    <div id="container"></div>
-    <link rel="stylesheet" href="https://imroc.io/static/gitment/default.css">
-    <script src="https://imroc.io/static/gitment/gitment.browser.js"></script>
-    <script>
-        var gitment = new Gitment({
-			owner: 'imroc', 
-			repo: 'imroc.github.io', 
-            oauth: {
-				client_id: 'd05b8f959b3111c6fb63',
-				client_secret: 'f30ef76ea0050ed731ace76f7fbf684ae5d28fbc',
-            },
-        })
-        gitment.render('container')
-    </script>
-</aside>
-</div>
-
-			
         </div>
     </div>
-    </section>
+    
+    <div id="gitalk-container"></div>
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+      var gitalk = new Gitalk({
+          clientID: 'd05b8f959b3111c6fb63',
+          clientSecret: 'f30ef76ea0050ed731ace76f7fbf684ae5d28fbc',
+          repo: 'blog',
+          owner: 'imroc',
+          admin: ['imroc'],
+          labels: ['Gitalk'],
+          title: 'Kubernetes 最佳实践：处理内存碎片化',
+          createIssueManually: false,
+          id: '',
+          distractionFreeMode: true
+      });
+      gitalk.render('gitalk-container');
+    </script>
+
 </div>
 
     <footer>
@@ -452,7 +356,7 @@ echo 1 &gt; /proc/sys/vm/compact_memory
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.49.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.62.0</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>
@@ -460,15 +364,7 @@ echo 1 &gt; /proc/sys/vm/compact_memory
   </div>
 </footer>
 
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script src="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe-ui-default.min.js"></script>
-<script src="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe.js"></script>
-<script src="https://imroc.io/js/auto-render.min.js"></script>
-<script src="https://imroc.io/js/main.js"></script>
-<script src="https://imroc.io/static/prism/prism.js"></script>
-<script src="https://cdn.staticfile.org/KaTeX/0.7.1/katex.min.js"></script>
-<script> renderMathInElement(document.body); </script>
-
+<script src='/js/bundle.min.879361cd590eb97fa7b7459c2fecb6f66e7b5c798ccdbbad966b1d4d0adce056.js' integrity='sha256-h5NhzVkOuX&#43;nt0WcL&#43;y29m57XHmMzbutlmsdTQrc4FY='></script>
 
 
 

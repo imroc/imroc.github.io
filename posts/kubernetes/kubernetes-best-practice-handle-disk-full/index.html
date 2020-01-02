@@ -9,9 +9,9 @@
   <meta name="description" content="imroc.io|roc的博客|Cloud Native|Kubernetes|Go|Golang" />
   <meta property="og:title" content="Kubernetes 最佳实践：处理容器数据磁盘被写满" />
   <meta name="twitter:title" content="Kubernetes 最佳实践：处理容器数据磁盘被写满" />
-  <meta name="description" content="容器数据磁盘被写满造成的危害: - 不能创建 Pod (一直 ContainerCreating) - 不能删除 Pod (一直 Terminating) - 无法 exec 到容器 判断是否被写满: 容器数据目录大多会单独挂数据盘，路径一般">
-  <meta property="og:description" content="容器数据磁盘被写满造成的危害: - 不能创建 Pod (一直 ContainerCreating) - 不能删除 Pod (一直 Terminating) - 无法 exec 到容器 判断是否被写满: 容器数据目录大多会单独挂数据盘，路径一般">
-  <meta name="twitter:description" content="容器数据磁盘被写满造成的危害: - 不能创建 Pod (一直 ContainerCreating) - 不能删除 Pod (一直 Terminating) - 无法 exec 到容器 判断是否被写满: 容器数据目录大多会单独挂数据盘，路径一般">
+  <meta name="description" content="容器数据磁盘被写满造成的危害: 不能创建 Pod (一直 ContainerCreating) 不能删除 Pod (一直 Terminating) 无法 exec 到容器 判断是否被写满: 容器数据目录大多会单独挂数据盘，路径一般是 /v">
+  <meta property="og:description" content="容器数据磁盘被写满造成的危害: 不能创建 Pod (一直 ContainerCreating) 不能删除 Pod (一直 Terminating) 无法 exec 到容器 判断是否被写满: 容器数据目录大多会单独挂数据盘，路径一般是 /v">
+  <meta name="twitter:description" content="容器数据磁盘被写满造成的危害: 不能创建 Pod (一直 ContainerCreating) 不能删除 Pod (一直 Terminating) 无法 exec 到容器 判断是否被写满: 容器数据目录大多会单独挂数据盘，路径一般是 /v">
   <meta name="author" content="{Description { .Site.Author.name }}"/>
   <link href='https://imroc.io/favicon.png' rel='icon' type='image/x-icon'/>
   <meta property="og:image" content="https://res.cloudinary.com/imroc/image/upload/v1521031841/avatar.png" />
@@ -23,21 +23,15 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="roc" />
 
-  <meta name="generator" content="Hugo 0.49.2" />
+  <meta name="generator" content="Hugo 0.62.0" />
   <link rel="canonical" href="https://imroc.io/posts/kubernetes/kubernetes-best-practice-handle-disk-full/" />
   <link rel="alternate" href="https://imroc.io/index.xml" type="application/rss+xml" title="roc">
-  <script src="https://cdn.staticfile.org/jquery/1.12.4/jquery.min.js"></script>
-  <link rel="stylesheet" href="https://cdn.staticfile.org/KaTeX/0.7.1/katex.min.css" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" crossorigin="anonymous">
 
-  <link rel="stylesheet" href="https://imroc.io/css/main.css" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
   
-  <link rel="stylesheet" href="https://imroc.io/static/prism/prism.css" />
 
-  <script>
+
+<link rel="stylesheet" href='/css/bundle.min.2971c990ae9e3036a2e09462d93d94829b857b7235a2b5eac8896bdad8a8fdb6.css' integrity='sha256-KXHJkK6eMDai4JRi2T2UgpuFe3I1orXqyIlr2tio/bY='>
+  --><script>
 var _hmt = _hmt || [];
 (function() {
   var hm = document.createElement("script");
@@ -46,56 +40,6 @@ var _hmt = _hmt || [];
   s.parentNode.insertBefore(hm, s);
 })();
 </script>
-
-
-
-<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe.min.css" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.2/default-skin/default-skin.min.css" crossorigin="anonymous" />
-
-
-<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
-
-<div class="pswp__bg"></div>
-
-<div class="pswp__scroll-wrap">
-    
-    <div class="pswp__container">
-      <div class="pswp__item"></div>
-      <div class="pswp__item"></div>
-      <div class="pswp__item"></div>
-    </div>
-    
-    <div class="pswp__ui pswp__ui--hidden">
-    <div class="pswp__top-bar">
-      
-      <div class="pswp__counter"></div>
-      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
-      <button class="pswp__button pswp__button--share" title="Share"></button>
-      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
-      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
-      
-      
-      <div class="pswp__preloader">
-        <div class="pswp__preloader__icn">
-          <div class="pswp__preloader__cut">
-            <div class="pswp__preloader__donut"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
-      <div class="pswp__share-tooltip"></div>
-    </div>
-    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
-    </button>
-    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
-    </button>
-    <div class="pswp__caption">
-      <div class="pswp__caption__center"></div>
-    </div>
-    </div>
-    </div>
-</div>
 
 
 </head>
@@ -273,199 +217,140 @@ var _hmt = _hmt || [];
                 
 <aside class="toc">
   <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#解决方法">解决方法</a>
-<ul>
-<li><a href="#先恢复业务-清理磁盘空间">先恢复业务，清理磁盘空间</a></li>
-<li><a href="#定位根因-彻底解决">定位根因，彻底解决</a></li>
-</ul></li>
-<li><a href="#附录">附录</a>
-<ul>
-<li><a href="#查看docker的磁盘空间占用情况">查看docker的磁盘空间占用情况</a></li>
-<li><a href="#定位容器写满磁盘的原因">定位容器写满磁盘的原因</a></li>
-<li><a href="#找出日志输出量大的-pod">找出日志输出量大的 pod</a></li>
-<li><a href="#找出可写层数据量大的-pod">找出可写层数据量大的 pod</a></li>
-<li><a href="#找出体积大的镜像">找出体积大的镜像</a></li>
-</ul></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#heading">解决方法</a>
+      <ul>
+        <li><a href="#heading-1">先恢复业务，清理磁盘空间</a></li>
+        <li><a href="#heading-2">定位根因，彻底解决</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading-3">附录</a>
+      <ul>
+        <li><a href="#docker">查看docker的磁盘空间占用情况</a></li>
+        <li><a href="#heading-4">定位容器写满磁盘的原因</a></li>
+        <li><a href="#-pod">找出日志输出量大的 pod</a></li>
+        <li><a href="#-pod-1">找出可写层数据量大的 pod</a></li>
+        <li><a href="#heading-5">找出体积大的镜像</a></li>
+      </ul>
+    </li>
+  </ul>
 </nav>
 </aside>
 
 
-                
-
-<p>容器数据磁盘被写满造成的危害:
-- 不能创建 Pod (一直 ContainerCreating)
-- 不能删除 Pod (一直 Terminating)
-- 无法 exec 到容器</p>
-
+                <p>容器数据磁盘被写满造成的危害:</p>
+<ul>
+<li>不能创建 Pod (一直 ContainerCreating)</li>
+<li>不能删除 Pod (一直 Terminating)</li>
+<li>无法 exec 到容器</li>
+</ul>
 <p>判断是否被写满:</p>
-
 <p>容器数据目录大多会单独挂数据盘，路径一般是 <code>/var/lib/docker</code>，也可能是 <code>/data/docker</code> 或 <code>/opt/docker</code>，取决于节点被添加时的配置：</p>
-
-<p><img src="https://imroc.io/assets/blog/tke-select-data-disk.png" alt="" /></p>
-
+<p><img src="https://imroc.io/assets/blog/tke-select-data-disk.png" alt=""></p>
 <p>可通过 <code>docker info</code> 确定：</p>
-
-<pre><code class="language-bash">$ docker info
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ docker info
 ...
 Docker Root Dir: /var/lib/docker
 ...
-</code></pre>
-
-<p>如果没有单独挂数据盘，则会使用系统盘存储。判断是否被写满：</p>
-
-<pre><code class="language-bash">$ df
+</code></pre></div><p>如果没有单独挂数据盘，则会使用系统盘存储。判断是否被写满：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ df
 Filesystem     1K-blocks     Used Available Use% Mounted on
 ...
-/dev/vda1       51474044  4619112  44233548  10% /
+/dev/vda1       <span style="color:#ae81ff">51474044</span>  <span style="color:#ae81ff">4619112</span>  <span style="color:#ae81ff">44233548</span>  10% /
 ...
-/dev/vdb        20511356 20511356         0 100% /var/lib/docker
-</code></pre>
-
-<h2 id="解决方法">解决方法</h2>
-
-<h3 id="先恢复业务-清理磁盘空间">先恢复业务，清理磁盘空间</h3>
-
+/dev/vdb        <span style="color:#ae81ff">20511356</span> <span style="color:#ae81ff">20511356</span>         <span style="color:#ae81ff">0</span> 100% /var/lib/docker
+</code></pre></div><h2 id="heading">解决方法</h2>
+<h3 id="heading-1">先恢复业务，清理磁盘空间</h3>
 <p>重启 dockerd (清理容器日志输出和可写层文件)</p>
-
 <ul>
 <li>重启前需要稍微腾出一点空间，不然重启 docker 会失败，可以手动删除一些docker的log文件或可写层文件，通常删除log:</li>
 </ul>
-
-<pre><code class="language-bash">$ cd /var/lib/docker/containers
-$ du -sh * # 找到比较大的目录
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ cd /var/lib/docker/containers
+$ du -sh * <span style="color:#75715e"># 找到比较大的目录</span>
 $ cd dda02c9a7491fa797ab730c1568ba06cba74cecd4e4a82e9d90d00fa11de743c
-$ cat /dev/null &gt; dda02c9a7491fa797ab730c1568ba06cba74cecd4e4a82e9d90d00fa11de743c-json.log.9 # 删除log文件
-</code></pre>
-
-<p><strong>注意:</strong> 使用 <code>cat /dev/null &gt;</code> 方式删除而不用 <code>rm</code>，因为用 rm 删除的文件，docker 进程可能不会释放文件，空间也就不会释放；log 的后缀数字越大表示越久远，先删除旧日志。</p>
-
+$ cat /dev/null &gt; dda02c9a7491fa797ab730c1568ba06cba74cecd4e4a82e9d90d00fa11de743c-json.log.9 <span style="color:#75715e"># 删除log文件</span>
+</code></pre></div><p><strong>注意:</strong> 使用 <code>cat /dev/null &gt;</code> 方式删除而不用 <code>rm</code>，因为用 rm 删除的文件，docker 进程可能不会释放文件，空间也就不会释放；log 的后缀数字越大表示越久远，先删除旧日志。</p>
 <ul>
 <li>将该 node 标记不可调度，并将其已有的 pod 驱逐到其它节点，这样重启dockerd就会让该节点的pod对应的容器删掉，容器相关的日志(标准输出)与容器内产生的数据文件(可写层)也会被清理：</li>
 </ul>
-
-<pre><code class="language-bash">kubectl drain 10.179.80.31
-</code></pre>
-
-<ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl drain 10.179.80.31
+</code></pre></div><ul>
 <li>重启 dockerd:</li>
 </ul>
-
-<pre><code class="language-bash">systemctl restart dockerd
-</code></pre>
-
-<ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">systemctl restart dockerd
+</code></pre></div><ul>
 <li>取消不可调度的标记:</li>
 </ul>
-
-<pre><code class="language-bash">kubectl uncordon 10.179.80.31
-</code></pre>
-
-<h3 id="定位根因-彻底解决">定位根因，彻底解决</h3>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl uncordon 10.179.80.31
+</code></pre></div><h3 id="heading-2">定位根因，彻底解决</h3>
 <p>问题定位方法见附录，这里列举根因对应的解决方法：</p>
-
 <ul>
 <li>日志输出量大导致磁盘写满:
-
 <ul>
 <li>减少日志输出</li>
 <li>增大磁盘空间</li>
 <li>减小单机可调度的pod数量</li>
-</ul></li>
+</ul>
+</li>
 <li>可写层量大导致磁盘写满: 优化程序逻辑，不写文件到容器内或控制写入文件的大小与数量</li>
 <li>镜像占用空间大导致磁盘写满:
-
 <ul>
 <li>增大磁盘空间</li>
 <li>删除不需要的镜像</li>
-</ul></li>
 </ul>
-
-<h2 id="附录">附录</h2>
-
-<h3 id="查看docker的磁盘空间占用情况">查看docker的磁盘空间占用情况</h3>
-
-<pre><code class="language-bash">$ docker system df -v
-</code></pre>
-
-<p><img src="https://imroc.io/assets/blog/docker-system-df.png" alt="" /></p>
-
-<h3 id="定位容器写满磁盘的原因">定位容器写满磁盘的原因</h3>
-
+</li>
+</ul>
+<h2 id="heading-3">附录</h2>
+<h3 id="docker">查看docker的磁盘空间占用情况</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ docker system df -v
+</code></pre></div><p><img src="https://imroc.io/assets/blog/docker-system-df.png" alt=""></p>
+<h3 id="heading-4">定位容器写满磁盘的原因</h3>
 <p>进入容器数据目录(假设是 <code>/var/lib/docker</code>，并且存储驱动是 aufs):</p>
-
-<pre><code class="language-bash">$ cd /var/lib/docker
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ cd /var/lib/docker
 $ du -sh *
-</code></pre>
-
-<p><img src="https://imroc.io/assets/blog/docker-sh-dockerlib.png" alt="" /></p>
-
+</code></pre></div><p><img src="https://imroc.io/assets/blog/docker-sh-dockerlib.png" alt=""></p>
 <ul>
 <li><code>containers</code> 目录: 体积大说明日志输出量大</li>
 <li><code>aufs</code> 目录</li>
 </ul>
-
-<p><img src="https://imroc.io/assets/blog/docker-sh-aufs.png" alt="" />
-  - <code>diff</code> 子目录: 容器可写层，体积大说明可写层数据量大(程序在容器里写入文件)
-  - <code>mnt</code> 子目录: 联合挂载点，内容为容器里看到的内容，即包含镜像本身内容以及可写层内容</p>
-
-<h3 id="找出日志输出量大的-pod">找出日志输出量大的 pod</h3>
-
+<p><img src="https://imroc.io/assets/blog/docker-sh-aufs.png" alt=""></p>
+<ul>
+<li><code>diff</code> 子目录: 容器可写层，体积大说明可写层数据量大(程序在容器里写入文件)</li>
+<li><code>mnt</code> 子目录: 联合挂载点，内容为容器里看到的内容，即包含镜像本身内容以及可写层内容</li>
+</ul>
+<h3 id="-pod">找出日志输出量大的 pod</h3>
 <p>TKE 的 pod 中每个容器输出的日志最大存储 1G (日志轮转，最大10个文件，每个文件最大100m，可用 <code>docker inpect</code> 查看):</p>
-
-<pre><code class="language-bash">$ docker inspect fef835ebfc88
-[
-    {
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ docker inspect fef835ebfc88
+<span style="color:#f92672">[</span>
+    <span style="color:#f92672">{</span>
          ...
-        &quot;HostConfig&quot;: {
+        <span style="color:#e6db74">&#34;HostConfig&#34;</span>: <span style="color:#f92672">{</span>
             ...
-            &quot;LogConfig&quot;: {
-                &quot;Type&quot;: &quot;json-file&quot;,
-                &quot;Config&quot;: {
-                    &quot;max-file&quot;: &quot;10&quot;,
-                    &quot;max-size&quot;: &quot;100m&quot;
-                }
-            },
+            <span style="color:#e6db74">&#34;LogConfig&#34;</span>: <span style="color:#f92672">{</span>
+                <span style="color:#e6db74">&#34;Type&#34;</span>: <span style="color:#e6db74">&#34;json-file&#34;</span>,
+                <span style="color:#e6db74">&#34;Config&#34;</span>: <span style="color:#f92672">{</span>
+                    <span style="color:#e6db74">&#34;max-file&#34;</span>: <span style="color:#e6db74">&#34;10&#34;</span>,
+                    <span style="color:#e6db74">&#34;max-size&#34;</span>: <span style="color:#e6db74">&#34;100m&#34;</span>
+                <span style="color:#f92672">}</span>
+            <span style="color:#f92672">}</span>,
 ...
-</code></pre>
-
-<p>查看哪些容器日志输出量大：</p>
-
-<pre><code class="language-bash">$ cd /var/lib/docker/containers
+</code></pre></div><p>查看哪些容器日志输出量大：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ cd /var/lib/docker/containers
 $ du -sh *
-</code></pre>
-
-<p><img src="https://imroc.io/assets/blog/du-sh-containers.png" alt="" /></p>
-
+</code></pre></div><p><img src="https://imroc.io/assets/blog/du-sh-containers.png" alt=""></p>
 <p>目录名即为容器id，使用前几位与 <code>docker ps</code> 结果匹配可找出对应容器，最后就可以推算出是哪些 pod 搞的鬼</p>
-
-<h3 id="找出可写层数据量大的-pod">找出可写层数据量大的 pod</h3>
-
+<h3 id="-pod-1">找出可写层数据量大的 pod</h3>
 <p>可写层的数据主要是容器内程序自身写入的，无法控制大小，可写层越大说明容器写入的文件越多或越大，通常是容器内程序将log写到文件里了，查看一下哪个容器的可写层数据量大：</p>
-
-<pre><code class="language-bash">$ cd /var/lib/docker/aufs/diff
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ cd /var/lib/docker/aufs/diff
 $ du -sh *
-</code></pre>
-
-<p><img src="https://imroc.io/assets/blog/du-sh-diff.png" alt="" />
+</code></pre></div><p><img src="https://imroc.io/assets/blog/du-sh-diff.png" alt="">
 通过可写层目录(<code>diff</code>的子目录)反查容器id:</p>
-
-<pre><code class="language-bash">$ grep 834d97500892f56b24c6e63ffd4e520fc29c6c0d809a3472055116f59fb1d2be /var/lib/docker/image/aufs/layerdb/mounts/*/mount-id
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ grep 834d97500892f56b24c6e63ffd4e520fc29c6c0d809a3472055116f59fb1d2be /var/lib/docker/image/aufs/layerdb/mounts/*/mount-id
 /var/lib/docker/image/aufs/layerdb/mounts/eb76fcd31dfbe5fc949b67e4ad717e002847d15334791715ff7d96bb2c8785f9/mount-id:834d97500892f56b24c6e63ffd4e520fc29c6c0d809a3472055116f59fb1d2be
-</code></pre>
-
-<p><code>mounts</code> 后面一级的id即为容器id: <code>eb76fcd31dfbe5fc949b67e4ad717e002847d15334791715ff7d96bb2c8785f9</code>，使用前几位与 <code>docker ps</code> 结果匹配可找出对应容器，最后就可以推算出是哪些 pod 搞的鬼</p>
-
-<h3 id="找出体积大的镜像">找出体积大的镜像</h3>
-
+</code></pre></div><p><code>mounts</code> 后面一级的id即为容器id: <code>eb76fcd31dfbe5fc949b67e4ad717e002847d15334791715ff7d96bb2c8785f9</code>，使用前几位与 <code>docker ps</code> 结果匹配可找出对应容器，最后就可以推算出是哪些 pod 搞的鬼</p>
+<h3 id="heading-5">找出体积大的镜像</h3>
 <p>看看哪些镜像比较占空间</p>
-
-<p><img src="https://imroc.io/assets/blog/docker-images.png" alt="" /></p>
+<p><img src="https://imroc.io/assets/blog/docker-images.png" alt=""></p>
 
             </article>
 
@@ -500,50 +385,28 @@ $ du -sh *
                 
             </div>
             
-            
-            
-            
-<div>
-    <section id="datecount">
-        <h4 id="date"> Fri Jun 7, 2019</h4>
-    </section>
-    <h5 id="wc">1300 Words|Read in about 3 Min</h5>
-    <h5 id="tags">Tags: 
-        
-        <a href="https://imroc.io/tags/kubernetes/">kubernetes</a> &nbsp;
-    </h5>
-</div>
-
-            
-            </div>
-            
-			
-               <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-<aside id=comments>
-    <div>
-        <h2> Comments </h2>
-    </div>
-    <div id="container"></div>
-    <link rel="stylesheet" href="https://imroc.io/static/gitment/default.css">
-    <script src="https://imroc.io/static/gitment/gitment.browser.js"></script>
-    <script>
-        var gitment = new Gitment({
-			owner: 'imroc', 
-			repo: 'imroc.github.io', 
-            oauth: {
-				client_id: 'd05b8f959b3111c6fb63',
-				client_secret: 'f30ef76ea0050ed731ace76f7fbf684ae5d28fbc',
-            },
-        })
-        gitment.render('container')
-    </script>
-</aside>
-</div>
-
-			
         </div>
     </div>
-    </section>
+    
+    <div id="gitalk-container"></div>
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+      var gitalk = new Gitalk({
+          clientID: 'd05b8f959b3111c6fb63',
+          clientSecret: 'f30ef76ea0050ed731ace76f7fbf684ae5d28fbc',
+          repo: 'blog',
+          owner: 'imroc',
+          admin: ['imroc'],
+          labels: ['Gitalk'],
+          title: 'Kubernetes 最佳实践：处理容器数据磁盘被写满',
+          createIssueManually: false,
+          id: '',
+          distractionFreeMode: true
+      });
+      gitalk.render('gitalk-container');
+    </script>
+
 </div>
 
     <footer>
@@ -602,7 +465,7 @@ $ du -sh *
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.49.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.62.0</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>
@@ -610,15 +473,7 @@ $ du -sh *
   </div>
 </footer>
 
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script src="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe-ui-default.min.js"></script>
-<script src="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe.js"></script>
-<script src="https://imroc.io/js/auto-render.min.js"></script>
-<script src="https://imroc.io/js/main.js"></script>
-<script src="https://imroc.io/static/prism/prism.js"></script>
-<script src="https://cdn.staticfile.org/KaTeX/0.7.1/katex.min.js"></script>
-<script> renderMathInElement(document.body); </script>
-
+<script src='/js/bundle.min.879361cd590eb97fa7b7459c2fecb6f66e7b5c798ccdbbad966b1d4d0adce056.js' integrity='sha256-h5NhzVkOuX&#43;nt0WcL&#43;y29m57XHmMzbutlmsdTQrc4FY='></script>
 
 
 

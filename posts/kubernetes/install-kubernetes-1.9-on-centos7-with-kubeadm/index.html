@@ -23,21 +23,15 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="roc" />
 
-  <meta name="generator" content="Hugo 0.49.2" />
+  <meta name="generator" content="Hugo 0.62.0" />
   <link rel="canonical" href="https://imroc.io/posts/kubernetes/install-kubernetes-1.9-on-centos7-with-kubeadm/" />
   <link rel="alternate" href="https://imroc.io/index.xml" type="application/rss+xml" title="roc">
-  <script src="https://cdn.staticfile.org/jquery/1.12.4/jquery.min.js"></script>
-  <link rel="stylesheet" href="https://cdn.staticfile.org/KaTeX/0.7.1/katex.min.css" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" crossorigin="anonymous">
 
-  <link rel="stylesheet" href="https://imroc.io/css/main.css" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
   
-  <link rel="stylesheet" href="https://imroc.io/static/prism/prism.css" />
 
-  <script>
+
+<link rel="stylesheet" href='/css/bundle.min.2971c990ae9e3036a2e09462d93d94829b857b7235a2b5eac8896bdad8a8fdb6.css' integrity='sha256-KXHJkK6eMDai4JRi2T2UgpuFe3I1orXqyIlr2tio/bY='>
+  --><script>
 var _hmt = _hmt || [];
 (function() {
   var hm = document.createElement("script");
@@ -46,56 +40,6 @@ var _hmt = _hmt || [];
   s.parentNode.insertBefore(hm, s);
 })();
 </script>
-
-
-
-<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe.min.css" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.2/default-skin/default-skin.min.css" crossorigin="anonymous" />
-
-
-<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
-
-<div class="pswp__bg"></div>
-
-<div class="pswp__scroll-wrap">
-    
-    <div class="pswp__container">
-      <div class="pswp__item"></div>
-      <div class="pswp__item"></div>
-      <div class="pswp__item"></div>
-    </div>
-    
-    <div class="pswp__ui pswp__ui--hidden">
-    <div class="pswp__top-bar">
-      
-      <div class="pswp__counter"></div>
-      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
-      <button class="pswp__button pswp__button--share" title="Share"></button>
-      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
-      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
-      
-      
-      <div class="pswp__preloader">
-        <div class="pswp__preloader__icn">
-          <div class="pswp__preloader__cut">
-            <div class="pswp__preloader__donut"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
-      <div class="pswp__share-tooltip"></div>
-    </div>
-    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
-    </button>
-    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
-    </button>
-    <div class="pswp__caption">
-      <div class="pswp__caption__center"></div>
-    </div>
-    </div>
-    </div>
-</div>
 
 
 </head>
@@ -290,210 +234,117 @@ var _hmt = _hmt || [];
                 
 <aside class="toc">
   <nav id="TableOfContents">
-<ul>
-<li><a href="#准备">准备</a>
-<ul>
-<li><a href="#修改系统配置">修改系统配置</a></li>
-<li><a href="#升级内核">升级内核</a></li>
-<li><a href="#docker-安装与配置">docker 安装与配置</a>
-<ul>
-<li>
-<ul>
-<li><a href="#确保epel源已安装">确保epel源已安装</a></li>
-<li><a href="#安装docker">安装docker</a></li>
-<li><a href="#使用overlay2驱动">使用overlay2驱动</a></li>
-</ul></li>
-</ul></li>
-<li><a href="#安装-kubeadm-kubectl-kubelet">安装 kubeadm, kubectl, kubelet</a></li>
-<li><a href="#初始化master">初始化master</a></li>
-<li><a href="#worker-节点加入">worker 节点加入</a></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#heading-1">修改系统配置</a></li>
+    <li><a href="#heading-2">升级内核</a></li>
+    <li><a href="#docker-">docker 安装与配置</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#-kubeadm-kubectl-kubelet">安装 kubeadm, kubectl, kubelet</a></li>
+    <li><a href="#master">初始化master</a></li>
+    <li><a href="#worker-">worker 节点加入</a></li>
+  </ul>
 </nav>
 </aside>
 
 
-                
-
-<h1 id="准备">准备</h1>
-
-<h2 id="修改系统配置">修改系统配置</h2>
-
+                <h1 id="heading">准备</h1>
+<h2 id="heading-1">修改系统配置</h2>
 <p>开启路由转发（保证 proxy 正常运行，Service 需要）</p>
-
-<pre><code class="language-bash">sysctl -w net.ipv4.ip_forward=1
-</code></pre>
-
-<ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sysctl -w net.ipv4.ip_forward<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>
+</code></pre></div><ul>
 <li>默认情况下，由于安全原因，linux是关闭了路由转发的，即同台机器不止一个网卡，将数据包从一个网卡传到另一个网卡，让另一个网卡继续路由，即实现两个不同网段的主机通信。service 的 IP 是通过 proxy（即 kube-proxy 或 kube-router ）路由的，并不需要路由器参与，node 收到数据包时，数据包的目的 IP 为本机的内网 IP，proxy 将数据包的目的IP转化成Service IP并路由转发到Serive IP 对应网段的虚拟网卡上，最终路由到正确的Pod</li>
-<li>ip_forward 与路由转发：<a href="http://blog.51cto.com/13683137989/1880744">http://blog.51cto.com/13683137989/1880744</a></li>
+<li>ip_forward 与路由转发：http://blog.51cto.com/13683137989/1880744</li>
 </ul>
-
 <p>禁用 swap (保证 kubelet 正确运行):</p>
-
-<pre><code class="language-bash">swapoff -a
-</code></pre>
-
-<p>关闭SELinux和防火墙</p>
-
-<pre><code class="language-bash">sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config # 修改配置永久生效，需重启
-setenforce 0
-#关闭防火墙 
-systemctl stop firewalld &amp;&amp; systemctl disable firewalld
-</code></pre>
-
-<p>RHEL / CentOS 7上的某些用户报告了由于iptables被绕过而导致流量被错误路由的问题。应该确保net.bridge.bridge-nf-call-iptables的sysctl配置中被设置为1</p>
-
-<pre><code class="language-bash">cat &lt;&lt;EOF &gt;  /etc/sysctl.d/k8s.conf
-net.bridge.bridge-nf-call-ip6tables = 1
-net.bridge.bridge-nf-call-iptables = 1
-EOF
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">swapoff -a
+</code></pre></div><p>关闭SELinux和防火墙</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sed -i <span style="color:#e6db74">&#39;s/SELINUX=enforcing/SELINUX=disabled/g&#39;</span> /etc/selinux/config <span style="color:#75715e"># 修改配置永久生效，需重启</span>
+setenforce <span style="color:#ae81ff">0</span>
+<span style="color:#75715e">#关闭防火墙</span> 
+systemctl stop firewalld <span style="color:#f92672">&amp;&amp;</span> systemctl disable firewalld
+</code></pre></div><p>RHEL / CentOS 7上的某些用户报告了由于iptables被绕过而导致流量被错误路由的问题。应该确保net.bridge.bridge-nf-call-iptables的sysctl配置中被设置为1</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">cat <span style="color:#e6db74">&lt;&lt;EOF &gt;  /etc/sysctl.d/k8s.conf
+</span><span style="color:#e6db74">net.bridge.bridge-nf-call-ip6tables = 1
+</span><span style="color:#e6db74">net.bridge.bridge-nf-call-iptables = 1
+</span><span style="color:#e6db74">EOF</span>
 sysctl --system
-</code></pre>
-
-<h2 id="升级内核">升级内核</h2>
-
+</code></pre></div><h2 id="heading-2">升级内核</h2>
 <p>运行docker的node节点需要升级到4.x内核支持overlay2驱动</p>
-
 <p>检查内核</p>
-
-<pre><code class="language-bash">uname -sr 
-</code></pre>
-
-<p>添加升级内核的第三方库
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">uname -sr 
+</code></pre></div><p>添加升级内核的第三方库
 <a href="http://elrepo.org/tiki/tiki-index.php">www.elrepo.org</a> 上有方法</p>
-
-<pre><code class="language-bash">rpm --import https://www.elrepo.org/RPM-GPG-KEY-elrepo.org
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">rpm --import https://www.elrepo.org/RPM-GPG-KEY-elrepo.org
 rpm -Uvh http://www.elrepo.org/elrepo-release-7.0-3.el7.elrepo.noarch.rpm
-</code></pre>
-
-<p>列出内核相关包</p>
-
-<pre><code class="language-bash">yum --disablerepo=&quot;*&quot; --enablerepo=&quot;elrepo-kernel&quot; list available
-</code></pre>
-
-<p>安装最新稳定版</p>
-
-<pre><code class="language-bash">yum --enablerepo=elrepo-kernel install kernel-ml -y
-</code></pre>
-
-<p>查看内核默认启动顺序</p>
-
-<pre><code class="language-bash">awk -F\' '$1==&quot;menuentry &quot; {print $2}' /etc/grub2.cfg
-</code></pre>
-
-<p>结果显示</p>
-
-<pre><code class="language-bash">CentOS Linux (4.15.7-1.el7.elrepo.x86_64) 7 (Core)
-CentOS Linux (3.10.0-693.17.1.el7.x86_64) 7 (Core)
-CentOS Linux (3.10.0-693.2.2.el7.x86_64) 7 (Core)
-CentOS Linux (3.10.0-693.el7.x86_64) 7 (Core)
-CentOS Linux (0-rescue-f0f31005fb5a436d88e3c6cbf54e25aa) 7 (Core)
-</code></pre>
-
-<p>设置默认启动的内核，顺序index 分别是 0,1,2,3，每个人机器不一样，看清楚选择自己的index， 执行以下代码选择内核</p>
-
-<pre><code class="language-bash">grub2-set-default 0
-</code></pre>
-
-<p>重启</p>
-
-<pre><code class="language-bash">reboot
-</code></pre>
-
-<p>检查内核</p>
-
-<pre><code class="language-bash">uname -a
-</code></pre>
-
-<h2 id="docker-安装与配置">docker 安装与配置</h2>
-
+</code></pre></div><p>列出内核相关包</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">yum --disablerepo<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;*&#34;</span> --enablerepo<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;elrepo-kernel&#34;</span> list available
+</code></pre></div><p>安装最新稳定版</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">yum --enablerepo<span style="color:#f92672">=</span>elrepo-kernel install kernel-ml -y
+</code></pre></div><p>查看内核默认启动顺序</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">awk -F<span style="color:#ae81ff">\&#39;</span> <span style="color:#e6db74">&#39;$1==&#34;menuentry &#34; {print $2}&#39;</span> /etc/grub2.cfg
+</code></pre></div><p>结果显示</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">CentOS Linux <span style="color:#f92672">(</span>4.15.7-1.el7.elrepo.x86_64<span style="color:#f92672">)</span> <span style="color:#ae81ff">7</span> <span style="color:#f92672">(</span>Core<span style="color:#f92672">)</span>
+CentOS Linux <span style="color:#f92672">(</span>3.10.0-693.17.1.el7.x86_64<span style="color:#f92672">)</span> <span style="color:#ae81ff">7</span> <span style="color:#f92672">(</span>Core<span style="color:#f92672">)</span>
+CentOS Linux <span style="color:#f92672">(</span>3.10.0-693.2.2.el7.x86_64<span style="color:#f92672">)</span> <span style="color:#ae81ff">7</span> <span style="color:#f92672">(</span>Core<span style="color:#f92672">)</span>
+CentOS Linux <span style="color:#f92672">(</span>3.10.0-693.el7.x86_64<span style="color:#f92672">)</span> <span style="color:#ae81ff">7</span> <span style="color:#f92672">(</span>Core<span style="color:#f92672">)</span>
+CentOS Linux <span style="color:#f92672">(</span>0-rescue-f0f31005fb5a436d88e3c6cbf54e25aa<span style="color:#f92672">)</span> <span style="color:#ae81ff">7</span> <span style="color:#f92672">(</span>Core<span style="color:#f92672">)</span>
+</code></pre></div><p>设置默认启动的内核，顺序index 分别是 0,1,2,3，每个人机器不一样，看清楚选择自己的index， 执行以下代码选择内核</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">grub2-set-default <span style="color:#ae81ff">0</span>
+</code></pre></div><p>重启</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">reboot
+</code></pre></div><p>检查内核</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">uname -a
+</code></pre></div><h2 id="docker-">docker 安装与配置</h2>
 <p>不建议使用官网的docker-ce版本、支持性不是很好、使用epel源支持的docker即可。</p>
-
-<h4 id="确保epel源已安装">确保epel源已安装</h4>
-
-<pre><code class="language-bash">yum install -y epel-release
-</code></pre>
-
-<h4 id="安装docker">安装docker</h4>
-
-<pre><code class="language-bash">yum install -y docker
-</code></pre>
-
-<h4 id="使用overlay2驱动">使用overlay2驱动</h4>
-
+<h4 id="epel">确保epel源已安装</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">yum install -y epel-release
+</code></pre></div><h4 id="docker">安装docker</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">yum install -y docker
+</code></pre></div><h4 id="overlay2">使用overlay2驱动</h4>
 <p>docker 存储驱动很多默认用devicemapper，存在很多问题，最好使用overlay2，内核版本小于 3.10.0-693 的不要使用 overlay2 驱动。</p>
-
 <p>确保 yum-plugin-ovl 安装，解决 ovlerlay2 兼容性问题：</p>
-
-<pre><code class="language-bash">yum install -y yum-plugin-ovl
-</code></pre>
-
-<ul>
-<li>overlay2 兼容性问题详见：<a href="https://docs.docker.com/storage/storagedriver/overlayfs-driver/#limitations-on-overlayfs-compatibility">https://docs.docker.com/storage/storagedriver/overlayfs-driver/#limitations-on-overlayfs-compatibility</a>  ：<br /></li>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">yum install -y yum-plugin-ovl
+</code></pre></div><ul>
+<li>overlay2 兼容性问题详见：<a href="https://docs.docker.com/storage/storagedriver/overlayfs-driver/#limitations-on-overlayfs-compatibility">https://docs.docker.com/storage/storagedriver/overlayfs-driver/#limitations-on-overlayfs-compatibility</a>  ：</li>
 </ul>
-
 <p>备份 docker 用到的目录（若需要）</p>
-
-<pre><code class="language-bash">cp -au /var/lib/docker /var/lib/docker.bk
-</code></pre>
-
-<p>关闭 docker</p>
-
-<pre><code class="language-bash">systemctl stop docker
-</code></pre>
-
-<p>配置 docker 的存储驱动</p>
-
-<pre><code class="language-bash">vi /etc/docker/daemon.json
-</code></pre>
-
-<pre><code class="language-json">{
-  &quot;storage-driver&quot;: &quot;overlay2&quot;
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">cp -au /var/lib/docker /var/lib/docker.bk
+</code></pre></div><p>关闭 docker</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">systemctl stop docker
+</code></pre></div><p>配置 docker 的存储驱动</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">vi /etc/docker/daemon.json
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">{
+  <span style="color:#f92672">&#34;storage-driver&#34;</span>: <span style="color:#e6db74">&#34;overlay2&#34;</span>
 }
-</code></pre>
-
-<p>如果使用 Docker EE 并且版本大于 17.06，还需要一个 <code>storage-opts</code>，这样配置</p>
-
-<pre><code class="language-json">{
-  &quot;storage-driver&quot;: &quot;overlay2&quot;,
-  &quot;storage-opts&quot;: [
-    &quot;overlay2.override_kernel_check=true&quot;
+</code></pre></div><p>如果使用 Docker EE 并且版本大于 17.06，还需要一个 <code>storage-opts</code>，这样配置</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">{
+  <span style="color:#f92672">&#34;storage-driver&#34;</span>: <span style="color:#e6db74">&#34;overlay2&#34;</span>,
+  <span style="color:#f92672">&#34;storage-opts&#34;</span>: [
+    <span style="color:#e6db74">&#34;overlay2.override_kernel_check=true&#34;</span>
   ]
 }
-</code></pre>
-
-<ul>
+</code></pre></div><ul>
 <li>docker 设置 overlay2 驱动官方参考文档：<a href="https://docs.docker.com/storage/storagedriver/overlayfs-driver/#configure-docker-with-the-overlay-or-overlay2-storage-driver">https://docs.docker.com/storage/storagedriver/overlayfs-driver/#configure-docker-with-the-overlay-or-overlay2-storage-driver</a></li>
 </ul>
-
 <p>启动 docker</p>
-
-<pre><code class="language-bash">systemctl start docker
-</code></pre>
-
-<h2 id="安装-kubeadm-kubectl-kubelet">安装 kubeadm, kubectl, kubelet</h2>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">systemctl start docker
+</code></pre></div><h2 id="-kubeadm-kubectl-kubelet">安装 kubeadm, kubectl, kubelet</h2>
 <p>配置国内kubernetes源</p>
-
-<pre><code class="language-bash">cat &gt; /etc/yum.repos.d/kubernetes.repo &lt;&lt;EOF
-[kubernetes]
-name=Kubernetes
-baseurl=https://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-x86_64
-enabled=1
-gpgcheck=0
-repo_gpgcheck=0
-EOF
-</code></pre>
-
-<p>如果直接安装最新版可以直接这样做</p>
-
-<pre><code class="language-bash">yum install -y kubelet kubeadm kubectl
-</code></pre>
-
-<p>如果要指定版本，可以先看看有那些版本</p>
-
-<pre><code class="language-bash">[root@roc ~]# yum list kubeadm --showduplicates
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">cat &gt; /etc/yum.repos.d/kubernetes.repo <span style="color:#e6db74">&lt;&lt;EOF
+</span><span style="color:#e6db74">[kubernetes]
+</span><span style="color:#e6db74">name=Kubernetes
+</span><span style="color:#e6db74">baseurl=https://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-x86_64
+</span><span style="color:#e6db74">enabled=1
+</span><span style="color:#e6db74">gpgcheck=0
+</span><span style="color:#e6db74">repo_gpgcheck=0
+</span><span style="color:#e6db74">EOF</span>
+</code></pre></div><p>如果直接安装最新版可以直接这样做</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">yum install -y kubelet kubeadm kubectl
+</code></pre></div><p>如果要指定版本，可以先看看有那些版本</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>root@roc ~<span style="color:#f92672">]</span><span style="color:#75715e"># yum list kubeadm --showduplicates</span>
 Loaded plugins: fastestmirror, ovl
 Loading mirror speeds from cached hostfile
  * elrepo: mirrors.tuna.tsinghua.edu.cn
@@ -540,39 +391,20 @@ kubeadm.x86_64                   1.9.0-0                    kubernetes
 kubeadm.x86_64                   1.9.1-0                    kubernetes
 kubeadm.x86_64                   1.9.2-0                    kubernetes
 kubeadm.x86_64                   1.9.3-0                    kubernetes
-</code></pre>
-
-<p>如果安装 1.9.3 ，执行下面的命令</p>
-
-<pre><code class="language-bash">yum install -y kubelet-1.9.3-0 kubeadm-1.9.3-0 kubectl-1.9.3-0
-</code></pre>
-
-<p>kubelet设置开机自动运行</p>
-
-<pre><code class="language-bash">systemctl enable kubelet
-</code></pre>
-
-<p>kubelet启动参数增加  <code>--runtime-cgroups=/systemd/system.slice --kubelet-cgroups=/systemd/system.slice</code> 防止kubelet报错</p>
-
-<pre><code class="language-bash">vi /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
-</code></pre>
-
-<p>将 KUBELET_CGROUP_ARGS 一行改为：</p>
-
-<pre><code class="language-bash">Environment=&quot;KUBELET_CGROUP_ARGS=--cgroup-driver=systemd --runtime-cgroups=/systemd/system.slice --kubelet-cgroups=/systemd/system.slice&quot;
-</code></pre>
-
-<p>然后reload并启动kubelet</p>
-
-<pre><code class="language-bash">systemctl daemon-reload
+</code></pre></div><p>如果安装 1.9.3 ，执行下面的命令</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">yum install -y kubelet-1.9.3-0 kubeadm-1.9.3-0 kubectl-1.9.3-0
+</code></pre></div><p>kubelet设置开机自动运行</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">systemctl enable kubelet
+</code></pre></div><p>kubelet启动参数增加  <code>--runtime-cgroups=/systemd/system.slice --kubelet-cgroups=/systemd/system.slice</code> 防止kubelet报错</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">vi /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+</code></pre></div><p>将 KUBELET_CGROUP_ARGS 一行改为：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">Environment<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;KUBELET_CGROUP_ARGS=--cgroup-driver=systemd --runtime-cgroups=/systemd/system.slice --kubelet-cgroups=/systemd/system.slice&#34;</span>
+</code></pre></div><p>然后reload并启动kubelet</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">systemctl daemon-reload
 systemctl start kubelet
-</code></pre>
-
-<h2 id="初始化master">初始化master</h2>
-
+</code></pre></div><h2 id="master">初始化master</h2>
 <p>国内快速下载镜像（假设docker配了加速器）</p>
-
-<pre><code class="language-bash">docker pull docker.io/k8smirror/flannel:v0.9.1-amd64
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">docker pull docker.io/k8smirror/flannel:v0.9.1-amd64
 docker tag docker.io/k8smirror/flannel:v0.9.1-amd64 quay.io/coreos/flannel:v0.9.1-amd64
 docker rmi docker.io/k8smirror/flannel:v0.9.1-amd64
 
@@ -583,75 +415,69 @@ docker rmi docker.io/gcrio/pause-amd64:3.0
 docker pull docker.io/gcrio/hyperkube:v1.9.3
 
 docker pull docker.io/gcrio/etcd:3.1.11
-</code></pre>
-
-<p>创建 kubeadm 配置文件</p>
-
-<pre><code class="language-bash">cat &lt;&lt;EOF &gt;  kubeadm.yaml
-apiVersion: kubeadm.k8s.io/v1alpha1
-kind: MasterConfiguration
-api:
-  advertiseAddress: 0.0.0.0
-unifiedControlPlaneImage: docker.io/gcrio/hyperkube:v1.9.3
-selfHosted: true
-kubernetesVersion: v1.9.3
-authorizationModes:
-  - RBAC
-  - Node
-kubeProxy:
-  config:
-    mode: ipvs # k8s 1.9开始kube-proxy的ipvs进入beta，替代iptables方式路由service
-etcd:
-  image: docker.io/gcrio/etcd:3.1.11 # k8s 1.9 官方推荐的etcd版本为 3.1.11
-imageRepository: gcrio
-featureGates:
-  CoreDNS: true
-networking:
-  dnsDomain: cluster.local
-  serviceSubnet: 10.96.0.0/12
-  podSubnet: 10.244.0.0/16
-EOF
-</code></pre>
-
-<p>执行初始化</p>
-
-<pre><code class="language-bash">[root@roc k8s]# kubeadm init --config kubeadm.yaml
-[init] Using Kubernetes version: v1.9.3
-[init] Using Authorization modes: [RBAC Node]
-[preflight] Running pre-flight checks.
-	[WARNING Hostname]: hostname &quot;roc&quot; could not be reached
-	[WARNING Hostname]: hostname &quot;roc&quot; lookup roc on 100.100.2.138:53: no such host
-	[WARNING FileExisting-crictl]: crictl not found in system path
-[preflight] Starting the kubelet service
-[certificates] Generated ca certificate and key.
-[certificates] Generated apiserver certificate and key.
-[certificates] apiserver serving cert is signed for DNS names [roc kubernetes kubernetes.default kubernetes.default.svc kubernetes.default.svc.cluster.local] and IPs [10.96.0.1 172.17.60.67]
-[certificates] Generated apiserver-kubelet-client certificate and key.
-[certificates] Generated sa key and public key.
-[certificates] Generated front-proxy-ca certificate and key.
-[certificates] Generated front-proxy-client certificate and key.
-[certificates] Valid certificates and keys now exist in &quot;/etc/kubernetes/pki&quot;
-[kubeconfig] Wrote KubeConfig file to disk: &quot;admin.conf&quot;
-[kubeconfig] Wrote KubeConfig file to disk: &quot;kubelet.conf&quot;
-[kubeconfig] Wrote KubeConfig file to disk: &quot;controller-manager.conf&quot;
-[kubeconfig] Wrote KubeConfig file to disk: &quot;scheduler.conf&quot;
-[controlplane] Wrote Static Pod manifest for component kube-apiserver to &quot;/etc/kubernetes/manifests/kube-apiserver.yaml&quot;
-[controlplane] Wrote Static Pod manifest for component kube-controller-manager to &quot;/etc/kubernetes/manifests/kube-controller-manager.yaml&quot;
-[controlplane] Wrote Static Pod manifest for component kube-scheduler to &quot;/etc/kubernetes/manifests/kube-scheduler.yaml&quot;
-[etcd] Wrote Static Pod manifest for a local etcd instance to &quot;/etc/kubernetes/manifests/etcd.yaml&quot;
-[init] Waiting for the kubelet to boot up the control plane as Static Pods from directory &quot;/etc/kubernetes/manifests&quot;.
-[init] This might take a minute or longer if the control plane images have to be pulled.
-[apiclient] All control plane components are healthy after 29.501817 seconds
-[uploadconfig] Storing the configuration used in ConfigMap &quot;kubeadm-config&quot; in the &quot;kube-system&quot; Namespace
-[markmaster] Will mark node roc as master by adding a label and a taint
-[markmaster] Master roc tainted and labelled with key/value: node-role.kubernetes.io/master=&quot;&quot;
-[bootstraptoken] Using token: 0e78a0.38a53399a9489d52
-[bootstraptoken] Configured RBAC rules to allow Node Bootstrap tokens to post CSRs in order for nodes to get long term certificate credentials
-[bootstraptoken] Configured RBAC rules to allow the csrapprover controller automatically approve CSRs from a Node Bootstrap Token
-[bootstraptoken] Configured RBAC rules to allow certificate rotation for all node client certificates in the cluster
-[bootstraptoken] Creating the &quot;cluster-info&quot; ConfigMap in the &quot;kube-public&quot; namespace
-[addons] Applied essential addon: CoreDNS
-[addons] Applied essential addon: kube-proxy
+</code></pre></div><p>创建 kubeadm 配置文件</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">cat <span style="color:#e6db74">&lt;&lt;EOF &gt;  kubeadm.yaml
+</span><span style="color:#e6db74">apiVersion: kubeadm.k8s.io/v1alpha1
+</span><span style="color:#e6db74">kind: MasterConfiguration
+</span><span style="color:#e6db74">api:
+</span><span style="color:#e6db74">  advertiseAddress: 0.0.0.0
+</span><span style="color:#e6db74">unifiedControlPlaneImage: docker.io/gcrio/hyperkube:v1.9.3
+</span><span style="color:#e6db74">selfHosted: true
+</span><span style="color:#e6db74">kubernetesVersion: v1.9.3
+</span><span style="color:#e6db74">authorizationModes:
+</span><span style="color:#e6db74">  - RBAC
+</span><span style="color:#e6db74">  - Node
+</span><span style="color:#e6db74">kubeProxy:
+</span><span style="color:#e6db74">  config:
+</span><span style="color:#e6db74">    mode: ipvs # k8s 1.9开始kube-proxy的ipvs进入beta，替代iptables方式路由service
+</span><span style="color:#e6db74">etcd:
+</span><span style="color:#e6db74">  image: docker.io/gcrio/etcd:3.1.11 # k8s 1.9 官方推荐的etcd版本为 3.1.11
+</span><span style="color:#e6db74">imageRepository: gcrio
+</span><span style="color:#e6db74">featureGates:
+</span><span style="color:#e6db74">  CoreDNS: true
+</span><span style="color:#e6db74">networking:
+</span><span style="color:#e6db74">  dnsDomain: cluster.local
+</span><span style="color:#e6db74">  serviceSubnet: 10.96.0.0/12
+</span><span style="color:#e6db74">  podSubnet: 10.244.0.0/16
+</span><span style="color:#e6db74">EOF</span>
+</code></pre></div><p>执行初始化</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>root@roc k8s<span style="color:#f92672">]</span><span style="color:#75715e"># kubeadm init --config kubeadm.yaml</span>
+<span style="color:#f92672">[</span>init<span style="color:#f92672">]</span> Using Kubernetes version: v1.9.3
+<span style="color:#f92672">[</span>init<span style="color:#f92672">]</span> Using Authorization modes: <span style="color:#f92672">[</span>RBAC Node<span style="color:#f92672">]</span>
+<span style="color:#f92672">[</span>preflight<span style="color:#f92672">]</span> Running pre-flight checks.
+	<span style="color:#f92672">[</span>WARNING Hostname<span style="color:#f92672">]</span>: hostname <span style="color:#e6db74">&#34;roc&#34;</span> could not be reached
+	<span style="color:#f92672">[</span>WARNING Hostname<span style="color:#f92672">]</span>: hostname <span style="color:#e6db74">&#34;roc&#34;</span> lookup roc on 100.100.2.138:53: no such host
+	<span style="color:#f92672">[</span>WARNING FileExisting-crictl<span style="color:#f92672">]</span>: crictl not found in system path
+<span style="color:#f92672">[</span>preflight<span style="color:#f92672">]</span> Starting the kubelet service
+<span style="color:#f92672">[</span>certificates<span style="color:#f92672">]</span> Generated ca certificate and key.
+<span style="color:#f92672">[</span>certificates<span style="color:#f92672">]</span> Generated apiserver certificate and key.
+<span style="color:#f92672">[</span>certificates<span style="color:#f92672">]</span> apiserver serving cert is signed <span style="color:#66d9ef">for</span> DNS names <span style="color:#f92672">[</span>roc kubernetes kubernetes.default kubernetes.default.svc kubernetes.default.svc.cluster.local<span style="color:#f92672">]</span> and IPs <span style="color:#f92672">[</span>10.96.0.1 172.17.60.67<span style="color:#f92672">]</span>
+<span style="color:#f92672">[</span>certificates<span style="color:#f92672">]</span> Generated apiserver-kubelet-client certificate and key.
+<span style="color:#f92672">[</span>certificates<span style="color:#f92672">]</span> Generated sa key and public key.
+<span style="color:#f92672">[</span>certificates<span style="color:#f92672">]</span> Generated front-proxy-ca certificate and key.
+<span style="color:#f92672">[</span>certificates<span style="color:#f92672">]</span> Generated front-proxy-client certificate and key.
+<span style="color:#f92672">[</span>certificates<span style="color:#f92672">]</span> Valid certificates and keys now exist in <span style="color:#e6db74">&#34;/etc/kubernetes/pki&#34;</span>
+<span style="color:#f92672">[</span>kubeconfig<span style="color:#f92672">]</span> Wrote KubeConfig file to disk: <span style="color:#e6db74">&#34;admin.conf&#34;</span>
+<span style="color:#f92672">[</span>kubeconfig<span style="color:#f92672">]</span> Wrote KubeConfig file to disk: <span style="color:#e6db74">&#34;kubelet.conf&#34;</span>
+<span style="color:#f92672">[</span>kubeconfig<span style="color:#f92672">]</span> Wrote KubeConfig file to disk: <span style="color:#e6db74">&#34;controller-manager.conf&#34;</span>
+<span style="color:#f92672">[</span>kubeconfig<span style="color:#f92672">]</span> Wrote KubeConfig file to disk: <span style="color:#e6db74">&#34;scheduler.conf&#34;</span>
+<span style="color:#f92672">[</span>controlplane<span style="color:#f92672">]</span> Wrote Static Pod manifest <span style="color:#66d9ef">for</span> component kube-apiserver to <span style="color:#e6db74">&#34;/etc/kubernetes/manifests/kube-apiserver.yaml&#34;</span>
+<span style="color:#f92672">[</span>controlplane<span style="color:#f92672">]</span> Wrote Static Pod manifest <span style="color:#66d9ef">for</span> component kube-controller-manager to <span style="color:#e6db74">&#34;/etc/kubernetes/manifests/kube-controller-manager.yaml&#34;</span>
+<span style="color:#f92672">[</span>controlplane<span style="color:#f92672">]</span> Wrote Static Pod manifest <span style="color:#66d9ef">for</span> component kube-scheduler to <span style="color:#e6db74">&#34;/etc/kubernetes/manifests/kube-scheduler.yaml&#34;</span>
+<span style="color:#f92672">[</span>etcd<span style="color:#f92672">]</span> Wrote Static Pod manifest <span style="color:#66d9ef">for</span> a local etcd instance to <span style="color:#e6db74">&#34;/etc/kubernetes/manifests/etcd.yaml&#34;</span>
+<span style="color:#f92672">[</span>init<span style="color:#f92672">]</span> Waiting <span style="color:#66d9ef">for</span> the kubelet to boot up the control plane as Static Pods from directory <span style="color:#e6db74">&#34;/etc/kubernetes/manifests&#34;</span>.
+<span style="color:#f92672">[</span>init<span style="color:#f92672">]</span> This might take a minute or longer <span style="color:#66d9ef">if</span> the control plane images have to be pulled.
+<span style="color:#f92672">[</span>apiclient<span style="color:#f92672">]</span> All control plane components are healthy after 29.501817 seconds
+<span style="color:#f92672">[</span>uploadconfig<span style="color:#f92672">]</span> Storing the configuration used in ConfigMap <span style="color:#e6db74">&#34;kubeadm-config&#34;</span> in the <span style="color:#e6db74">&#34;kube-system&#34;</span> Namespace
+<span style="color:#f92672">[</span>markmaster<span style="color:#f92672">]</span> Will mark node roc as master by adding a label and a taint
+<span style="color:#f92672">[</span>markmaster<span style="color:#f92672">]</span> Master roc tainted and labelled with key/value: node-role.kubernetes.io/master<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;&#34;</span>
+<span style="color:#f92672">[</span>bootstraptoken<span style="color:#f92672">]</span> Using token: 0e78a0.38a53399a9489d52
+<span style="color:#f92672">[</span>bootstraptoken<span style="color:#f92672">]</span> Configured RBAC rules to allow Node Bootstrap tokens to post CSRs in order <span style="color:#66d9ef">for</span> nodes to get long term certificate credentials
+<span style="color:#f92672">[</span>bootstraptoken<span style="color:#f92672">]</span> Configured RBAC rules to allow the csrapprover controller automatically approve CSRs from a Node Bootstrap Token
+<span style="color:#f92672">[</span>bootstraptoken<span style="color:#f92672">]</span> Configured RBAC rules to allow certificate rotation <span style="color:#66d9ef">for</span> all node client certificates in the cluster
+<span style="color:#f92672">[</span>bootstraptoken<span style="color:#f92672">]</span> Creating the <span style="color:#e6db74">&#34;cluster-info&#34;</span> ConfigMap in the <span style="color:#e6db74">&#34;kube-public&#34;</span> namespace
+<span style="color:#f92672">[</span>addons<span style="color:#f92672">]</span> Applied essential addon: CoreDNS
+<span style="color:#f92672">[</span>addons<span style="color:#f92672">]</span> Applied essential addon: kube-proxy
 
 Your Kubernetes master has initialized successfully!
 
@@ -659,86 +485,51 @@ To start using your cluster, you need to run the following as a regular user:
 
   mkdir -p $HOME/.kube
   sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-  sudo chown $(id -u):$(id -g) $HOME/.kube/config
+  sudo chown <span style="color:#66d9ef">$(</span>id -u<span style="color:#66d9ef">)</span>:<span style="color:#66d9ef">$(</span>id -g<span style="color:#66d9ef">)</span> $HOME/.kube/config
 
 You should now deploy a pod network to the cluster.
-Run &quot;kubectl apply -f [podnetwork].yaml&quot; with one of the options listed at:
+Run <span style="color:#e6db74">&#34;kubectl apply -f [podnetwork].yaml&#34;</span> with one of the options listed at:
   https://kubernetes.io/docs/concepts/cluster-administration/addons/
 
 You can now join any number of machines by running the following on each node
 as root:
 
   kubeadm join --token 0e78a0.38a53399a9489d52 172.17.60.67:6443 --discovery-token-ca-cert-hash sha256:038654a3d0adb79978913e5d2bce191b5d8536feac7d9354ca35b348e9fc4cd5
-</code></pre>
-
-<p>如果初始化失败，可以撤销</p>
-
-<pre><code class="language-bash">kubeadm reset
-</code></pre>
-
-<p>如果成功，根据输出提示，master 上如果想通过 kubectl 管理集群，执行下面的命令</p>
-
-<pre><code class="language-bash">mkdir -p $HOME/.kube
+</code></pre></div><p>如果初始化失败，可以撤销</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubeadm reset
+</code></pre></div><p>如果成功，根据输出提示，master 上如果想通过 kubectl 管理集群，执行下面的命令</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">mkdir -p $HOME/.kube
 sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-sudo chown $(id -u):$(id -g) $HOME/.kube/config
-</code></pre>
-
-<p>最重要的是最后一行，保存下来，其它 node 加入集群需要执行那条命令</p>
-
-<pre><code class="language-bash">kubeadm join --token 0e78a0.38a53399a9489d52 172.17.60.67:6443 --discovery-token-ca-cert-hash sha256:038654a3d0adb79978913e5d2bce191b5d8536feac7d9354ca35b348e9fc4cd5
-</code></pre>
-
-<p>这个时候，如果你看 kubelet 的日志会发现不断提示没有cni插件，kubeadm 配置文件中的 CoreDNS 也不会生效</p>
-
-<pre><code class="language-bash">journalctl -xef -u kubelet -n 20
-</code></pre>
-
-<p>安装 flannel 网络插件就可以搞定了</p>
-
-<pre><code class="language-bash">kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/v0.9.1/Documentation/kube-flannel.yml
-</code></pre>
-
-<p>看看集群状态</p>
-
-<pre><code class="language-bash">[root@roc ~]# kubectl get cs
+sudo chown <span style="color:#66d9ef">$(</span>id -u<span style="color:#66d9ef">)</span>:<span style="color:#66d9ef">$(</span>id -g<span style="color:#66d9ef">)</span> $HOME/.kube/config
+</code></pre></div><p>最重要的是最后一行，保存下来，其它 node 加入集群需要执行那条命令</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubeadm join --token 0e78a0.38a53399a9489d52 172.17.60.67:6443 --discovery-token-ca-cert-hash sha256:038654a3d0adb79978913e5d2bce191b5d8536feac7d9354ca35b348e9fc4cd5
+</code></pre></div><p>这个时候，如果你看 kubelet 的日志会发现不断提示没有cni插件，kubeadm 配置文件中的 CoreDNS 也不会生效</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">journalctl -xef -u kubelet -n <span style="color:#ae81ff">20</span>
+</code></pre></div><p>安装 flannel 网络插件就可以搞定了</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/v0.9.1/Documentation/kube-flannel.yml
+</code></pre></div><p>看看集群状态</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">[</span>root@roc ~<span style="color:#f92672">]</span><span style="color:#75715e"># kubectl get cs</span>
 NAME                 STATUS    MESSAGE              ERROR
 scheduler            Healthy   ok
 controller-manager   Healthy   ok
-etcd-0               Healthy   {&quot;health&quot;: &quot;true&quot;}
-</code></pre>
-
-<p>使用kubeadm初始化的集群，出于安全考虑Pod不会被调度到Master Node上，可使用如下命令使Master节点参与工作负载</p>
-
-<pre><code class="language-bash">kubectl taint nodes --all node-role.kubernetes.io/master-
-</code></pre>
-
-<p>输出类似下面（报错可忽略）</p>
-
-<pre><code class="language-bash">node &quot;roc&quot; untainted
-error: taint &quot;node-role.kubernetes.io/master:&quot; not found
-</code></pre>
-
-<h2 id="worker-节点加入">worker 节点加入</h2>
-
+etcd-0               Healthy   <span style="color:#f92672">{</span><span style="color:#e6db74">&#34;health&#34;</span>: <span style="color:#e6db74">&#34;true&#34;</span><span style="color:#f92672">}</span>
+</code></pre></div><p>使用kubeadm初始化的集群，出于安全考虑Pod不会被调度到Master Node上，可使用如下命令使Master节点参与工作负载</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl taint nodes --all node-role.kubernetes.io/master-
+</code></pre></div><p>输出类似下面（报错可忽略）</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">node <span style="color:#e6db74">&#34;roc&#34;</span> untainted
+error: taint <span style="color:#e6db74">&#34;node-role.kubernetes.io/master:&#34;</span> not found
+</code></pre></div><h2 id="worker-">worker 节点加入</h2>
 <p>下载需要的镜像</p>
-
-<pre><code class="language-bash">docker pull docker.io/gcrio/hyperkube:v1.9.3
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">docker pull docker.io/gcrio/hyperkube:v1.9.3
 
 docker pull docker.io/gcrio/pause-amd64:3.0
 docker tag docker.io/gcrio/pause-amd64:3.0 gcr.io/google_containers/pause-amd64:3.0
 docker rmi docker.io/gcrio/pause-amd64:3.0
-</code></pre>
-
-<p>将之前保存的 kubeadm join 命令粘贴过来</p>
-
-<pre><code class="language-bash">kubeadm join --token 0e78a0.38a53399a9489d52 172.17.60.67:6443 --discovery-token-ca-cert-hash sha256:038654a3d0adb79978913e5d2bce191b5d8536feac7d9354ca35b348e9fc4cd5
-</code></pre>
-
-<p>在master上看看集群节点</p>
-
-<pre><code class="language-bash">kubectl get nodes
-</code></pre>
-
+</code></pre></div><p>将之前保存的 kubeadm join 命令粘贴过来</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubeadm join --token 0e78a0.38a53399a9489d52 172.17.60.67:6443 --discovery-token-ca-cert-hash sha256:038654a3d0adb79978913e5d2bce191b5d8536feac7d9354ca35b348e9fc4cd5
+</code></pre></div><p>在master上看看集群节点</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl get nodes
+</code></pre></div>
             </article>
 
             <ul class="pager blog-pager">
@@ -772,54 +563,28 @@ docker rmi docker.io/gcrio/pause-amd64:3.0
                 
             </div>
             
-            
-            
-            
-<div>
-    <section id="datecount">
-        <h4 id="date"> Wed Mar 7, 2018</h4>
-    </section>
-    <h5 id="wc">2500 Words|Read in about 5 Min</h5>
-    <h5 id="tags">Tags: 
-        
-        <a href="https://imroc.io/tags/docker/">docker</a> &nbsp;
-        
-        <a href="https://imroc.io/tags/kubernetes/">kubernetes</a> &nbsp;
-        
-        <a href="https://imroc.io/tags/kubeadm/">kubeadm</a> &nbsp;
-    </h5>
-</div>
-
-            
-            </div>
-            
-			
-               <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-<aside id=comments>
-    <div>
-        <h2> Comments </h2>
-    </div>
-    <div id="container"></div>
-    <link rel="stylesheet" href="https://imroc.io/static/gitment/default.css">
-    <script src="https://imroc.io/static/gitment/gitment.browser.js"></script>
-    <script>
-        var gitment = new Gitment({
-			owner: 'imroc', 
-			repo: 'imroc.github.io', 
-            oauth: {
-				client_id: 'd05b8f959b3111c6fb63',
-				client_secret: 'f30ef76ea0050ed731ace76f7fbf684ae5d28fbc',
-            },
-        })
-        gitment.render('container')
-    </script>
-</aside>
-</div>
-
-			
         </div>
     </div>
-    </section>
+    
+    <div id="gitalk-container"></div>
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+      var gitalk = new Gitalk({
+          clientID: 'd05b8f959b3111c6fb63',
+          clientSecret: 'f30ef76ea0050ed731ace76f7fbf684ae5d28fbc',
+          repo: 'blog',
+          owner: 'imroc',
+          admin: ['imroc'],
+          labels: ['Gitalk'],
+          title: '国内使用Kubeadm在CentOS 7上安装Kubernetes 1.9',
+          createIssueManually: false,
+          id: '',
+          distractionFreeMode: true
+      });
+      gitalk.render('gitalk-container');
+    </script>
+
 </div>
 
     <footer>
@@ -878,7 +643,7 @@ docker rmi docker.io/gcrio/pause-amd64:3.0
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.49.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.62.0</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>
@@ -886,15 +651,7 @@ docker rmi docker.io/gcrio/pause-amd64:3.0
   </div>
 </footer>
 
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script src="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe-ui-default.min.js"></script>
-<script src="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe.js"></script>
-<script src="https://imroc.io/js/auto-render.min.js"></script>
-<script src="https://imroc.io/js/main.js"></script>
-<script src="https://imroc.io/static/prism/prism.js"></script>
-<script src="https://cdn.staticfile.org/KaTeX/0.7.1/katex.min.js"></script>
-<script> renderMathInElement(document.body); </script>
-
+<script src='/js/bundle.min.879361cd590eb97fa7b7459c2fecb6f66e7b5c798ccdbbad966b1d4d0adce056.js' integrity='sha256-h5NhzVkOuX&#43;nt0WcL&#43;y29m57XHmMzbutlmsdTQrc4FY='></script>
 
 
 

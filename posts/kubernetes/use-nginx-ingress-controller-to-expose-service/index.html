@@ -23,21 +23,15 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="roc" />
 
-  <meta name="generator" content="Hugo 0.49.2" />
+  <meta name="generator" content="Hugo 0.62.0" />
   <link rel="canonical" href="https://imroc.io/posts/kubernetes/use-nginx-ingress-controller-to-expose-service/" />
   <link rel="alternate" href="https://imroc.io/index.xml" type="application/rss+xml" title="roc">
-  <script src="https://cdn.staticfile.org/jquery/1.12.4/jquery.min.js"></script>
-  <link rel="stylesheet" href="https://cdn.staticfile.org/KaTeX/0.7.1/katex.min.css" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" crossorigin="anonymous">
 
-  <link rel="stylesheet" href="https://imroc.io/css/main.css" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
   
-  <link rel="stylesheet" href="https://imroc.io/static/prism/prism.css" />
 
-  <script>
+
+<link rel="stylesheet" href='/css/bundle.min.2971c990ae9e3036a2e09462d93d94829b857b7235a2b5eac8896bdad8a8fdb6.css' integrity='sha256-KXHJkK6eMDai4JRi2T2UgpuFe3I1orXqyIlr2tio/bY='>
+  --><script>
 var _hmt = _hmt || [];
 (function() {
   var hm = document.createElement("script");
@@ -46,56 +40,6 @@ var _hmt = _hmt || [];
   s.parentNode.insertBefore(hm, s);
 })();
 </script>
-
-
-
-<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe.min.css" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.2/default-skin/default-skin.min.css" crossorigin="anonymous" />
-
-
-<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
-
-<div class="pswp__bg"></div>
-
-<div class="pswp__scroll-wrap">
-    
-    <div class="pswp__container">
-      <div class="pswp__item"></div>
-      <div class="pswp__item"></div>
-      <div class="pswp__item"></div>
-    </div>
-    
-    <div class="pswp__ui pswp__ui--hidden">
-    <div class="pswp__top-bar">
-      
-      <div class="pswp__counter"></div>
-      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
-      <button class="pswp__button pswp__button--share" title="Share"></button>
-      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
-      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
-      
-      
-      <div class="pswp__preloader">
-        <div class="pswp__preloader__icn">
-          <div class="pswp__preloader__cut">
-            <div class="pswp__preloader__donut"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
-      <div class="pswp__share-tooltip"></div>
-    </div>
-    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
-    </button>
-    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
-    </button>
-    <div class="pswp__caption">
-      <div class="pswp__caption__center"></div>
-    </div>
-    </div>
-    </div>
-</div>
 
 
 </head>
@@ -273,129 +217,87 @@ var _hmt = _hmt || [];
                 
 <aside class="toc">
   <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#概述">概述</a></li>
-<li><a href="#导入流量的方式">导入流量的方式</a>
-<ul>
-<li><a href="#使用-loadbalancer-导入流量">使用 LoadBalancer 导入流量</a></li>
-</ul></li>
-<li><a href="#使用-deamonset-hostport-导入流量">使用 DeamonSet + hostPort 导入流量</a></li>
-<li><a href="#测试">测试</a></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#heading">概述</a></li>
+    <li><a href="#heading-1">导入流量的方式</a>
+      <ul>
+        <li><a href="#-loadbalancer-">使用 LoadBalancer 导入流量</a></li>
+      </ul>
+    </li>
+    <li><a href="#-deamonset--hostport-">使用 DeamonSet + hostPort 导入流量</a></li>
+    <li><a href="#heading-2">测试</a></li>
+  </ul>
 </nav>
 </aside>
 
 
-                
-
-<h2 id="概述">概述</h2>
-
-<p>Nginx Ingress Controller 是 Kubernetes Ingress Controller 的一种实现，作为反向代理将外部流量导入集群内部，实现将 Kubernetes 内部的 Service 暴露给外部，这样我们就能通过公网或内网直接访问集群内部的服务。本文使用 Helm 来安装，所以请确保 Helm 已安装，安装方法参考：<a href="https://imroc.io/posts/kubernetes/install-helm/">https://imroc.io/posts/kubernetes/install-helm/</a></p>
-
-<h2 id="导入流量的方式">导入流量的方式</h2>
-
+                <h2 id="heading">概述</h2>
+<p>Nginx Ingress Controller 是 Kubernetes Ingress Controller 的一种实现，作为反向代理将外部流量导入集群内部，实现将 Kubernetes 内部的 Service 暴露给外部，这样我们就能通过公网或内网直接访问集群内部的服务。本文使用 Helm 来安装，所以请确保 Helm 已安装，安装方法参考：https://imroc.io/posts/kubernetes/install-helm/</p>
+<h2 id="heading-1">导入流量的方式</h2>
 <p>要想暴露内部流量，就需要让 Ingress Controller 自身能够对外提供服务，主要有以下两种方式：</p>
-
 <ul>
-<li><p>Ingress Controller 使用 Deployment 部署，Service 类型指定为 LoadBalancer<br />
-优点：最简单<br />
-缺点：需要集群有 Cloud Provider 并且支持 LoadBalancer, 一般云厂商托管的 kubernetes 集群支持，并且使用 LoadBalancer 是付费的，因为他会给你每个 LoadBalancer 类型的 Service 分配公网 IP 地址</p></li>
-
-<li><p>Ingress Controller 使用 DeamonSet 部署，Pod 指定 hostPort 来暴露端口<br />
-优点：免费<br />
-缺点：没有高可用保证，如果需要高可用就得自己去搞</p></li>
+<li>
+<p>Ingress Controller 使用 Deployment 部署，Service 类型指定为 LoadBalancer<br>
+优点：最简单<br>
+缺点：需要集群有 Cloud Provider 并且支持 LoadBalancer, 一般云厂商托管的 kubernetes 集群支持，并且使用 LoadBalancer 是付费的，因为他会给你每个 LoadBalancer 类型的 Service 分配公网 IP 地址</p>
+</li>
+<li>
+<p>Ingress Controller 使用 DeamonSet 部署，Pod 指定 hostPort 来暴露端口<br>
+优点：免费<br>
+缺点：没有高可用保证，如果需要高可用就得自己去搞</p>
+</li>
 </ul>
-
-<h3 id="使用-loadbalancer-导入流量">使用 LoadBalancer 导入流量</h3>
-
+<h3 id="-loadbalancer-">使用 LoadBalancer 导入流量</h3>
 <p>这种方式部署 Nginx Ingress Controller 最简单，只要保证上面说的前提：集群有 Cloud Provider 并且支持 LoadBalancer，如果你是使用云厂商的 Kubernetes 集群，保证你集群所使用的云厂商的账号有足够的余额，执行下面的命令一键安装：</p>
-
-<pre><code class="language-bash">helm install --name nginx-ingress --namespace kube-system stable/nginx-ingress
-</code></pre>
-
-<p>因为 <code>stable/nginx-ingress</code> 这个 helm 的 chart 包默认就是使用的这种方式部署。</p>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">helm install --name nginx-ingress --namespace kube-system stable/nginx-ingress
+</code></pre></div><p>因为 <code>stable/nginx-ingress</code> 这个 helm 的 chart 包默认就是使用的这种方式部署。</p>
 <p>部署完了我们可以查看 LoadBalancer 给我们分配的 IP 地址：</p>
-
-<pre><code class="language-bash">$ kubectl get svc -n kube-system
-NAME                            TYPE           CLUSTER-IP     EXTERNAL-IP      PORT(S)                      AGE
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ kubectl get svc -n kube-system
+NAME                            TYPE           CLUSTER-IP     EXTERNAL-IP      PORT<span style="color:#f92672">(</span>S<span style="color:#f92672">)</span>                      AGE
 nginx-ingress-controller        LoadBalancer   10.3.255.138   119.28.121.125   80:30113/TCP,443:32564/TCP   21h
-</code></pre>
-
-<p><code>EXTERNAL-IP</code> 就是我们需要的外部 IP 地址，通过访问它就可以访问到集群内部的服务了，我们可以将想要的域名配置这个IP的DNS记录，这样就可以直接通过域名来访问了。具体访问哪个 Service, 这个就是我们创建的 Ingress 里面所配置规则的了，可以通过匹配请求的 Host 和 路径这些来转发到不同的后端 Service.</p>
-
-<h2 id="使用-deamonset-hostport-导入流量">使用 DeamonSet + hostPort 导入流量</h2>
-
+</code></pre></div><p><code>EXTERNAL-IP</code> 就是我们需要的外部 IP 地址，通过访问它就可以访问到集群内部的服务了，我们可以将想要的域名配置这个IP的DNS记录，这样就可以直接通过域名来访问了。具体访问哪个 Service, 这个就是我们创建的 Ingress 里面所配置规则的了，可以通过匹配请求的 Host 和 路径这些来转发到不同的后端 Service.</p>
+<h2 id="-deamonset--hostport-">使用 DeamonSet + hostPort 导入流量</h2>
 <p>这种方式实际是使用集群内的某些节点来暴露流量，使用 DeamonSet 部署，保证让符合我们要求的节点都会启动一个 Nginx 的 Ingress Controller 来监听端口，这些节点我们叫它 <code>边缘节点</code>，因为它们才是真正监听端口，让外界流量进入集群内部的节点，这里我使用集群内部的一个节点来暴露流量，它有自己的公网 IP 地址，并且 80 和 443 端口没有被其它占用。</p>
-
 <p>首先，看看集群有哪些节点：</p>
-
-<pre><code class="language-bash">$ kubectl get node
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ kubectl get node
 NAME       STATUS    ROLES     AGE       VERSION
 10.0.0.3   Ready     &lt;none&gt;    56d       v1.8.7-qcloud
 10.0.0.4   Ready     &lt;none&gt;    56d       v1.8.7-qcloud
 10.0.0.5   Ready     &lt;none&gt;    56d       v1.8.7-qcloud
 10.0.0.6   Ready     &lt;none&gt;    56d       v1.8.7-qcloud
-</code></pre>
-
-<p>我想要 <code>10.0.0.3</code> 这个节点作为 <code>边缘节点</code> 来暴露流量，我来给它加个 label，以便后面我们用 DeamonSet 部署 Nginx Ingress Controller 时能绑到这个节点上，我这里就加个名为 <code>node:edge</code> 的 label :</p>
-
-<pre><code class="language-bash">$ kubectl label node 10.0.0.3 node=edge
-node &quot;10.0.0.3&quot; labeled
-</code></pre>
-
-<p>如果 label 加错了可以这样删掉:</p>
-
-<pre><code class="language-bash">$ kubectl label node 10.0.0.3 node-
-node &quot;10.0.0.3&quot; labeled
-</code></pre>
-
-<p>接下来我们覆盖一些默认配置来安装:</p>
-
-<pre><code class="language-bash">helm install stable/nginx-ingress \
-  --namespace kube-system \
-  --name nginx-ingress \
-  --version=0.23.0 \
-  --set controller.kind=DaemonSet \
-  --set controller.daemonset.useHostPort=true \
-  --set controller.nodeSelector.node=edge \
-  --set controller.service.type=ClusterIP
-</code></pre>
-
-<p>可以看下是否成功启动:</p>
-
-<pre><code class="language-bash">$ kubectl get pods -n kube-system | grep nginx-ingress
-nginx-ingress-controller-b47h9                  1/1       Running   0          1h
-nginx-ingress-default-backend-9c5d6df7d-7dwll   1/1       Running   0          1h
-</code></pre>
-
-<p>如果状态不是 <code>Running</code>  可以查看下详情:</p>
-
-<pre><code class="language-bash">$ kubectl describe -n kube-system po/nginx-ingress-controller-b47h9
-</code></pre>
-
-<p>这两个 pod 的镜像在 <code>quay.io</code> 下，国内拉取可能会比较慢。</p>
-
+</code></pre></div><p>我想要 <code>10.0.0.3</code> 这个节点作为 <code>边缘节点</code> 来暴露流量，我来给它加个 label，以便后面我们用 DeamonSet 部署 Nginx Ingress Controller 时能绑到这个节点上，我这里就加个名为 <code>node:edge</code> 的 label :</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ kubectl label node 10.0.0.3 node<span style="color:#f92672">=</span>edge
+node <span style="color:#e6db74">&#34;10.0.0.3&#34;</span> labeled
+</code></pre></div><p>如果 label 加错了可以这样删掉:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ kubectl label node 10.0.0.3 node-
+node <span style="color:#e6db74">&#34;10.0.0.3&#34;</span> labeled
+</code></pre></div><p>接下来我们覆盖一些默认配置来安装:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">helm install stable/nginx-ingress <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>  --namespace kube-system <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>  --name nginx-ingress <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>  --version<span style="color:#f92672">=</span>0.23.0 <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>  --set controller.kind<span style="color:#f92672">=</span>DaemonSet <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>  --set controller.daemonset.useHostPort<span style="color:#f92672">=</span>true <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>  --set controller.nodeSelector.node<span style="color:#f92672">=</span>edge <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>  --set controller.service.type<span style="color:#f92672">=</span>ClusterIP
+</code></pre></div><p>可以看下是否成功启动:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ kubectl get pods -n kube-system | grep nginx-ingress
+nginx-ingress-controller-b47h9                  1/1       Running   <span style="color:#ae81ff">0</span>          1h
+nginx-ingress-default-backend-9c5d6df7d-7dwll   1/1       Running   <span style="color:#ae81ff">0</span>          1h
+</code></pre></div><p>如果状态不是 <code>Running</code>  可以查看下详情:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ kubectl describe -n kube-system po/nginx-ingress-controller-b47h9
+</code></pre></div><p>这两个 pod 的镜像在 <code>quay.io</code> 下，国内拉取可能会比较慢。</p>
 <p>运行成功我们就可以创建 Ingress 来将外部流量导入集群内部啦，外部 IP 是我们的 <code>边缘节点</code> 的 IP，公网和内网 IP 都算，我用的 <code>10.0.0.3</code> 这个节点，并且它有公网 IP，我就可以通过公网 IP 来访问了，如果再给这个公网 IP 添加 DNS 记录，我就可以用域名访问了。</p>
-
-<h2 id="测试">测试</h2>
-
+<h2 id="heading-2">测试</h2>
 <p>我们来创建一个服务测试一下，先创建一个 <code>my-nginx.yaml</code></p>
-
-<pre><code class="language-bash">vi my-nginx.yaml
-</code></pre>
-
-<p>粘贴以下内容：</p>
-
-<pre><code class="language-yaml">apiVersion: extensions/v1beta1
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">vi my-nginx.yaml
+</code></pre></div><p>粘贴以下内容：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: my-nginx
 spec:
-  replicas: 1
+  replicas: <span style="color:#ae81ff">1</span>
   template:
     metadata:
       labels:
@@ -405,7 +307,7 @@ spec:
       - name: my-nginx
         image: nginx
         ports:
-        - containerPort: 80
+        - containerPort: <span style="color:#ae81ff">80</span>
 ---
 apiVersion: v1
 kind: Service
@@ -415,7 +317,7 @@ metadata:
     app: my-nginx
 spec:
   ports:
-  - port: 80
+  - port: <span style="color:#ae81ff">80</span>
     protocol: TCP
     name: http
   selector:
@@ -426,7 +328,7 @@ kind: Ingress
 metadata:
   name: my-nginx
   annotations:
-    kubernetes.io/ingress.class: &quot;nginx&quot;
+    kubernetes.io/ingress.class: <span style="color:#e6db74">&#34;nginx&#34;</span>
 spec:
   rules:
   - http:
@@ -434,16 +336,10 @@ spec:
       - path: /
         backend:
           serviceName: my-nginx
-          servicePort: 80
-</code></pre>
-
-<p>创建：</p>
-
-<pre><code class="language-bash">kubectl apply -f my-nginx.yaml
-</code></pre>
-
-<p>然后浏览器通过 IP 或域名访问下，当你看到 <code>Welcome to nginx!</code> 这个 nginx 默认的主页说明已经成功啦。</p>
-
+          servicePort: <span style="color:#ae81ff">80</span>
+</code></pre></div><p>创建：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl apply -f my-nginx.yaml
+</code></pre></div><p>然后浏览器通过 IP 或域名访问下，当你看到 <code>Welcome to nginx!</code> 这个 nginx 默认的主页说明已经成功啦。</p>
 <p><strong>注意</strong>：定义 Ingress 的时候最好加上 <code>kubernetes.io/ingress.class</code> 这个 annotation，在有多个 Ingress Controller 的情况下让请求能够被我们安装的这个处理（云厂商托管的 Kubernetes 集群一般会有默认的 Ingress Controller)</p>
 
             </article>
@@ -479,50 +375,28 @@ spec:
                 
             </div>
             
-            
-            
-            
-<div>
-    <section id="datecount">
-        <h4 id="date"> Mon Jul 23, 2018</h4>
-    </section>
-    <h5 id="wc">1400 Words|Read in about 3 Min</h5>
-    <h5 id="tags">Tags: 
-        
-        <a href="https://imroc.io/tags/kubernetes/">kubernetes</a> &nbsp;
-    </h5>
-</div>
-
-            
-            </div>
-            
-			
-               <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-<aside id=comments>
-    <div>
-        <h2> Comments </h2>
-    </div>
-    <div id="container"></div>
-    <link rel="stylesheet" href="https://imroc.io/static/gitment/default.css">
-    <script src="https://imroc.io/static/gitment/gitment.browser.js"></script>
-    <script>
-        var gitment = new Gitment({
-			owner: 'imroc', 
-			repo: 'imroc.github.io', 
-            oauth: {
-				client_id: 'd05b8f959b3111c6fb63',
-				client_secret: 'f30ef76ea0050ed731ace76f7fbf684ae5d28fbc',
-            },
-        })
-        gitment.render('container')
-    </script>
-</aside>
-</div>
-
-			
         </div>
     </div>
-    </section>
+    
+    <div id="gitalk-container"></div>
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+      var gitalk = new Gitalk({
+          clientID: 'd05b8f959b3111c6fb63',
+          clientSecret: 'f30ef76ea0050ed731ace76f7fbf684ae5d28fbc',
+          repo: 'blog',
+          owner: 'imroc',
+          admin: ['imroc'],
+          labels: ['Gitalk'],
+          title: '使用Nginx Ingress Controller导入外部流量到Kubernetes集群内部',
+          createIssueManually: false,
+          id: '',
+          distractionFreeMode: true
+      });
+      gitalk.render('gitalk-container');
+    </script>
+
 </div>
 
     <footer>
@@ -581,7 +455,7 @@ spec:
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.49.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.62.0</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>
@@ -589,15 +463,7 @@ spec:
   </div>
 </footer>
 
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script src="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe-ui-default.min.js"></script>
-<script src="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe.js"></script>
-<script src="https://imroc.io/js/auto-render.min.js"></script>
-<script src="https://imroc.io/js/main.js"></script>
-<script src="https://imroc.io/static/prism/prism.js"></script>
-<script src="https://cdn.staticfile.org/KaTeX/0.7.1/katex.min.js"></script>
-<script> renderMathInElement(document.body); </script>
-
+<script src='/js/bundle.min.879361cd590eb97fa7b7459c2fecb6f66e7b5c798ccdbbad966b1d4d0adce056.js' integrity='sha256-h5NhzVkOuX&#43;nt0WcL&#43;y29m57XHmMzbutlmsdTQrc4FY='></script>
 
 
 

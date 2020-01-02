@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Git on roc</title>
+    <title>git on roc</title>
     <link>https://imroc.io/tags/git/</link>
-    <description>Recent content in Git on roc</description>
+    <description>Recent content in git on roc</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <managingEditor>roc@imroc.io (roc)</managingEditor>

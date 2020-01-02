@@ -23,21 +23,15 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="roc" />
 
-  <meta name="generator" content="Hugo 0.49.2" />
+  <meta name="generator" content="Hugo 0.62.0" />
   <link rel="canonical" href="https://imroc.io/posts/docker/quick-start-for-docker-5/" />
   <link rel="alternate" href="https://imroc.io/index.xml" type="application/rss+xml" title="roc">
-  <script src="https://cdn.staticfile.org/jquery/1.12.4/jquery.min.js"></script>
-  <link rel="stylesheet" href="https://cdn.staticfile.org/KaTeX/0.7.1/katex.min.css" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" crossorigin="anonymous">
 
-  <link rel="stylesheet" href="https://imroc.io/css/main.css" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
   
-  <link rel="stylesheet" href="https://imroc.io/static/prism/prism.css" />
 
-  <script>
+
+<link rel="stylesheet" href='/css/bundle.min.2971c990ae9e3036a2e09462d93d94829b857b7235a2b5eac8896bdad8a8fdb6.css' integrity='sha256-KXHJkK6eMDai4JRi2T2UgpuFe3I1orXqyIlr2tio/bY='>
+  --><script>
 var _hmt = _hmt || [];
 (function() {
   var hm = document.createElement("script");
@@ -46,56 +40,6 @@ var _hmt = _hmt || [];
   s.parentNode.insertBefore(hm, s);
 })();
 </script>
-
-
-
-<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe.min.css" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.2/default-skin/default-skin.min.css" crossorigin="anonymous" />
-
-
-<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
-
-<div class="pswp__bg"></div>
-
-<div class="pswp__scroll-wrap">
-    
-    <div class="pswp__container">
-      <div class="pswp__item"></div>
-      <div class="pswp__item"></div>
-      <div class="pswp__item"></div>
-    </div>
-    
-    <div class="pswp__ui pswp__ui--hidden">
-    <div class="pswp__top-bar">
-      
-      <div class="pswp__counter"></div>
-      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
-      <button class="pswp__button pswp__button--share" title="Share"></button>
-      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
-      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
-      
-      
-      <div class="pswp__preloader">
-        <div class="pswp__preloader__icn">
-          <div class="pswp__preloader__cut">
-            <div class="pswp__preloader__donut"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
-      <div class="pswp__share-tooltip"></div>
-    </div>
-    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
-    </button>
-    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
-    </button>
-    <div class="pswp__caption">
-      <div class="pswp__caption__center"></div>
-    </div>
-    </div>
-    </div>
-</div>
 
 
 </head>
@@ -243,99 +187,62 @@ var _hmt = _hmt || [];
                 
 <aside class="toc">
   <nav id="TableOfContents">
-<ul>
-<li><a href="#简介">简介</a></li>
-<li><a href="#安装">安装</a></li>
-<li><a href="#编写docker-compose-yml">编写docker-compose.yml</a></li>
-<li><a href="#docker-compose-命令">docker-compose 命令</a>
-<ul>
-<li>
-<ul>
-<li><a href="#启动">启动</a></li>
-<li><a href="#查看运行状态">查看运行状态</a></li>
-<li><a href="#停止">停止</a></li>
-</ul></li>
-</ul></li>
-</ul>
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#heading-2">启动</a></li>
+        <li><a href="#heading-3">查看运行状态</a></li>
+        <li><a href="#heading-4">停止</a></li>
+      </ul>
+    </li>
+  </ul>
 </nav>
 </aside>
 
 
-                
-
-<h1 id="简介">简介</h1>
-
+                <h1 id="heading">简介</h1>
 <p>docker-compose 可以用来定义和运行复杂应用的Docker工具，比如你的web应用需要用到好几个容器，mysql、redis和你自己的应用容器，它们之间需要相互协作、通信，一般都是同时启动和关闭的。如果手工一个一个启动、link，这样很麻烦，通常如果它们运行在同一台机器上，我们可以用docker-compose来管理，非常方便。</p>
-
-<h1 id="安装">安装</h1>
-
-<p>如果你用的mac或windows桌面版docker，那么docker-compose已经自带了，如果是linux，可以在官方的github release页面下载最新版: <a href="https://github.com/docker/compose/releases">https://github.com/docker/compose/releases</a><br />
+<h1 id="heading-1">安装</h1>
+<p>如果你用的mac或windows桌面版docker，那么docker-compose已经自带了，如果是linux，可以在官方的github release页面下载最新版: <a href="https://github.com/docker/compose/releases">https://github.com/docker/compose/releases</a><br>
 通常选择<code>docker-compose-Linux-x86_64</code>，下载下来重命名为<code>docker-compose</code>，并增加可执行权限：</p>
-
-<pre><code class="language-sh">chmod +x docker-compose
-</code></pre>
-
-<p>然后将其移到<code>PATH</code>下，比如：</p>
-
-<pre><code class="language-sh">mv docker-compose /usr/local/bin/
-</code></pre>
-
-<p>最后检验一下是否安装成功：</p>
-
-<pre><code class="language-sh">docker-compose --version
-</code></pre>
-
-<h1 id="编写docker-compose-yml">编写docker-compose.yml</h1>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">chmod +x docker-compose
+</code></pre></div><p>然后将其移到<code>PATH</code>下，比如：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">mv docker-compose /usr/local/bin/
+</code></pre></div><p>最后检验一下是否安装成功：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">docker-compose --version
+</code></pre></div><h1 id="docker-composeyml">编写docker-compose.yml</h1>
 <p>要使用docker-compose，就必须定义<code>docker-compose.yml</code>配置文件，然后在配置文件所在目录执行docker-compose相关命令，配置文件示例：</p>
-
-<pre><code class="language-yaml">version: &quot;3&quot; # 配置文件格式版本号
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">version: <span style="color:#e6db74">&#34;3&#34;</span> <span style="color:#75715e"># 配置文件格式版本号</span>
 services:
   web:
-    image: yourname/web # 镜像名
-    container_name: web # 给容器起别名
+    image: yourname/web <span style="color:#75715e"># 镜像名</span>
+    container_name: web <span style="color:#75715e"># 给容器起别名</span>
     ports:
-      - 8080:80 # 容器内80端口映射到宿主机8080端口
-    volumes: # 挂载目录或文件
+      - <span style="color:#ae81ff">8080</span>:<span style="color:#ae81ff">80</span> <span style="color:#75715e"># 容器内80端口映射到宿主机8080端口</span>
+    volumes: <span style="color:#75715e"># 挂载目录或文件</span>
       - ./conf.toml:/etc/web/conf.toml
       - ./data:/data/web
-    working_dir: /web # 改变当前工作目录
-    command: python app.py # 改变默认启动命令
+    working_dir: /web <span style="color:#75715e"># 改变当前工作目录</span>
+    command: python app.py <span style="color:#75715e"># 改变默认启动命令</span>
     depends_on: 
-      - db # 依赖db这个service
-      - redis # 依赖redis这个service
+      - db <span style="color:#75715e"># 依赖db这个service</span>
+      - redis <span style="color:#75715e"># 依赖redis这个service</span>
   db:
-    image: mysql:5.6
+    image: mysql:<span style="color:#ae81ff">5.6</span>
   redis:
     image: redis
-</code></pre>
-
-<h1 id="docker-compose-命令">docker-compose 命令</h1>
-
+</code></pre></div><h1 id="docker-compose-">docker-compose 命令</h1>
 <p>执行docker-compose命令首先确保你的当前目录跟<code>docker-compose.yml</code>在同一目录下</p>
-
-<h3 id="启动">启动</h3>
-
+<h3 id="heading-2">启动</h3>
 <p>通常都是后台启动，加<code>-d</code>参数：</p>
-
-<pre><code class="language-sh">docker-compose up -d
-</code></pre>
-
-<p><img src="https://res.cloudinary.com/imroc/image/upload/v1513753125/blog/docker/docker-compose-up.png" alt="docker compose up -d" /></p>
-
-<h3 id="查看运行状态">查看运行状态</h3>
-
-<pre><code class="language-sh">docker-compose ps
-</code></pre>
-
-<p><img src="https://res.cloudinary.com/imroc/image/upload/v1513752292/blog/docker/docker-compose-ps.png" alt="docker compose ps" /></p>
-
-<h3 id="停止">停止</h3>
-
-<pre><code class="language-sh">docker-compose down
-</code></pre>
-
-<p><img src="https://res.cloudinary.com/imroc/image/upload/v1513753125/blog/docker/docker-compose-down.png" alt="docker compose down" /></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">docker-compose up -d
+</code></pre></div><p><img src="https://res.cloudinary.com/imroc/image/upload/v1513753125/blog/docker/docker-compose-up.png" alt="docker compose up -d"></p>
+<h3 id="heading-3">查看运行状态</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">docker-compose ps
+</code></pre></div><p><img src="https://res.cloudinary.com/imroc/image/upload/v1513752292/blog/docker/docker-compose-ps.png" alt="docker compose ps"></p>
+<h3 id="heading-4">停止</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">docker-compose down
+</code></pre></div><p><img src="https://res.cloudinary.com/imroc/image/upload/v1513753125/blog/docker/docker-compose-down.png" alt="docker compose down"></p>
 
             </article>
 
@@ -370,52 +277,28 @@ services:
                 
             </div>
             
-            
-            
-            
-<div>
-    <section id="datecount">
-        <h4 id="date"> Wed Dec 20, 2017</h4>
-    </section>
-    <h5 id="wc">700 Words|Read in about 2 Min</h5>
-    <h5 id="tags">Tags: 
-        
-        <a href="https://imroc.io/tags/docker/">docker</a> &nbsp;
-        
-        <a href="https://imroc.io/tags/docker%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/">Docker快速入门</a> &nbsp;
-    </h5>
-</div>
-
-            
-            </div>
-            
-			
-               <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-<aside id=comments>
-    <div>
-        <h2> Comments </h2>
-    </div>
-    <div id="container"></div>
-    <link rel="stylesheet" href="https://imroc.io/static/gitment/default.css">
-    <script src="https://imroc.io/static/gitment/gitment.browser.js"></script>
-    <script>
-        var gitment = new Gitment({
-			owner: 'imroc', 
-			repo: 'imroc.github.io', 
-            oauth: {
-				client_id: 'd05b8f959b3111c6fb63',
-				client_secret: 'f30ef76ea0050ed731ace76f7fbf684ae5d28fbc',
-            },
-        })
-        gitment.render('container')
-    </script>
-</aside>
-</div>
-
-			
         </div>
     </div>
-    </section>
+    
+    <div id="gitalk-container"></div>
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+      var gitalk = new Gitalk({
+          clientID: 'd05b8f959b3111c6fb63',
+          clientSecret: 'f30ef76ea0050ed731ace76f7fbf684ae5d28fbc',
+          repo: 'blog',
+          owner: 'imroc',
+          admin: ['imroc'],
+          labels: ['Gitalk'],
+          title: 'Docker快速入门（五）docker-compose安装与基础用法',
+          createIssueManually: false,
+          id: '',
+          distractionFreeMode: true
+      });
+      gitalk.render('gitalk-container');
+    </script>
+
 </div>
 
     <footer>
@@ -474,7 +357,7 @@ services:
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.49.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.62.0</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>
@@ -482,15 +365,7 @@ services:
   </div>
 </footer>
 
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script src="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe-ui-default.min.js"></script>
-<script src="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe.js"></script>
-<script src="https://imroc.io/js/auto-render.min.js"></script>
-<script src="https://imroc.io/js/main.js"></script>
-<script src="https://imroc.io/static/prism/prism.js"></script>
-<script src="https://cdn.staticfile.org/KaTeX/0.7.1/katex.min.js"></script>
-<script> renderMathInElement(document.body); </script>
-
+<script src='/js/bundle.min.879361cd590eb97fa7b7459c2fecb6f66e7b5c798ccdbbad966b1d4d0adce056.js' integrity='sha256-h5NhzVkOuX&#43;nt0WcL&#43;y29m57XHmMzbutlmsdTQrc4FY='></script>
 
 
 

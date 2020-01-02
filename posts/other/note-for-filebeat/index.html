@@ -23,21 +23,15 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="roc" />
 
-  <meta name="generator" content="Hugo 0.49.2" />
+  <meta name="generator" content="Hugo 0.62.0" />
   <link rel="canonical" href="https://imroc.io/posts/other/note-for-filebeat/" />
   <link rel="alternate" href="https://imroc.io/index.xml" type="application/rss+xml" title="roc">
-  <script src="https://cdn.staticfile.org/jquery/1.12.4/jquery.min.js"></script>
-  <link rel="stylesheet" href="https://cdn.staticfile.org/KaTeX/0.7.1/katex.min.css" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" crossorigin="anonymous">
 
-  <link rel="stylesheet" href="https://imroc.io/css/main.css" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
   
-  <link rel="stylesheet" href="https://imroc.io/static/prism/prism.css" />
 
-  <script>
+
+<link rel="stylesheet" href='/css/bundle.min.2971c990ae9e3036a2e09462d93d94829b857b7235a2b5eac8896bdad8a8fdb6.css' integrity='sha256-KXHJkK6eMDai4JRi2T2UgpuFe3I1orXqyIlr2tio/bY='>
+  --><script>
 var _hmt = _hmt || [];
 (function() {
   var hm = document.createElement("script");
@@ -46,56 +40,6 @@ var _hmt = _hmt || [];
   s.parentNode.insertBefore(hm, s);
 })();
 </script>
-
-
-
-<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe.min.css" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.2/default-skin/default-skin.min.css" crossorigin="anonymous" />
-
-
-<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
-
-<div class="pswp__bg"></div>
-
-<div class="pswp__scroll-wrap">
-    
-    <div class="pswp__container">
-      <div class="pswp__item"></div>
-      <div class="pswp__item"></div>
-      <div class="pswp__item"></div>
-    </div>
-    
-    <div class="pswp__ui pswp__ui--hidden">
-    <div class="pswp__top-bar">
-      
-      <div class="pswp__counter"></div>
-      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
-      <button class="pswp__button pswp__button--share" title="Share"></button>
-      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
-      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
-      
-      
-      <div class="pswp__preloader">
-        <div class="pswp__preloader__icn">
-          <div class="pswp__preloader__cut">
-            <div class="pswp__preloader__donut"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
-      <div class="pswp__share-tooltip"></div>
-    </div>
-    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
-    </button>
-    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
-    </button>
-    <div class="pswp__caption">
-      <div class="pswp__caption__center"></div>
-    </div>
-    </div>
-    </div>
-</div>
 
 
 </head>
@@ -241,81 +185,65 @@ var _hmt = _hmt || [];
                 
 <aside class="toc">
   <nav id="TableOfContents">
-<ul>
-<li><a href="#前言">前言</a></li>
-<li><a href="#程序大致逻辑">程序大致逻辑</a></li>
-<li><a href="#概念">概念</a>
-<ul>
-<li>
-<ul>
-<li><a href="#registrar">registrar</a></li>
-<li><a href="#crawler-prospector-harvester">crawler, prospector, harvester</a></li>
-</ul></li>
-</ul></li>
-<li><a href="#reader">Reader</a>
-<ul>
-<li>
-<ul>
-<li><a href="#reader的实现">Reader的实现</a></li>
-</ul></li>
-</ul></li>
-<li><a href="#包结构">包结构</a></li>
-</ul>
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#registrar">registrar</a></li>
+        <li><a href="#crawler-prospector-harvester">crawler, prospector, harvester</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#reader-1">Reader的实现</a></li>
+      </ul>
+    </li>
+  </ul>
 </nav>
 </aside>
 
 
-                
-
-<h1 id="前言">前言</h1>
-
+                <h1 id="heading">前言</h1>
 <p>最近在阅读filebeat源码，将所学到的记录总结在本文，正在进行中，还不够完善，内容可能随时更新调整。</p>
-
-<h1 id="程序大致逻辑">程序大致逻辑</h1>
-
+<h1 id="heading-1">程序大致逻辑</h1>
 <ol>
 <li>加载配置</li>
 <li><code>Filebeat.Run()</code> filebeat逻辑入口</li>
 <li><code>Registrar.Start()</code> 启动状态管理器</li>
 <li><code>Crawler.Start()</code> 启动数据爬虫，采集最新数据，封装格式并输出到指定地方</li>
 </ol>
-
-<h1 id="概念">概念</h1>
-
+<h1 id="heading-2">概念</h1>
 <h3 id="registrar">registrar</h3>
-
 <p>文件状态管理器，记录文件读取进度等信息，避免重复采集。</p>
-
 <h3 id="crawler-prospector-harvester">crawler, prospector, harvester</h3>
-
 <p><code>crawler</code> 是用来采集数据的爬虫，也是filebeat的关键，管理一个或多个 <code>prospector</code> ，一个 <code>prospector</code> 是一批文件的采集管理器，可管理某个文件或用通配符匹配的多个文件，它管理一个或多个 <code>harvester</code> ，每个 <code>harvester</code> 采集某个特定的文件。</p>
-
-<p>注：<br />
-1. <code>prospector</code> 是抽象成接口的，文件不仅仅可以是磁盘上的文件，还可以是标准输入、redis、docker。<br />
-2. <code>github.com/elastic/beats/filebeat/prospector</code> 包提供接口和 <code>Register()</code> 函数来注册接口的实现，下面的子包就是 <code>prospector</code> 的实现。用的最多的就是下面的 <code>log</code> 包实现的 <code>prospector</code> 了，用来采集磁盘上的文件。</p>
-
-<h1 id="reader">Reader</h1>
-
-<p><code>reader</code> 包，即 <code>github.com/elastic/beats/filebeat/harvester/reader</code> 这个包，定义了 <code>Reader</code> 接口，跟 <code>io.Reader</code> 接口不同，它需要返回 <code>Message</code> 结构体，除开所需的字节数组外还包含其它一些信息。 这个 <code>Reader</code> 用于采集数据，有多种实现，可根据需要嵌套组合着用。</p>
-
-<h3 id="reader的实现">Reader的实现</h3>
-
-<p><code>reader</code>包本身实现了一些公用的 <code>Reader</code> 接口实现，一些 <code>harvester</code>的实现根据自己需要会使用到，下面列几个比较关键的实现：</p>
-
+<p>注：</p>
 <ol>
-<li><p><code>reader.Encode</code>
-这是一个很基础很核心的 <code>reader.Reader</code> 实现，它使用 <code>reader.Line</code> 这个辅助的结构体（封装 <code>io.Reader</code>，保证每次读一行），然后将每次读取的数据封装成 <code>reader.Message</code> 返回以实现 <code>reader.Reader</code> 接口。</p></li>
-
-<li><p><code>reader.JSON</code>
-将现成的 <code>reader.Reader</code> 读取的数据根据配置转换成json格式的数据。</p></li>
-
-<li><p><code>log</code> 包的 <code>Reader</code> 实现
-<code>log</code> 包中创建 <code>reader.Reader</code> 时先创建 <code>log.Log</code>（封装日志文件读取，实现 <code>io.Reader</code> 接口）然后调用 <code>reader.NewEncode()</code> 将创建好的 <code>log.Log</code> 实例传入，返回 <code>reader.Reader</code>；不过并没完，还会根据配置用其它 <code>reader.Reader</code> 再进行一次封装，比如 <code>reader.NewJSON()</code> 返回 <code>reader.JSON</code>，即将采集到的数据转换成json格式。</p></li>
+<li><code>prospector</code> 是抽象成接口的，文件不仅仅可以是磁盘上的文件，还可以是标准输入、redis、docker。</li>
+<li><code>github.com/elastic/beats/filebeat/prospector</code> 包提供接口和 <code>Register()</code> 函数来注册接口的实现，下面的子包就是 <code>prospector</code> 的实现。用的最多的就是下面的 <code>log</code> 包实现的 <code>prospector</code> 了，用来采集磁盘上的文件。</li>
 </ol>
-
-<h1 id="包结构">包结构</h1>
-
-<pre><code>github.com
+<h1 id="reader">Reader</h1>
+<p><code>reader</code> 包，即 <code>github.com/elastic/beats/filebeat/harvester/reader</code> 这个包，定义了 <code>Reader</code> 接口，跟 <code>io.Reader</code> 接口不同，它需要返回 <code>Message</code> 结构体，除开所需的字节数组外还包含其它一些信息。 这个 <code>Reader</code> 用于采集数据，有多种实现，可根据需要嵌套组合着用。</p>
+<h3 id="reader-1">Reader的实现</h3>
+<p><code>reader</code>包本身实现了一些公用的 <code>Reader</code> 接口实现，一些 <code>harvester</code>的实现根据自己需要会使用到，下面列几个比较关键的实现：</p>
+<ol>
+<li>
+<p><code>reader.Encode</code>
+这是一个很基础很核心的 <code>reader.Reader</code> 实现，它使用 <code>reader.Line</code> 这个辅助的结构体（封装 <code>io.Reader</code>，保证每次读一行），然后将每次读取的数据封装成 <code>reader.Message</code> 返回以实现 <code>reader.Reader</code> 接口。</p>
+</li>
+<li>
+<p><code>reader.JSON</code>
+将现成的 <code>reader.Reader</code> 读取的数据根据配置转换成json格式的数据。</p>
+</li>
+<li>
+<p><code>log</code> 包的 <code>Reader</code> 实现
+<code>log</code> 包中创建 <code>reader.Reader</code> 时先创建 <code>log.Log</code>（封装日志文件读取，实现 <code>io.Reader</code> 接口）然后调用 <code>reader.NewEncode()</code> 将创建好的 <code>log.Log</code> 实例传入，返回 <code>reader.Reader</code>；不过并没完，还会根据配置用其它 <code>reader.Reader</code> 再进行一次封装，比如 <code>reader.NewJSON()</code> 返回 <code>reader.JSON</code>，即将采集到的数据转换成json格式。</p>
+</li>
+</ol>
+<h1 id="heading-3">包结构</h1>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">github.com
 └── elastic
     └── beats # elastic旗下beats系列产品
         ├── libbeats # elastic旗下beats系列产品共用库
@@ -328,8 +256,7 @@ var _hmt = _hmt || [];
             │   └── stdin # 标准输出的Prospectorer实现
             └── registrar # 定义Registrar结构体，包含Registrar的所有逻辑
 
-</code></pre>
-
+</code></pre></div>
             </article>
 
             <ul class="pager blog-pager">
@@ -348,50 +275,28 @@ var _hmt = _hmt || [];
                  
             </div>
             
-            
-            
-            
-<div>
-    <section id="datecount">
-        <h4 id="date"> Wed Jan 3, 2018</h4>
-    </section>
-    <h5 id="wc">1100 Words|Read in about 3 Min</h5>
-    <h5 id="tags">Tags: 
-        
-        <a href="https://imroc.io/tags/filebeat/">filebeat</a> &nbsp;
-    </h5>
-</div>
-
-            
-            </div>
-            
-			
-               <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-<aside id=comments>
-    <div>
-        <h2> Comments </h2>
-    </div>
-    <div id="container"></div>
-    <link rel="stylesheet" href="https://imroc.io/static/gitment/default.css">
-    <script src="https://imroc.io/static/gitment/gitment.browser.js"></script>
-    <script>
-        var gitment = new Gitment({
-			owner: 'imroc', 
-			repo: 'imroc.github.io', 
-            oauth: {
-				client_id: 'd05b8f959b3111c6fb63',
-				client_secret: 'f30ef76ea0050ed731ace76f7fbf684ae5d28fbc',
-            },
-        })
-        gitment.render('container')
-    </script>
-</aside>
-</div>
-
-			
         </div>
     </div>
-    </section>
+    
+    <div id="gitalk-container"></div>
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+      var gitalk = new Gitalk({
+          clientID: 'd05b8f959b3111c6fb63',
+          clientSecret: 'f30ef76ea0050ed731ace76f7fbf684ae5d28fbc',
+          repo: 'blog',
+          owner: 'imroc',
+          admin: ['imroc'],
+          labels: ['Gitalk'],
+          title: 'filebeat源码阅读笔记',
+          createIssueManually: false,
+          id: '',
+          distractionFreeMode: true
+      });
+      gitalk.render('gitalk-container');
+    </script>
+
 </div>
 
     <footer>
@@ -450,7 +355,7 @@ var _hmt = _hmt || [];
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.49.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.62.0</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>
@@ -458,15 +363,7 @@ var _hmt = _hmt || [];
   </div>
 </footer>
 
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script src="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe-ui-default.min.js"></script>
-<script src="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe.js"></script>
-<script src="https://imroc.io/js/auto-render.min.js"></script>
-<script src="https://imroc.io/js/main.js"></script>
-<script src="https://imroc.io/static/prism/prism.js"></script>
-<script src="https://cdn.staticfile.org/KaTeX/0.7.1/katex.min.js"></script>
-<script> renderMathInElement(document.body); </script>
-
+<script src='/js/bundle.min.879361cd590eb97fa7b7459c2fecb6f66e7b5c798ccdbbad966b1d4d0adce056.js' integrity='sha256-h5NhzVkOuX&#43;nt0WcL&#43;y29m57XHmMzbutlmsdTQrc4FY='></script>
 
 
 

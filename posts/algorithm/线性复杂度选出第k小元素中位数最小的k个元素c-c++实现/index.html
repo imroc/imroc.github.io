@@ -23,21 +23,15 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="roc" />
 
-  <meta name="generator" content="Hugo 0.49.2" />
+  <meta name="generator" content="Hugo 0.62.0" />
   <link rel="canonical" href="https://imroc.io/posts/algorithm/%E7%BA%BF%E6%80%A7%E5%A4%8D%E6%9D%82%E5%BA%A6%E9%80%89%E5%87%BA%E7%AC%ACk%E5%B0%8F%E5%85%83%E7%B4%A0%E4%B8%AD%E4%BD%8D%E6%95%B0%E6%9C%80%E5%B0%8F%E7%9A%84k%E4%B8%AA%E5%85%83%E7%B4%A0c-c&#43;&#43;%E5%AE%9E%E7%8E%B0/" />
   <link rel="alternate" href="https://imroc.io/index.xml" type="application/rss+xml" title="roc">
-  <script src="https://cdn.staticfile.org/jquery/1.12.4/jquery.min.js"></script>
-  <link rel="stylesheet" href="https://cdn.staticfile.org/KaTeX/0.7.1/katex.min.css" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" crossorigin="anonymous">
 
-  <link rel="stylesheet" href="https://imroc.io/css/main.css" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
   
-  <link rel="stylesheet" href="https://imroc.io/static/prism/prism.css" />
 
-  <script>
+
+<link rel="stylesheet" href='/css/bundle.min.2971c990ae9e3036a2e09462d93d94829b857b7235a2b5eac8896bdad8a8fdb6.css' integrity='sha256-KXHJkK6eMDai4JRi2T2UgpuFe3I1orXqyIlr2tio/bY='>
+  --><script>
 var _hmt = _hmt || [];
 (function() {
   var hm = document.createElement("script");
@@ -46,56 +40,6 @@ var _hmt = _hmt || [];
   s.parentNode.insertBefore(hm, s);
 })();
 </script>
-
-
-
-<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe.min.css" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.2/default-skin/default-skin.min.css" crossorigin="anonymous" />
-
-
-<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
-
-<div class="pswp__bg"></div>
-
-<div class="pswp__scroll-wrap">
-    
-    <div class="pswp__container">
-      <div class="pswp__item"></div>
-      <div class="pswp__item"></div>
-      <div class="pswp__item"></div>
-    </div>
-    
-    <div class="pswp__ui pswp__ui--hidden">
-    <div class="pswp__top-bar">
-      
-      <div class="pswp__counter"></div>
-      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
-      <button class="pswp__button pswp__button--share" title="Share"></button>
-      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
-      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
-      
-      
-      <div class="pswp__preloader">
-        <div class="pswp__preloader__icn">
-          <div class="pswp__preloader__cut">
-            <div class="pswp__preloader__donut"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
-      <div class="pswp__share-tooltip"></div>
-    </div>
-    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
-    </button>
-    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
-    </button>
-    <div class="pswp__caption">
-      <div class="pswp__caption__center"></div>
-    </div>
-    </div>
-    </div>
-</div>
 
 
 </head>
@@ -229,7 +173,7 @@ var _hmt = _hmt || [];
     <section id="datecount">
         <h4 id="date"> Tue Sep 5, 2017</h4>
     </section>
-    <h5 id="wc">600 Words|Read in about 1 Min</h5>
+    <h5 id="wc">500 Words|Read in about 1 Min</h5>
     <h5 id="tags">Tags: 
         
         <a href="https://imroc.io/tags/%E7%AE%97%E6%B3%95/">算法</a> &nbsp;
@@ -240,151 +184,145 @@ var _hmt = _hmt || [];
             <article role="main" class="blog-post" itemprop="articleBody" id="content">
                 
 <aside class="toc">
-  
+  <nav id="TableOfContents"></nav>
 </aside>
 
 
                 <p>封装成函数：</p>
-
-<pre><code class="language-c">#include &lt;malloc.h&gt;
-
-void swap(int *a,int i,int j)
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">#</span><span style="color:#75715e">include</span> <span style="color:#75715e">&lt;malloc.h&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">swap</span>(<span style="color:#66d9ef">int</span> <span style="color:#f92672">*</span>a,<span style="color:#66d9ef">int</span> i,<span style="color:#66d9ef">int</span> j)
 {
-    int t = a[i];
-    a[i] = a[j];
-    a[j] = t;
+    <span style="color:#66d9ef">int</span> t <span style="color:#f92672">=</span> a[i];
+    a[i] <span style="color:#f92672">=</span> a[j];
+    a[j] <span style="color:#f92672">=</span> t;
 }
 
-int partition(int *a,int lo,int hi)
+<span style="color:#66d9ef">int</span> <span style="color:#a6e22e">partition</span>(<span style="color:#66d9ef">int</span> <span style="color:#f92672">*</span>a,<span style="color:#66d9ef">int</span> lo,<span style="color:#66d9ef">int</span> hi)
 {
-    int i,j;
-    i=lo;
-    j=hi+1;
-    while(1)
+    <span style="color:#66d9ef">int</span> i,j;
+    i<span style="color:#f92672">=</span>lo;
+    j<span style="color:#f92672">=</span>hi<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>;
+    <span style="color:#66d9ef">while</span>(<span style="color:#ae81ff">1</span>)
     {
-        while(a[++i]&lt;=a[lo])
+        <span style="color:#66d9ef">while</span>(a[<span style="color:#f92672">+</span><span style="color:#f92672">+</span>i]<span style="color:#f92672">&lt;</span><span style="color:#f92672">=</span>a[lo])
         {
-            if(i==hi)
+            <span style="color:#66d9ef">if</span>(i<span style="color:#f92672">=</span><span style="color:#f92672">=</span>hi)
             {
-                break;
+                <span style="color:#66d9ef">break</span>;
             }
         }
-        while(a[--j]&gt;a[lo])
+        <span style="color:#66d9ef">while</span>(a[<span style="color:#f92672">-</span><span style="color:#f92672">-</span>j]<span style="color:#f92672">&gt;</span>a[lo])
         {
-            if(j==lo)
+            <span style="color:#66d9ef">if</span>(j<span style="color:#f92672">=</span><span style="color:#f92672">=</span>lo)
             {
-                break;
+                <span style="color:#66d9ef">break</span>;
             }
         }
-        if(i&gt;=j)
+        <span style="color:#66d9ef">if</span>(i<span style="color:#f92672">&gt;</span><span style="color:#f92672">=</span>j)
         {
-            break;
+            <span style="color:#66d9ef">break</span>;
         }
         swap(a,i,j);
     }
     swap(a,lo,j);
-    return j;
+    <span style="color:#66d9ef">return</span> j;
 }
 
-int* copy_of(int *a,int len)
+<span style="color:#66d9ef">int</span><span style="color:#f92672">*</span> <span style="color:#a6e22e">copy_of</span>(<span style="color:#66d9ef">int</span> <span style="color:#f92672">*</span>a,<span style="color:#66d9ef">int</span> len)
 {
-    int *ret = (int*)malloc(sizeof(int)*len);
-    int i;
-    for(i=0; i&lt;len; i++)
+    <span style="color:#66d9ef">int</span> <span style="color:#f92672">*</span>ret <span style="color:#f92672">=</span> (<span style="color:#66d9ef">int</span><span style="color:#f92672">*</span>)malloc(<span style="color:#66d9ef">sizeof</span>(<span style="color:#66d9ef">int</span>)<span style="color:#f92672">*</span>len);
+    <span style="color:#66d9ef">int</span> i;
+    <span style="color:#66d9ef">for</span>(i<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>; i<span style="color:#f92672">&lt;</span>len; i<span style="color:#f92672">+</span><span style="color:#f92672">+</span>)
     {
-        ret[i] = a[i];
+        ret[i] <span style="color:#f92672">=</span> a[i];
     }
-    return ret;
+    <span style="color:#66d9ef">return</span> ret;
 }
 
-//选出第k小元素，k为1~len
-int select_kth_min(int *a, int len,int k)
+<span style="color:#75715e">//选出第k小元素，k为1~len
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">select_kth_min</span>(<span style="color:#66d9ef">int</span> <span style="color:#f92672">*</span>a, <span style="color:#66d9ef">int</span> len,<span style="color:#66d9ef">int</span> k)
 {
-    k--;
-    int lo = 0, hi = len - 1;
-    while (1)
+    k<span style="color:#f92672">-</span><span style="color:#f92672">-</span>;
+    <span style="color:#66d9ef">int</span> lo <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>, hi <span style="color:#f92672">=</span> len <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>;
+    <span style="color:#66d9ef">while</span> (<span style="color:#ae81ff">1</span>)
     {
-        int j = partition(a, lo, hi);
-        if (j &lt; k)
+        <span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> partition(a, lo, hi);
+        <span style="color:#66d9ef">if</span> (j <span style="color:#f92672">&lt;</span> k)
         {
-            lo = j + 1;
+            lo <span style="color:#f92672">=</span> j <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>;
         }
-        else if (j &gt; k)
+        <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (j <span style="color:#f92672">&gt;</span> k)
         {
-            hi = j - 1;
+            hi <span style="color:#f92672">=</span> j <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>;
         }
-        else
+        <span style="color:#66d9ef">else</span>
         {
-            return a[k];
-        }
-    }
-}
-
-//选出中位数（比一半的元素小，比另一半的大）
-int select_mid(int *a,int len)
-{
-    return select_kth_min(a, len, len / 2);
-}
-
-//选出k个最小元素，k为1~len
-int* select_k_min(int *a, int len,int k)
-{
-    int lo = 0, hi = len - 1;
-    while (1)
-    {
-        int j = partition(a, lo, hi);
-        if (j &lt; k)
-        {
-            lo = j + 1;
-        }
-        else if (j &gt; k)
-        {
-            hi = j - 1;
-        }
-        else
-        {
-            return copy_of(a, k);
+            <span style="color:#66d9ef">return</span> a[k];
         }
     }
 }
-</code></pre>
 
-<p>测试：</p>
-
-<pre><code class="language-c">#include &lt;stdio.h&gt;
-
-//打印输出数组
-void print_arr(int *a,int len)
+<span style="color:#75715e">//选出中位数（比一半的元素小，比另一半的大）
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">select_mid</span>(<span style="color:#66d9ef">int</span> <span style="color:#f92672">*</span>a,<span style="color:#66d9ef">int</span> len)
 {
-    int i;
-    if(len&lt;1)  //数组长度必须大于0
-    {
-        printf(&quot;length greater than 0&quot;);
-        return;
-    }
-    //打印整个数组
-    printf(&quot;[&quot;);
-    for(i=0; i&lt;len-1; i++)
-    {
-        printf(&quot;%d &quot;,a[i]);
-    }
-    printf(&quot;%d]\n&quot;,a[len-1]);
+    <span style="color:#66d9ef">return</span> select_kth_min(a, len, len <span style="color:#f92672">/</span> <span style="color:#ae81ff">2</span>);
 }
 
-int main()
+<span style="color:#75715e">//选出k个最小元素，k为1~len
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">int</span><span style="color:#f92672">*</span> <span style="color:#a6e22e">select_k_min</span>(<span style="color:#66d9ef">int</span> <span style="color:#f92672">*</span>a, <span style="color:#66d9ef">int</span> len,<span style="color:#66d9ef">int</span> k)
 {
-    int a[] = {9,0,6,5,8,2,1,7,4,3};
-    int len = sizeof(a)/sizeof(int);
-    printf(&quot;%d\n&quot;,select_kth_min(a,len,1));//第1小元素：0
-    printf(&quot;%d\n&quot;,select_mid(a,len));//中位数：4
-    print_arr(select_k_min(a,len,5),5);//最小的5个数：0~4
-    return 0;
+    <span style="color:#66d9ef">int</span> lo <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>, hi <span style="color:#f92672">=</span> len <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>;
+    <span style="color:#66d9ef">while</span> (<span style="color:#ae81ff">1</span>)
+    {
+        <span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> partition(a, lo, hi);
+        <span style="color:#66d9ef">if</span> (j <span style="color:#f92672">&lt;</span> k)
+        {
+            lo <span style="color:#f92672">=</span> j <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>;
+        }
+        <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (j <span style="color:#f92672">&gt;</span> k)
+        {
+            hi <span style="color:#f92672">=</span> j <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>;
+        }
+        <span style="color:#66d9ef">else</span>
+        {
+            <span style="color:#66d9ef">return</span> copy_of(a, k);
+        }
+    }
 }
-</code></pre>
+</code></pre></div><p>测试：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">#</span><span style="color:#75715e">include</span> <span style="color:#75715e">&lt;stdio.h&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e"></span>
+<span style="color:#75715e">//打印输出数组
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">print_arr</span>(<span style="color:#66d9ef">int</span> <span style="color:#f92672">*</span>a,<span style="color:#66d9ef">int</span> len)
+{
+    <span style="color:#66d9ef">int</span> i;
+    <span style="color:#66d9ef">if</span>(len<span style="color:#f92672">&lt;</span><span style="color:#ae81ff">1</span>)  <span style="color:#75715e">//数组长度必须大于0
+</span><span style="color:#75715e"></span>    {
+        printf(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">length greater than 0</span><span style="color:#e6db74">&#34;</span>);
+        <span style="color:#66d9ef">return</span>;
+    }
+    <span style="color:#75715e">//打印整个数组
+</span><span style="color:#75715e"></span>    printf(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">[</span><span style="color:#e6db74">&#34;</span>);
+    <span style="color:#66d9ef">for</span>(i<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>; i<span style="color:#f92672">&lt;</span>len<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>; i<span style="color:#f92672">+</span><span style="color:#f92672">+</span>)
+    {
+        printf(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">%d </span><span style="color:#e6db74">&#34;</span>,a[i]);
+    }
+    printf(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">%d]</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,a[len<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]);
+}
 
-<p>输出：<br />
-0<br />
-4<br />
+<span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>()
+{
+    <span style="color:#66d9ef">int</span> a[] <span style="color:#f92672">=</span> {<span style="color:#ae81ff">9</span>,<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">6</span>,<span style="color:#ae81ff">5</span>,<span style="color:#ae81ff">8</span>,<span style="color:#ae81ff">2</span>,<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">7</span>,<span style="color:#ae81ff">4</span>,<span style="color:#ae81ff">3</span>};
+    <span style="color:#66d9ef">int</span> len <span style="color:#f92672">=</span> <span style="color:#66d9ef">sizeof</span>(a)<span style="color:#f92672">/</span><span style="color:#66d9ef">sizeof</span>(<span style="color:#66d9ef">int</span>);
+    printf(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">%d</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,select_kth_min(a,len,<span style="color:#ae81ff">1</span>));<span style="color:#75715e">//第1小元素：0
+</span><span style="color:#75715e"></span>    printf(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">%d</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,select_mid(a,len));<span style="color:#75715e">//中位数：4
+</span><span style="color:#75715e"></span>    print_arr(select_k_min(a,len,<span style="color:#ae81ff">5</span>),<span style="color:#ae81ff">5</span>);<span style="color:#75715e">//最小的5个数：0~4
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+}
+</code></pre></div><p>输出：<br>
+0<br>
+4<br>
 [0 1 2 3 4]</p>
 
             </article>
@@ -392,7 +330,7 @@ int main()
             <ul class="pager blog-pager">
                 
                 <li class="previous">
-                    <a href="https://imroc.io/posts/algorithm/%E7%BA%BF%E6%80%A7%E5%A4%8D%E6%9D%82%E5%BA%A6%E9%80%89%E5%87%BA%E7%AC%ACk%E5%B0%8F%E5%85%83%E7%B4%A0%E4%B8%AD%E4%BD%8D%E6%95%B0%E6%9C%80%E5%B0%8F%E7%9A%84k%E4%B8%AA%E5%85%83%E7%B4%A0java%E5%AE%9E%E7%8E%B0/" data-toggle="tooltip" data-placement="top" title="线性复杂度选出第k小元素、中位数、最小的k个元素(Java实现)">&larr; Previous Post</a>
+                    <a href="https://imroc.io/posts/algorithm/%E7%BA%BF%E6%80%A7%E5%A4%8D%E6%9D%82%E5%BA%A6%E9%80%89%E5%87%BA%E7%AC%ACk%E5%B0%8F%E5%85%83%E7%B4%A0%E4%B8%AD%E4%BD%8D%E6%95%B0%E6%9C%80%E5%B0%8F%E7%9A%84k%E4%B8%AA%E5%85%83%E7%B4%A0golang%E5%AE%9E%E7%8E%B0/" data-toggle="tooltip" data-placement="top" title="线性复杂度选出第k小元素、中位数、最小的k个元素(golang实现)">&larr; Previous Post</a>
                 </li>
                  
                 <li class="next">
@@ -406,64 +344,42 @@ int main()
                 <h2>See Also</h2>
                 <ul>
                     
-                    <li><a href="/posts/algorithm/%E4%BA%8C%E5%88%86%E6%B3%95%E6%9F%A5%E6%89%BEc-c&#43;&#43;%E5%AE%9E%E7%8E%B0/">二分法查找(C-C&#43;&#43;实现)</a></li>
-                    
-                    <li><a href="/posts/algorithm/%E6%B1%82%E4%B8%A4%E5%9C%86%E4%BA%A4%E7%82%B9%E7%AE%97%E6%B3%95%E4%BB%A3%E7%A0%81golang%E5%AE%9E%E7%8E%B0/">求两圆交点算法代码(golang实现)</a></li>
+                    <li><a href="/posts/algorithm/union-findc&#43;&#43;%E5%AE%9E%E7%8E%B0%E5%AE%9E%E7%8E%B0/">Union-Find(C&#43;&#43;实现实现)</a></li>
                     
                     <li><a href="/posts/algorithm/union-findjava%E5%AE%9E%E7%8E%B0/">Union-Find(Java实现)</a></li>
                     
-                    <li><a href="/posts/algorithm/%E4%BA%8C%E5%88%86%E6%B3%95%E6%9F%A5%E6%89%BEgolang%E5%AE%9E%E7%8E%B0/">二分法查找(golang实现)</a></li>
+                    <li><a href="/posts/algorithm/union-findgolang%E5%AE%9E%E7%8E%B0/">Union-Find(golang实现)</a></li>
                     
-                    <li><a href="/posts/algorithm/%E6%8F%92%E5%85%A5%E6%8E%92%E5%BA%8Fjava%E5%AE%9E%E7%8E%B0/">插入排序(Java实现)</a></li>
+                    <li><a href="/posts/algorithm/golang%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92%E6%B1%82%E8%A7%A3%E6%9C%80%E5%A4%A7%E8%BF%9E%E7%BB%AD%E5%AD%90%E6%95%B0%E7%BB%84%E5%92%8C/">golang动态规划求解最大连续子数组和</a></li>
+                    
+                    <li><a href="/posts/algorithm/golang%E5%AE%9E%E7%8E%B0%E4%BA%8C%E5%8F%89%E6%9F%A5%E6%89%BE%E6%A0%91/">golang实现二叉查找树</a></li>
                     
                 </ul>
                 
             </div>
             
-            
-            
-            
-<div>
-    <section id="datecount">
-        <h4 id="date"> Tue Sep 5, 2017</h4>
-    </section>
-    <h5 id="wc">600 Words|Read in about 1 Min</h5>
-    <h5 id="tags">Tags: 
-        
-        <a href="https://imroc.io/tags/%E7%AE%97%E6%B3%95/">算法</a> &nbsp;
-    </h5>
-</div>
-
-            
-            </div>
-            
-			
-               <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-<aside id=comments>
-    <div>
-        <h2> Comments </h2>
-    </div>
-    <div id="container"></div>
-    <link rel="stylesheet" href="https://imroc.io/static/gitment/default.css">
-    <script src="https://imroc.io/static/gitment/gitment.browser.js"></script>
-    <script>
-        var gitment = new Gitment({
-			owner: 'imroc', 
-			repo: 'imroc.github.io', 
-            oauth: {
-				client_id: 'd05b8f959b3111c6fb63',
-				client_secret: 'f30ef76ea0050ed731ace76f7fbf684ae5d28fbc',
-            },
-        })
-        gitment.render('container')
-    </script>
-</aside>
-</div>
-
-			
         </div>
     </div>
-    </section>
+    
+    <div id="gitalk-container"></div>
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+      var gitalk = new Gitalk({
+          clientID: 'd05b8f959b3111c6fb63',
+          clientSecret: 'f30ef76ea0050ed731ace76f7fbf684ae5d28fbc',
+          repo: 'blog',
+          owner: 'imroc',
+          admin: ['imroc'],
+          labels: ['Gitalk'],
+          title: '线性复杂度选出第k小元素、中位数、最小的k个元素(C-C\x2b\x2b实现)',
+          createIssueManually: false,
+          id: '',
+          distractionFreeMode: true
+      });
+      gitalk.render('gitalk-container');
+    </script>
+
 </div>
 
     <footer>
@@ -522,7 +438,7 @@ int main()
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.49.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.62.0</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>
@@ -530,15 +446,7 @@ int main()
   </div>
 </footer>
 
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script src="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe-ui-default.min.js"></script>
-<script src="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe.js"></script>
-<script src="https://imroc.io/js/auto-render.min.js"></script>
-<script src="https://imroc.io/js/main.js"></script>
-<script src="https://imroc.io/static/prism/prism.js"></script>
-<script src="https://cdn.staticfile.org/KaTeX/0.7.1/katex.min.js"></script>
-<script> renderMathInElement(document.body); </script>
-
+<script src='/js/bundle.min.879361cd590eb97fa7b7459c2fecb6f66e7b5c798ccdbbad966b1d4d0adce056.js' integrity='sha256-h5NhzVkOuX&#43;nt0WcL&#43;y29m57XHmMzbutlmsdTQrc4FY='></script>
 
 
 

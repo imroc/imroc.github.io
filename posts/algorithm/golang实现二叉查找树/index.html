@@ -23,21 +23,15 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="roc" />
 
-  <meta name="generator" content="Hugo 0.49.2" />
+  <meta name="generator" content="Hugo 0.62.0" />
   <link rel="canonical" href="https://imroc.io/posts/algorithm/golang%E5%AE%9E%E7%8E%B0%E4%BA%8C%E5%8F%89%E6%9F%A5%E6%89%BE%E6%A0%91/" />
   <link rel="alternate" href="https://imroc.io/index.xml" type="application/rss+xml" title="roc">
-  <script src="https://cdn.staticfile.org/jquery/1.12.4/jquery.min.js"></script>
-  <link rel="stylesheet" href="https://cdn.staticfile.org/KaTeX/0.7.1/katex.min.css" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" crossorigin="anonymous">
 
-  <link rel="stylesheet" href="https://imroc.io/css/main.css" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
   
-  <link rel="stylesheet" href="https://imroc.io/static/prism/prism.css" />
 
-  <script>
+
+<link rel="stylesheet" href='/css/bundle.min.2971c990ae9e3036a2e09462d93d94829b857b7235a2b5eac8896bdad8a8fdb6.css' integrity='sha256-KXHJkK6eMDai4JRi2T2UgpuFe3I1orXqyIlr2tio/bY='>
+  --><script>
 var _hmt = _hmt || [];
 (function() {
   var hm = document.createElement("script");
@@ -46,56 +40,6 @@ var _hmt = _hmt || [];
   s.parentNode.insertBefore(hm, s);
 })();
 </script>
-
-
-
-<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe.min.css" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.2/default-skin/default-skin.min.css" crossorigin="anonymous" />
-
-
-<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
-
-<div class="pswp__bg"></div>
-
-<div class="pswp__scroll-wrap">
-    
-    <div class="pswp__container">
-      <div class="pswp__item"></div>
-      <div class="pswp__item"></div>
-      <div class="pswp__item"></div>
-    </div>
-    
-    <div class="pswp__ui pswp__ui--hidden">
-    <div class="pswp__top-bar">
-      
-      <div class="pswp__counter"></div>
-      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
-      <button class="pswp__button pswp__button--share" title="Share"></button>
-      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
-      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
-      
-      
-      <div class="pswp__preloader">
-        <div class="pswp__preloader__icn">
-          <div class="pswp__preloader__cut">
-            <div class="pswp__preloader__donut"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
-      <div class="pswp__share-tooltip"></div>
-    </div>
-    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
-    </button>
-    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
-    </button>
-    <div class="pswp__caption">
-      <div class="pswp__caption__center"></div>
-    </div>
-    </div>
-    </div>
-</div>
 
 
 </head>
@@ -240,195 +184,186 @@ var _hmt = _hmt || [];
             <article role="main" class="blog-post" itemprop="articleBody" id="content">
                 
 <aside class="toc">
-  
+  <nav id="TableOfContents"></nav>
 </aside>
 
 
                 <p>为简单起见，键值均为整型。</p>
-
 <p>定义接口(tree.go)：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Tree</span> <span style="color:#66d9ef">interface</span> {
+	<span style="color:#a6e22e">Put</span>(<span style="color:#a6e22e">k</span>, <span style="color:#a6e22e">v</span> <span style="color:#66d9ef">int</span>)  <span style="color:#75715e">//新增或修改
+</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">Get</span>(<span style="color:#a6e22e">k</span> <span style="color:#66d9ef">int</span>) <span style="color:#66d9ef">int</span> <span style="color:#75715e">//查询
+</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">Delete</span>(<span style="color:#a6e22e">k</span> <span style="color:#66d9ef">int</span>)  <span style="color:#75715e">//删除
+</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">Size</span>() <span style="color:#66d9ef">int</span>     <span style="color:#75715e">//树的大小
+</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">Min</span>() <span style="color:#66d9ef">int</span>      <span style="color:#75715e">//最小键
+</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">DeleteMin</span>()    <span style="color:#75715e">//删除最小键
+</span><span style="color:#75715e"></span>}
+</code></pre></div><p>二叉查找树(binary_tree.go)：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">//二叉查找树
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">BinaryTree</span> <span style="color:#66d9ef">struct</span> {
+	<span style="color:#a6e22e">root</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">node</span>
+	<span style="color:#a6e22e">n</span>    <span style="color:#66d9ef">int</span>
+}
+ 
+<span style="color:#75715e">//创建节点
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">newNode</span>(<span style="color:#a6e22e">k</span>, <span style="color:#a6e22e">v</span> <span style="color:#66d9ef">int</span>) <span style="color:#f92672">*</span><span style="color:#a6e22e">node</span> {
+	<span style="color:#66d9ef">return</span> <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">node</span>{<span style="color:#a6e22e">k</span>: <span style="color:#a6e22e">k</span>, <span style="color:#a6e22e">v</span>: <span style="color:#a6e22e">v</span>, <span style="color:#a6e22e">sz</span>: <span style="color:#ae81ff">1</span>}
+}
+ 
+<span style="color:#75715e">//创建二叉查找树
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">NewBinaryTree</span>() <span style="color:#f92672">*</span><span style="color:#a6e22e">BinaryTree</span> {
+	<span style="color:#66d9ef">return</span> <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">BinaryTree</span>{}
+}
+ 
+<span style="color:#75715e">//增加或修改
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">bt</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">BinaryTree</span>) <span style="color:#a6e22e">Put</span>(<span style="color:#a6e22e">k</span>, <span style="color:#a6e22e">v</span> <span style="color:#66d9ef">int</span>) {
+	<span style="color:#a6e22e">bt</span>.<span style="color:#a6e22e">root</span>, <span style="color:#a6e22e">_</span> = <span style="color:#a6e22e">put</span>(<span style="color:#a6e22e">bt</span>.<span style="color:#a6e22e">root</span>, <span style="color:#a6e22e">k</span>, <span style="color:#a6e22e">v</span>)
+}
+ 
+<span style="color:#75715e">//查找
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">bt</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">BinaryTree</span>) <span style="color:#a6e22e">Get</span>(<span style="color:#a6e22e">k</span> <span style="color:#66d9ef">int</span>) <span style="color:#66d9ef">int</span> {
+	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">get</span>(<span style="color:#a6e22e">bt</span>.<span style="color:#a6e22e">root</span>, <span style="color:#a6e22e">k</span>)
+}
+ 
+<span style="color:#75715e">//树的大小
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">bt</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">BinaryTree</span>) <span style="color:#a6e22e">Size</span>() <span style="color:#66d9ef">int</span> {
+	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">size</span>(<span style="color:#a6e22e">bt</span>.<span style="color:#a6e22e">root</span>)
+}
+ 
+<span style="color:#75715e">//选出最小键
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">bt</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">BinaryTree</span>) <span style="color:#a6e22e">Min</span>() <span style="color:#66d9ef">int</span> {
+	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">min</span>(<span style="color:#a6e22e">bt</span>.<span style="color:#a6e22e">root</span>).<span style="color:#a6e22e">k</span>
+}
+ 
+<span style="color:#75715e">//删除最小键
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">bt</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">BinaryTree</span>) <span style="color:#a6e22e">DeleteMin</span>() {
+	<span style="color:#a6e22e">bt</span>.<span style="color:#a6e22e">root</span> = <span style="color:#a6e22e">deleteMin</span>(<span style="color:#a6e22e">bt</span>.<span style="color:#a6e22e">root</span>)
+}
+ 
+<span style="color:#75715e">//删除
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">bt</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">BinaryTree</span>) <span style="color:#a6e22e">Delete</span>(<span style="color:#a6e22e">k</span> <span style="color:#66d9ef">int</span>) {
+	<span style="color:#a6e22e">bt</span>.<span style="color:#a6e22e">root</span> = delete(<span style="color:#a6e22e">bt</span>.<span style="color:#a6e22e">root</span>, <span style="color:#a6e22e">k</span>)
+}
+</code></pre></div><p>节点(node.go)：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">//节点
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">node</span> <span style="color:#66d9ef">struct</span> {
+	<span style="color:#a6e22e">k</span>, <span style="color:#a6e22e">v</span>, <span style="color:#a6e22e">sz</span>    <span style="color:#66d9ef">int</span>   <span style="color:#75715e">//键，值，大小
+</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">left</span>, <span style="color:#a6e22e">right</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">node</span> <span style="color:#75715e">//左右子节点
+</span><span style="color:#75715e"></span>}
 
-<pre><code class="language-go">type Tree interface {
-	Put(k, v int)  //新增或修改
-	Get(k int) int //查询
-	Delete(k int)  //删除
-	Size() int     //树的大小
-	Min() int      //最小键
-	DeleteMin()    //删除最小键
-}
-</code></pre>
-
-<p>二叉查找树(binary_tree.go)：</p>
-
-<pre><code class="language-go">//二叉查找树
-type BinaryTree struct {
-	root *node
-	n    int
-}
- 
-//创建节点
-func newNode(k, v int) *node {
-	return &amp;node{k: k, v: v, sz: 1}
-}
- 
-//创建二叉查找树
-func NewBinaryTree() *BinaryTree {
-	return &amp;BinaryTree{}
-}
- 
-//增加或修改
-func (bt *BinaryTree) Put(k, v int) {
-	bt.root, _ = put(bt.root, k, v)
-}
- 
-//查找
-func (bt *BinaryTree) Get(k int) int {
-	return get(bt.root, k)
-}
- 
-//树的大小
-func (bt *BinaryTree) Size() int {
-	return size(bt.root)
-}
- 
-//选出最小键
-func (bt *BinaryTree) Min() int {
-	return min(bt.root).k
-}
- 
-//删除最小键
-func (bt *BinaryTree) DeleteMin() {
-	bt.root = deleteMin(bt.root)
-}
- 
-//删除
-func (bt *BinaryTree) Delete(k int) {
-	bt.root = delete(bt.root, k)
-}
-</code></pre>
-
-<p>节点(node.go)：</p>
-
-<pre><code class="language-go">//节点
-type node struct {
-	k, v, sz    int   //键，值，大小
-	left, right *node //左右子节点
-}
-
-//在以nd为根节点的树下增加或修改一个节点
-//如果创建了新节点，第二个参数返回true，
-//如果只是修改，第二个参数返回false
-func put(nd *node, k, v int) (*node, bool) {
-	if nd == nil {
-		return newNode(k, v), true
+<span style="color:#75715e">//在以nd为根节点的树下增加或修改一个节点
+</span><span style="color:#75715e"></span><span style="color:#75715e">//如果创建了新节点，第二个参数返回true，
+</span><span style="color:#75715e"></span><span style="color:#75715e">//如果只是修改，第二个参数返回false
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">put</span>(<span style="color:#a6e22e">nd</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">node</span>, <span style="color:#a6e22e">k</span>, <span style="color:#a6e22e">v</span> <span style="color:#66d9ef">int</span>) (<span style="color:#f92672">*</span><span style="color:#a6e22e">node</span>, <span style="color:#66d9ef">bool</span>) {
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">nd</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">nil</span> {
+		<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">newNode</span>(<span style="color:#a6e22e">k</span>, <span style="color:#a6e22e">v</span>), <span style="color:#66d9ef">true</span>
 	}
-	hasNew := false //检测是否创建了新节点
-	if k &lt; nd.k {
-		nd.left, hasNew = put(nd.left, k, v)
-	} else if k &gt; nd.k {
-		nd.right, hasNew = put(nd.right, k, v)
-	} else {
-		nd.v = v //仅修改，不会增加增加节点，就不更新节点大小
+	<span style="color:#a6e22e">hasNew</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">false</span> <span style="color:#75715e">//检测是否创建了新节点
+</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">k</span> &lt; <span style="color:#a6e22e">nd</span>.<span style="color:#a6e22e">k</span> {
+		<span style="color:#a6e22e">nd</span>.<span style="color:#a6e22e">left</span>, <span style="color:#a6e22e">hasNew</span> = <span style="color:#a6e22e">put</span>(<span style="color:#a6e22e">nd</span>.<span style="color:#a6e22e">left</span>, <span style="color:#a6e22e">k</span>, <span style="color:#a6e22e">v</span>)
+	} <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">k</span> &gt; <span style="color:#a6e22e">nd</span>.<span style="color:#a6e22e">k</span> {
+		<span style="color:#a6e22e">nd</span>.<span style="color:#a6e22e">right</span>, <span style="color:#a6e22e">hasNew</span> = <span style="color:#a6e22e">put</span>(<span style="color:#a6e22e">nd</span>.<span style="color:#a6e22e">right</span>, <span style="color:#a6e22e">k</span>, <span style="color:#a6e22e">v</span>)
+	} <span style="color:#66d9ef">else</span> {
+		<span style="color:#a6e22e">nd</span>.<span style="color:#a6e22e">v</span> = <span style="color:#a6e22e">v</span> <span style="color:#75715e">//仅修改，不会增加增加节点，就不更新节点大小
+</span><span style="color:#75715e"></span>	}
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">hasNew</span> { <span style="color:#75715e">//如果创建了新节点就更新树的大小
+</span><span style="color:#75715e"></span>		<span style="color:#a6e22e">updateSize</span>(<span style="color:#a6e22e">nd</span>)
 	}
-	if hasNew { //如果创建了新节点就更新树的大小
-		updateSize(nd)
-	}
-	return nd, hasNew
+	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">nd</span>, <span style="color:#a6e22e">hasNew</span>
 }
  
-//在以nd为根节点的树中获取键为k的值
-func get(nd *node, k int) int {
-	if nd == nil {
-		return -1
+<span style="color:#75715e">//在以nd为根节点的树中获取键为k的值
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">get</span>(<span style="color:#a6e22e">nd</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">node</span>, <span style="color:#a6e22e">k</span> <span style="color:#66d9ef">int</span>) <span style="color:#66d9ef">int</span> {
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">nd</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">nil</span> {
+		<span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>
 	}
-	if k &lt; nd.k {
-		return get(nd.left, k)
-	} else if k &gt; nd.k {
-		return get(nd.right, k)
-	} else {
-		return nd.v
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">k</span> &lt; <span style="color:#a6e22e">nd</span>.<span style="color:#a6e22e">k</span> {
+		<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">get</span>(<span style="color:#a6e22e">nd</span>.<span style="color:#a6e22e">left</span>, <span style="color:#a6e22e">k</span>)
+	} <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">k</span> &gt; <span style="color:#a6e22e">nd</span>.<span style="color:#a6e22e">k</span> {
+		<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">get</span>(<span style="color:#a6e22e">nd</span>.<span style="color:#a6e22e">right</span>, <span style="color:#a6e22e">k</span>)
+	} <span style="color:#66d9ef">else</span> {
+		<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">nd</span>.<span style="color:#a6e22e">v</span>
 	}
 }
  
-//获取以nd为根节点的树的大小
-func size(nd *node) int {
-	if nd == nil {
-		return 0
+<span style="color:#75715e">//获取以nd为根节点的树的大小
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">size</span>(<span style="color:#a6e22e">nd</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">node</span>) <span style="color:#66d9ef">int</span> {
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">nd</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">nil</span> {
+		<span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>
 	}
-	return nd.sz
+	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">nd</span>.<span style="color:#a6e22e">sz</span>
 }
  
-//更新以nd为根节点的树的大小
-func updateSize(nd *node) {
-	if nd == nil {
-		return
+<span style="color:#75715e">//更新以nd为根节点的树的大小
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">updateSize</span>(<span style="color:#a6e22e">nd</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">node</span>) {
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">nd</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">nil</span> {
+		<span style="color:#66d9ef">return</span>
 	}
-	nd.sz = size(nd.left) + size(nd.right) + 1
+	<span style="color:#a6e22e">nd</span>.<span style="color:#a6e22e">sz</span> = <span style="color:#a6e22e">size</span>(<span style="color:#a6e22e">nd</span>.<span style="color:#a6e22e">left</span>) <span style="color:#f92672">+</span> <span style="color:#a6e22e">size</span>(<span style="color:#a6e22e">nd</span>.<span style="color:#a6e22e">right</span>) <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>
 }
  
-//选出以nd为根节点的树的最小键节点
-func min(nd *node) *node {
-	if nd == nil {
-		return nil
+<span style="color:#75715e">//选出以nd为根节点的树的最小键节点
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">min</span>(<span style="color:#a6e22e">nd</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">node</span>) <span style="color:#f92672">*</span><span style="color:#a6e22e">node</span> {
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">nd</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">nil</span> {
+		<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
 	}
-	if nd.left != nil {
-		return min(nd.left)
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">nd</span>.<span style="color:#a6e22e">left</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+		<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">min</span>(<span style="color:#a6e22e">nd</span>.<span style="color:#a6e22e">left</span>)
 	}
-	return nd
+	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">nd</span>
 }
  
-//删除以nd为根节点的树的最小键节点
-//返回被删除的节点
-func deleteMin(nd *node) *node {
-	if nd == nil {
-		return nil
+<span style="color:#75715e">//删除以nd为根节点的树的最小键节点
+</span><span style="color:#75715e"></span><span style="color:#75715e">//返回被删除的节点
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">deleteMin</span>(<span style="color:#a6e22e">nd</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">node</span>) <span style="color:#f92672">*</span><span style="color:#a6e22e">node</span> {
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">nd</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">nil</span> {
+		<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
 	}
-	if nd.left == nil { //找到最小节点
-		nd = nd.right //用右子节点代替自己
-	} else { //还有更小的
-		nd.left = deleteMin(nd.left)
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">nd</span>.<span style="color:#a6e22e">left</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">nil</span> { <span style="color:#75715e">//找到最小节点
+</span><span style="color:#75715e"></span>		<span style="color:#a6e22e">nd</span> = <span style="color:#a6e22e">nd</span>.<span style="color:#a6e22e">right</span> <span style="color:#75715e">//用右子节点代替自己
+</span><span style="color:#75715e"></span>	} <span style="color:#66d9ef">else</span> { <span style="color:#75715e">//还有更小的
+</span><span style="color:#75715e"></span>		<span style="color:#a6e22e">nd</span>.<span style="color:#a6e22e">left</span> = <span style="color:#a6e22e">deleteMin</span>(<span style="color:#a6e22e">nd</span>.<span style="color:#a6e22e">left</span>)
 	}
-	updateSize(nd)
-	return nd
+	<span style="color:#a6e22e">updateSize</span>(<span style="color:#a6e22e">nd</span>)
+	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">nd</span>
 }
  
-//删除以nd为根节点的树并且键为k的节点
-func delete(nd *node, k int) *node {
-	if nd == nil {
-		return nil
+<span style="color:#75715e">//删除以nd为根节点的树并且键为k的节点
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> delete(<span style="color:#a6e22e">nd</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">node</span>, <span style="color:#a6e22e">k</span> <span style="color:#66d9ef">int</span>) <span style="color:#f92672">*</span><span style="color:#a6e22e">node</span> {
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">nd</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">nil</span> {
+		<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
 	}
-	if k &lt; nd.k {
-		nd.left = delete(nd.left, k)
-	} else if k &gt; nd.k {
-		nd.right = delete(nd.right, k)
-	} else { //命中要删除的节点
-		//只有一个或零个子节点
-		if nd.right == nil {
-			return nd.left
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">k</span> &lt; <span style="color:#a6e22e">nd</span>.<span style="color:#a6e22e">k</span> {
+		<span style="color:#a6e22e">nd</span>.<span style="color:#a6e22e">left</span> = delete(<span style="color:#a6e22e">nd</span>.<span style="color:#a6e22e">left</span>, <span style="color:#a6e22e">k</span>)
+	} <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">k</span> &gt; <span style="color:#a6e22e">nd</span>.<span style="color:#a6e22e">k</span> {
+		<span style="color:#a6e22e">nd</span>.<span style="color:#a6e22e">right</span> = delete(<span style="color:#a6e22e">nd</span>.<span style="color:#a6e22e">right</span>, <span style="color:#a6e22e">k</span>)
+	} <span style="color:#66d9ef">else</span> { <span style="color:#75715e">//命中要删除的节点
+</span><span style="color:#75715e"></span>		<span style="color:#75715e">//只有一个或零个子节点
+</span><span style="color:#75715e"></span>		<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">nd</span>.<span style="color:#a6e22e">right</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">nil</span> {
+			<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">nd</span>.<span style="color:#a6e22e">left</span>
 		}
-		if nd.left == nil {
-			return nd.right
+		<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">nd</span>.<span style="color:#a6e22e">left</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">nil</span> {
+			<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">nd</span>.<span style="color:#a6e22e">right</span>
 		}
-		//同时具有两个子节点
-		//先找出大于本节点的最小节点作为后继节点
-		t := nd
-		nd.k = min(t.right).k
-		//删除
-		deleteMin(t.right)
-		//用后继节点代替本节点
-		nd.left = t.left
+		<span style="color:#75715e">//同时具有两个子节点
+</span><span style="color:#75715e"></span>		<span style="color:#75715e">//先找出大于本节点的最小节点作为后继节点
+</span><span style="color:#75715e"></span>		<span style="color:#a6e22e">t</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">nd</span>
+		<span style="color:#a6e22e">nd</span>.<span style="color:#a6e22e">k</span> = <span style="color:#a6e22e">min</span>(<span style="color:#a6e22e">t</span>.<span style="color:#a6e22e">right</span>).<span style="color:#a6e22e">k</span>
+		<span style="color:#75715e">//删除
+</span><span style="color:#75715e"></span>		<span style="color:#a6e22e">deleteMin</span>(<span style="color:#a6e22e">t</span>.<span style="color:#a6e22e">right</span>)
+		<span style="color:#75715e">//用后继节点代替本节点
+</span><span style="color:#75715e"></span>		<span style="color:#a6e22e">nd</span>.<span style="color:#a6e22e">left</span> = <span style="color:#a6e22e">t</span>.<span style="color:#a6e22e">left</span>
 	}
-	updateSize(nd)
-	return nd
+	<span style="color:#a6e22e">updateSize</span>(<span style="color:#a6e22e">nd</span>)
+	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">nd</span>
 }
-</code></pre>
-
+</code></pre></div>
             </article>
 
             <ul class="pager blog-pager">
                 
                 <li class="previous">
-                    <a href="https://imroc.io/posts/algorithm/%E4%B8%89%E5%90%91%E5%88%87%E5%88%86%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8Fc-c&#43;&#43;%E5%AE%9E%E7%8E%B0/" data-toggle="tooltip" data-placement="top" title="三向切分快速排序(C-C&#43;&#43;实现)">&larr; Previous Post</a>
+                    <a href="https://imroc.io/posts/algorithm/union-findc&#43;&#43;%E5%AE%9E%E7%8E%B0%E5%AE%9E%E7%8E%B0/" data-toggle="tooltip" data-placement="top" title="Union-Find(C&#43;&#43;实现实现)">&larr; Previous Post</a>
                 </li>
                  
                 <li class="next">
@@ -442,64 +377,42 @@ func delete(nd *node, k int) *node {
                 <h2>See Also</h2>
                 <ul>
                     
-                    <li><a href="/posts/algorithm/%E4%B8%89%E5%90%91%E5%88%87%E5%88%86%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8Fgolang%E5%AE%9E%E7%8E%B0/">三向切分快速排序(golang实现)</a></li>
-                    
                     <li><a href="/posts/algorithm/union-findc&#43;&#43;%E5%AE%9E%E7%8E%B0%E5%AE%9E%E7%8E%B0/">Union-Find(C&#43;&#43;实现实现)</a></li>
                     
-                    <li><a href="/posts/algorithm/%E4%B8%89%E5%90%91%E5%88%87%E5%88%86%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8Fjava%E5%AE%9E%E7%8E%B0/">三向切分快速排序(Java实现)</a></li>
+                    <li><a href="/posts/algorithm/union-findjava%E5%AE%9E%E7%8E%B0/">Union-Find(Java实现)</a></li>
                     
-                    <li><a href="/posts/algorithm/%E7%BA%BF%E6%80%A7%E5%A4%8D%E6%9D%82%E5%BA%A6%E9%80%89%E5%87%BA%E7%AC%ACk%E5%B0%8F%E5%85%83%E7%B4%A0%E4%B8%AD%E4%BD%8D%E6%95%B0%E6%9C%80%E5%B0%8F%E7%9A%84k%E4%B8%AA%E5%85%83%E7%B4%A0java%E5%AE%9E%E7%8E%B0/">线性复杂度选出第k小元素、中位数、最小的k个元素(Java实现)</a></li>
+                    <li><a href="/posts/algorithm/union-findgolang%E5%AE%9E%E7%8E%B0/">Union-Find(golang实现)</a></li>
                     
-                    <li><a href="/posts/algorithm/%E4%BA%8C%E5%88%86%E6%B3%95%E6%9F%A5%E6%89%BEgolang%E5%AE%9E%E7%8E%B0/">二分法查找(golang实现)</a></li>
+                    <li><a href="/posts/algorithm/golang%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92%E6%B1%82%E8%A7%A3%E6%9C%80%E5%A4%A7%E8%BF%9E%E7%BB%AD%E5%AD%90%E6%95%B0%E7%BB%84%E5%92%8C/">golang动态规划求解最大连续子数组和</a></li>
+                    
+                    <li><a href="/posts/algorithm/%E4%B8%89%E5%90%91%E5%88%87%E5%88%86%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8Fc-c&#43;&#43;%E5%AE%9E%E7%8E%B0/">三向切分快速排序(C-C&#43;&#43;实现)</a></li>
                     
                 </ul>
                 
             </div>
             
-            
-            
-            
-<div>
-    <section id="datecount">
-        <h4 id="date"> Tue Sep 5, 2017</h4>
-    </section>
-    <h5 id="wc">900 Words|Read in about 2 Min</h5>
-    <h5 id="tags">Tags: 
-        
-        <a href="https://imroc.io/tags/%E7%AE%97%E6%B3%95/">算法</a> &nbsp;
-    </h5>
-</div>
-
-            
-            </div>
-            
-			
-               <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-<aside id=comments>
-    <div>
-        <h2> Comments </h2>
-    </div>
-    <div id="container"></div>
-    <link rel="stylesheet" href="https://imroc.io/static/gitment/default.css">
-    <script src="https://imroc.io/static/gitment/gitment.browser.js"></script>
-    <script>
-        var gitment = new Gitment({
-			owner: 'imroc', 
-			repo: 'imroc.github.io', 
-            oauth: {
-				client_id: 'd05b8f959b3111c6fb63',
-				client_secret: 'f30ef76ea0050ed731ace76f7fbf684ae5d28fbc',
-            },
-        })
-        gitment.render('container')
-    </script>
-</aside>
-</div>
-
-			
         </div>
     </div>
-    </section>
+    
+    <div id="gitalk-container"></div>
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+      var gitalk = new Gitalk({
+          clientID: 'd05b8f959b3111c6fb63',
+          clientSecret: 'f30ef76ea0050ed731ace76f7fbf684ae5d28fbc',
+          repo: 'blog',
+          owner: 'imroc',
+          admin: ['imroc'],
+          labels: ['Gitalk'],
+          title: 'golang实现二叉查找树',
+          createIssueManually: false,
+          id: '',
+          distractionFreeMode: true
+      });
+      gitalk.render('gitalk-container');
+    </script>
+
 </div>
 
     <footer>
@@ -558,7 +471,7 @@ func delete(nd *node, k int) *node {
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.49.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.62.0</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>
@@ -566,15 +479,7 @@ func delete(nd *node, k int) *node {
   </div>
 </footer>
 
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script src="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe-ui-default.min.js"></script>
-<script src="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe.js"></script>
-<script src="https://imroc.io/js/auto-render.min.js"></script>
-<script src="https://imroc.io/js/main.js"></script>
-<script src="https://imroc.io/static/prism/prism.js"></script>
-<script src="https://cdn.staticfile.org/KaTeX/0.7.1/katex.min.js"></script>
-<script> renderMathInElement(document.body); </script>
-
+<script src='/js/bundle.min.879361cd590eb97fa7b7459c2fecb6f66e7b5c798ccdbbad966b1d4d0adce056.js' integrity='sha256-h5NhzVkOuX&#43;nt0WcL&#43;y29m57XHmMzbutlmsdTQrc4FY='></script>
 
 
 

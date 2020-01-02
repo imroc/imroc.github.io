@@ -23,21 +23,15 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="roc" />
 
-  <meta name="generator" content="Hugo 0.49.2" />
+  <meta name="generator" content="Hugo 0.62.0" />
   <link rel="canonical" href="https://imroc.io/posts/algorithm/%E5%A0%86%E6%8E%92%E5%BA%8Fgolang%E5%AE%9E%E7%8E%B0/" />
   <link rel="alternate" href="https://imroc.io/index.xml" type="application/rss+xml" title="roc">
-  <script src="https://cdn.staticfile.org/jquery/1.12.4/jquery.min.js"></script>
-  <link rel="stylesheet" href="https://cdn.staticfile.org/KaTeX/0.7.1/katex.min.css" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" crossorigin="anonymous">
 
-  <link rel="stylesheet" href="https://imroc.io/css/main.css" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
   
-  <link rel="stylesheet" href="https://imroc.io/static/prism/prism.css" />
 
-  <script>
+
+<link rel="stylesheet" href='/css/bundle.min.2971c990ae9e3036a2e09462d93d94829b857b7235a2b5eac8896bdad8a8fdb6.css' integrity='sha256-KXHJkK6eMDai4JRi2T2UgpuFe3I1orXqyIlr2tio/bY='>
+  --><script>
 var _hmt = _hmt || [];
 (function() {
   var hm = document.createElement("script");
@@ -46,56 +40,6 @@ var _hmt = _hmt || [];
   s.parentNode.insertBefore(hm, s);
 })();
 </script>
-
-
-
-<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe.min.css" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.2/default-skin/default-skin.min.css" crossorigin="anonymous" />
-
-
-<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
-
-<div class="pswp__bg"></div>
-
-<div class="pswp__scroll-wrap">
-    
-    <div class="pswp__container">
-      <div class="pswp__item"></div>
-      <div class="pswp__item"></div>
-      <div class="pswp__item"></div>
-    </div>
-    
-    <div class="pswp__ui pswp__ui--hidden">
-    <div class="pswp__top-bar">
-      
-      <div class="pswp__counter"></div>
-      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
-      <button class="pswp__button pswp__button--share" title="Share"></button>
-      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
-      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
-      
-      
-      <div class="pswp__preloader">
-        <div class="pswp__preloader__icn">
-          <div class="pswp__preloader__cut">
-            <div class="pswp__preloader__donut"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
-      <div class="pswp__share-tooltip"></div>
-    </div>
-    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
-    </button>
-    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
-    </button>
-    <div class="pswp__caption">
-      <div class="pswp__caption__center"></div>
-    </div>
-    </div>
-    </div>
-</div>
 
 
 </head>
@@ -240,72 +184,65 @@ var _hmt = _hmt || [];
             <article role="main" class="blog-post" itemprop="articleBody" id="content">
                 
 <aside class="toc">
-  
+  <nav id="TableOfContents"></nav>
 </aside>
 
 
                 <p>封装成函数：</p>
-
-<pre><code class="language-go">//堆排序
-//s[0]不用，实际元素从角标1开始
-//父节点元素大于子节点元素
-//左子节点角标为2*k
-//右子节点角标为2*k+1
-//父节点角标为k/2
-func HeapSort(s []int) {
-	N := len(s) - 1 //s[0]不用，实际元素数量和最后一个元素的角标都为N
-	//构造堆
-	//如果给两个已构造好的堆添加一个共同父节点，
-	//将新添加的节点作一次下沉将构造一个新堆，
-	//由于叶子节点都可看作一个构造好的堆，所以
-	//可以从最后一个非叶子节点开始下沉，直至
-	//根节点，最后一个非叶子节点是最后一个叶子
-	//节点的父节点，角标为N/2
-	for k := N / 2; k &gt;= 1; k-- {
-		sink(s, k, N)
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">//堆排序
+</span><span style="color:#75715e"></span><span style="color:#75715e">//s[0]不用，实际元素从角标1开始
+</span><span style="color:#75715e"></span><span style="color:#75715e">//父节点元素大于子节点元素
+</span><span style="color:#75715e"></span><span style="color:#75715e">//左子节点角标为2*k
+</span><span style="color:#75715e"></span><span style="color:#75715e">//右子节点角标为2*k+1
+</span><span style="color:#75715e"></span><span style="color:#75715e">//父节点角标为k/2
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">HeapSort</span>(<span style="color:#a6e22e">s</span> []<span style="color:#66d9ef">int</span>) {
+	<span style="color:#a6e22e">N</span> <span style="color:#f92672">:=</span> len(<span style="color:#a6e22e">s</span>) <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span> <span style="color:#75715e">//s[0]不用，实际元素数量和最后一个元素的角标都为N
+</span><span style="color:#75715e"></span>	<span style="color:#75715e">//构造堆
+</span><span style="color:#75715e"></span>	<span style="color:#75715e">//如果给两个已构造好的堆添加一个共同父节点，
+</span><span style="color:#75715e"></span>	<span style="color:#75715e">//将新添加的节点作一次下沉将构造一个新堆，
+</span><span style="color:#75715e"></span>	<span style="color:#75715e">//由于叶子节点都可看作一个构造好的堆，所以
+</span><span style="color:#75715e"></span>	<span style="color:#75715e">//可以从最后一个非叶子节点开始下沉，直至
+</span><span style="color:#75715e"></span>	<span style="color:#75715e">//根节点，最后一个非叶子节点是最后一个叶子
+</span><span style="color:#75715e"></span>	<span style="color:#75715e">//节点的父节点，角标为N/2
+</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">k</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">N</span> <span style="color:#f92672">/</span> <span style="color:#ae81ff">2</span>; <span style="color:#a6e22e">k</span> <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">1</span>; <span style="color:#a6e22e">k</span><span style="color:#f92672">--</span> {
+		<span style="color:#a6e22e">sink</span>(<span style="color:#a6e22e">s</span>, <span style="color:#a6e22e">k</span>, <span style="color:#a6e22e">N</span>)
 	}
-	//下沉排序
-	for N &gt; 1 {
-		swap(s, 1, N) //将大的放在数组后面，升序排序
-		N--
-		sink(s, 1, N)
-	}
-}
- 
-//下沉（由上至下的堆有序化）
-func sink(s []int, k, N int) {
-	for {
-		i := 2 * k
-		if i &gt; N { //保证该节点是非叶子节点
-			break
-		}
-		if i &lt; N &amp;&amp; s[i+1] &gt; s[i] { //选择较大的子节点
-			i++
-		}
-		if s[k] &gt;= s[i] { //没下沉到底就构造好堆了
-			break
-		}
-		swap(s, k, i)
-		k = i
+	<span style="color:#75715e">//下沉排序
+</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">N</span> &gt; <span style="color:#ae81ff">1</span> {
+		<span style="color:#a6e22e">swap</span>(<span style="color:#a6e22e">s</span>, <span style="color:#ae81ff">1</span>, <span style="color:#a6e22e">N</span>) <span style="color:#75715e">//将大的放在数组后面，升序排序
+</span><span style="color:#75715e"></span>		<span style="color:#a6e22e">N</span><span style="color:#f92672">--</span>
+		<span style="color:#a6e22e">sink</span>(<span style="color:#a6e22e">s</span>, <span style="color:#ae81ff">1</span>, <span style="color:#a6e22e">N</span>)
 	}
 }
  
-func swap(s []int, i int, j int) {
-	s[i], s[j] = s[j], s[i]
+<span style="color:#75715e">//下沉（由上至下的堆有序化）
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">sink</span>(<span style="color:#a6e22e">s</span> []<span style="color:#66d9ef">int</span>, <span style="color:#a6e22e">k</span>, <span style="color:#a6e22e">N</span> <span style="color:#66d9ef">int</span>) {
+	<span style="color:#66d9ef">for</span> {
+		<span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">*</span> <span style="color:#a6e22e">k</span>
+		<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">i</span> &gt; <span style="color:#a6e22e">N</span> { <span style="color:#75715e">//保证该节点是非叶子节点
+</span><span style="color:#75715e"></span>			<span style="color:#66d9ef">break</span>
+		}
+		<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">i</span> &lt; <span style="color:#a6e22e">N</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#a6e22e">s</span>[<span style="color:#a6e22e">i</span><span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>] &gt; <span style="color:#a6e22e">s</span>[<span style="color:#a6e22e">i</span>] { <span style="color:#75715e">//选择较大的子节点
+</span><span style="color:#75715e"></span>			<span style="color:#a6e22e">i</span><span style="color:#f92672">++</span>
+		}
+		<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">s</span>[<span style="color:#a6e22e">k</span>] <span style="color:#f92672">&gt;=</span> <span style="color:#a6e22e">s</span>[<span style="color:#a6e22e">i</span>] { <span style="color:#75715e">//没下沉到底就构造好堆了
+</span><span style="color:#75715e"></span>			<span style="color:#66d9ef">break</span>
+		}
+		<span style="color:#a6e22e">swap</span>(<span style="color:#a6e22e">s</span>, <span style="color:#a6e22e">k</span>, <span style="color:#a6e22e">i</span>)
+		<span style="color:#a6e22e">k</span> = <span style="color:#a6e22e">i</span>
+	}
 }
-</code></pre>
-
-<p>测试：</p>
-
-<pre><code class="language-go">s := []int{-1,9, 0, 6, 5, 8, 2, 1, 7, 4, 3}
-fmt.Println(s[1:])
-HeapSort(s)
-fmt.Println(s[1:])
-</code></pre>
-
-<p>输出:</p>
-
-<p>[9 0 6 5 8 2 1 7 4 3]<br />
+ 
+<span style="color:#66d9ef">func</span> <span style="color:#a6e22e">swap</span>(<span style="color:#a6e22e">s</span> []<span style="color:#66d9ef">int</span>, <span style="color:#a6e22e">i</span> <span style="color:#66d9ef">int</span>, <span style="color:#a6e22e">j</span> <span style="color:#66d9ef">int</span>) {
+	<span style="color:#a6e22e">s</span>[<span style="color:#a6e22e">i</span>], <span style="color:#a6e22e">s</span>[<span style="color:#a6e22e">j</span>] = <span style="color:#a6e22e">s</span>[<span style="color:#a6e22e">j</span>], <span style="color:#a6e22e">s</span>[<span style="color:#a6e22e">i</span>]
+}
+</code></pre></div><p>测试：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#a6e22e">s</span> <span style="color:#f92672">:=</span> []<span style="color:#66d9ef">int</span>{<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">9</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">6</span>, <span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">8</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">7</span>, <span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">3</span>}
+<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">s</span>[<span style="color:#ae81ff">1</span>:])
+<span style="color:#a6e22e">HeapSort</span>(<span style="color:#a6e22e">s</span>)
+<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">s</span>[<span style="color:#ae81ff">1</span>:])
+</code></pre></div><p>输出:</p>
+<p>[9 0 6 5 8 2 1 7 4 3]<br>
 [0 1 2 3 4 5 6 7 8 9]</p>
 
             </article>
@@ -313,11 +250,11 @@ fmt.Println(s[1:])
             <ul class="pager blog-pager">
                 
                 <li class="previous">
-                    <a href="https://imroc.io/posts/algorithm/%E5%B8%8C%E5%B0%94%E6%8E%92%E5%BA%8Fc-c&#43;&#43;%E5%AE%9E%E7%8E%B0/" data-toggle="tooltip" data-placement="top" title="希尔排序(C-C&#43;&#43;实现)">&larr; Previous Post</a>
+                    <a href="https://imroc.io/posts/algorithm/%E5%A0%86%E6%8E%92%E5%BA%8Fjava%E5%AE%9E%E7%8E%B0/" data-toggle="tooltip" data-placement="top" title="堆排序(Java实现)">&larr; Previous Post</a>
                 </li>
                  
                 <li class="next">
-                    <a href="https://imroc.io/posts/algorithm/%E5%A0%86%E6%8E%92%E5%BA%8Fjava%E5%AE%9E%E7%8E%B0/" data-toggle="tooltip" data-placement="top" title="堆排序(Java实现)">Next Post &rarr;</a>
+                    <a href="https://imroc.io/posts/algorithm/%E5%A0%86%E6%8E%92%E5%BA%8Fc-c&#43;&#43;%E5%AE%9E%E7%8E%B0/" data-toggle="tooltip" data-placement="top" title="堆排序(C-C&#43;&#43;实现)">Next Post &rarr;</a>
                 </li>
                 
             </ul>
@@ -327,64 +264,42 @@ fmt.Println(s[1:])
                 <h2>See Also</h2>
                 <ul>
                     
-                    <li><a href="/posts/algorithm/%E9%80%89%E6%8B%A9%E6%8E%92%E5%BA%8Fgolang%E5%AE%9E%E7%8E%B0/">选择排序(golang实现)</a></li>
+                    <li><a href="/posts/algorithm/union-findc&#43;&#43;%E5%AE%9E%E7%8E%B0%E5%AE%9E%E7%8E%B0/">Union-Find(C&#43;&#43;实现实现)</a></li>
                     
-                    <li><a href="/posts/algorithm/%E4%BA%8C%E5%88%86%E6%B3%95%E6%9F%A5%E6%89%BEgolang%E5%AE%9E%E7%8E%B0/">二分法查找(golang实现)</a></li>
+                    <li><a href="/posts/algorithm/union-findjava%E5%AE%9E%E7%8E%B0/">Union-Find(Java实现)</a></li>
                     
-                    <li><a href="/posts/algorithm/%E7%BA%BF%E6%80%A7%E5%A4%8D%E6%9D%82%E5%BA%A6%E9%80%89%E5%87%BA%E7%AC%ACk%E5%B0%8F%E5%85%83%E7%B4%A0%E4%B8%AD%E4%BD%8D%E6%95%B0%E6%9C%80%E5%B0%8F%E7%9A%84k%E4%B8%AA%E5%85%83%E7%B4%A0java%E5%AE%9E%E7%8E%B0/">线性复杂度选出第k小元素、中位数、最小的k个元素(Java实现)</a></li>
+                    <li><a href="/posts/algorithm/union-findgolang%E5%AE%9E%E7%8E%B0/">Union-Find(golang实现)</a></li>
                     
-                    <li><a href="/posts/algorithm/%E4%BA%8C%E5%88%86%E6%B3%95%E6%9F%A5%E6%89%BEc-c&#43;&#43;%E5%AE%9E%E7%8E%B0/">二分法查找(C-C&#43;&#43;实现)</a></li>
+                    <li><a href="/posts/algorithm/golang%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92%E6%B1%82%E8%A7%A3%E6%9C%80%E5%A4%A7%E8%BF%9E%E7%BB%AD%E5%AD%90%E6%95%B0%E7%BB%84%E5%92%8C/">golang动态规划求解最大连续子数组和</a></li>
                     
-                    <li><a href="/posts/algorithm/%E5%B8%8C%E5%B0%94%E6%8E%92%E5%BA%8Fgolang%E5%AE%9E%E7%8E%B0/">希尔排序(golang实现)</a></li>
+                    <li><a href="/posts/algorithm/golang%E5%AE%9E%E7%8E%B0%E4%BA%8C%E5%8F%89%E6%9F%A5%E6%89%BE%E6%A0%91/">golang实现二叉查找树</a></li>
                     
                 </ul>
                 
             </div>
             
-            
-            
-            
-<div>
-    <section id="datecount">
-        <h4 id="date"> Tue Sep 5, 2017</h4>
-    </section>
-    <h5 id="wc">500 Words|Read in about 1 Min</h5>
-    <h5 id="tags">Tags: 
-        
-        <a href="https://imroc.io/tags/%E7%AE%97%E6%B3%95/">算法</a> &nbsp;
-    </h5>
-</div>
-
-            
-            </div>
-            
-			
-               <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-<aside id=comments>
-    <div>
-        <h2> Comments </h2>
-    </div>
-    <div id="container"></div>
-    <link rel="stylesheet" href="https://imroc.io/static/gitment/default.css">
-    <script src="https://imroc.io/static/gitment/gitment.browser.js"></script>
-    <script>
-        var gitment = new Gitment({
-			owner: 'imroc', 
-			repo: 'imroc.github.io', 
-            oauth: {
-				client_id: 'd05b8f959b3111c6fb63',
-				client_secret: 'f30ef76ea0050ed731ace76f7fbf684ae5d28fbc',
-            },
-        })
-        gitment.render('container')
-    </script>
-</aside>
-</div>
-
-			
         </div>
     </div>
-    </section>
+    
+    <div id="gitalk-container"></div>
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+      var gitalk = new Gitalk({
+          clientID: 'd05b8f959b3111c6fb63',
+          clientSecret: 'f30ef76ea0050ed731ace76f7fbf684ae5d28fbc',
+          repo: 'blog',
+          owner: 'imroc',
+          admin: ['imroc'],
+          labels: ['Gitalk'],
+          title: '堆排序(golang实现)',
+          createIssueManually: false,
+          id: '',
+          distractionFreeMode: true
+      });
+      gitalk.render('gitalk-container');
+    </script>
+
 </div>
 
     <footer>
@@ -443,7 +358,7 @@ fmt.Println(s[1:])
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.49.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.62.0</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>
@@ -451,15 +366,7 @@ fmt.Println(s[1:])
   </div>
 </footer>
 
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script src="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe-ui-default.min.js"></script>
-<script src="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe.js"></script>
-<script src="https://imroc.io/js/auto-render.min.js"></script>
-<script src="https://imroc.io/js/main.js"></script>
-<script src="https://imroc.io/static/prism/prism.js"></script>
-<script src="https://cdn.staticfile.org/KaTeX/0.7.1/katex.min.js"></script>
-<script> renderMathInElement(document.body); </script>
-
+<script src='/js/bundle.min.879361cd590eb97fa7b7459c2fecb6f66e7b5c798ccdbbad966b1d4d0adce056.js' integrity='sha256-h5NhzVkOuX&#43;nt0WcL&#43;y29m57XHmMzbutlmsdTQrc4FY='></script>
 
 
 

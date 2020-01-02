@@ -23,21 +23,15 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="roc" />
 
-  <meta name="generator" content="Hugo 0.49.2" />
+  <meta name="generator" content="Hugo 0.62.0" />
   <link rel="canonical" href="https://imroc.io/posts/golang/golang-package/" />
   <link rel="alternate" href="https://imroc.io/index.xml" type="application/rss+xml" title="roc">
-  <script src="https://cdn.staticfile.org/jquery/1.12.4/jquery.min.js"></script>
-  <link rel="stylesheet" href="https://cdn.staticfile.org/KaTeX/0.7.1/katex.min.css" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" crossorigin="anonymous">
 
-  <link rel="stylesheet" href="https://imroc.io/css/main.css" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
   
-  <link rel="stylesheet" href="https://imroc.io/static/prism/prism.css" />
 
-  <script>
+
+<link rel="stylesheet" href='/css/bundle.min.2971c990ae9e3036a2e09462d93d94829b857b7235a2b5eac8896bdad8a8fdb6.css' integrity='sha256-KXHJkK6eMDai4JRi2T2UgpuFe3I1orXqyIlr2tio/bY='>
+  --><script>
 var _hmt = _hmt || [];
 (function() {
   var hm = document.createElement("script");
@@ -46,56 +40,6 @@ var _hmt = _hmt || [];
   s.parentNode.insertBefore(hm, s);
 })();
 </script>
-
-
-
-<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe.min.css" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.2/default-skin/default-skin.min.css" crossorigin="anonymous" />
-
-
-<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
-
-<div class="pswp__bg"></div>
-
-<div class="pswp__scroll-wrap">
-    
-    <div class="pswp__container">
-      <div class="pswp__item"></div>
-      <div class="pswp__item"></div>
-      <div class="pswp__item"></div>
-    </div>
-    
-    <div class="pswp__ui pswp__ui--hidden">
-    <div class="pswp__top-bar">
-      
-      <div class="pswp__counter"></div>
-      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
-      <button class="pswp__button pswp__button--share" title="Share"></button>
-      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
-      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
-      
-      
-      <div class="pswp__preloader">
-        <div class="pswp__preloader__icn">
-          <div class="pswp__preloader__cut">
-            <div class="pswp__preloader__donut"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
-      <div class="pswp__share-tooltip"></div>
-    </div>
-    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
-    </button>
-    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
-    </button>
-    <div class="pswp__caption">
-      <div class="pswp__caption__center"></div>
-    </div>
-    </div>
-    </div>
-</div>
 
 
 </head>
@@ -240,63 +184,51 @@ var _hmt = _hmt || [];
             <article role="main" class="blog-post" itemprop="articleBody" id="content">
                 
 <aside class="toc">
-  
+  <nav id="TableOfContents"></nav>
 </aside>
 
 
                 <p>总结下Go的package设计哲学</p>
-
 <ol>
 <li>明确目的
-
 <ul>
 <li>在准备设计一个包之前，我们需要明确它的目的。</li>
 <li>包的命名就必须明确体现其目的，而不仅仅是为了存放代码。像标准库的io,http,fmt这些包名就很好，而像util.helper,common这种命名就是反面教材。</li>
-</ul></li>
+</ul>
+</li>
 <li>可用性
-
 <ul>
 <li>想想使用这个包的人真正的需求，包的使用一定要直观、简单。</li>
 <li>在不断迭代开发、优化、完善的时候，不能让引用这个的程序出错。</li>
 <li>防止出现需要类型断言具体类型的需求。</li>
 <li>让单个包的代码量简化到最少，减少bug，易于掌控。</li>
-</ul></li>
+</ul>
+</li>
 <li>可移植性
-
 <ul>
 <li>始终追求最高可移植性。</li>
 <li>如果包合理实用，就不要过多在意其它人的意见，没有适合所有人的完美的包。</li>
 <li>不要让包成为单一依赖点(即所有其它包都依赖它)，每个包都有自己的设计目的，可能多个包会有重复的类型，即便重复定义也不要让包成为单一依赖点，这是API设计原则。</li>
-</ul></li>
+</ul>
+</li>
 </ol>
-
 <p>项目结构组织的最佳实践</p>
-
 <p>有两种类型的项目，一种是生成可运行程序的项目(application project)，另一种是专门用于被其它项目引用的套件项目(kit project)。
 对于套件项目，结构组织根据实际项目用途而定，而对于可运行程序的项目，用这样的结构：</p>
-
-<p>├── cmd<br />
-├── internal<br />
+<p>├── cmd<br>
+├── internal<br>
 └── vendor</p>
-
 <p>vendor存放依赖包，internal存放本项目内部使用的包，cmd存放可运行的程序的代码，如果该项目有多个可运行程序，可以在cmd下建子目录。</p>
-
 <p><strong>注:</strong> internal可以被编译器识别，在internal下面的包是不能被其它项目引用的。</p>
-
 <p>internal下面如果有很多包，并且它们需要用到一些相同的逻辑，比如加解密、网络请求等，可以在internal中建platform目录，存放内部使用的套件包，这样的结构：</p>
-
-<p>├── cmd<br />
-├── internal<br />
-│   └── platform<br />
+<p>├── cmd<br>
+├── internal<br>
+│   └── platform<br>
 └── vendor</p>
-
 <p><code>注：platform下面的包如果成熟了，在未来它们你可以将其开源变成公有的套件项目，供别人的项目引用。</code></p>
-
 <p>关于日志输出，公有的套件项目不要打印日志，因为它是要被其它项目引用的，打印日志的逻辑应该让可运行的项目自己来决定。</p>
-
 <p>附上相关演讲视频：<a href="https://golangnews.com/stories/2019-video-william-kennedy-package-oriented-design-in-go-gopherconindia">《Go语言面向包设计》</a></p>
-
-<p><strong>插播广告，go的http请求库req，让http请求简单到极致：</strong><a href="https://github.com/imroc/req">https://github.com/imroc/req</a></p>
+<p>**插播广告，go的http请求库req，让http请求简单到极致：**<a href="https://github.com/imroc/req">https://github.com/imroc/req</a></p>
 
             </article>
 
@@ -307,7 +239,7 @@ var _hmt = _hmt || [];
                 </li>
                  
                 <li class="next">
-                    <a href="https://imroc.io/posts/arch/%E5%8D%95%E4%BD%93%E5%BA%94%E7%94%A8%E7%BC%BA%E9%99%B7%E4%B8%8E%E5%BE%AE%E6%9C%8D%E5%8A%A1%E7%89%B9%E7%82%B9/" data-toggle="tooltip" data-placement="top" title="单体应用缺陷与微服务特点">Next Post &rarr;</a>
+                    <a href="https://imroc.io/posts/golang/golang-append/" data-toggle="tooltip" data-placement="top" title="golang中append函数返回值必须有变量接收的原因探究">Next Post &rarr;</a>
                 </li>
                 
             </ul>
@@ -317,60 +249,38 @@ var _hmt = _hmt || [];
                 <h2>See Also</h2>
                 <ul>
                     
-                    <li><a href="/posts/golang/golang-append/">golang中append函数返回值必须有变量接收的原因探究</a></li>
+                    <li><a href="/posts/golang/golang-for-range-time-tick/">Go语言技巧-使用for range time.Tick()固定间隔时间执行</a></li>
                     
                     <li><a href="/posts/golang/golang-select/">Go语言技巧-使用select{}阻塞main函数</a></li>
                     
-                    <li><a href="/posts/golang/golang-for-range-time-tick/">Go语言技巧-使用for range time.Tick()固定间隔时间执行</a></li>
+                    <li><a href="/posts/golang/golang-append/">golang中append函数返回值必须有变量接收的原因探究</a></li>
                     
                 </ul>
                 
             </div>
             
-            
-            
-            
-<div>
-    <section id="datecount">
-        <h4 id="date"> Wed Sep 6, 2017</h4>
-    </section>
-    <h5 id="wc">1000 Words|Read in about 2 Min</h5>
-    <h5 id="tags">Tags: 
-        
-        <a href="https://imroc.io/tags/golang/">golang</a> &nbsp;
-    </h5>
-</div>
-
-            
-            </div>
-            
-			
-               <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-<aside id=comments>
-    <div>
-        <h2> Comments </h2>
-    </div>
-    <div id="container"></div>
-    <link rel="stylesheet" href="https://imroc.io/static/gitment/default.css">
-    <script src="https://imroc.io/static/gitment/gitment.browser.js"></script>
-    <script>
-        var gitment = new Gitment({
-			owner: 'imroc', 
-			repo: 'imroc.github.io', 
-            oauth: {
-				client_id: 'd05b8f959b3111c6fb63',
-				client_secret: 'f30ef76ea0050ed731ace76f7fbf684ae5d28fbc',
-            },
-        })
-        gitment.render('container')
-    </script>
-</aside>
-</div>
-
-			
         </div>
     </div>
-    </section>
+    
+    <div id="gitalk-container"></div>
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+      var gitalk = new Gitalk({
+          clientID: 'd05b8f959b3111c6fb63',
+          clientSecret: 'f30ef76ea0050ed731ace76f7fbf684ae5d28fbc',
+          repo: 'blog',
+          owner: 'imroc',
+          admin: ['imroc'],
+          labels: ['Gitalk'],
+          title: 'Go语言(golang)包设计哲学-原则与项目结构组织最佳实践',
+          createIssueManually: false,
+          id: '',
+          distractionFreeMode: true
+      });
+      gitalk.render('gitalk-container');
+    </script>
+
 </div>
 
     <footer>
@@ -429,7 +339,7 @@ var _hmt = _hmt || [];
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.49.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.62.0</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>
@@ -437,15 +347,7 @@ var _hmt = _hmt || [];
   </div>
 </footer>
 
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script src="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe-ui-default.min.js"></script>
-<script src="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe.js"></script>
-<script src="https://imroc.io/js/auto-render.min.js"></script>
-<script src="https://imroc.io/js/main.js"></script>
-<script src="https://imroc.io/static/prism/prism.js"></script>
-<script src="https://cdn.staticfile.org/KaTeX/0.7.1/katex.min.js"></script>
-<script> renderMathInElement(document.body); </script>
-
+<script src='/js/bundle.min.879361cd590eb97fa7b7459c2fecb6f66e7b5c798ccdbbad966b1d4d0adce056.js' integrity='sha256-h5NhzVkOuX&#43;nt0WcL&#43;y29m57XHmMzbutlmsdTQrc4FY='></script>
 
 
 

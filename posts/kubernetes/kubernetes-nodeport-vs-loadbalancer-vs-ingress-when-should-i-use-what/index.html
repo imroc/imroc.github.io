@@ -23,21 +23,15 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="roc" />
 
-  <meta name="generator" content="Hugo 0.49.2" />
+  <meta name="generator" content="Hugo 0.62.0" />
   <link rel="canonical" href="https://imroc.io/posts/kubernetes/kubernetes-nodeport-vs-loadbalancer-vs-ingress-when-should-i-use-what/" />
   <link rel="alternate" href="https://imroc.io/index.xml" type="application/rss+xml" title="roc">
-  <script src="https://cdn.staticfile.org/jquery/1.12.4/jquery.min.js"></script>
-  <link rel="stylesheet" href="https://cdn.staticfile.org/KaTeX/0.7.1/katex.min.css" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" crossorigin="anonymous">
 
-  <link rel="stylesheet" href="https://imroc.io/css/main.css" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
   
-  <link rel="stylesheet" href="https://imroc.io/static/prism/prism.css" />
 
-  <script>
+
+<link rel="stylesheet" href='/css/bundle.min.2971c990ae9e3036a2e09462d93d94829b857b7235a2b5eac8896bdad8a8fdb6.css' integrity='sha256-KXHJkK6eMDai4JRi2T2UgpuFe3I1orXqyIlr2tio/bY='>
+  --><script>
 var _hmt = _hmt || [];
 (function() {
   var hm = document.createElement("script");
@@ -46,56 +40,6 @@ var _hmt = _hmt || [];
   s.parentNode.insertBefore(hm, s);
 })();
 </script>
-
-
-
-<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe.min.css" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.2/default-skin/default-skin.min.css" crossorigin="anonymous" />
-
-
-<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
-
-<div class="pswp__bg"></div>
-
-<div class="pswp__scroll-wrap">
-    
-    <div class="pswp__container">
-      <div class="pswp__item"></div>
-      <div class="pswp__item"></div>
-      <div class="pswp__item"></div>
-    </div>
-    
-    <div class="pswp__ui pswp__ui--hidden">
-    <div class="pswp__top-bar">
-      
-      <div class="pswp__counter"></div>
-      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
-      <button class="pswp__button pswp__button--share" title="Share"></button>
-      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
-      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
-      
-      
-      <div class="pswp__preloader">
-        <div class="pswp__preloader__icn">
-          <div class="pswp__preloader__cut">
-            <div class="pswp__preloader__donut"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
-      <div class="pswp__share-tooltip"></div>
-    </div>
-    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
-    </button>
-    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
-    </button>
-    <div class="pswp__caption">
-      <div class="pswp__caption__center"></div>
-    </div>
-    </div>
-    </div>
-</div>
 
 
 </head>
@@ -273,48 +217,41 @@ var _hmt = _hmt || [];
                 
 <aside class="toc">
   <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#clusterip">ClusterIP</a>
-<ul>
-<li><a href="#什么时候用">什么时候用？</a></li>
-</ul></li>
-<li><a href="#nodeport">NodePort</a>
-<ul>
-<li><a href="#什么时候用-1">什么时候用？</a></li>
-</ul></li>
-<li><a href="#loadbalancer">LoadBalancer</a>
-<ul>
-<li><a href="#什么时候用-2">什么时候用？</a></li>
-</ul></li>
-<li><a href="#ingress">Ingress</a>
-<ul>
-<li><a href="#什么时候用-3">什么时候用？</a></li>
-</ul></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#clusterip">ClusterIP</a>
+      <ul>
+        <li><a href="#heading">什么时候用？</a></li>
+      </ul>
+    </li>
+    <li><a href="#nodeport">NodePort</a>
+      <ul>
+        <li><a href="#heading-1">什么时候用？</a></li>
+      </ul>
+    </li>
+    <li><a href="#loadbalancer">LoadBalancer</a>
+      <ul>
+        <li><a href="#heading-2">什么时候用？</a></li>
+      </ul>
+    </li>
+    <li><a href="#ingress">Ingress</a>
+      <ul>
+        <li><a href="#heading-3">什么时候用？</a></li>
+      </ul>
+    </li>
+  </ul>
 </nav>
 </aside>
 
 
-                
-
-<blockquote>
+                <blockquote>
 <p>本文翻译自：<a href="https://medium.com/google-cloud/kubernetes-nodeport-vs-loadbalancer-vs-ingress-when-should-i-use-what-922f010849e0">https://medium.com/google-cloud/kubernetes-nodeport-vs-loadbalancer-vs-ingress-when-should-i-use-what-922f010849e0</a></p>
 </blockquote>
-
 <p>最近，有人问我 NodePort，LoadBalancer 和 Ingress 之间的区别是什么。 它们是将外部流量引入群集的不同方式，并且实现方式不一样。 我们来看看它们是如何工作的，以及什么时候该用哪种。</p>
-
-<p><strong>注意：</strong>本文适用于 <a href="https://cloud.google.com/kubernetes-engine/">Google Kubernetes Engine</a>。 如果你在其他公有云、混合云、minikube 等上运行，可能会略有不同。 例如，您不能在 minikube 上使用 LoadBalancer。 我也没有深入技术细节。 如果您有兴趣了解更多，<a href="https://kubernetes.io/docs/concepts/services-networking/service/">官方文档</a>是一个很好的资源！</p>
-
+<p>**注意：**本文适用于 <a href="https://cloud.google.com/kubernetes-engine/">Google Kubernetes Engine</a>。 如果你在其他公有云、混合云、minikube 等上运行，可能会略有不同。 例如，您不能在 minikube 上使用 LoadBalancer。 我也没有深入技术细节。 如果您有兴趣了解更多，<a href="https://kubernetes.io/docs/concepts/services-networking/service/">官方文档</a>是一个很好的资源！</p>
 <h2 id="clusterip">ClusterIP</h2>
-
 <p>ClusterIP 服务是默认的 Kubernetes 服务。 它为您提供集群内部其他应用程序可以访问的服务， 外部无法访问。</p>
-
 <p>ClusterIP 服务的 YAML 类似这样：</p>
-
-<pre><code class="language-yaml">apiVersion: v1
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">apiVersion: v1
 kind: Service
 metadata:  
   name: my-internal-service
@@ -324,46 +261,29 @@ spec:
   type: ClusterIP
   ports:  
   - name: http
-    port: 80
-    targetPort: 80
+    port: <span style="color:#ae81ff">80</span>
+    targetPort: <span style="color:#ae81ff">80</span>
     protocol: TCP
-</code></pre>
-
-<p>如果你不能从集群外部上访问一个 ClusterIP 服务，我为什么要谈论它？ 因为你可以使用 Kubernetes Proxy 来访问它！
-<img src="https://res.cloudinary.com/imroc/image/upload/v1520947097/blog/k8s/kubernetes-proxy.png">
+</code></pre></div><p>如果你不能从集群外部上访问一个 ClusterIP 服务，我为什么要谈论它？ 因为你可以使用 Kubernetes Proxy 来访问它！
+<!-- raw HTML omitted -->
 启动 Kubernetes Proxy:</p>
-
-<pre><code class="language-bash">$ kubectl proxy --port=8080
-</code></pre>
-
-<p>现在，你可以使用如下的 Kubernetes API 访问服务：</p>
-
-<pre><code class="language-bash">http://localhost:8080/api/v1/proxy/namespaces/&lt;NAMESPACE&gt;/services/&lt;SERVICE-NAME&gt;:&lt;PORT-NAME&gt;/
-</code></pre>
-
-<p>所以，如果要访问我们刚刚定义的服务，可以使用下面的地址：</p>
-
-<pre><code class="language-bash">http://localhost:8080/api/v1/proxy/namespaces/default/services/my-internal-service:http/
-</code></pre>
-
-<h3 id="什么时候用">什么时候用？</h3>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ kubectl proxy --port<span style="color:#f92672">=</span><span style="color:#ae81ff">8080</span>
+</code></pre></div><p>现在，你可以使用如下的 Kubernetes API 访问服务：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">http://localhost:8080/api/v1/proxy/namespaces/&lt;NAMESPACE&gt;/services/&lt;SERVICE-NAME&gt;:&lt;PORT-NAME&gt;/
+</code></pre></div><p>所以，如果要访问我们刚刚定义的服务，可以使用下面的地址：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">http://localhost:8080/api/v1/proxy/namespaces/default/services/my-internal-service:http/
+</code></pre></div><h3 id="heading">什么时候用？</h3>
 <p>有几种情况可以使用 Kubernetes Proxy 来访问您的服务：</p>
-
 <ul>
 <li>调试您的服务，或由于某种原因直接从你笔记本电脑连接到它们</li>
 <li>允许内部流量，显示内部仪表盘等</li>
 </ul>
-
 <p>由于此方法要求您用已授权用户运行 kubectl ，因此您不应该使用此方法将您的服务公开到公网上或将其用于生产。</p>
-
 <h2 id="nodeport">NodePort</h2>
-
 <p>NodePort 服务是暴露服务的最原始方式。 顾名思义，NodePort 会在所有节点（VM）上打开一个特定的端口，并且发送到此端口的任何流量都将转发到该服务。
-<img src="https://res.cloudinary.com/imroc/image/upload/v1520948622/blog/k8s/kubernetes-nodeport.png">
+<!-- raw HTML omitted -->
 NodePort 服务的 YAML 类似这样：</p>
-
-<pre><code class="language-yaml">apiVersion: v1
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">apiVersion: v1
 kind: Service
 metadata:  
   name: my-nodeport-service
@@ -373,75 +293,55 @@ spec:
   type: NodePort
   ports:  
   - name: http
-    port: 80
-    targetPort: 80
-    nodePort: 30036
+    port: <span style="color:#ae81ff">80</span>
+    targetPort: <span style="color:#ae81ff">80</span>
+    nodePort: <span style="color:#ae81ff">30036</span>
     protocol: TCP
-</code></pre>
-
-<p>基本上，NodePort 服务与普通的 “ClusterIP” 服务 YAML 定义有两点区别。 首先，type 是 “NodePort”。还有一个称为 nodePort 的附加端口，指定在节点上打开哪个端口。 如果你不指定这个端口，它会选择一个随机端口。</p>
-
-<h3 id="什么时候用-1">什么时候用？</h3>
-
+</code></pre></div><p>基本上，NodePort 服务与普通的 “ClusterIP” 服务 YAML 定义有两点区别。 首先，type 是 “NodePort”。还有一个称为 nodePort 的附加端口，指定在节点上打开哪个端口。 如果你不指定这个端口，它会选择一个随机端口。</p>
+<h3 id="heading-1">什么时候用？</h3>
 <p>这种方法有许多缺点：</p>
-
 <ul>
 <li>每个端口只能有一个服务</li>
 <li>默认您只能使用端口30000-32767</li>
 <li>如果您的 节点/虚拟机 IP 地址发生更改，则需要处理该问题</li>
 </ul>
-
 <p>由于这些原因，我不建议在生产中使用这种方法。 如果您运行的服务不必始终可用，或者您非常关注成本，则此方法适用于您，比如演示程序或临时应用。</p>
-
 <h2 id="loadbalancer">LoadBalancer</h2>
-
 <p>LoadBalancer 服务暴露服务的标准方式。 在 GKE 上，这将启动一个<a href="https://cloud.google.com/compute/docs/load-balancing/network/">网络负载平衡器</a>，它将为您提供一个将所有流量转发到您的服务的IP地址。
-<img src="https://res.cloudinary.com/imroc/image/upload/v1520949676/blog/k8s/kubernetes-loadbalancer.png"></p>
-
-<h3 id="什么时候用-2">什么时候用？</h3>
-
+<!-- raw HTML omitted --></p>
+<h3 id="heading-2">什么时候用？</h3>
 <p>如果你想直接暴露一个服务，这是默认的方法(GKE上)。 您指定的端口上的所有流量都将被转发到该服务， 没有过滤、路由等。这意味着您可以发送几乎任何类型的流量，如 HTTP，TCP，UDP，Websockets，gRPC 或其他。</p>
-
 <p>最大的缺点是，您使用 LoadBalancer 公开的每项服务都将获得自己的 IP 地址，并且您必须为每个暴露的服务使用一个 LoadBalancer，这可能会付出比较大的代价！</p>
-
 <h2 id="ingress">Ingress</h2>
-
 <p>与以上所有例子不同，Ingress 实际上不是一种服务。相反，它位于多个服务之前，充当集群中的“智能路由器”或入口点。</p>
-
 <p>您可以使用 Ingress 做很多不同的事情，并且有许多类型的 Ingress 控制器，具有不同的功能。</p>
-
 <p>GKE 默认的 Ingress 控制器将为您启动一个 <a href="https://cloud.google.com/compute/docs/load-balancing/http/">HTTP（S）负载均衡器</a>。 这将使您可以执行基于路径和基于子域名的路由到后端服务。 例如，您可以将 foo.yourdomain.com 上的所有内容发送到 foo 服务，并将 yourdomain.com/bar/ 路径下所有内容发送到 bar 服务的。
-<img src="https://res.cloudinary.com/imroc/image/upload/v1520951161/blog/k8s/kubernetes-ingress.png">
+<!-- raw HTML omitted -->
 在 GKE 上的 <a href="https://cloud.google.com/compute/docs/load-balancing/http/">七层 HTTP 负载均衡器</a> 的 Ingress 对象 YAML 定义类似这样：</p>
-
-<pre><code class="language-yaml">apiVersion: extensions/v1beta1
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: my-ingress
 spec:
   backend:
     serviceName: other
-    servicePort: 8080
+    servicePort: <span style="color:#ae81ff">8080</span>
   rules:
   - host: foo.mydomain.com
     http:
       paths:
       - backend:
           serviceName: foo
-          servicePort: 8080
+          servicePort: <span style="color:#ae81ff">8080</span>
   - host: mydomain.com
     http:
       paths:
       - path: /bar/*
         backend:
           serviceName: bar
-          servicePort: 8080
-</code></pre>
-
-<h3 id="什么时候用-3">什么时候用？</h3>
-
+          servicePort: <span style="color:#ae81ff">8080</span>
+</code></pre></div><h3 id="heading-3">什么时候用？</h3>
 <p>Ingress 可能是暴露服务最强大的方式了，但也可能是最复杂的。 来自 <a href="https://cloud.google.com/kubernetes-engine/docs/tutorials/http-balancer">Google Cloud Load Balancer</a>, <a href="https://github.com/kubernetes/ingress-nginx">Nginx</a>, <a href="https://github.com/heptio/contour">Contour</a>, <a href="https://istio.io/docs/tasks/traffic-management/ingress.html">Istio</a> 等的 Ingress 控制器类型很多。 还有用于 Ingress 控制器的插件，如 <a href="https://github.com/jetstack/cert-manager">cert-manager</a>，可以为您的服务自动提供 SSL 证书。</p>
-
 <p>如果您希望在相同的 IP 地址下暴露多个服务，并且这些服务都使用相同的L7协议（通常是HTTP），则 Ingress 是最有用的。 如果您使用原生 GCP 集成，您只需支付一个负载平衡器，由于 Ingress 很“智能”，您可以获得许多开箱即用的功能（如 SSL，Auth，路由等）</p>
 
             </article>
@@ -475,50 +375,28 @@ spec:
                 
             </div>
             
-            
-            
-            
-<div>
-    <section id="datecount">
-        <h4 id="date"> Tue Mar 13, 2018</h4>
-    </section>
-    <h5 id="wc">1700 Words|Read in about 4 Min</h5>
-    <h5 id="tags">Tags: 
-        
-        <a href="https://imroc.io/tags/kubernetes/">kubernetes</a> &nbsp;
-    </h5>
-</div>
-
-            
-            </div>
-            
-			
-               <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-<aside id=comments>
-    <div>
-        <h2> Comments </h2>
-    </div>
-    <div id="container"></div>
-    <link rel="stylesheet" href="https://imroc.io/static/gitment/default.css">
-    <script src="https://imroc.io/static/gitment/gitment.browser.js"></script>
-    <script>
-        var gitment = new Gitment({
-			owner: 'imroc', 
-			repo: 'imroc.github.io', 
-            oauth: {
-				client_id: 'd05b8f959b3111c6fb63',
-				client_secret: 'f30ef76ea0050ed731ace76f7fbf684ae5d28fbc',
-            },
-        })
-        gitment.render('container')
-    </script>
-</aside>
-</div>
-
-			
         </div>
     </div>
-    </section>
+    
+    <div id="gitalk-container"></div>
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+      var gitalk = new Gitalk({
+          clientID: 'd05b8f959b3111c6fb63',
+          clientSecret: 'f30ef76ea0050ed731ace76f7fbf684ae5d28fbc',
+          repo: 'blog',
+          owner: 'imroc',
+          admin: ['imroc'],
+          labels: ['Gitalk'],
+          title: '对比Kubernetes的Nodeport、Loadbalancer和Ingress，什么时候该用哪种',
+          createIssueManually: false,
+          id: '',
+          distractionFreeMode: true
+      });
+      gitalk.render('gitalk-container');
+    </script>
+
 </div>
 
     <footer>
@@ -577,7 +455,7 @@ spec:
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.49.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.62.0</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>
@@ -585,15 +463,7 @@ spec:
   </div>
 </footer>
 
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script src="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe-ui-default.min.js"></script>
-<script src="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe.js"></script>
-<script src="https://imroc.io/js/auto-render.min.js"></script>
-<script src="https://imroc.io/js/main.js"></script>
-<script src="https://imroc.io/static/prism/prism.js"></script>
-<script src="https://cdn.staticfile.org/KaTeX/0.7.1/katex.min.js"></script>
-<script> renderMathInElement(document.body); </script>
-
+<script src='/js/bundle.min.879361cd590eb97fa7b7459c2fecb6f66e7b5c798ccdbbad966b1d4d0adce056.js' integrity='sha256-h5NhzVkOuX&#43;nt0WcL&#43;y29m57XHmMzbutlmsdTQrc4FY='></script>
 
 
 

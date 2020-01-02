@@ -23,21 +23,15 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="roc" />
 
-  <meta name="generator" content="Hugo 0.49.2" />
+  <meta name="generator" content="Hugo 0.62.0" />
   <link rel="canonical" href="https://imroc.io/posts/kubernetes/analysis-exitcode/" />
   <link rel="alternate" href="https://imroc.io/index.xml" type="application/rss+xml" title="roc">
-  <script src="https://cdn.staticfile.org/jquery/1.12.4/jquery.min.js"></script>
-  <link rel="stylesheet" href="https://cdn.staticfile.org/KaTeX/0.7.1/katex.min.css" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" crossorigin="anonymous">
 
-  <link rel="stylesheet" href="https://imroc.io/css/main.css" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
   
-  <link rel="stylesheet" href="https://imroc.io/static/prism/prism.css" />
 
-  <script>
+
+<link rel="stylesheet" href='/css/bundle.min.2971c990ae9e3036a2e09462d93d94829b857b7235a2b5eac8896bdad8a8fdb6.css' integrity='sha256-KXHJkK6eMDai4JRi2T2UgpuFe3I1orXqyIlr2tio/bY='>
+  --><script>
 var _hmt = _hmt || [];
 (function() {
   var hm = document.createElement("script");
@@ -46,56 +40,6 @@ var _hmt = _hmt || [];
   s.parentNode.insertBefore(hm, s);
 })();
 </script>
-
-
-
-<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe.min.css" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.2/default-skin/default-skin.min.css" crossorigin="anonymous" />
-
-
-<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
-
-<div class="pswp__bg"></div>
-
-<div class="pswp__scroll-wrap">
-    
-    <div class="pswp__container">
-      <div class="pswp__item"></div>
-      <div class="pswp__item"></div>
-      <div class="pswp__item"></div>
-    </div>
-    
-    <div class="pswp__ui pswp__ui--hidden">
-    <div class="pswp__top-bar">
-      
-      <div class="pswp__counter"></div>
-      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
-      <button class="pswp__button pswp__button--share" title="Share"></button>
-      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
-      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
-      
-      
-      <div class="pswp__preloader">
-        <div class="pswp__preloader__icn">
-          <div class="pswp__preloader__cut">
-            <div class="pswp__preloader__donut"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
-      <div class="pswp__share-tooltip"></div>
-    </div>
-    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
-    </button>
-    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
-    </button>
-    <div class="pswp__caption">
-      <div class="pswp__caption__center"></div>
-    </div>
-    </div>
-    </div>
-</div>
 
 
 </head>
@@ -273,85 +217,70 @@ var _hmt = _hmt || [];
                 
 <aside class="toc">
   <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li>
-<ul>
-<li><a href="#退出状态码的区间">退出状态码的区间</a></li>
-<li><a href="#常见异常状态码">常见异常状态码</a></li>
-<li><a href="#状态码参考">状态码参考</a></li>
-<li><a href="#linux-标准中断信号">Linux 标准中断信号</a></li>
-<li><a href="#c-c-退出状态码">C/C++ 退出状态码</a></li>
-</ul></li>
-</ul></li>
-</ul>
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#heading">退出状态码的区间</a></li>
+        <li><a href="#heading-1">常见异常状态码</a></li>
+        <li><a href="#heading-2">状态码参考</a></li>
+        <li><a href="#linux-">Linux 标准中断信号</a></li>
+        <li><a href="#cc-">C/C++ 退出状态码</a></li>
+      </ul>
+    </li>
+  </ul>
 </nav>
 </aside>
 
 
-                
-
-<p>使用 <code>kubectl describe pod</code> 查看异常的 pod 的状态，在容器列表里看 <code>State</code> 字段，其中 <code>ExitCode</code> 即程序退出时的状态码，正常退出时为0。如果不为0，表示异常退出，我们可以分析下原因。</p>
-
-<p><img src="https://res.cloudinary.com/imroc/image/upload/v1545380096/blog/k8s/exitcode-pod.png" alt="exitcode-pod" /></p>
-
-<h3 id="退出状态码的区间">退出状态码的区间</h3>
-
+                <p>使用 <code>kubectl describe pod</code> 查看异常的 pod 的状态，在容器列表里看 <code>State</code> 字段，其中 <code>ExitCode</code> 即程序退出时的状态码，正常退出时为0。如果不为0，表示异常退出，我们可以分析下原因。</p>
+<p><img src="https://res.cloudinary.com/imroc/image/upload/v1545380096/blog/k8s/exitcode-pod.png" alt="exitcode-pod"></p>
+<h3 id="heading">退出状态码的区间</h3>
 <ul>
 <li>必须在 0-255 之间</li>
 <li>0 表示正常退出</li>
 <li>外界中断将程序退出的时候状态码区间在 129-255，(操作系统给程序发送中断信号，比如 <code>kill -9</code> 是 <code>SIGKILL</code>，<code>ctrl+c</code> 是 <code>SIGINT</code>)</li>
 <li>一般程序自身原因导致的异常退出状态区间在 1-128 (这只是一般约定，程序如果一定要用129-255的状态码也是可以的)</li>
 </ul>
-
 <p>假如写代码指定的退出状态码时不在 0-255 之间，例如: <code>exit(-1)</code>，这时会自动做一个转换，最终呈现的状态码还是会在 0-255 之间。我们把状态码记为 <code>code</code></p>
-
 <ul>
 <li>当指定的退出时状态码为负数，那么转换公式如下:</li>
 </ul>
-
-<pre><code>256 - (|code| % 256)
-</code></pre>
-
-<ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">256 - (|code| % 256)
+</code></pre></div><ul>
 <li>当指定的退出时状态码为正数，那么转换公式如下:</li>
 </ul>
-
-<pre><code>code % 256
-</code></pre>
-
-<h3 id="常见异常状态码">常见异常状态码</h3>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">code % 256
+</code></pre></div><h3 id="heading-1">常见异常状态码</h3>
 <ul>
-<li><p>137</p>
-
+<li>
+<p>137</p>
 <ul>
-<li>此状态码一般是因为 pod 中容器内存达到了它的资源限制(<code>resources.limits</code>)，一般是内存溢出(OOM)，CPU达到限制只需要不分时间片给程序就可以。因为限制资源是通过 linux 的 cgroup 实现的，所以 cgroup 会将此容器强制杀掉，类似于 <code>kill -9</code></li>
-<li>还可能是宿主机本身资源不够用了(OOM)，内核会选取一些进程杀掉来释放内存</li>
-<li>不管是 cgroup 限制杀掉进程还是因为节点机器本身资源不够导致进程死掉，都可以从系统日志中找到记录:</li>
-</ul>
-
+<li>
+<p>此状态码一般是因为 pod 中容器内存达到了它的资源限制(<code>resources.limits</code>)，一般是内存溢出(OOM)，CPU达到限制只需要不分时间片给程序就可以。因为限制资源是通过 linux 的 cgroup 实现的，所以 cgroup 会将此容器强制杀掉，类似于 <code>kill -9</code></p>
+</li>
+<li>
+<p>还可能是宿主机本身资源不够用了(OOM)，内核会选取一些进程杀掉来释放内存</p>
+</li>
+<li>
+<p>不管是 cgroup 限制杀掉进程还是因为节点机器本身资源不够导致进程死掉，都可以从系统日志中找到记录:</p>
 <blockquote>
 <p>ubuntu 的系统日志在 <code>/var/log/syslog</code>，centos 的系统日志在 <code>/var/log/messages</code>，都可以用 <code>journalctl -k</code> 来查看系统日志</p>
-</blockquote></li>
-
-<li><p>1 和 255</p>
-
+</blockquote>
+</li>
+</ul>
+</li>
+<li>
+<p>1 和 255</p>
 <ul>
 <li>这种可能是一般错误，具体错误原因只能看容器日志，因为很多程序员写异常退出时习惯用 <code>exit(1)</code> 或 <code>exit(-1)</code>，-1 会根据转换规则转成 255</li>
-</ul></li>
 </ul>
-
-<h3 id="状态码参考">状态码参考</h3>
-
+</li>
+</ul>
+<h3 id="heading-2">状态码参考</h3>
 <p>这里罗列了一些状态码的含义：<a href="http://tldp.org/LDP/abs/html/exitcodes.html">Appendix E. Exit Codes With Special Meanings</a></p>
-
-<h3 id="linux-标准中断信号">Linux 标准中断信号</h3>
-
+<h3 id="linux-">Linux 标准中断信号</h3>
 <p>Linux 程序被外界中断时会发送中断信号，程序退出时的状态码就是中断信号值加上 128 得到的，比如 <code>SIGKILL</code> 的中断信号值为 9，那么程序退出状态码就为 9+128=137。以下是标准信号值参考：</p>
-
-<pre><code>Signal     Value     Action   Comment
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">Signal     Value     Action   Comment
 ──────────────────────────────────────────────────────────────────────
 SIGHUP        1       Term    Hangup detected on controlling terminal
                                      or death of controlling process
@@ -374,13 +303,9 @@ SIGSTOP   17,19,23    Stop    Stop process
 SIGTSTP   18,20,24    Stop    Stop typed at terminal
 SIGTTIN   21,21,26    Stop    Terminal input for background process
 SIGTTOU   22,22,27    Stop    Terminal output for background process
-</code></pre>
-
-<h3 id="c-c-退出状态码">C/C++ 退出状态码</h3>
-
+</code></pre></div><h3 id="cc-">C/C++ 退出状态码</h3>
 <p><code>/usr/include/sysexits.h</code> 试图将退出状态码标准化(仅限 C/C++):</p>
-
-<pre><code>#define EX_OK           0       /* successful termination */
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">#define EX_OK           0       /* successful termination */
 
 #define EX__BASE        64      /* base value for error messages */
 
@@ -391,9 +316,9 @@ SIGTTOU   22,22,27    Stop    Terminal output for background process
 #define EX_NOHOST       68      /* host name unknown */
 #define EX_UNAVAILABLE  69      /* service unavailable */
 #define EX_SOFTWARE     70      /* internal software error */
-#define EX_OSERR        71      /* system error (e.g., can't fork) */
+#define EX_OSERR        71      /* system error (e.g., can&#39;t fork) */
 #define EX_OSFILE       72      /* critical OS file missing */
-#define EX_CANTCREAT    73      /* can't create (user) output file */
+#define EX_CANTCREAT    73      /* can&#39;t create (user) output file */
 #define EX_IOERR        74      /* input/output error */
 #define EX_TEMPFAIL     75      /* temp failure; user is invited to retry */
 #define EX_PROTOCOL     76      /* remote error in protocol */
@@ -401,8 +326,7 @@ SIGTTOU   22,22,27    Stop    Terminal output for background process
 #define EX_CONFIG       78      /* configuration error */
 
 #define EX__MAX 78      /* maximum listed value */
-</code></pre>
-
+</code></pre></div>
             </article>
 
             <ul class="pager blog-pager">
@@ -436,50 +360,28 @@ SIGTTOU   22,22,27    Stop    Terminal output for background process
                 
             </div>
             
-            
-            
-            
-<div>
-    <section id="datecount">
-        <h4 id="date"> Fri Dec 21, 2018</h4>
-    </section>
-    <h5 id="wc">1200 Words|Read in about 3 Min</h5>
-    <h5 id="tags">Tags: 
-        
-        <a href="https://imroc.io/tags/kubernetes/">kubernetes</a> &nbsp;
-    </h5>
-</div>
-
-            
-            </div>
-            
-			
-               <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-<aside id=comments>
-    <div>
-        <h2> Comments </h2>
-    </div>
-    <div id="container"></div>
-    <link rel="stylesheet" href="https://imroc.io/static/gitment/default.css">
-    <script src="https://imroc.io/static/gitment/gitment.browser.js"></script>
-    <script>
-        var gitment = new Gitment({
-			owner: 'imroc', 
-			repo: 'imroc.github.io', 
-            oauth: {
-				client_id: 'd05b8f959b3111c6fb63',
-				client_secret: 'f30ef76ea0050ed731ace76f7fbf684ae5d28fbc',
-            },
-        })
-        gitment.render('container')
-    </script>
-</aside>
-</div>
-
-			
         </div>
     </div>
-    </section>
+    
+    <div id="gitalk-container"></div>
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+      var gitalk = new Gitalk({
+          clientID: 'd05b8f959b3111c6fb63',
+          clientSecret: 'f30ef76ea0050ed731ace76f7fbf684ae5d28fbc',
+          repo: 'blog',
+          owner: 'imroc',
+          admin: ['imroc'],
+          labels: ['Gitalk'],
+          title: 'Kubernetes 问题定位技巧：分析 ExitCode',
+          createIssueManually: false,
+          id: '',
+          distractionFreeMode: true
+      });
+      gitalk.render('gitalk-container');
+    </script>
+
 </div>
 
     <footer>
@@ -538,7 +440,7 @@ SIGTTOU   22,22,27    Stop    Terminal output for background process
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.49.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.62.0</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>
@@ -546,15 +448,7 @@ SIGTTOU   22,22,27    Stop    Terminal output for background process
   </div>
 </footer>
 
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script src="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe-ui-default.min.js"></script>
-<script src="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe.js"></script>
-<script src="https://imroc.io/js/auto-render.min.js"></script>
-<script src="https://imroc.io/js/main.js"></script>
-<script src="https://imroc.io/static/prism/prism.js"></script>
-<script src="https://cdn.staticfile.org/KaTeX/0.7.1/katex.min.js"></script>
-<script> renderMathInElement(document.body); </script>
-
+<script src='/js/bundle.min.879361cd590eb97fa7b7459c2fecb6f66e7b5c798ccdbbad966b1d4d0adce056.js' integrity='sha256-h5NhzVkOuX&#43;nt0WcL&#43;y29m57XHmMzbutlmsdTQrc4FY='></script>
 
 
 

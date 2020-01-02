@@ -23,21 +23,15 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="roc" />
 
-  <meta name="generator" content="Hugo 0.49.2" />
+  <meta name="generator" content="Hugo 0.62.0" />
   <link rel="canonical" href="https://imroc.io/posts/kubernetes/deploy-kubernetes-dashboard-and-enable-free-https/" />
   <link rel="alternate" href="https://imroc.io/index.xml" type="application/rss+xml" title="roc">
-  <script src="https://cdn.staticfile.org/jquery/1.12.4/jquery.min.js"></script>
-  <link rel="stylesheet" href="https://cdn.staticfile.org/KaTeX/0.7.1/katex.min.css" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" crossorigin="anonymous">
 
-  <link rel="stylesheet" href="https://imroc.io/css/main.css" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
   
-  <link rel="stylesheet" href="https://imroc.io/static/prism/prism.css" />
 
-  <script>
+
+<link rel="stylesheet" href='/css/bundle.min.2971c990ae9e3036a2e09462d93d94829b857b7235a2b5eac8896bdad8a8fdb6.css' integrity='sha256-KXHJkK6eMDai4JRi2T2UgpuFe3I1orXqyIlr2tio/bY='>
+  --><script>
 var _hmt = _hmt || [];
 (function() {
   var hm = document.createElement("script");
@@ -46,56 +40,6 @@ var _hmt = _hmt || [];
   s.parentNode.insertBefore(hm, s);
 })();
 </script>
-
-
-
-<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe.min.css" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.2/default-skin/default-skin.min.css" crossorigin="anonymous" />
-
-
-<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
-
-<div class="pswp__bg"></div>
-
-<div class="pswp__scroll-wrap">
-    
-    <div class="pswp__container">
-      <div class="pswp__item"></div>
-      <div class="pswp__item"></div>
-      <div class="pswp__item"></div>
-    </div>
-    
-    <div class="pswp__ui pswp__ui--hidden">
-    <div class="pswp__top-bar">
-      
-      <div class="pswp__counter"></div>
-      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
-      <button class="pswp__button pswp__button--share" title="Share"></button>
-      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
-      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
-      
-      
-      <div class="pswp__preloader">
-        <div class="pswp__preloader__icn">
-          <div class="pswp__preloader__cut">
-            <div class="pswp__preloader__donut"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
-      <div class="pswp__share-tooltip"></div>
-    </div>
-    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
-    </button>
-    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
-    </button>
-    <div class="pswp__caption">
-      <div class="pswp__caption__center"></div>
-    </div>
-    </div>
-    </div>
-</div>
 
 
 </head>
@@ -273,94 +217,82 @@ var _hmt = _hmt || [];
                 
 <aside class="toc">
   <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#概述">概述</a></li>
-<li><a href="#安装">安装</a></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#heading">概述</a></li>
+    <li><a href="#heading-1">安装</a></li>
+  </ul>
 </nav>
 </aside>
 
 
-                
-
-<h2 id="概述">概述</h2>
-
+                <h2 id="heading">概述</h2>
 <p>Kubernetes Dashboard 是一个可以可视化查看和操作 Kubernetes 集群的一个插件</p>
-
 <ul>
-<li>本文利用 Helm 部署它，所以请确保 Helm 已安装，安装方法参考：<a href="https://imroc.io/posts/kubernetes/install-helm">https://imroc.io/posts/kubernetes/install-helm</a></li>
-<li>本文使用 Nginx Ingress Controller 暴露 Kubernetes Dashboard 服务到外部，Nginx Ingress Controller 安装参考：<a href="https://imroc.io/posts/kubernetes/use-nginx-ingress-controller-to-expose-service">https://imroc.io/posts/kubernetes/use-nginx-ingress-controller-to-expose-service</a></li>
+<li>本文利用 Helm 部署它，所以请确保 Helm 已安装，安装方法参考：https://imroc.io/posts/kubernetes/install-helm</li>
+<li>本文使用 Nginx Ingress Controller 暴露 Kubernetes Dashboard 服务到外部，Nginx Ingress Controller 安装参考：https://imroc.io/posts/kubernetes/use-nginx-ingress-controller-to-expose-service</li>
 <li>有域名，并且配置 DNS，IP 指向 Ingress Controller 对外暴露的地址</li>
-<li>本文使用 cert-manager 生成免费证书，安装和使用参考：<a href="https://imroc.io/posts/kubernetes/let-ingress-enable-free-https-with-cert-manager">https://imroc.io/posts/kubernetes/let-ingress-enable-free-https-with-cert-manager</a></li>
+<li>本文使用 cert-manager 生成免费证书，安装和使用参考：https://imroc.io/posts/kubernetes/let-ingress-enable-free-https-with-cert-manager</li>
 </ul>
-
-<h2 id="安装">安装</h2>
-
+<h2 id="heading-1">安装</h2>
 <p>先自定义 helm 的 chart 配置:</p>
-
-<pre><code class="language-bash">vi values.yaml
-</code></pre>
-
-<pre><code class="language-yaml">#Default values for kubernetes-dashboard
-# This is a YAML-formatted file.
-# Declare name/value pairs to be passed into your templates.
-# name: value
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">vi values.yaml
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#75715e">#Default values for kubernetes-dashboard</span>
+<span style="color:#75715e"># This is a YAML-formatted file.</span>
+<span style="color:#75715e"># Declare name/value pairs to be passed into your templates.</span>
+<span style="color:#75715e"># name: value</span>
 
 image:
   repository: k8s.gcr.io/kubernetes-dashboard-amd64
-  tag: v1.8.3
+  tag: v1<span style="color:#ae81ff">.8</span><span style="color:#ae81ff">.3</span>
   pullPolicy: IfNotPresent
 
-replicaCount: 1
+replicaCount: <span style="color:#ae81ff">1</span>
 
-## Here labels can be added to the kubernetes dashboard deployment
-##
+<span style="color:#75715e">## Here labels can be added to the kubernetes dashboard deployment</span>
+<span style="color:#75715e">##</span>
 labels: {}
-# kubernetes.io/cluster-service: &quot;true&quot;
-# kubernetes.io/name: &quot;Kubernetes Dashboard&quot;
+<span style="color:#75715e"># kubernetes.io/cluster-service: &#34;true&#34;</span>
+<span style="color:#75715e"># kubernetes.io/name: &#34;Kubernetes Dashboard&#34;</span>
 
-## Additional container arguments
-##
-#extraArgs:
-#  - --enable-insecure-login
-#  - --system-banner=&quot;Welcome to Kubernetes&quot;
-#  - --port=8444 # By default, https uses 8443 so we move it away to something else
-#  - --insecure-port=8443 # The chart has 8443 hard coded as a containerPort in the deployment spec so we must use this internally for the http service
-#  - --insecure-bind-address=0.0.0.0
+<span style="color:#75715e">## Additional container arguments</span>
+<span style="color:#75715e">##</span>
+<span style="color:#75715e">#extraArgs:</span>
+<span style="color:#75715e">#  - --enable-insecure-login</span>
+<span style="color:#75715e">#  - --system-banner=&#34;Welcome to Kubernetes&#34;</span>
+<span style="color:#75715e">#  - --port=8444 # By default, https uses 8443 so we move it away to something else</span>
+<span style="color:#75715e">#  - --insecure-port=8443 # The chart has 8443 hard coded as a containerPort in the deployment spec so we must use this internally for the http service</span>
+<span style="color:#75715e">#  - --insecure-bind-address=0.0.0.0</span>
 
-## Node labels for pod assignment
-## Ref: https://kubernetes.io/docs/user-guide/node-selection/
-##
+<span style="color:#75715e">## Node labels for pod assignment</span>
+<span style="color:#75715e">## Ref: https://kubernetes.io/docs/user-guide/node-selection/</span>
+<span style="color:#75715e">##</span>
 nodeSelector: {}
 
-## List of node taints to tolerate (requires Kubernetes &gt;= 1.6)
+<span style="color:#75715e">## List of node taints to tolerate (requires Kubernetes &gt;= 1.6)</span>
 tolerations: []
-#  - key: &quot;key&quot;
-#    operator: &quot;Equal|Exists&quot;
-#    value: &quot;value&quot;
-#    effect: &quot;NoSchedule|PreferNoSchedule|NoExecute&quot;
+<span style="color:#75715e">#  - key: &#34;key&#34;</span>
+<span style="color:#75715e">#    operator: &#34;Equal|Exists&#34;</span>
+<span style="color:#75715e">#    value: &#34;value&#34;</span>
+<span style="color:#75715e">#    effect: &#34;NoSchedule|PreferNoSchedule|NoExecute&#34;</span>
 
 service:
   type: ClusterIP
-  externalPort: 443
+  externalPort: <span style="color:#ae81ff">443</span>
 
-  ## This allows an override of the heapster service name
-  ## Default: {{ .Chart.Name }}
-  ##
-  # nameOverride:
+  <span style="color:#75715e">## This allows an override of the heapster service name</span>
+  <span style="color:#75715e">## Default: {{ .Chart.Name }}</span>
+  <span style="color:#75715e">##</span>
+  <span style="color:#75715e"># nameOverride:</span>
 
-  ## Kubernetes Dashboard Service annotations
-  ##
+  <span style="color:#75715e">## Kubernetes Dashboard Service annotations</span>
+  <span style="color:#75715e">##</span>
   annotations: {}
-  # foo.io/bar: &quot;true&quot;
+  <span style="color:#75715e"># foo.io/bar: &#34;true&#34;</span>
 
-  ## Here labels can be added to the Kubernetes Dashboard service
-  ##
+  <span style="color:#75715e">## Here labels can be added to the Kubernetes Dashboard service</span>
+  <span style="color:#75715e">##</span>
   labels: {}
-  # kubernetes.io/name: &quot;Kubernetes Dashboard&quot;
+  <span style="color:#75715e"># kubernetes.io/name: &#34;Kubernetes Dashboard&#34;</span>
 
 resources:
   limits:
@@ -371,55 +303,52 @@ resources:
     memory: 50Mi
 
 ingress:
-  ## If true, Kubernetes Dashboard Ingress will be created.
-  ##
-  enabled: true
+  <span style="color:#75715e">## If true, Kubernetes Dashboard Ingress will be created.</span>
+  <span style="color:#75715e">##</span>
+  enabled: <span style="color:#66d9ef">true</span>
 
-  ## Kubernetes Dashboard Ingress annotations
-  ##
+  <span style="color:#75715e">## Kubernetes Dashboard Ingress annotations</span>
+  <span style="color:#75715e">##</span>
   annotations:
     kubernetes.io/ingress.class: nginx
-    nginx.ingress.kubernetes.io/secure-backends: &quot;true&quot;
-    #nginx.ingress.kubernetes.io/configuration-snippet: |
-    #  proxy_set_header &quot;Host: 127.0.0.1&quot;;
-    #kubernetes.io/tls-acme: 'true'
+    nginx.ingress.kubernetes.io/secure-backends: <span style="color:#e6db74">&#34;true&#34;</span>
+    <span style="color:#75715e">#nginx.ingress.kubernetes.io/configuration-snippet: |</span>
+    <span style="color:#75715e">#  proxy_set_header &#34;Host: 127.0.0.1&#34;;</span>
+    <span style="color:#75715e">#kubernetes.io/tls-acme: &#39;true&#39;</span>
 
-  ## Kubernetes Dashboard Ingress path
-  ##
+  <span style="color:#75715e">## Kubernetes Dashboard Ingress path</span>
+  <span style="color:#75715e">##</span>
   path: /
 
-  ## Kubernetes Dashboard Ingress hostnames
-  ## Must be provided if Ingress is enabled
-  ##
+  <span style="color:#75715e">## Kubernetes Dashboard Ingress hostnames</span>
+  <span style="color:#75715e">## Must be provided if Ingress is enabled</span>
+  <span style="color:#75715e">##</span>
   hosts:
     - dashboard.imroc.io
 
-  ## Kubernetes Dashboard Ingress TLS configuration
-  ## Secrets must be manually created in the namespace
-  ##
+  <span style="color:#75715e">## Kubernetes Dashboard Ingress TLS configuration</span>
+  <span style="color:#75715e">## Secrets must be manually created in the namespace</span>
+  <span style="color:#75715e">##</span>
   tls:
    - secretName: dashboard-imroc-io-tls
      hosts:
        - dashboard.imroc.io
 
 rbac:
-  # Specifies whether RBAC resources should be created
-  create: true
+  <span style="color:#75715e"># Specifies whether RBAC resources should be created</span>
+  create: <span style="color:#66d9ef">true</span>
 
-  # Specifies whether cluster-admin ClusterRole will be used for dashboard
-  # ServiceAccount (NOT RECOMMENDED).
-  clusterAdminRole: true
+  <span style="color:#75715e"># Specifies whether cluster-admin ClusterRole will be used for dashboard</span>
+  <span style="color:#75715e"># ServiceAccount (NOT RECOMMENDED).</span>
+  clusterAdminRole: <span style="color:#66d9ef">true</span>
 
 serviceAccount:
-  # Specifies whether a service account should be created
-  create: true
-  # The name of the service account to use.
-  # If not set and create is true, a name is generated using the fullname template
+  <span style="color:#75715e"># Specifies whether a service account should be created</span>
+  create: <span style="color:#66d9ef">true</span>
+  <span style="color:#75715e"># The name of the service account to use.</span>
+  <span style="color:#75715e"># If not set and create is true, a name is generated using the fullname template</span>
   name:
-</code></pre>
-
-<p>相比默认配置，修改了以下配置项：</p>
-
+</code></pre></div><p>相比默认配置，修改了以下配置项：</p>
 <ul>
 <li>ingress.enabled - 置为 true 开启 Ingress，用 Ingress 将 Kubernetes Dashboard 服务暴露出来，以便让我们浏览器能够访问</li>
 <li>ingress.annotations - 指定 <code>ingress.class</code> 为 nginx，让我们安装 Nginx Ingress Controller 来反向代理 Kubernetes Dashboard 服务；由于 Kubernetes Dashboard 后端服务是以 https 方式监听的，而 Nginx Ingress Controller 默认会以 HTTP 协议将请求转发给后端服务，用<code>secure-backends</code>这个 annotation 来指示 Nginx Ingress Controller 以 HTTPS 协议将请求转发给后端服务</li>
@@ -427,18 +356,13 @@ serviceAccount:
 <li>Ingress.tls - secretName 配置为 cert-manager 生成的免费证书所在的 Secret 资源名称，hosts 替换为证书配置的域名</li>
 <li>rbac.clusterAdminRole - 置为 true 让 dashboard 的权限够大，这样我们可以方便操作多个 namespace</li>
 </ul>
-
 <p>安装：</p>
-
-<pre><code class="language-bash">helm install stable/kubernetes-dashboard \
-  --name dashboard \
-  --namespace dashboard \
-  -f values.yaml
-</code></pre>
-
-<p>安装完成后在浏览器通过域名就能访问 Kubernetes Dashboard 啦，而且是有信任的证书，不需要手动点击信任该站点 ~~</p>
-
-<p><img src="https://res.cloudinary.com/imroc/image/upload/v1532357376/blog/k8s/kubernetes-dashboard.png" alt="kubernetes-dashboard" /></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">helm install stable/kubernetes-dashboard <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>  --name dashboard <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>  --namespace dashboard <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>  -f values.yaml
+</code></pre></div><p>安装完成后在浏览器通过域名就能访问 Kubernetes Dashboard 啦，而且是有信任的证书，不需要手动点击信任该站点 ~~</p>
+<p><img src="https://res.cloudinary.com/imroc/image/upload/v1532357376/blog/k8s/kubernetes-dashboard.png" alt="kubernetes-dashboard"></p>
 
             </article>
 
@@ -473,50 +397,28 @@ serviceAccount:
                 
             </div>
             
-            
-            
-            
-<div>
-    <section id="datecount">
-        <h4 id="date"> Mon Jul 23, 2018</h4>
-    </section>
-    <h5 id="wc">1100 Words|Read in about 3 Min</h5>
-    <h5 id="tags">Tags: 
-        
-        <a href="https://imroc.io/tags/kubernetes/">kubernetes</a> &nbsp;
-    </h5>
-</div>
-
-            
-            </div>
-            
-			
-               <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-<aside id=comments>
-    <div>
-        <h2> Comments </h2>
-    </div>
-    <div id="container"></div>
-    <link rel="stylesheet" href="https://imroc.io/static/gitment/default.css">
-    <script src="https://imroc.io/static/gitment/gitment.browser.js"></script>
-    <script>
-        var gitment = new Gitment({
-			owner: 'imroc', 
-			repo: 'imroc.github.io', 
-            oauth: {
-				client_id: 'd05b8f959b3111c6fb63',
-				client_secret: 'f30ef76ea0050ed731ace76f7fbf684ae5d28fbc',
-            },
-        })
-        gitment.render('container')
-    </script>
-</aside>
-</div>
-
-			
         </div>
     </div>
-    </section>
+    
+    <div id="gitalk-container"></div>
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+      var gitalk = new Gitalk({
+          clientID: 'd05b8f959b3111c6fb63',
+          clientSecret: 'f30ef76ea0050ed731ace76f7fbf684ae5d28fbc',
+          repo: 'blog',
+          owner: 'imroc',
+          admin: ['imroc'],
+          labels: ['Gitalk'],
+          title: '利用Helm一键部署Kubernetes Dashboard并启用免费HTTPS',
+          createIssueManually: false,
+          id: '',
+          distractionFreeMode: true
+      });
+      gitalk.render('gitalk-container');
+    </script>
+
 </div>
 
     <footer>
@@ -575,7 +477,7 @@ serviceAccount:
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.49.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.62.0</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>
@@ -583,15 +485,7 @@ serviceAccount:
   </div>
 </footer>
 
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script src="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe-ui-default.min.js"></script>
-<script src="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe.js"></script>
-<script src="https://imroc.io/js/auto-render.min.js"></script>
-<script src="https://imroc.io/js/main.js"></script>
-<script src="https://imroc.io/static/prism/prism.js"></script>
-<script src="https://cdn.staticfile.org/KaTeX/0.7.1/katex.min.js"></script>
-<script> renderMathInElement(document.body); </script>
-
+<script src='/js/bundle.min.879361cd590eb97fa7b7459c2fecb6f66e7b5c798ccdbbad966b1d4d0adce056.js' integrity='sha256-h5NhzVkOuX&#43;nt0WcL&#43;y29m57XHmMzbutlmsdTQrc4FY='></script>
 
 
 

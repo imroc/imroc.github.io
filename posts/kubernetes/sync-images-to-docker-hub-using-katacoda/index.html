@@ -23,21 +23,15 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="roc" />
 
-  <meta name="generator" content="Hugo 0.49.2" />
+  <meta name="generator" content="Hugo 0.62.0" />
   <link rel="canonical" href="https://imroc.io/posts/kubernetes/sync-images-to-docker-hub-using-katacoda/" />
   <link rel="alternate" href="https://imroc.io/index.xml" type="application/rss+xml" title="roc">
-  <script src="https://cdn.staticfile.org/jquery/1.12.4/jquery.min.js"></script>
-  <link rel="stylesheet" href="https://cdn.staticfile.org/KaTeX/0.7.1/katex.min.css" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" crossorigin="anonymous">
 
-  <link rel="stylesheet" href="https://imroc.io/css/main.css" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
   
-  <link rel="stylesheet" href="https://imroc.io/static/prism/prism.css" />
 
-  <script>
+
+<link rel="stylesheet" href='/css/bundle.min.2971c990ae9e3036a2e09462d93d94829b857b7235a2b5eac8896bdad8a8fdb6.css' integrity='sha256-KXHJkK6eMDai4JRi2T2UgpuFe3I1orXqyIlr2tio/bY='>
+  --><script>
 var _hmt = _hmt || [];
 (function() {
   var hm = document.createElement("script");
@@ -46,56 +40,6 @@ var _hmt = _hmt || [];
   s.parentNode.insertBefore(hm, s);
 })();
 </script>
-
-
-
-<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe.min.css" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.2/default-skin/default-skin.min.css" crossorigin="anonymous" />
-
-
-<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
-
-<div class="pswp__bg"></div>
-
-<div class="pswp__scroll-wrap">
-    
-    <div class="pswp__container">
-      <div class="pswp__item"></div>
-      <div class="pswp__item"></div>
-      <div class="pswp__item"></div>
-    </div>
-    
-    <div class="pswp__ui pswp__ui--hidden">
-    <div class="pswp__top-bar">
-      
-      <div class="pswp__counter"></div>
-      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
-      <button class="pswp__button pswp__button--share" title="Share"></button>
-      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
-      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
-      
-      
-      <div class="pswp__preloader">
-        <div class="pswp__preloader__icn">
-          <div class="pswp__preloader__cut">
-            <div class="pswp__preloader__donut"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
-      <div class="pswp__share-tooltip"></div>
-    </div>
-    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
-    </button>
-    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
-    </button>
-    <div class="pswp__caption">
-      <div class="pswp__caption__center"></div>
-    </div>
-    </div>
-    </div>
-</div>
 
 
 </head>
@@ -288,183 +232,139 @@ var _hmt = _hmt || [];
                 
 <aside class="toc">
   <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#为什么要同步">为什么要同步</a></li>
-<li><a href="#原理">原理</a></li>
-<li><a href="#let-s-do-it">Let&rsquo;s Do It</a></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#heading">为什么要同步</a></li>
+    <li><a href="#heading-1">原理</a></li>
+    <li><a href="#lets-do-it">Let's Do It</a></li>
+  </ul>
 </nav>
 </aside>
 
 
-                
-
-<h2 id="为什么要同步">为什么要同步</h2>
-
+                <h2 id="heading">为什么要同步</h2>
 <p>安装kubernetes的时候，我们需要用到 gcr.io/google_containers 下面的一些镜像，在国内是不能直接下载的。如果用 Self Host 方式安装，master 上的组件除开kubelet之外都用容器运行，甚至 CNI 插件也是容器运行，比如 flannel，在 quay.io/coreos 下面，在国内下载非常慢。但是我们可以把这些镜像同步到我们的docker hub仓库里，再配个docker hub加速器，这样下载镜像就很快了。</p>
-
-<h2 id="原理">原理</h2>
-
+<h2 id="heading-1">原理</h2>
 <p>Katacoda 是一个在线学习平台，在web上提供学习需要的服务器终端，里面包含学习所需的环境，我们可以利用docker的课程的终端来同步，因为里面有docker环境，可以执行 <code>docker login</code>，<code>docker pull</code>，<code>docker tag</code>，<code>docker push</code> 等命令来实现同步镜像。</p>
-
 <p>但是手工去执行命令很麻烦，如果要同步的镜像和tag比较多，手工操作那就是浪费生命，我们可以利用程序代替手工操作，不过 Katacoda 为了安全起见，不允许执行外来的二进制程序，但是可以shell脚本，我写好了脚本，大家只需要粘贴进去根据自己需要稍稍修改下，然后运行就可以了。</p>
-
-<h2 id="let-s-do-it">Let&rsquo;s Do It</h2>
-
+<h2 id="lets-do-it">Let's Do It</h2>
 <p>点击 <a href="https://www.katacoda.com/courses/docker/deploying-first-container">这里</a> 进入docker课程</p>
-
-<p><img src="https://res.cloudinary.com/imroc/image/upload/v1520565820/blog/k8s/katacoda-docker.png"></p>
-
+<!-- raw HTML omitted -->
 <p>点击 <code>START SCENARIO</code> 或 终端右上角全屏按钮将终端放大</p>
-
-<p><img src="https://res.cloudinary.com/imroc/image/upload/v1520565820/blog/k8s/katacoda-terminal.png"></p>
-
+<!-- raw HTML omitted -->
 <p>安装脚本依赖的 <code>jq</code> 命令</p>
-
-<pre><code class="language-bash">apt install jq
-</code></pre>
-
-<p>登录docker hub</p>
-
-<pre><code class="language-bash">docker login
-</code></pre>
-
-<p>创建脚本并赋予执行权限</p>
-
-<pre><code class="language-bash">touch sync
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">apt install jq
+</code></pre></div><p>登录docker hub</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">docker login
+</code></pre></div><p>创建脚本并赋予执行权限</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">touch sync
 chmod +x sync
-</code></pre>
-
-<p><img src="https://res.cloudinary.com/imroc/image/upload/v1520565825/blog/k8s/katacoda-terminal2.png"></p>
-
+</code></pre></div><!-- raw HTML omitted -->
 <p>编辑脚本，可以使用自带的vim编辑器</p>
-
-<pre><code class="language-bash">vim sync
-</code></pre>
-
-<p>将脚本粘贴进去</p>
-
-<pre><code class="language-bash">#! /bin/bash
-
-docker_repo=&quot;k8smirror&quot; # your docker hub username or organization name
-registry=&quot;gcr.io&quot; # the registry of original image, e.g. gcr.io, quay.io
-repo=&quot;google_containers&quot; # the repository name of original image
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">vim sync
+</code></pre></div><p>将脚本粘贴进去</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e">#! /bin/bash
+</span><span style="color:#75715e"></span>
+docker_repo<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;k8smirror&#34;</span> <span style="color:#75715e"># your docker hub username or organization name</span>
+registry<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;gcr.io&#34;</span> <span style="color:#75715e"># the registry of original image, e.g. gcr.io, quay.io</span>
+repo<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;google_containers&#34;</span> <span style="color:#75715e"># the repository name of original image</span>
 
 
-sync_one(){
-  docker pull ${registry}/${repo}/${1}:${2}
-  docker tag ${registry}/${repo}/${1}:${2} docker.io/${docker_repo}/${1}:${2}
-  docker push docker.io/${docker_repo}/${1}:${2}
-  docker rmi -f ${registry}/${repo}/${1}:${2} docker.io/${docker_repo}/${1}:${2}
-}
+sync_one<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">{</span>
+  docker pull <span style="color:#e6db74">${</span>registry<span style="color:#e6db74">}</span>/<span style="color:#e6db74">${</span>repo<span style="color:#e6db74">}</span>/<span style="color:#e6db74">${</span>1<span style="color:#e6db74">}</span>:<span style="color:#e6db74">${</span>2<span style="color:#e6db74">}</span>
+  docker tag <span style="color:#e6db74">${</span>registry<span style="color:#e6db74">}</span>/<span style="color:#e6db74">${</span>repo<span style="color:#e6db74">}</span>/<span style="color:#e6db74">${</span>1<span style="color:#e6db74">}</span>:<span style="color:#e6db74">${</span>2<span style="color:#e6db74">}</span> docker.io/<span style="color:#e6db74">${</span>docker_repo<span style="color:#e6db74">}</span>/<span style="color:#e6db74">${</span>1<span style="color:#e6db74">}</span>:<span style="color:#e6db74">${</span>2<span style="color:#e6db74">}</span>
+  docker push docker.io/<span style="color:#e6db74">${</span>docker_repo<span style="color:#e6db74">}</span>/<span style="color:#e6db74">${</span>1<span style="color:#e6db74">}</span>:<span style="color:#e6db74">${</span>2<span style="color:#e6db74">}</span>
+  docker rmi -f <span style="color:#e6db74">${</span>registry<span style="color:#e6db74">}</span>/<span style="color:#e6db74">${</span>repo<span style="color:#e6db74">}</span>/<span style="color:#e6db74">${</span>1<span style="color:#e6db74">}</span>:<span style="color:#e6db74">${</span>2<span style="color:#e6db74">}</span> docker.io/<span style="color:#e6db74">${</span>docker_repo<span style="color:#e6db74">}</span>/<span style="color:#e6db74">${</span>1<span style="color:#e6db74">}</span>:<span style="color:#e6db74">${</span>2<span style="color:#e6db74">}</span>
+<span style="color:#f92672">}</span>
 
-sync_all_tags() {
-  for image in $*; do
-    tags_str=`curl https://${registry}/v2/${repo}/$image/tags/list | jq '.tags' -c | sed 's/\[/\(/g' | sed 's/\]/\)/g' | sed 's/,/ /g'`
-    echo &quot;$image $tags_str&quot;
-    src=&quot;
-sync_one(){
-  docker pull ${registry}/${repo}/\${1}:\${2}
-  docker tag ${registry}/${repo}/\${1}:\${2} docker.io/${docker_repo}/\${1}:\${2}
-  docker push docker.io/${docker_repo}/\${1}:\${2}
-  docker rmi -f ${registry}/${repo}/\${1}:\${2} docker.io/${docker_repo}/\${1}:\${2}
-}
-tags=${tags_str}
-echo \&quot;$image ${tags_str}\&quot;
-for tag in \${tags[@]}
-do
-  sync_one $image \${tag}
-done;&quot;
-    bash -c &quot;$src&quot;
-  done 
-}
+sync_all_tags<span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+  <span style="color:#66d9ef">for</span> image in $*; <span style="color:#66d9ef">do</span>
+    tags_str<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>curl https://<span style="color:#e6db74">${</span>registry<span style="color:#e6db74">}</span>/v2/<span style="color:#e6db74">${</span>repo<span style="color:#e6db74">}</span>/$image/tags/list | jq <span style="color:#e6db74">&#39;.tags&#39;</span> -c | sed <span style="color:#e6db74">&#39;s/\[/\(/g&#39;</span> | sed <span style="color:#e6db74">&#39;s/\]/\)/g&#39;</span> | sed <span style="color:#e6db74">&#39;s/,/ /g&#39;</span><span style="color:#e6db74">`</span>
+    echo <span style="color:#e6db74">&#34;</span>$image<span style="color:#e6db74"> </span>$tags_str<span style="color:#e6db74">&#34;</span>
+    src<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">
+</span><span style="color:#e6db74">sync_one(){
+</span><span style="color:#e6db74">  docker pull </span><span style="color:#e6db74">${</span>registry<span style="color:#e6db74">}</span><span style="color:#e6db74">/</span><span style="color:#e6db74">${</span>repo<span style="color:#e6db74">}</span><span style="color:#e6db74">/\${1}:\${2}
+</span><span style="color:#e6db74">  docker tag </span><span style="color:#e6db74">${</span>registry<span style="color:#e6db74">}</span><span style="color:#e6db74">/</span><span style="color:#e6db74">${</span>repo<span style="color:#e6db74">}</span><span style="color:#e6db74">/\${1}:\${2} docker.io/</span><span style="color:#e6db74">${</span>docker_repo<span style="color:#e6db74">}</span><span style="color:#e6db74">/\${1}:\${2}
+</span><span style="color:#e6db74">  docker push docker.io/</span><span style="color:#e6db74">${</span>docker_repo<span style="color:#e6db74">}</span><span style="color:#e6db74">/\${1}:\${2}
+</span><span style="color:#e6db74">  docker rmi -f </span><span style="color:#e6db74">${</span>registry<span style="color:#e6db74">}</span><span style="color:#e6db74">/</span><span style="color:#e6db74">${</span>repo<span style="color:#e6db74">}</span><span style="color:#e6db74">/\${1}:\${2} docker.io/</span><span style="color:#e6db74">${</span>docker_repo<span style="color:#e6db74">}</span><span style="color:#e6db74">/\${1}:\${2}
+</span><span style="color:#e6db74">}
+</span><span style="color:#e6db74">tags=</span><span style="color:#e6db74">${</span>tags_str<span style="color:#e6db74">}</span><span style="color:#e6db74">
+</span><span style="color:#e6db74">echo \&#34;</span>$image<span style="color:#e6db74"> </span><span style="color:#e6db74">${</span>tags_str<span style="color:#e6db74">}</span><span style="color:#e6db74">\&#34;
+</span><span style="color:#e6db74">for tag in \${tags[@]}
+</span><span style="color:#e6db74">do
+</span><span style="color:#e6db74">  sync_one </span>$image<span style="color:#e6db74"> \${tag}
+</span><span style="color:#e6db74">done;</span><span style="color:#e6db74">&#34;</span>
+    bash -c <span style="color:#e6db74">&#34;</span>$src<span style="color:#e6db74">&#34;</span>
+  <span style="color:#66d9ef">done</span> 
+<span style="color:#f92672">}</span>
 
-sync_with_tags(){
-  image=$1
-  skip=1
-  for tag in $*; do
-    if [ $skip -eq 1 ]; then
-	  skip=0
-    else
+sync_with_tags<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">{</span>
+  image<span style="color:#f92672">=</span>$1
+  skip<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>
+  <span style="color:#66d9ef">for</span> tag in $*; <span style="color:#66d9ef">do</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> $skip -eq <span style="color:#ae81ff">1</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
+	  skip<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>
+    <span style="color:#66d9ef">else</span>
       sync_one $image $tag
-	fi
-  done 
-}
+	<span style="color:#66d9ef">fi</span>
+  <span style="color:#66d9ef">done</span> 
+<span style="color:#f92672">}</span>
 
-sync_after_tag(){
-  image=$1
-  start_tag=$2
-  tags_str=`curl https://${registry}/v2/${repo}/$image/tags/list | jq '.tags' -c | sed 's/\[/\(/g' | sed 's/\]/\)/g' | sed 's/,/ /g'`
-  echo &quot;$image $tags_str&quot;
-  src=&quot;
-sync_one(){
-  docker pull ${registry}/${repo}/\${1}:\${2}
-  docker tag ${registry}/${repo}/\${1}:\${2} docker.io/${docker_repo}/\${1}:\${2}
-  docker push docker.io/${docker_repo}/\${1}:\${2}
-  docker rmi -f ${registry}/${repo}/\${1}:\${2} docker.io/${docker_repo}/\${1}:\${2}
-}
-tags=${tags_str}
-start=0
-for tag in \${tags[@]}; do
-  if [ \$start -eq 1 ]; then
-    sync_one $image \$tag
-  elif [ \$tag == '$start_tag' ]; then
-    start=1
-  fi
-done&quot;
-  bash -c &quot;$src&quot;
-}
+sync_after_tag<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">{</span>
+  image<span style="color:#f92672">=</span>$1
+  start_tag<span style="color:#f92672">=</span>$2
+  tags_str<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>curl https://<span style="color:#e6db74">${</span>registry<span style="color:#e6db74">}</span>/v2/<span style="color:#e6db74">${</span>repo<span style="color:#e6db74">}</span>/$image/tags/list | jq <span style="color:#e6db74">&#39;.tags&#39;</span> -c | sed <span style="color:#e6db74">&#39;s/\[/\(/g&#39;</span> | sed <span style="color:#e6db74">&#39;s/\]/\)/g&#39;</span> | sed <span style="color:#e6db74">&#39;s/,/ /g&#39;</span><span style="color:#e6db74">`</span>
+  echo <span style="color:#e6db74">&#34;</span>$image<span style="color:#e6db74"> </span>$tags_str<span style="color:#e6db74">&#34;</span>
+  src<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">
+</span><span style="color:#e6db74">sync_one(){
+</span><span style="color:#e6db74">  docker pull </span><span style="color:#e6db74">${</span>registry<span style="color:#e6db74">}</span><span style="color:#e6db74">/</span><span style="color:#e6db74">${</span>repo<span style="color:#e6db74">}</span><span style="color:#e6db74">/\${1}:\${2}
+</span><span style="color:#e6db74">  docker tag </span><span style="color:#e6db74">${</span>registry<span style="color:#e6db74">}</span><span style="color:#e6db74">/</span><span style="color:#e6db74">${</span>repo<span style="color:#e6db74">}</span><span style="color:#e6db74">/\${1}:\${2} docker.io/</span><span style="color:#e6db74">${</span>docker_repo<span style="color:#e6db74">}</span><span style="color:#e6db74">/\${1}:\${2}
+</span><span style="color:#e6db74">  docker push docker.io/</span><span style="color:#e6db74">${</span>docker_repo<span style="color:#e6db74">}</span><span style="color:#e6db74">/\${1}:\${2}
+</span><span style="color:#e6db74">  docker rmi -f </span><span style="color:#e6db74">${</span>registry<span style="color:#e6db74">}</span><span style="color:#e6db74">/</span><span style="color:#e6db74">${</span>repo<span style="color:#e6db74">}</span><span style="color:#e6db74">/\${1}:\${2} docker.io/</span><span style="color:#e6db74">${</span>docker_repo<span style="color:#e6db74">}</span><span style="color:#e6db74">/\${1}:\${2}
+</span><span style="color:#e6db74">}
+</span><span style="color:#e6db74">tags=</span><span style="color:#e6db74">${</span>tags_str<span style="color:#e6db74">}</span><span style="color:#e6db74">
+</span><span style="color:#e6db74">start=0
+</span><span style="color:#e6db74">for tag in \${tags[@]}; do
+</span><span style="color:#e6db74">  if [ \$start -eq 1 ]; then
+</span><span style="color:#e6db74">    sync_one </span>$image<span style="color:#e6db74"> \$tag
+</span><span style="color:#e6db74">  elif [ \$tag == &#39;</span>$start_tag<span style="color:#e6db74">&#39; ]; then
+</span><span style="color:#e6db74">    start=1
+</span><span style="color:#e6db74">  fi
+</span><span style="color:#e6db74">done</span><span style="color:#e6db74">&#34;</span>
+  bash -c <span style="color:#e6db74">&#34;</span>$src<span style="color:#e6db74">&#34;</span>
+<span style="color:#f92672">}</span>
 
-get_tags(){
-  image=$1
-  curl https://${registry}/v2/${repo}/$image/tags/list | jq '.tags' -c
-}
+get_tags<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">{</span>
+  image<span style="color:#f92672">=</span>$1
+  curl https://<span style="color:#e6db74">${</span>registry<span style="color:#e6db74">}</span>/v2/<span style="color:#e6db74">${</span>repo<span style="color:#e6db74">}</span>/$image/tags/list | jq <span style="color:#e6db74">&#39;.tags&#39;</span> -c
+<span style="color:#f92672">}</span>
 
-#sync_with_tags etcd 2.0.12 2.0.13 # sync etcd:2.0.12 and etcd:2.0.13
-#sync_after_tag etcd 2.0.8 # sync tag after etcd:2.0.8
-#sync_all_tags etcd hyperkube # sync all tags of etcd and hyperkube
-</code></pre>
-
-<p>脚本中有一些参数需要根据你自己情况修改，可以使用它自带的vim在线修改，也可以在你本地改好在粘贴上去</p>
-
+<span style="color:#75715e">#sync_with_tags etcd 2.0.12 2.0.13 # sync etcd:2.0.12 and etcd:2.0.13</span>
+<span style="color:#75715e">#sync_after_tag etcd 2.0.8 # sync tag after etcd:2.0.8</span>
+<span style="color:#75715e">#sync_all_tags etcd hyperkube # sync all tags of etcd and hyperkube</span>
+</code></pre></div><p>脚本中有一些参数需要根据你自己情况修改，可以使用它自带的vim在线修改，也可以在你本地改好在粘贴上去</p>
 <ul>
 <li><code>docker_repo</code> 改为你的Docker Hub账号组织名</li>
 <li><code>registry</code> 改为被同步镜像所在仓库的域名</li>
 <li><code>repo</code> 改为被同步镜像所在仓库的账号或组织名</li>
 </ul>
-
 <p>在脚本最后，可以调用写好的函数来实现镜像同步，举例：</p>
-
 <ul>
-<li>同步一个镜像中指定的一个或多个tag</li>
+<li>
+<p>同步一个镜像中指定的一个或多个tag</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sync_with_tags etcd 2.0.12 2.0.13 
+</code></pre></div></li>
+<li>
+<p>从某个tag后面的tag开始一直同步到最后（tag顺序按照字母数字来的，不是上传日期；Katacoda 终端用久了会断连，可能处于安全原因考虑，断开之后可以看tag同步到哪一个了，然后执行类似下面的命令从断连的tag开始同步）</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sync_after_tag etcd 2.0.8
+</code></pre></div></li>
+<li>
+<p>同步一个或多个镜像的所有tag</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sync_all_tags etcd hyperkube
+</code></pre></div></li>
 </ul>
-
-<pre><code class="language-bash">  sync_with_tags etcd 2.0.12 2.0.13 
-</code></pre>
-
-<ul>
-<li>从某个tag后面的tag开始一直同步到最后（tag顺序按照字母数字来的，不是上传日期；Katacoda 终端用久了会断连，可能处于安全原因考虑，断开之后可以看tag同步到哪一个了，然后执行类似下面的命令从断连的tag开始同步）</li>
-</ul>
-
-<pre><code class="language-bash">  sync_after_tag etcd 2.0.8
-</code></pre>
-
-<ul>
-<li>同步一个或多个镜像的所有tag</li>
-</ul>
-
-<pre><code class="language-bash">  sync_all_tags etcd hyperkube
-</code></pre>
-
 <p>最后执行脚本</p>
-
-<pre><code class="language-bash">./sync
-</code></pre>
-
-<p>这就开始同步了，Katacoda 服务器在国外，下载 gcr.io 或 quay.io 上那些镜像都很快，上传 Docker Hub 也很快，如果断连了，可以在 Docker Hub 上查最新上传的 tag 是哪个（如：<a href="https://hub.docker.com/r/k8smirror/hyperkube/tags/">https://hub.docker.com/r/k8smirror/hyperkube/tags/</a>  把<code>k8smirror</code>改为你的docker用户名或组织名，<code>hyperkube</code>改为镜像名），然后改脚本，用 <code>sync_after_tag</code> 这个函数继续上传。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">./sync
+</code></pre></div><p>这就开始同步了，Katacoda 服务器在国外，下载 gcr.io 或 quay.io 上那些镜像都很快，上传 Docker Hub 也很快，如果断连了，可以在 Docker Hub 上查最新上传的 tag 是哪个（如：https://hub.docker.com/r/k8smirror/hyperkube/tags/  把<code>k8smirror</code>改为你的docker用户名或组织名，<code>hyperkube</code>改为镜像名），然后改脚本，用 <code>sync_after_tag</code> 这个函数继续上传。</p>
 
             </article>
 
@@ -499,52 +399,28 @@ get_tags(){
                 
             </div>
             
-            
-            
-            
-<div>
-    <section id="datecount">
-        <h4 id="date"> Fri Mar 9, 2018</h4>
-    </section>
-    <h5 id="wc">1300 Words|Read in about 3 Min</h5>
-    <h5 id="tags">Tags: 
-        
-        <a href="https://imroc.io/tags/docker/">docker</a> &nbsp;
-        
-        <a href="https://imroc.io/tags/kubernetes/">kubernetes</a> &nbsp;
-    </h5>
-</div>
-
-            
-            </div>
-            
-			
-               <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-<aside id=comments>
-    <div>
-        <h2> Comments </h2>
-    </div>
-    <div id="container"></div>
-    <link rel="stylesheet" href="https://imroc.io/static/gitment/default.css">
-    <script src="https://imroc.io/static/gitment/gitment.browser.js"></script>
-    <script>
-        var gitment = new Gitment({
-			owner: 'imroc', 
-			repo: 'imroc.github.io', 
-            oauth: {
-				client_id: 'd05b8f959b3111c6fb63',
-				client_secret: 'f30ef76ea0050ed731ace76f7fbf684ae5d28fbc',
-            },
-        })
-        gitment.render('container')
-    </script>
-</aside>
-</div>
-
-			
         </div>
     </div>
-    </section>
+    
+    <div id="gitalk-container"></div>
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+      var gitalk = new Gitalk({
+          clientID: 'd05b8f959b3111c6fb63',
+          clientSecret: 'f30ef76ea0050ed731ace76f7fbf684ae5d28fbc',
+          repo: 'blog',
+          owner: 'imroc',
+          admin: ['imroc'],
+          labels: ['Gitalk'],
+          title: '利用Katacoda免费同步Docker镜像到Docker Hub',
+          createIssueManually: false,
+          id: '',
+          distractionFreeMode: true
+      });
+      gitalk.render('gitalk-container');
+    </script>
+
 </div>
 
     <footer>
@@ -603,7 +479,7 @@ get_tags(){
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.49.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.62.0</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>
@@ -611,15 +487,7 @@ get_tags(){
   </div>
 </footer>
 
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script src="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe-ui-default.min.js"></script>
-<script src="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe.js"></script>
-<script src="https://imroc.io/js/auto-render.min.js"></script>
-<script src="https://imroc.io/js/main.js"></script>
-<script src="https://imroc.io/static/prism/prism.js"></script>
-<script src="https://cdn.staticfile.org/KaTeX/0.7.1/katex.min.js"></script>
-<script> renderMathInElement(document.body); </script>
-
+<script src='/js/bundle.min.879361cd590eb97fa7b7459c2fecb6f66e7b5c798ccdbbad966b1d4d0adce056.js' integrity='sha256-h5NhzVkOuX&#43;nt0WcL&#43;y29m57XHmMzbutlmsdTQrc4FY='></script>
 
 
 

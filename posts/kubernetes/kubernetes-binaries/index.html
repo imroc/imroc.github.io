@@ -23,21 +23,15 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="roc" />
 
-  <meta name="generator" content="Hugo 0.49.2" />
+  <meta name="generator" content="Hugo 0.62.0" />
   <link rel="canonical" href="https://imroc.io/posts/kubernetes/kubernetes-binaries/" />
   <link rel="alternate" href="https://imroc.io/index.xml" type="application/rss+xml" title="roc">
-  <script src="https://cdn.staticfile.org/jquery/1.12.4/jquery.min.js"></script>
-  <link rel="stylesheet" href="https://cdn.staticfile.org/KaTeX/0.7.1/katex.min.css" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" crossorigin="anonymous">
 
-  <link rel="stylesheet" href="https://imroc.io/css/main.css" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
   
-  <link rel="stylesheet" href="https://imroc.io/static/prism/prism.css" />
 
-  <script>
+
+<link rel="stylesheet" href='/css/bundle.min.2971c990ae9e3036a2e09462d93d94829b857b7235a2b5eac8896bdad8a8fdb6.css' integrity='sha256-KXHJkK6eMDai4JRi2T2UgpuFe3I1orXqyIlr2tio/bY='>
+  --><script>
 var _hmt = _hmt || [];
 (function() {
   var hm = document.createElement("script");
@@ -46,56 +40,6 @@ var _hmt = _hmt || [];
   s.parentNode.insertBefore(hm, s);
 })();
 </script>
-
-
-
-<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe.min.css" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.2/default-skin/default-skin.min.css" crossorigin="anonymous" />
-
-
-<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
-
-<div class="pswp__bg"></div>
-
-<div class="pswp__scroll-wrap">
-    
-    <div class="pswp__container">
-      <div class="pswp__item"></div>
-      <div class="pswp__item"></div>
-      <div class="pswp__item"></div>
-    </div>
-    
-    <div class="pswp__ui pswp__ui--hidden">
-    <div class="pswp__top-bar">
-      
-      <div class="pswp__counter"></div>
-      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
-      <button class="pswp__button pswp__button--share" title="Share"></button>
-      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
-      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
-      
-      
-      <div class="pswp__preloader">
-        <div class="pswp__preloader__icn">
-          <div class="pswp__preloader__cut">
-            <div class="pswp__preloader__donut"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
-      <div class="pswp__share-tooltip"></div>
-    </div>
-    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
-    </button>
-    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
-    </button>
-    <div class="pswp__caption">
-      <div class="pswp__caption__center"></div>
-    </div>
-    </div>
-    </div>
-</div>
 
 
 </head>
@@ -246,44 +190,25 @@ var _hmt = _hmt || [];
             <article role="main" class="blog-post" itemprop="articleBody" id="content">
                 
 <aside class="toc">
-  <nav id="TableOfContents">
-<ul>
-<li><a href="#前言">前言</a></li>
-<li><a href="#k8s自身组件下载链接">k8s自身组件下载链接</a></li>
-<li><a href="#etcd下载链接">etcd下载链接</a></li>
-<li><a href="#helm下载链接">helm下载链接</a></li>
-</ul>
-</nav>
+  <nav id="TableOfContents"></nav>
 </aside>
 
 
-                
-
-<h1 id="前言">前言</h1>
-
+                <h1 id="heading">前言</h1>
 <p>由于国内网络的特殊性，安装Kubernetes很多时候会采用二进制方式部署，我将涉及到的二进制利用脚本传到百度云，方便大家下载，脚本开源在：<a href="https://github.com/imroc/k8s_baiduyun_uploader">https://github.com/imroc/k8s_baiduyun_uploader</a>。</p>
-
 <p>Kubernetes在Github的<a href="https://github.com/kubernetes/kubernetes/releases">Release</a>页面其实已经有压缩包下载，但是在国内下载很慢，而且里面并不包含安装所需的程序二进制文件，需要执行里面的<code>./kubernetes/cluster/get-kube-binaries.sh</code>这个脚本去下载得到文件<code>./kubernetes/server/kubernetes-server-linux-amd64.tar.gz</code>，大概三四百兆的样子，然而这在国内并不能直接下载。</p>
-
-<h1 id="k8s自身组件下载链接">k8s自身组件下载链接</h1>
-
+<h1 id="k8s">k8s自身组件下载链接</h1>
 <p>下载地址为百度云，根据版本号组织的目录，文件名保持从官方下载下来时的名字不变：</p>
-
 <ul>
-<li><code>kubernetes.tar.gz</code>: Github Release 页面的压缩包（不含程序二进制）<br /></li>
-<li><code>kubernetes-server-linux-amd64.tar.gz</code>: Kubernetes所需的程序二进制压缩包<br /></li>
+<li><code>kubernetes.tar.gz</code>: Github Release 页面的压缩包（不含程序二进制）</li>
+<li><code>kubernetes-server-linux-amd64.tar.gz</code>: Kubernetes所需的程序二进制压缩包</li>
 </ul>
-
 <p>链接：<a href="https://pan.baidu.com/s/1dFrVjHZ">https://pan.baidu.com/s/1dFrVjHZ</a></p>
-
-<h1 id="etcd下载链接">etcd下载链接</h1>
-
-<p>文件名包含版本号，完全同步自Github的<a href="https://github.com/coreos/etcd/releases">Release</a>页面（国内下载很慢很慢，而且容易失败），所以同步到百度云供大家下载：<br />
+<h1 id="etcd">etcd下载链接</h1>
+<p>文件名包含版本号，完全同步自Github的<a href="https://github.com/coreos/etcd/releases">Release</a>页面（国内下载很慢很慢，而且容易失败），所以同步到百度云供大家下载：<br>
 链接：<a href="https://pan.baidu.com/s/1pLgfDk3">https://pan.baidu.com/s/1pLgfDk3</a></p>
-
-<h1 id="helm下载链接">helm下载链接</h1>
-
-<p>helm是kubernetes包管理工具，二进制文件也是同步至Github的<a href="https://github.com/kubernetes/helm/releases">Release</a>页面：<br />
+<h1 id="helm">helm下载链接</h1>
+<p>helm是kubernetes包管理工具，二进制文件也是同步至Github的<a href="https://github.com/kubernetes/helm/releases">Release</a>页面：<br>
 链接：<a href="https://pan.baidu.com/s/1bpXxhuf">https://pan.baidu.com/s/1bpXxhuf</a></p>
 
             </article>
@@ -319,52 +244,28 @@ var _hmt = _hmt || [];
                 
             </div>
             
-            
-            
-            
-<div>
-    <section id="datecount">
-        <h4 id="date"> Fri Jan 5, 2018</h4>
-    </section>
-    <h5 id="wc">700 Words|Read in about 2 Min</h5>
-    <h5 id="tags">Tags: 
-        
-        <a href="https://imroc.io/tags/docker/">docker</a> &nbsp;
-        
-        <a href="https://imroc.io/tags/kubernetes/">kubernetes</a> &nbsp;
-    </h5>
-</div>
-
-            
-            </div>
-            
-			
-               <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-<aside id=comments>
-    <div>
-        <h2> Comments </h2>
-    </div>
-    <div id="container"></div>
-    <link rel="stylesheet" href="https://imroc.io/static/gitment/default.css">
-    <script src="https://imroc.io/static/gitment/gitment.browser.js"></script>
-    <script>
-        var gitment = new Gitment({
-			owner: 'imroc', 
-			repo: 'imroc.github.io', 
-            oauth: {
-				client_id: 'd05b8f959b3111c6fb63',
-				client_secret: 'f30ef76ea0050ed731ace76f7fbf684ae5d28fbc',
-            },
-        })
-        gitment.render('container')
-    </script>
-</aside>
-</div>
-
-			
         </div>
     </div>
-    </section>
+    
+    <div id="gitalk-container"></div>
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+      var gitalk = new Gitalk({
+          clientID: 'd05b8f959b3111c6fb63',
+          clientSecret: 'f30ef76ea0050ed731ace76f7fbf684ae5d28fbc',
+          repo: 'blog',
+          owner: 'imroc',
+          admin: ['imroc'],
+          labels: ['Gitalk'],
+          title: 'Kubernetes程序二进制下载集合',
+          createIssueManually: false,
+          id: '',
+          distractionFreeMode: true
+      });
+      gitalk.render('gitalk-container');
+    </script>
+
 </div>
 
     <footer>
@@ -423,7 +324,7 @@ var _hmt = _hmt || [];
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.49.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.62.0</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>
@@ -431,15 +332,7 @@ var _hmt = _hmt || [];
   </div>
 </footer>
 
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script src="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe-ui-default.min.js"></script>
-<script src="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe.js"></script>
-<script src="https://imroc.io/js/auto-render.min.js"></script>
-<script src="https://imroc.io/js/main.js"></script>
-<script src="https://imroc.io/static/prism/prism.js"></script>
-<script src="https://cdn.staticfile.org/KaTeX/0.7.1/katex.min.js"></script>
-<script> renderMathInElement(document.body); </script>
-
+<script src='/js/bundle.min.879361cd590eb97fa7b7459c2fecb6f66e7b5c798ccdbbad966b1d4d0adce056.js' integrity='sha256-h5NhzVkOuX&#43;nt0WcL&#43;y29m57XHmMzbutlmsdTQrc4FY='></script>
 
 
 

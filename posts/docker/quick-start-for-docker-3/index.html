@@ -23,21 +23,15 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="roc" />
 
-  <meta name="generator" content="Hugo 0.49.2" />
+  <meta name="generator" content="Hugo 0.62.0" />
   <link rel="canonical" href="https://imroc.io/posts/docker/quick-start-for-docker-3/" />
   <link rel="alternate" href="https://imroc.io/index.xml" type="application/rss+xml" title="roc">
-  <script src="https://cdn.staticfile.org/jquery/1.12.4/jquery.min.js"></script>
-  <link rel="stylesheet" href="https://cdn.staticfile.org/KaTeX/0.7.1/katex.min.css" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" crossorigin="anonymous">
 
-  <link rel="stylesheet" href="https://imroc.io/css/main.css" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
   
-  <link rel="stylesheet" href="https://imroc.io/static/prism/prism.css" />
 
-  <script>
+
+<link rel="stylesheet" href='/css/bundle.min.2971c990ae9e3036a2e09462d93d94829b857b7235a2b5eac8896bdad8a8fdb6.css' integrity='sha256-KXHJkK6eMDai4JRi2T2UgpuFe3I1orXqyIlr2tio/bY='>
+  --><script>
 var _hmt = _hmt || [];
 (function() {
   var hm = document.createElement("script");
@@ -46,56 +40,6 @@ var _hmt = _hmt || [];
   s.parentNode.insertBefore(hm, s);
 })();
 </script>
-
-
-
-<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe.min.css" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.2/default-skin/default-skin.min.css" crossorigin="anonymous" />
-
-
-<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
-
-<div class="pswp__bg"></div>
-
-<div class="pswp__scroll-wrap">
-    
-    <div class="pswp__container">
-      <div class="pswp__item"></div>
-      <div class="pswp__item"></div>
-      <div class="pswp__item"></div>
-    </div>
-    
-    <div class="pswp__ui pswp__ui--hidden">
-    <div class="pswp__top-bar">
-      
-      <div class="pswp__counter"></div>
-      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
-      <button class="pswp__button pswp__button--share" title="Share"></button>
-      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
-      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
-      
-      
-      <div class="pswp__preloader">
-        <div class="pswp__preloader__icn">
-          <div class="pswp__preloader__cut">
-            <div class="pswp__preloader__donut"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
-      <div class="pswp__share-tooltip"></div>
-    </div>
-    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
-    </button>
-    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
-    </button>
-    <div class="pswp__caption">
-      <div class="pswp__caption__center"></div>
-    </div>
-    </div>
-    </div>
-</div>
 
 
 </head>
@@ -243,124 +187,96 @@ var _hmt = _hmt || [];
                 
 <aside class="toc">
   <nav id="TableOfContents">
-<ul>
-<li><a href="#前言">前言</a></li>
-<li><a href="#自带源安装-稳定可靠但非最新版">自带源安装(稳定可靠但非最新版)</a>
-<ul>
-<li>
-<ul>
-<li><a href="#ubuntu">Ubuntu</a></li>
-<li><a href="#centos">CentOS</a></li>
-</ul></li>
-</ul></li>
-<li><a href="#官方源安装-最新版">官方源安装(最新版)</a>
-<ul>
-<li>
-<ul>
-<li><a href="#ubuntu-14-04-16-04">Ubuntu 14.04/16.04</a></li>
-<li><a href="#centos-7">CentOS 7</a></li>
-</ul></li>
-</ul></li>
-<li><a href="#配置加速器">配置加速器</a>
-<ul>
-<li><a href="#阿里云">阿里云</a></li>
-<li><a href="#daocloud">Daocloud</a></li>
-</ul></li>
-</ul>
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#ubuntu">Ubuntu</a></li>
+        <li><a href="#centos">CentOS</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#ubuntu-14041604">Ubuntu 14.04/16.04</a></li>
+        <li><a href="#centos-7">CentOS 7</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li><a href="#heading-4">阿里云</a></li>
+    <li><a href="#daocloud">Daocloud</a></li>
+  </ul>
 </nav>
 </aside>
 
 
-                
-
-<h1 id="前言">前言</h1>
-
+                <h1 id="heading">前言</h1>
 <p>使用docker最常用的系统莫过于ubuntu和centos了，一般有两种方式，一种是直接用系统自带的源安装，另一种是官方的源安装。前者安装方便，但不是最新版，后者是最新版，但在国内安装会比较慢，后面会将快速安装的方法。</p>
-
-<h1 id="自带源安装-稳定可靠但非最新版">自带源安装(稳定可靠但非最新版)</h1>
-
+<h1 id="heading-1">自带源安装(稳定可靠但非最新版)</h1>
 <h3 id="ubuntu">Ubuntu</h3>
-
-<pre><code class="language-sh">sudo apt-get install -y docker
-</code></pre>
-
-<h3 id="centos">CentOS</h3>
-
-<pre><code class="language-sh">sudo yum install -y docker
-</code></pre>
-
-<h1 id="官方源安装-最新版">官方源安装(最新版)</h1>
-
-<p>此方式装的是<code>docker-ce</code>，即docker社区版，利用国内的docker官方源镜像，加速下载安装。<br />
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">sudo apt-get install -y docker
+</code></pre></div><h3 id="centos">CentOS</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">sudo yum install -y docker
+</code></pre></div><h1 id="heading-2">官方源安装(最新版)</h1>
+<p>此方式装的是<code>docker-ce</code>，即docker社区版，利用国内的docker官方源镜像，加速下载安装。<br>
 注：Docker官方文档给出的安装方式会比较慢，因为提供软件源的服务器在国外，下载速度有时慢的像蜗牛，简直不能忍，现在就给大家介绍如何在国内愉快的安装Docker</p>
-
-<h3 id="ubuntu-14-04-16-04">Ubuntu 14.04/16.04</h3>
-
-<pre><code class="language-sh"># step 1: 安装必要的一些系统工具
+<h3 id="ubuntu-14041604">Ubuntu 14.04/16.04</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#75715e"># step 1: 安装必要的一些系统工具</span>
 sudo apt-get update
 sudo apt-get -y install apt-transport-https ca-certificates curl software-properties-common
-# step 2: 安装GPG证书
+<span style="color:#75715e"># step 2: 安装GPG证书</span>
 curl -fsSL http://mirrors.aliyun.com/docker-ce/linux/ubuntu/gpg | sudo apt-key add -
-# Step 3: 写入软件源信息
-sudo add-apt-repository &quot;deb [arch=amd64] http://mirrors.aliyun.com/docker-ce/linux/ubuntu $(lsb_release -cs) stable&quot;
-# Step 4: 更新并安装 Docker-CE
+<span style="color:#75715e"># Step 3: 写入软件源信息</span>
+sudo add-apt-repository <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">deb [arch=amd64] http://mirrors.aliyun.com/docker-ce/linux/ubuntu </span><span style="color:#66d9ef">$(</span>lsb_release -cs<span style="color:#66d9ef">)</span><span style="color:#e6db74"> stable</span><span style="color:#e6db74">&#34;</span>
+<span style="color:#75715e"># Step 4: 更新并安装 Docker-CE</span>
 sudo apt-get -y update
 sudo apt-get -y install docker-ce
 
-# 安装指定版本的Docker-CE:
-# Step 1: 查找Docker-CE的版本:
-# apt-cache madison docker-ce
-#   docker-ce | 17.03.1~ce-0~ubuntu-xenial | http://mirrors.aliyun.com/docker-ce/linux/ubuntu xenial/stable amd64 Packages
-#   docker-ce | 17.03.0~ce-0~ubuntu-xenial | http://mirrors.aliyun.com/docker-ce/linux/ubuntu xenial/stable amd64 Packages
-# Step 2: 安装指定版本的Docker-CE: (VERSION 例如上面的 17.03.1~ce-0~ubuntu-xenial)
-# sudo apt-get -y install docker-ce=[VERSION]
-</code></pre>
-
-<h3 id="centos-7">CentOS 7</h3>
-
-<pre><code class="language-sh"># step 1: 安装必要的一些系统工具
+<span style="color:#75715e"># 安装指定版本的Docker-CE:</span>
+<span style="color:#75715e"># Step 1: 查找Docker-CE的版本:</span>
+<span style="color:#75715e"># apt-cache madison docker-ce</span>
+<span style="color:#75715e">#   docker-ce | 17.03.1~ce-0~ubuntu-xenial | http://mirrors.aliyun.com/docker-ce/linux/ubuntu xenial/stable amd64 Packages</span>
+<span style="color:#75715e">#   docker-ce | 17.03.0~ce-0~ubuntu-xenial | http://mirrors.aliyun.com/docker-ce/linux/ubuntu xenial/stable amd64 Packages</span>
+<span style="color:#75715e"># Step 2: 安装指定版本的Docker-CE: (VERSION 例如上面的 17.03.1~ce-0~ubuntu-xenial)</span>
+<span style="color:#75715e"># sudo apt-get -y install docker-ce=[VERSION]</span>
+</code></pre></div><h3 id="centos-7">CentOS 7</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#75715e"># step 1: 安装必要的一些系统工具</span>
 sudo yum install -y yum-utils device-mapper-persistent-data lvm2
-# Step 2: 添加软件源信息
+<span style="color:#75715e"># Step 2: 添加软件源信息</span>
 sudo yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
-# Step 3: 更新并安装 Docker-CE
+<span style="color:#75715e"># Step 3: 更新并安装 Docker-CE</span>
 sudo yum makecache fast
 sudo yum -y install docker-ce
-# Step 4: 开启Docker服务
+<span style="color:#75715e"># Step 4: 开启Docker服务</span>
 sudo service docker start
 
-# 注意：
-# 官方软件源默认启用了最新的软件，您可以通过编辑软件源的方式获取各个版本的软件包。例如官方并没有将测试版本的软件源置为可用，你可以通过以下方式开启。同理可以开启各种测试版本等。
-# vim /etc/yum.repos.d/docker-ee.repo
-#   将 [docker-ce-test] 下方的 enabled=0 修改为 enabled=1
+<span style="color:#75715e"># 注意：</span>
+<span style="color:#75715e"># 官方软件源默认启用了最新的软件，您可以通过编辑软件源的方式获取各个版本的软件包。例如官方并没有将测试版本的软件源置为可用，你可以通过以下方式开启。同理可以开启各种测试版本等。</span>
+<span style="color:#75715e"># vim /etc/yum.repos.d/docker-ee.repo</span>
+<span style="color:#75715e">#   将 [docker-ce-test] 下方的 enabled=0 修改为 enabled=1</span>
 #
-# 安装指定版本的Docker-CE:
-# Step 1: 查找Docker-CE的版本:
-# yum list docker-ce.x86_64 --showduplicates | sort -r
-#   Loading mirror speeds from cached hostfile
-#   Loaded plugins: branch, fastestmirror, langpacks
-#   docker-ce.x86_64            17.03.1.ce-1.el7.centos            docker-ce-stable
-#   docker-ce.x86_64            17.03.1.ce-1.el7.centos            @docker-ce-stable
-#   docker-ce.x86_64            17.03.0.ce-1.el7.centos            docker-ce-stable
-#   Available Packages
-# Step2 : 安装指定版本的Docker-CE: (VERSION 例如上面的 17.03.0.ce.1-1.el7.centos)
-# sudo yum -y install docker-ce-[VERSION]
-</code></pre>
-
-<h1 id="配置加速器">配置加速器</h1>
-
+<span style="color:#75715e"># 安装指定版本的Docker-CE:</span>
+<span style="color:#75715e"># Step 1: 查找Docker-CE的版本:</span>
+<span style="color:#75715e"># yum list docker-ce.x86_64 --showduplicates | sort -r</span>
+<span style="color:#75715e">#   Loading mirror speeds from cached hostfile</span>
+<span style="color:#75715e">#   Loaded plugins: branch, fastestmirror, langpacks</span>
+<span style="color:#75715e">#   docker-ce.x86_64            17.03.1.ce-1.el7.centos            docker-ce-stable</span>
+<span style="color:#75715e">#   docker-ce.x86_64            17.03.1.ce-1.el7.centos            @docker-ce-stable</span>
+<span style="color:#75715e">#   docker-ce.x86_64            17.03.0.ce-1.el7.centos            docker-ce-stable</span>
+<span style="color:#75715e">#   Available Packages</span>
+<span style="color:#75715e"># Step2 : 安装指定版本的Docker-CE: (VERSION 例如上面的 17.03.0.ce.1-1.el7.centos)</span>
+<span style="color:#75715e"># sudo yum -y install docker-ce-[VERSION]</span>
+</code></pre></div><h1 id="heading-3">配置加速器</h1>
 <p>比较常用的镜像加速器是阿里云和Daocloud的，都是免费的，不过加速器地址并不是公有的，每个人不一样，要获取你自己的加速地址前提是需要登录。</p>
-
-<h2 id="阿里云">阿里云</h2>
-
+<h2 id="heading-4">阿里云</h2>
 <p>登录后进入 <a href="https://cr.console.aliyun.com/#/accelerator">https://cr.console.aliyun.com/#/accelerator</a></p>
-
-<p><img src="https://res.cloudinary.com/imroc/image/upload/v1513735608/blog/docker/aliyun-accelerator.png" alt="aliyun" /></p>
-
+<p><img src="https://res.cloudinary.com/imroc/image/upload/v1513735608/blog/docker/aliyun-accelerator.png" alt="aliyun"></p>
 <h2 id="daocloud">Daocloud</h2>
-
 <p>登录后进入 <a href="https://www.daocloud.io/mirror#accelerator-doc">https://www.daocloud.io/mirror#accelerator-doc</a></p>
-
-<p><img src="https://res.cloudinary.com/imroc/image/upload/v1513734634/blog/docker/daocloud-accelerator.png" alt="daocloud" /></p>
+<p><img src="https://res.cloudinary.com/imroc/image/upload/v1513734634/blog/docker/daocloud-accelerator.png" alt="daocloud"></p>
 
             </article>
 
@@ -393,52 +309,28 @@ sudo service docker start
                 
             </div>
             
-            
-            
-            
-<div>
-    <section id="datecount">
-        <h4 id="date"> Tue Dec 19, 2017</h4>
-    </section>
-    <h5 id="wc">900 Words|Read in about 2 Min</h5>
-    <h5 id="tags">Tags: 
-        
-        <a href="https://imroc.io/tags/docker/">docker</a> &nbsp;
-        
-        <a href="https://imroc.io/tags/docker%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/">Docker快速入门</a> &nbsp;
-    </h5>
-</div>
-
-            
-            </div>
-            
-			
-               <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-<aside id=comments>
-    <div>
-        <h2> Comments </h2>
-    </div>
-    <div id="container"></div>
-    <link rel="stylesheet" href="https://imroc.io/static/gitment/default.css">
-    <script src="https://imroc.io/static/gitment/gitment.browser.js"></script>
-    <script>
-        var gitment = new Gitment({
-			owner: 'imroc', 
-			repo: 'imroc.github.io', 
-            oauth: {
-				client_id: 'd05b8f959b3111c6fb63',
-				client_secret: 'f30ef76ea0050ed731ace76f7fbf684ae5d28fbc',
-            },
-        })
-        gitment.render('container')
-    </script>
-</aside>
-</div>
-
-			
         </div>
     </div>
-    </section>
+    
+    <div id="gitalk-container"></div>
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+      var gitalk = new Gitalk({
+          clientID: 'd05b8f959b3111c6fb63',
+          clientSecret: 'f30ef76ea0050ed731ace76f7fbf684ae5d28fbc',
+          repo: 'blog',
+          owner: 'imroc',
+          admin: ['imroc'],
+          labels: ['Gitalk'],
+          title: 'Docker快速入门（三）在国内如何快速安装Docker与镜像加速器配置',
+          createIssueManually: false,
+          id: '',
+          distractionFreeMode: true
+      });
+      gitalk.render('gitalk-container');
+    </script>
+
 </div>
 
     <footer>
@@ -497,7 +389,7 @@ sudo service docker start
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.49.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.62.0</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>
@@ -505,15 +397,7 @@ sudo service docker start
   </div>
 </footer>
 
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script src="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe-ui-default.min.js"></script>
-<script src="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe.js"></script>
-<script src="https://imroc.io/js/auto-render.min.js"></script>
-<script src="https://imroc.io/js/main.js"></script>
-<script src="https://imroc.io/static/prism/prism.js"></script>
-<script src="https://cdn.staticfile.org/KaTeX/0.7.1/katex.min.js"></script>
-<script> renderMathInElement(document.body); </script>
-
+<script src='/js/bundle.min.879361cd590eb97fa7b7459c2fecb6f66e7b5c798ccdbbad966b1d4d0adce056.js' integrity='sha256-h5NhzVkOuX&#43;nt0WcL&#43;y29m57XHmMzbutlmsdTQrc4FY='></script>
 
 
 

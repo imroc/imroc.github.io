@@ -23,21 +23,15 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="roc" />
 
-  <meta name="generator" content="Hugo 0.49.2" />
+  <meta name="generator" content="Hugo 0.62.0" />
   <link rel="canonical" href="https://imroc.io/posts/geek/oh-my-zsh/" />
   <link rel="alternate" href="https://imroc.io/index.xml" type="application/rss+xml" title="roc">
-  <script src="https://cdn.staticfile.org/jquery/1.12.4/jquery.min.js"></script>
-  <link rel="stylesheet" href="https://cdn.staticfile.org/KaTeX/0.7.1/katex.min.css" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" crossorigin="anonymous">
 
-  <link rel="stylesheet" href="https://imroc.io/css/main.css" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
   
-  <link rel="stylesheet" href="https://imroc.io/static/prism/prism.css" />
 
-  <script>
+
+<link rel="stylesheet" href='/css/bundle.min.2971c990ae9e3036a2e09462d93d94829b857b7235a2b5eac8896bdad8a8fdb6.css' integrity='sha256-KXHJkK6eMDai4JRi2T2UgpuFe3I1orXqyIlr2tio/bY='>
+  --><script>
 var _hmt = _hmt || [];
 (function() {
   var hm = document.createElement("script");
@@ -46,56 +40,6 @@ var _hmt = _hmt || [];
   s.parentNode.insertBefore(hm, s);
 })();
 </script>
-
-
-
-<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe.min.css" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.2/default-skin/default-skin.min.css" crossorigin="anonymous" />
-
-
-<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
-
-<div class="pswp__bg"></div>
-
-<div class="pswp__scroll-wrap">
-    
-    <div class="pswp__container">
-      <div class="pswp__item"></div>
-      <div class="pswp__item"></div>
-      <div class="pswp__item"></div>
-    </div>
-    
-    <div class="pswp__ui pswp__ui--hidden">
-    <div class="pswp__top-bar">
-      
-      <div class="pswp__counter"></div>
-      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
-      <button class="pswp__button pswp__button--share" title="Share"></button>
-      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
-      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
-      
-      
-      <div class="pswp__preloader">
-        <div class="pswp__preloader__icn">
-          <div class="pswp__preloader__cut">
-            <div class="pswp__preloader__donut"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
-      <div class="pswp__share-tooltip"></div>
-    </div>
-    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
-    </button>
-    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
-    </button>
-    <div class="pswp__caption">
-      <div class="pswp__caption__center"></div>
-    </div>
-    </div>
-    </div>
-</div>
 
 
 </head>
@@ -286,63 +230,39 @@ var _hmt = _hmt || [];
                 
 <aside class="toc">
   <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li>
-<ul>
-<li><a href="#安装">安装</a></li>
-<li><a href="#更改系统默认-shell">更改系统默认 shell</a></li>
-<li><a href="#更改zsh配置文件">更改zsh配置文件</a></li>
-<li><a href="#修改主题">修改主题</a></li>
-<li><a href="#配置插件">配置插件</a></li>
-</ul></li>
-</ul></li>
-</ul>
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#heading">安装</a></li>
+        <li><a href="#-shell">更改系统默认 shell</a></li>
+        <li><a href="#zsh">更改zsh配置文件</a></li>
+        <li><a href="#heading-1">修改主题</a></li>
+        <li><a href="#heading-2">配置插件</a></li>
+      </ul>
+    </li>
+  </ul>
 </nav>
 </aside>
 
 
-                
-
-<p>shell 有多种，大多数人接触比较多的是 bash， 不管是 mac 还是各个 linux 发行版，默认的 shell 基本都是 bash，虽然 bash 功能已经丰富了，但对于极客们来说，界面不够炫，提示功能也不够强大。而 zsh 功能及其强大，只是配置过于复杂，后来就有了 oh-my-zsh 开源项目，配置难度大大降低。</p>
-
+                <p>shell 有多种，大多数人接触比较多的是 bash， 不管是 mac 还是各个 linux 发行版，默认的 shell 基本都是 bash，虽然 bash 功能已经丰富了，但对于极客们来说，界面不够炫，提示功能也不够强大。而 zsh 功能及其强大，只是配置过于复杂，后来就有了 oh-my-zsh 开源项目，配置难度大大降低。</p>
 <p>Github地址: <a href="https://github.com/robbyrussell/oh-my-zsh">https://github.com/robbyrussell/oh-my-zsh</a></p>
-
-<h3 id="安装">安装</h3>
-
-<pre><code class="language-bash">sh -c &quot;$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)&quot;
-</code></pre>
-
-<h3 id="更改系统默认-shell">更改系统默认 shell</h3>
-
-<pre><code class="language-bash">chsh -s /bin/zsh
-</code></pre>
-
-<h3 id="更改zsh配置文件">更改zsh配置文件</h3>
-
-<pre><code class="language-bash">vim ~/.zshrc
-</code></pre>
-
-<h3 id="修改主题">修改主题</h3>
-
-<pre><code class="language-bash">ZSH_THEME=&quot;robbyrussell&quot;
-</code></pre>
-
-<p>默认的 <code>robbyrussell</code> 主题也挺好看
-<img src="https://res.cloudinary.com/imroc/image/upload/v1539969862/blog/geek/zsh.png" alt="zsh" />
+<h3 id="heading">安装</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sh -c <span style="color:#e6db74">&#34;</span><span style="color:#66d9ef">$(</span>curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh<span style="color:#66d9ef">)</span><span style="color:#e6db74">&#34;</span>
+</code></pre></div><h3 id="-shell">更改系统默认 shell</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">chsh -s /bin/zsh
+</code></pre></div><h3 id="zsh">更改zsh配置文件</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">vim ~/.zshrc
+</code></pre></div><h3 id="heading-1">修改主题</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">ZSH_THEME<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;robbyrussell&#34;</span>
+</code></pre></div><p>默认的 <code>robbyrussell</code> 主题也挺好看
+<img src="https://res.cloudinary.com/imroc/image/upload/v1539969862/blog/geek/zsh.png" alt="zsh">
 更多主题看过来： <a href="https://github.com/robbyrussell/oh-my-zsh/wiki/Themes">https://github.com/robbyrussell/oh-my-zsh/wiki/Themes</a></p>
-
-<h3 id="配置插件">配置插件</h3>
-
+<h3 id="heading-2">配置插件</h3>
 <p>oh-my-zsh 还支持插件，插件存放目录为：</p>
-
-<pre><code class="language-bash">~/.oh-my-zsh/plugins
-</code></pre>
-
-<p>这个目录中每个子目录都是一个插件，目录名即为插件名，默认不开启，需要在 <code>~/.zshrc</code> 中该配置开启，比如:</p>
-
-<pre><code class="language-bash">plugins=(
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">~/.oh-my-zsh/plugins
+</code></pre></div><p>这个目录中每个子目录都是一个插件，目录名即为插件名，默认不开启，需要在 <code>~/.zshrc</code> 中该配置开启，比如:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">plugins<span style="color:#f92672">=</span><span style="color:#f92672">(</span>
   git
   git-flow
   docker
@@ -350,11 +270,8 @@ var _hmt = _hmt || [];
   brew
   npm
   helm
-)
-</code></pre>
-
-<p>这些插件可以给你常用的命令做用法提示，使用 tab 键触发。我这里再推荐另外三个不是内置的插件，需要将它们单独下载到 <code>~/.oh-my-zsh/plugins</code> 并且加到上面的 plugins 配置列表中以启用插件：</p>
-
+<span style="color:#f92672">)</span>
+</code></pre></div><p>这些插件可以给你常用的命令做用法提示，使用 tab 键触发。我这里再推荐另外三个不是内置的插件，需要将它们单独下载到 <code>~/.oh-my-zsh/plugins</code> 并且加到上面的 plugins 配置列表中以启用插件：</p>
 <table>
 <thead>
 <tr>
@@ -363,20 +280,17 @@ var _hmt = _hmt || [];
 <th>地址</th>
 </tr>
 </thead>
-
 <tbody>
 <tr>
 <td>zsh-autosuggestions</td>
 <td>自动提示输入提示</td>
 <td><a href="https://github.com/zsh-users/zsh-autosuggestions">https://github.com/zsh-users/zsh-autosuggestions</a></td>
 </tr>
-
 <tr>
 <td>zsh-syntax-highlighting</td>
 <td>高亮命令输入</td>
 <td><a href="https://github.com/zsh-users/zsh-syntax-highlighting">https://github.com/zsh-users/zsh-syntax-highlighting</a></td>
 </tr>
-
 <tr>
 <td>zsh-history-substring-search</td>
 <td>查找匹配前缀的历史输入</td>
@@ -384,23 +298,14 @@ var _hmt = _hmt || [];
 </tr>
 </tbody>
 </table>
-
 <p><code>zsh-autosuggestions</code> 默认使用方向右键来将建议的历史填充到命令行输入，按这个键需要挪下右手，不方便，可以映射下，我这里使用 <code>ctrl+space</code></p>
-
-<pre><code class="language-bash">bindkey '^ ' autosuggest-accept
-</code></pre>
-
-<p>再给 <code>zsh-history-substring-search</code> 绑下快捷键，上下翻匹配输入前缀的历史输入，我这里使用 <code>ctrl+n</code> 和 <code>ctrl+p</code></p>
-
-<pre><code class="language-bash">bindkey -M emacs '^P' history-substring-search-up
-bindkey -M emacs '^N' history-substring-search-down
-</code></pre>
-
-<p><strong>注:</strong> 以上插件的快捷键绑定的配置写在 <code>~/.zshrc</code> 中 <code>source $ZSH/oh-my-zsh.sh</code> 这句下面的位置</p>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">bindkey <span style="color:#e6db74">&#39;^ &#39;</span> autosuggest-accept
+</code></pre></div><p>再给 <code>zsh-history-substring-search</code> 绑下快捷键，上下翻匹配输入前缀的历史输入，我这里使用 <code>ctrl+n</code> 和 <code>ctrl+p</code></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">bindkey -M emacs <span style="color:#e6db74">&#39;^P&#39;</span> history-substring-search-up
+bindkey -M emacs <span style="color:#e6db74">&#39;^N&#39;</span> history-substring-search-down
+</code></pre></div><p><strong>注:</strong> 以上插件的快捷键绑定的配置写在 <code>~/.zshrc</code> 中 <code>source $ZSH/oh-my-zsh.sh</code> 这句下面的位置</p>
 <p>使用效果演示:</p>
-
-<p><img src="https://res.cloudinary.com/imroc/image/upload/v1539969883/blog/geek/zsh_demo.gif" alt="zsh demo" /></p>
+<p><img src="https://res.cloudinary.com/imroc/image/upload/v1539969883/blog/geek/zsh_demo.gif" alt="zsh demo"></p>
 
             </article>
 
@@ -420,50 +325,28 @@ bindkey -M emacs '^N' history-substring-search-down
                  
             </div>
             
-            
-            
-            
-<div>
-    <section id="datecount">
-        <h4 id="date"> Sat Oct 20, 2018</h4>
-    </section>
-    <h5 id="wc">600 Words|Read in about 2 Min</h5>
-    <h5 id="tags">Tags: 
-        
-        <a href="https://imroc.io/tags/geek/">geek</a> &nbsp;
-    </h5>
-</div>
-
-            
-            </div>
-            
-			
-               <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-<aside id=comments>
-    <div>
-        <h2> Comments </h2>
-    </div>
-    <div id="container"></div>
-    <link rel="stylesheet" href="https://imroc.io/static/gitment/default.css">
-    <script src="https://imroc.io/static/gitment/gitment.browser.js"></script>
-    <script>
-        var gitment = new Gitment({
-			owner: 'imroc', 
-			repo: 'imroc.github.io', 
-            oauth: {
-				client_id: 'd05b8f959b3111c6fb63',
-				client_secret: 'f30ef76ea0050ed731ace76f7fbf684ae5d28fbc',
-            },
-        })
-        gitment.render('container')
-    </script>
-</aside>
-</div>
-
-			
         </div>
     </div>
-    </section>
+    
+    <div id="gitalk-container"></div>
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+      var gitalk = new Gitalk({
+          clientID: 'd05b8f959b3111c6fb63',
+          clientSecret: 'f30ef76ea0050ed731ace76f7fbf684ae5d28fbc',
+          repo: 'blog',
+          owner: 'imroc',
+          admin: ['imroc'],
+          labels: ['Gitalk'],
+          title: '极客工具之 oh-my-zsh',
+          createIssueManually: false,
+          id: '',
+          distractionFreeMode: true
+      });
+      gitalk.render('gitalk-container');
+    </script>
+
 </div>
 
     <footer>
@@ -522,7 +405,7 @@ bindkey -M emacs '^N' history-substring-search-down
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.49.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.62.0</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>
@@ -530,15 +413,7 @@ bindkey -M emacs '^N' history-substring-search-down
   </div>
 </footer>
 
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script src="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe-ui-default.min.js"></script>
-<script src="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe.js"></script>
-<script src="https://imroc.io/js/auto-render.min.js"></script>
-<script src="https://imroc.io/js/main.js"></script>
-<script src="https://imroc.io/static/prism/prism.js"></script>
-<script src="https://cdn.staticfile.org/KaTeX/0.7.1/katex.min.js"></script>
-<script> renderMathInElement(document.body); </script>
-
+<script src='/js/bundle.min.879361cd590eb97fa7b7459c2fecb6f66e7b5c798ccdbbad966b1d4d0adce056.js' integrity='sha256-h5NhzVkOuX&#43;nt0WcL&#43;y29m57XHmMzbutlmsdTQrc4FY='></script>
 
 
 

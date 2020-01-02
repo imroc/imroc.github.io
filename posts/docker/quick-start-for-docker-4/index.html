@@ -23,21 +23,15 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="roc" />
 
-  <meta name="generator" content="Hugo 0.49.2" />
+  <meta name="generator" content="Hugo 0.62.0" />
   <link rel="canonical" href="https://imroc.io/posts/docker/quick-start-for-docker-4/" />
   <link rel="alternate" href="https://imroc.io/index.xml" type="application/rss+xml" title="roc">
-  <script src="https://cdn.staticfile.org/jquery/1.12.4/jquery.min.js"></script>
-  <link rel="stylesheet" href="https://cdn.staticfile.org/KaTeX/0.7.1/katex.min.css" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" crossorigin="anonymous">
 
-  <link rel="stylesheet" href="https://imroc.io/css/main.css" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
   
-  <link rel="stylesheet" href="https://imroc.io/static/prism/prism.css" />
 
-  <script>
+
+<link rel="stylesheet" href='/css/bundle.min.2971c990ae9e3036a2e09462d93d94829b857b7235a2b5eac8896bdad8a8fdb6.css' integrity='sha256-KXHJkK6eMDai4JRi2T2UgpuFe3I1orXqyIlr2tio/bY='>
+  --><script>
 var _hmt = _hmt || [];
 (function() {
   var hm = document.createElement("script");
@@ -46,56 +40,6 @@ var _hmt = _hmt || [];
   s.parentNode.insertBefore(hm, s);
 })();
 </script>
-
-
-
-<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe.min.css" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.2/default-skin/default-skin.min.css" crossorigin="anonymous" />
-
-
-<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
-
-<div class="pswp__bg"></div>
-
-<div class="pswp__scroll-wrap">
-    
-    <div class="pswp__container">
-      <div class="pswp__item"></div>
-      <div class="pswp__item"></div>
-      <div class="pswp__item"></div>
-    </div>
-    
-    <div class="pswp__ui pswp__ui--hidden">
-    <div class="pswp__top-bar">
-      
-      <div class="pswp__counter"></div>
-      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
-      <button class="pswp__button pswp__button--share" title="Share"></button>
-      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
-      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
-      
-      
-      <div class="pswp__preloader">
-        <div class="pswp__preloader__icn">
-          <div class="pswp__preloader__cut">
-            <div class="pswp__preloader__donut"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
-      <div class="pswp__share-tooltip"></div>
-    </div>
-    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
-    </button>
-    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
-    </button>
-    <div class="pswp__caption">
-      <div class="pswp__caption__center"></div>
-    </div>
-    </div>
-    </div>
-</div>
 
 
 </head>
@@ -243,214 +187,153 @@ var _hmt = _hmt || [];
                 
 <aside class="toc">
   <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li>
-<ul>
-<li><a href="#列出机器上的镜像">列出机器上的镜像</a></li>
-<li><a href="#拉取镜像">拉取镜像</a></li>
-<li><a href="#上传镜像">上传镜像</a></li>
-<li><a href="#删除镜像">删除镜像</a></li>
-<li><a href="#镜像tar包保存与载入">镜像tar包保存与载入</a></li>
-<li><a href="#列出机器上的容器">列出机器上的容器</a>
-<ul>
-<li>
-<ul>
-<li><a href="#1-查看正在运行的">1. 查看正在运行的</a></li>
-<li><a href="#2-查看所有的-包含已经停止并且没有删除的容器">2. 查看所有的 (包含已经停止并且没有删除的容器)</a></li>
-</ul></li>
-</ul></li>
-<li><a href="#启动容器">启动容器</a></li>
-<li><a href="#停止容器">停止容器</a></li>
-<li><a href="#删除容器">删除容器</a></li>
-<li><a href="#进入已运行的容器内部-进入容器内的命令行操作">进入已运行的容器内部 (进入容器内的命令行操作)</a></li>
-<li><a href="#查看后台运行容器的标准输出">查看后台运行容器的标准输出</a></li>
-<li><a href="#查看容器内运行的进程">查看容器内运行的进程</a></li>
-<li><a href="#容器与宿主机之间文件拷贝">容器与宿主机之间文件拷贝</a></li>
-<li><a href="#查看容器或镜像详细信息">查看容器或镜像详细信息</a></li>
-</ul></li>
-</ul></li>
-</ul>
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#heading">列出机器上的镜像</a></li>
+        <li><a href="#heading-1">拉取镜像</a></li>
+        <li><a href="#heading-2">上传镜像</a></li>
+        <li><a href="#heading-3">删除镜像</a></li>
+        <li><a href="#tar">镜像tar包保存与载入</a></li>
+        <li><a href="#heading-4">列出机器上的容器</a></li>
+        <li><a href="#heading-5">启动容器</a></li>
+        <li><a href="#heading-6">停止容器</a></li>
+        <li><a href="#heading-7">删除容器</a></li>
+        <li><a href="#-">进入已运行的容器内部 (进入容器内的命令行操作)</a></li>
+        <li><a href="#heading-8">查看后台运行容器的标准输出</a></li>
+        <li><a href="#heading-9">查看容器内运行的进程</a></li>
+        <li><a href="#heading-10">容器与宿主机之间文件拷贝</a></li>
+        <li><a href="#heading-11">查看容器或镜像详细信息</a></li>
+      </ul>
+    </li>
+  </ul>
 </nav>
 </aside>
 
 
-                
+                <h3 id="heading">列出机器上的镜像</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">docker images
+</code></pre></div><p><img src="https://res.cloudinary.com/imroc/image/upload/v1513675136/blog/docker/docker-images.png" alt="docker images"></p>
+<h3 id="heading-1">拉取镜像</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">docker pull openjdk <span style="color:#75715e"># 等同于 docker pull openjdk:latest</span>
 
-<h3 id="列出机器上的镜像">列出机器上的镜像</h3>
+docker pull openjdk:jre-slim <span style="color:#75715e"># 指定了tag</span>
 
-<pre><code class="language-sh">docker images
-</code></pre>
+docker pull hub.imroc.io:5000/imroc/myapp:1.2 <span style="color:#75715e"># 拉取私有仓库的镜像</span>
+</code></pre></div><h3 id="heading-2">上传镜像</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">docker push imroc/myapp:1atest <span style="color:#75715e"># 上传到Docker Hub公有仓库</span>
 
-<p><img src="https://res.cloudinary.com/imroc/image/upload/v1513675136/blog/docker/docker-images.png" alt="docker images" /></p>
-
-<h3 id="拉取镜像">拉取镜像</h3>
-
-<pre><code class="language-sh">docker pull openjdk # 等同于 docker pull openjdk:latest
-
-docker pull openjdk:jre-slim # 指定了tag
-
-docker pull hub.imroc.io:5000/imroc/myapp:1.2 # 拉取私有仓库的镜像
-</code></pre>
-
-<h3 id="上传镜像">上传镜像</h3>
-
-<pre><code class="language-sh">docker push imroc/myapp:1atest # 上传到Docker Hub公有仓库
-
-docker push hub.imroc.io:5000/imroc/myqpp:1.2 # 上传到私有仓库
-</code></pre>
-
-<h3 id="删除镜像">删除镜像</h3>
-
-<pre><code class="language-sh"># 删除指定名称的镜像
+docker push hub.imroc.io:5000/imroc/myqpp:1.2 <span style="color:#75715e"># 上传到私有仓库</span>
+</code></pre></div><h3 id="heading-3">删除镜像</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#75715e"># 删除指定名称的镜像</span>
 docker rmi imroc/myapp:latest
 
-# 删除没有tag的镜像（比如每次编译新镜像都会打latest这个tag，导致旧的latest镜像没了tag）
-docker rmi `docker images -f &quot;dangling=true&quot; -q`
+<span style="color:#75715e"># 删除没有tag的镜像（比如每次编译新镜像都会打latest这个tag，导致旧的latest镜像没了tag）</span>
+docker rmi <span style="color:#e6db74">`</span>docker images -f <span style="color:#e6db74">&#34;dangling=true&#34;</span> -q<span style="color:#e6db74">`</span>
 
-# 删除所有镜像
-docker rmi `docker images -q`
-</code></pre>
-
-<h3 id="镜像tar包保存与载入">镜像tar包保存与载入</h3>
-
+<span style="color:#75715e"># 删除所有镜像</span>
+docker rmi <span style="color:#e6db74">`</span>docker images -q<span style="color:#e6db74">`</span>
+</code></pre></div><h3 id="tar">镜像tar包保存与载入</h3>
 <p>在有些情况下，我们无法拉取镜像，比如网络原因或者没有私有仓库，这时可以将镜像保存为tar包文件，拷到其它机器上然后载入到docker里，然后就能愉快的使用镜像了</p>
-
-<pre><code class="language-sh"># 保存
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#75715e"># 保存</span>
 docker save –o ./myapp.tar myapp:latest
 
-# 载入
+<span style="color:#75715e"># 载入</span>
 docker load —i myapp.tar
-</code></pre>
-
-<h3 id="列出机器上的容器">列出机器上的容器</h3>
-
-<h5 id="1-查看正在运行的">1. 查看正在运行的</h5>
-
-<pre><code class="language-sh">docker ps
-</code></pre>
-
-<p><img src="https://res.cloudinary.com/imroc/image/upload/v1513687714/blog/docker/docker-ps.png" alt="docker ps" /></p>
-
-<h5 id="2-查看所有的-包含已经停止并且没有删除的容器">2. 查看所有的 (包含已经停止并且没有删除的容器)</h5>
-
-<pre><code class="language-sh">docker ps -a
-</code></pre>
-
-<p><img src="https://res.cloudinary.com/imroc/image/upload/v1513688020/blog/docker/docker-ps-a.png" alt="docker ps -a" /></p>
-
-<h3 id="启动容器">启动容器</h3>
-
-<pre><code class="language-sh"># 前台运行，指定镜像为ubuntu，并指定要运行的是bash命令行
+</code></pre></div><h3 id="heading-4">列出机器上的容器</h3>
+<h5 id="1-">1. 查看正在运行的</h5>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">docker ps
+</code></pre></div><p><img src="https://res.cloudinary.com/imroc/image/upload/v1513687714/blog/docker/docker-ps.png" alt="docker ps"></p>
+<h5 id="2--">2. 查看所有的 (包含已经停止并且没有删除的容器)</h5>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">docker ps -a
+</code></pre></div><p><img src="https://res.cloudinary.com/imroc/image/upload/v1513688020/blog/docker/docker-ps-a.png" alt="docker ps -a"></p>
+<h3 id="heading-5">启动容器</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#75715e"># 前台运行，指定镜像为ubuntu，并指定要运行的是bash命令行</span>
 docker run -it ubuntu /bin/bash 
 
-# 后台运行
+<span style="color:#75715e"># 后台运行</span>
 docker run -d imroc/myapp:1.2 
 
-# 后台运行，如果程序挂掉就自动重启
+<span style="color:#75715e"># 后台运行，如果程序挂掉就自动重启</span>
 docker run -d --restart always imroc/myapp:1.2 
 
-# 给容器起别名（方便后续命令操作容器）
+<span style="color:#75715e"># 给容器起别名（方便后续命令操作容器）</span>
 docker run --name app imroc/myapp:1.2 
 
-# 映射宿主机5000端口到容器的80端口，
-# 即访问机器的5000端口相当于访问容器的80端口
+<span style="color:#75715e"># 映射宿主机5000端口到容器的80端口，</span>
+<span style="color:#75715e"># 即访问机器的5000端口相当于访问容器的80端口</span>
 docker run -p 5000:80 imroc/myapp:1.2 
 
-# 挂载当前目录的配置文件到容器里
+<span style="color:#75715e"># 挂载当前目录的配置文件到容器里</span>
 docker run -v $PWD:/config.yaml:/app/config.yaml imroc/myapp:1.2 
 
-# 当容器停止就将其删除
+<span style="color:#75715e"># 当容器停止就将其删除</span>
 docker run --rm imroc/myapp:1.2
 
-# 连接别名为mysql的容器，使得该容器
-# 可以通过db这个地址访问mysql容器（修改hosts文件）
+<span style="color:#75715e"># 连接别名为mysql的容器，使得该容器</span>
+<span style="color:#75715e"># 可以通过db这个地址访问mysql容器（修改hosts文件）</span>
 docker run -link mysql:db imroc/myapp
 
-# 默认会把所有标准输出都存到文件，
-# 如果输出量很大，长时间运行会很
-# 占硬盘空间，可以设置只存文件最
-# 新的一部分内容
-docker run --log-opt max-size=10m app
-</code></pre>
-
-<h3 id="停止容器">停止容器</h3>
-
-<pre><code class="language-sh"># 通过容器别名
+<span style="color:#75715e"># 默认会把所有标准输出都存到文件，</span>
+<span style="color:#75715e"># 如果输出量很大，长时间运行会很</span>
+<span style="color:#75715e"># 占硬盘空间，可以设置只存文件最</span>
+<span style="color:#75715e"># 新的一部分内容</span>
+docker run --log-opt max-size<span style="color:#f92672">=</span>10m app
+</code></pre></div><h3 id="heading-6">停止容器</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#75715e"># 通过容器别名</span>
 docker stop app
 
-# 通过容器id
+<span style="color:#75715e"># 通过容器id</span>
 docker stop c62874e3750a
 
-# 限定停止超时时间(单位：秒)
-# 默认的stop是发送SIGTERM信号等待程序停止，
-# 如果超过10秒还没停止才发送SIGKILL信号强制kill进程，
-# 通过 -t 参数可以改变默认超时时间
-docker stop -t 20 app
+<span style="color:#75715e"># 限定停止超时时间(单位：秒)</span>
+<span style="color:#75715e"># 默认的stop是发送SIGTERM信号等待程序停止，</span>
+<span style="color:#75715e"># 如果超过10秒还没停止才发送SIGKILL信号强制kill进程，</span>
+<span style="color:#75715e"># 通过 -t 参数可以改变默认超时时间</span>
+docker stop -t <span style="color:#ae81ff">20</span> app
 
-# 强制停止容器(直接发送SIGKILL信号)
+<span style="color:#75715e"># 强制停止容器(直接发送SIGKILL信号)</span>
 docker kill app
-</code></pre>
-
-<h3 id="删除容器">删除容器</h3>
-
-<pre><code class="language-sh"># 通过别名删除
+</code></pre></div><h3 id="heading-7">删除容器</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#75715e"># 通过别名删除</span>
 docker rm app
 
-# 通过id删除
+<span style="color:#75715e"># 通过id删除</span>
 docker rm 4a19c300e0c0
 
-# 删除全部容器
-docker rm $(docker ps -a -q)
+<span style="color:#75715e"># 删除全部容器</span>
+docker rm <span style="color:#66d9ef">$(</span>docker ps -a -q<span style="color:#66d9ef">)</span>
 
-# 删除已停止的容器
-docker rm $(docker ps -f status=exited -q)
-</code></pre>
-
-<h3 id="进入已运行的容器内部-进入容器内的命令行操作">进入已运行的容器内部 (进入容器内的命令行操作)</h3>
-
-<pre><code class="language-sh"># 进入别名为app的容器，终端为/bin/sh
+<span style="color:#75715e"># 删除已停止的容器</span>
+docker rm <span style="color:#66d9ef">$(</span>docker ps -f status<span style="color:#f92672">=</span>exited -q<span style="color:#66d9ef">)</span>
+</code></pre></div><h3 id="-">进入已运行的容器内部 (进入容器内的命令行操作)</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#75715e"># 进入别名为app的容器，终端为/bin/sh</span>
 docker exec -it app /bin/sh
 
-# 进入id为c62874e3750a的容器，终端为/bin/bash（有些容器可能只有/bin/sh）
+<span style="color:#75715e"># 进入id为c62874e3750a的容器，终端为/bin/bash（有些容器可能只有/bin/sh）</span>
 docker exec -it c62874e3750a /bin/bash
-</code></pre>
-
-<h3 id="查看后台运行容器的标准输出">查看后台运行容器的标准输出</h3>
-
-<pre><code class="language-sh"># 查看全部输出
+</code></pre></div><h3 id="heading-8">查看后台运行容器的标准输出</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#75715e"># 查看全部输出</span>
 docker logs c62874e3750a
 
-# 查看全部输出并实时追加最新输出
+<span style="color:#75715e"># 查看全部输出并实时追加最新输出</span>
 docker logs c62874e3750a
 
-# 限制最后N行
-docker logs --tail 10 -f app
-</code></pre>
-
-<h3 id="查看容器内运行的进程">查看容器内运行的进程</h3>
-
-<pre><code class="language-sh">docker top c62874e3750a
-</code></pre>
-
-<p><img src="https://res.cloudinary.com/imroc/image/upload/v1513738482/blog/docker/docker-top.png" alt="docker top" /></p>
-
-<h3 id="容器与宿主机之间文件拷贝">容器与宿主机之间文件拷贝</h3>
-
-<pre><code class="language-sh"># 将当前目录的配置文件拷贝到别名为app的容器里
+<span style="color:#75715e"># 限制最后N行</span>
+docker logs --tail <span style="color:#ae81ff">10</span> -f app
+</code></pre></div><h3 id="heading-9">查看容器内运行的进程</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">docker top c62874e3750a
+</code></pre></div><p><img src="https://res.cloudinary.com/imroc/image/upload/v1513738482/blog/docker/docker-top.png" alt="docker top"></p>
+<h3 id="heading-10">容器与宿主机之间文件拷贝</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#75715e"># 将当前目录的配置文件拷贝到别名为app的容器里</span>
 docker cp ./config.toml app:/app/config.toml
 
-# 将id为c62874e3750a的容器中的配置文件拷贝到当前目录
+<span style="color:#75715e"># 将id为c62874e3750a的容器中的配置文件拷贝到当前目录</span>
 docker cp c62874e3750a:/app/config.toml ./config.toml
-</code></pre>
-
-<h3 id="查看容器或镜像详细信息">查看容器或镜像详细信息</h3>
-
-<pre><code class="language-sh"># name可以为镜像id或名称，也可以为容器id或别名
+</code></pre></div><h3 id="heading-11">查看容器或镜像详细信息</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#75715e"># name可以为镜像id或名称，也可以为容器id或别名</span>
 docker inspect name
-</code></pre>
-
+</code></pre></div>
             </article>
 
             <ul class="pager blog-pager">
@@ -484,52 +367,28 @@ docker inspect name
                 
             </div>
             
-            
-            
-            
-<div>
-    <section id="datecount">
-        <h4 id="date"> Wed Dec 20, 2017</h4>
-    </section>
-    <h5 id="wc">1200 Words|Read in about 3 Min</h5>
-    <h5 id="tags">Tags: 
-        
-        <a href="https://imroc.io/tags/docker/">docker</a> &nbsp;
-        
-        <a href="https://imroc.io/tags/docker%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/">Docker快速入门</a> &nbsp;
-    </h5>
-</div>
-
-            
-            </div>
-            
-			
-               <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-<aside id=comments>
-    <div>
-        <h2> Comments </h2>
-    </div>
-    <div id="container"></div>
-    <link rel="stylesheet" href="https://imroc.io/static/gitment/default.css">
-    <script src="https://imroc.io/static/gitment/gitment.browser.js"></script>
-    <script>
-        var gitment = new Gitment({
-			owner: 'imroc', 
-			repo: 'imroc.github.io', 
-            oauth: {
-				client_id: 'd05b8f959b3111c6fb63',
-				client_secret: 'f30ef76ea0050ed731ace76f7fbf684ae5d28fbc',
-            },
-        })
-        gitment.render('container')
-    </script>
-</aside>
-</div>
-
-			
         </div>
     </div>
-    </section>
+    
+    <div id="gitalk-container"></div>
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+      var gitalk = new Gitalk({
+          clientID: 'd05b8f959b3111c6fb63',
+          clientSecret: 'f30ef76ea0050ed731ace76f7fbf684ae5d28fbc',
+          repo: 'blog',
+          owner: 'imroc',
+          admin: ['imroc'],
+          labels: ['Gitalk'],
+          title: 'Docker快速入门（四）常用命令与技巧',
+          createIssueManually: false,
+          id: '',
+          distractionFreeMode: true
+      });
+      gitalk.render('gitalk-container');
+    </script>
+
 </div>
 
     <footer>
@@ -588,7 +447,7 @@ docker inspect name
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.49.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.62.0</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>
@@ -596,15 +455,7 @@ docker inspect name
   </div>
 </footer>
 
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script src="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe-ui-default.min.js"></script>
-<script src="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe.js"></script>
-<script src="https://imroc.io/js/auto-render.min.js"></script>
-<script src="https://imroc.io/js/main.js"></script>
-<script src="https://imroc.io/static/prism/prism.js"></script>
-<script src="https://cdn.staticfile.org/KaTeX/0.7.1/katex.min.js"></script>
-<script> renderMathInElement(document.body); </script>
-
+<script src='/js/bundle.min.879361cd590eb97fa7b7459c2fecb6f66e7b5c798ccdbbad966b1d4d0adce056.js' integrity='sha256-h5NhzVkOuX&#43;nt0WcL&#43;y29m57XHmMzbutlmsdTQrc4FY='></script>
 
 
 

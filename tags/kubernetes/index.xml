@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Kubernetes on roc</title>
+    <title>kubernetes on roc</title>
     <link>https://imroc.io/tags/kubernetes/</link>
-    <description>Recent content in Kubernetes on roc</description>
+    <description>Recent content in kubernetes on roc</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <managingEditor>roc@imroc.io (roc)</managingEditor>
@@ -28,7 +28,7 @@
       <pubDate>Sat, 30 Nov 2019 15:32:00 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
       <guid>https://imroc.io/posts/kubernetes/service-topology-en/</guid>
-      <description>Hello everyone, I&amp;rsquo;m roc, from the Tencent Kubernetes Engine (TKE) team. Today I will introduce a new feature of kubernetes in v1.17 that I am involved in: topology-aware service routing.
+      <description>Hello everyone, I&#39;m roc, from the Tencent Kubernetes Engine (TKE) team. Today I will introduce a new feature of kubernetes in v1.17 that I am involved in: topology-aware service routing.
  This article is translated from my Chinese blog post, which received a great response in China and was reprinted by many well-known Chinese container technology media accounts.
  Glossary  Topological domain: Indicates a certain type of &amp;ldquo;place&amp;rdquo; in the cluster, such as node, rack, zone or region etc.</description>
     </item>
@@ -75,7 +75,7 @@
       <pubDate>Fri, 07 Jun 2019 19:54:00 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
       <guid>https://imroc.io/posts/kubernetes/kubernetes-best-practice-handle-disk-full/</guid>
-      <description>容器数据磁盘被写满造成的危害: - 不能创建 Pod (一直 ContainerCreating) - 不能删除 Pod (一直 Terminating) - 无法 exec 到容器 判断是否被写满: 容器数据目录大多会单独挂数据盘，路径一般</description>
+      <description>容器数据磁盘被写满造成的危害: 不能创建 Pod (一直 ContainerCreating) 不能删除 Pod (一直 Terminating) 无法 exec 到容器 判断是否被写满: 容器数据目录大多会单独挂数据盘，路径一般是 /v</description>
     </item>
     
     <item>

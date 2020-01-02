@@ -23,21 +23,15 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="roc" />
 
-  <meta name="generator" content="Hugo 0.49.2" />
+  <meta name="generator" content="Hugo 0.62.0" />
   <link rel="canonical" href="https://imroc.io/posts/docker/quick-start-for-docker-2/" />
   <link rel="alternate" href="https://imroc.io/index.xml" type="application/rss+xml" title="roc">
-  <script src="https://cdn.staticfile.org/jquery/1.12.4/jquery.min.js"></script>
-  <link rel="stylesheet" href="https://cdn.staticfile.org/KaTeX/0.7.1/katex.min.css" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" crossorigin="anonymous">
 
-  <link rel="stylesheet" href="https://imroc.io/css/main.css" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
   
-  <link rel="stylesheet" href="https://imroc.io/static/prism/prism.css" />
 
-  <script>
+
+<link rel="stylesheet" href='/css/bundle.min.2971c990ae9e3036a2e09462d93d94829b857b7235a2b5eac8896bdad8a8fdb6.css' integrity='sha256-KXHJkK6eMDai4JRi2T2UgpuFe3I1orXqyIlr2tio/bY='>
+  --><script>
 var _hmt = _hmt || [];
 (function() {
   var hm = document.createElement("script");
@@ -46,56 +40,6 @@ var _hmt = _hmt || [];
   s.parentNode.insertBefore(hm, s);
 })();
 </script>
-
-
-
-<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe.min.css" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.2/default-skin/default-skin.min.css" crossorigin="anonymous" />
-
-
-<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
-
-<div class="pswp__bg"></div>
-
-<div class="pswp__scroll-wrap">
-    
-    <div class="pswp__container">
-      <div class="pswp__item"></div>
-      <div class="pswp__item"></div>
-      <div class="pswp__item"></div>
-    </div>
-    
-    <div class="pswp__ui pswp__ui--hidden">
-    <div class="pswp__top-bar">
-      
-      <div class="pswp__counter"></div>
-      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
-      <button class="pswp__button pswp__button--share" title="Share"></button>
-      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
-      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
-      
-      
-      <div class="pswp__preloader">
-        <div class="pswp__preloader__icn">
-          <div class="pswp__preloader__cut">
-            <div class="pswp__preloader__donut"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
-      <div class="pswp__share-tooltip"></div>
-    </div>
-    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
-    </button>
-    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
-    </button>
-    <div class="pswp__caption">
-      <div class="pswp__caption__center"></div>
-    </div>
-    </div>
-    </div>
-</div>
 
 
 </head>
@@ -229,7 +173,7 @@ var _hmt = _hmt || [];
     <section id="datecount">
         <h4 id="date"> Tue Dec 19, 2017</h4>
     </section>
-    <h5 id="wc">1300 Words|Read in about 3 Min</h5>
+    <h5 id="wc">1400 Words|Read in about 3 Min</h5>
     <h5 id="tags">Tags: 
         
         <a href="https://imroc.io/tags/docker/">docker</a> &nbsp;
@@ -243,100 +187,61 @@ var _hmt = _hmt || [];
                 
 <aside class="toc">
   <nav id="TableOfContents">
-<ul>
-<li><a href="#镜像与容器的关系">镜像与容器的关系</a></li>
-<li><a href="#镜像仓库">镜像仓库</a></li>
-<li><a href="#标签">标签</a></li>
-<li><a href="#制作镜像">制作镜像</a>
-<ul>
-<li>
-<ul>
-<li><a href="#1-docker-commit">1. docker commit</a></li>
-<li><a href="#2-dockerfile">2. Dockerfile</a></li>
-</ul></li>
-</ul></li>
-<li><a href="#上传镜像">上传镜像</a></li>
-</ul>
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#1-docker-commit">1. docker commit</a></li>
+        <li><a href="#2-dockerfile">2. Dockerfile</a></li>
+      </ul>
+    </li>
+  </ul>
 </nav>
 </aside>
 
 
-                
-
-<h1 id="镜像与容器的关系">镜像与容器的关系</h1>
-
+                <h1 id="heading">镜像与容器的关系</h1>
 <p>镜像就是把你程序以及依赖的运行时打包在一起的一个东东，运行一个镜像就成了容器。镜像与容器的关系有点类似程序与进程的关系，比如windows上的exe可执行文件是程序，双击运行它就有了进程，镜像可以看成程序，容器可以看成进程。</p>
-
-<h1 id="镜像仓库">镜像仓库</h1>
-
+<h1 id="heading-1">镜像仓库</h1>
 <p>镜像仓库的作用是存放镜像的地方，官方术语叫 Registry，默认的仓库是 <a href="https://hub.docker.com/">Docker Hub</a>，它属于公有仓库，很多常用的镜像都来源于这里，有官方的，有个人的。</p>
-
 <p>除了公有仓库之外，还有私有仓库，主要企业内部用，一方面可以加快镜像拉取速度，另一方面可以提高安全性，避免将企业内部的程序泄露出去。Docker官方有开源docker-registry，不过功能比较简陋，连web ui都没有，通常搭建企业级docker私有仓库会选择 <a href="https://github.com/vmware/harbor">Harbor</a></p>
-
-<h1 id="标签">标签</h1>
-
+<h1 id="heading-2">标签</h1>
 <p>镜像可以打标签，拉取镜像不加标签的化默认用的是latest，用来标识版本，比如我的程序要发布新的版本到镜像仓库，版本号为1.2.3，那么我可以给这个新版本镜像打上几个tag，分别是：1.2.3, 1.2, latest。 这样别人拉取镜像的时候如果不加tag，默认会拉取这个最新版，如果拉取的时候加1.2或1.2.3的tag，也会拉取到这个版本的镜像。</p>
-
-<h1 id="制作镜像">制作镜像</h1>
-
+<h1 id="heading-3">制作镜像</h1>
 <h3 id="1-docker-commit">1. docker commit</h3>
-
 <p>这种方式类似 git commit，通过某个镜像运行一个容器，做些修改操作，然后提交成一个新的镜像。</p>
-
 <p>比如你拉取一个ubuntu镜像，通过它启动一个容器，进入容器，然后安装java和ruby环境，装好后使用docker commit命令来将这个容器保存成一个新的镜像，这个镜像同时具有java和ruby环境。</p>
-
 <p>语法：</p>
-
-<pre><code class="language-sh">docker commit &lt;container&gt; [repo:tag]
-</code></pre>
-
-<p>这种做法的优点是方便快速，缺点是不规范、无法自动化，也就不方便在一个团队中分享，所以通常我们会采用下面Dockerfile这种方式。</p>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">docker commit &lt;container&gt; <span style="color:#f92672">[</span>repo:tag<span style="color:#f92672">]</span>
+</code></pre></div><p>这种做法的优点是方便快速，缺点是不规范、无法自动化，也就不方便在一个团队中分享，所以通常我们会采用下面Dockerfile这种方式。</p>
 <h3 id="2-dockerfile">2. Dockerfile</h3>
-
 <p>这种方式是编写一个 Dockerfile 文件，然后使用 docker build 命令来编译出镜像，文件格式就不赘述了，直接举个栗子：</p>
-
-<pre><code class="language-Dockerfile"># 这里是注释
-
-# 设置继承自哪个镜像
-FROM ubuntu:16.04
-
-# 下面是一些创建者的基本信息
-MAINTAINER roc&lt;imrocchan@gmail.com&gt;
-
-# 在终端需要执行的命令
-RUN apt-get install -y openjdk
-
-# 将当前目录的jar包拷到镜像里
-COPY app.jar /root/app.jar
-
-# 设置默认运行命令
-CMD [&quot;java&quot;, &quot;-jar&quot;, &quot;/root/app.jar&quot;]
-</code></pre>
-
-<p>写好Dockerfile之后就可以编译镜像了，比如：</p>
-
-<pre><code class="language-sh">docker build . -t imroc/myapp:latest
-</code></pre>
-
-<h1 id="上传镜像">上传镜像</h1>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-Dockerfile" data-lang="Dockerfile"><span style="color:#75715e"># 这里是注释</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># 设置继承自哪个镜像</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">FROM</span><span style="color:#e6db74"> ubuntu:16.04</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># 下面是一些创建者的基本信息</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">MAINTAINER</span><span style="color:#e6db74"> roc&lt;imrocchan@gmail.com&gt;</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># 在终端需要执行的命令</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> apt-get install -y openjdk<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># 将当前目录的jar包拷到镜像里</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">COPY</span> app.jar /root/app.jar<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># 设置默认运行命令</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">CMD</span> [<span style="color:#e6db74">&#34;java&#34;</span>, <span style="color:#e6db74">&#34;-jar&#34;</span>, <span style="color:#e6db74">&#34;/root/app.jar&#34;</span>]<span style="color:#960050;background-color:#1e0010">
+</span></code></pre></div><p>写好Dockerfile之后就可以编译镜像了，比如：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">docker build . -t imroc/myapp:latest
+</code></pre></div><h1 id="heading-4">上传镜像</h1>
 <p>上传前事先确保你已经登录了，利用docker login 命令进行登录，如果是Docker Hub，直接执行docker login 即可登录，如果是私有仓库，需要在后面加上私有仓库的地址，比如：</p>
-
-<pre><code class="language-sh">docker login hub.imroc.io
-</code></pre>
-
-<p>然后输入你所在仓库的用户名密码即可，一般登录了只要没有重启docker daemon就能一直保持登录，不需要重复登录。<br />
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">docker login hub.imroc.io
+</code></pre></div><p>然后输入你所在仓库的用户名密码即可，一般登录了只要没有重启docker daemon就能一直保持登录，不需要重复登录。<br>
 上传镜像需要用到<code>docker push</code>命令，前提是你的镜像名符合规范。如果你想上传到私有仓库，那么你的镜像名前面需要加私有仓库地址，例如：<code>hub.imroc.io/imroc/myapp:1.2</code>，那么执行下面的命令就能上传镜像到私有仓库:</p>
-
-<pre><code class="language-sh">docker push hub.imroc.io/imroc/myqpp:1.2
-</code></pre>
-
-<p>如果是上传到 Docker Hub，你就不需要将仓库地址写出来了，因为默认就是Docker Hub，比如我的镜像名叫<code>imroc/myqpp:latest</code>，那么执行下面的命令就能上传到Docker Hub，所有人都可以拉取下来使用：</p>
-
-<pre><code class="language-sh">docker push imroc/myapp:latest
-</code></pre>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">docker push hub.imroc.io/imroc/myqpp:1.2
+</code></pre></div><p>如果是上传到 Docker Hub，你就不需要将仓库地址写出来了，因为默认就是Docker Hub，比如我的镜像名叫<code>imroc/myqpp:latest</code>，那么执行下面的命令就能上传到Docker Hub，所有人都可以拉取下来使用：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">docker push imroc/myapp:latest
+</code></pre></div>
             </article>
 
             <ul class="pager blog-pager">
@@ -366,52 +271,28 @@ CMD [&quot;java&quot;, &quot;-jar&quot;, &quot;/root/app.jar&quot;]
                 
             </div>
             
-            
-            
-            
-<div>
-    <section id="datecount">
-        <h4 id="date"> Tue Dec 19, 2017</h4>
-    </section>
-    <h5 id="wc">1300 Words|Read in about 3 Min</h5>
-    <h5 id="tags">Tags: 
-        
-        <a href="https://imroc.io/tags/docker/">docker</a> &nbsp;
-        
-        <a href="https://imroc.io/tags/docker%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/">Docker快速入门</a> &nbsp;
-    </h5>
-</div>
-
-            
-            </div>
-            
-			
-               <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-<aside id=comments>
-    <div>
-        <h2> Comments </h2>
-    </div>
-    <div id="container"></div>
-    <link rel="stylesheet" href="https://imroc.io/static/gitment/default.css">
-    <script src="https://imroc.io/static/gitment/gitment.browser.js"></script>
-    <script>
-        var gitment = new Gitment({
-			owner: 'imroc', 
-			repo: 'imroc.github.io', 
-            oauth: {
-				client_id: 'd05b8f959b3111c6fb63',
-				client_secret: 'f30ef76ea0050ed731ace76f7fbf684ae5d28fbc',
-            },
-        })
-        gitment.render('container')
-    </script>
-</aside>
-</div>
-
-			
         </div>
     </div>
-    </section>
+    
+    <div id="gitalk-container"></div>
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+      var gitalk = new Gitalk({
+          clientID: 'd05b8f959b3111c6fb63',
+          clientSecret: 'f30ef76ea0050ed731ace76f7fbf684ae5d28fbc',
+          repo: 'blog',
+          owner: 'imroc',
+          admin: ['imroc'],
+          labels: ['Gitalk'],
+          title: 'Docker快速入门（二）容器、镜像与镜像仓库',
+          createIssueManually: false,
+          id: '',
+          distractionFreeMode: true
+      });
+      gitalk.render('gitalk-container');
+    </script>
+
 </div>
 
     <footer>
@@ -470,7 +351,7 @@ CMD [&quot;java&quot;, &quot;-jar&quot;, &quot;/root/app.jar&quot;]
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.49.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.62.0</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>
@@ -478,15 +359,7 @@ CMD [&quot;java&quot;, &quot;-jar&quot;, &quot;/root/app.jar&quot;]
   </div>
 </footer>
 
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script src="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe-ui-default.min.js"></script>
-<script src="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe.js"></script>
-<script src="https://imroc.io/js/auto-render.min.js"></script>
-<script src="https://imroc.io/js/main.js"></script>
-<script src="https://imroc.io/static/prism/prism.js"></script>
-<script src="https://cdn.staticfile.org/KaTeX/0.7.1/katex.min.js"></script>
-<script> renderMathInElement(document.body); </script>
-
+<script src='/js/bundle.min.879361cd590eb97fa7b7459c2fecb6f66e7b5c798ccdbbad966b1d4d0adce056.js' integrity='sha256-h5NhzVkOuX&#43;nt0WcL&#43;y29m57XHmMzbutlmsdTQrc4FY='></script>
 
 
 

@@ -23,21 +23,15 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="roc" />
 
-  <meta name="generator" content="Hugo 0.49.2" />
+  <meta name="generator" content="Hugo 0.62.0" />
   <link rel="canonical" href="https://imroc.io/posts/kubernetes/install-helm/" />
   <link rel="alternate" href="https://imroc.io/index.xml" type="application/rss+xml" title="roc">
-  <script src="https://cdn.staticfile.org/jquery/1.12.4/jquery.min.js"></script>
-  <link rel="stylesheet" href="https://cdn.staticfile.org/KaTeX/0.7.1/katex.min.css" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" crossorigin="anonymous">
 
-  <link rel="stylesheet" href="https://imroc.io/css/main.css" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
   
-  <link rel="stylesheet" href="https://imroc.io/static/prism/prism.css" />
 
-  <script>
+
+<link rel="stylesheet" href='/css/bundle.min.2971c990ae9e3036a2e09462d93d94829b857b7235a2b5eac8896bdad8a8fdb6.css' integrity='sha256-KXHJkK6eMDai4JRi2T2UgpuFe3I1orXqyIlr2tio/bY='>
+  --><script>
 var _hmt = _hmt || [];
 (function() {
   var hm = document.createElement("script");
@@ -46,56 +40,6 @@ var _hmt = _hmt || [];
   s.parentNode.insertBefore(hm, s);
 })();
 </script>
-
-
-
-<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe.min.css" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.2/default-skin/default-skin.min.css" crossorigin="anonymous" />
-
-
-<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
-
-<div class="pswp__bg"></div>
-
-<div class="pswp__scroll-wrap">
-    
-    <div class="pswp__container">
-      <div class="pswp__item"></div>
-      <div class="pswp__item"></div>
-      <div class="pswp__item"></div>
-    </div>
-    
-    <div class="pswp__ui pswp__ui--hidden">
-    <div class="pswp__top-bar">
-      
-      <div class="pswp__counter"></div>
-      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
-      <button class="pswp__button pswp__button--share" title="Share"></button>
-      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
-      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
-      
-      
-      <div class="pswp__preloader">
-        <div class="pswp__preloader__icn">
-          <div class="pswp__preloader__cut">
-            <div class="pswp__preloader__donut"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
-      <div class="pswp__share-tooltip"></div>
-    </div>
-    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
-    </button>
-    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
-    </button>
-    <div class="pswp__caption">
-      <div class="pswp__caption__center"></div>
-    </div>
-    </div>
-    </div>
-</div>
 
 
 </head>
@@ -245,46 +189,31 @@ var _hmt = _hmt || [];
                 
 <aside class="toc">
   <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#概述">概述</a></li>
-<li><a href="#安装">安装</a></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#heading">概述</a></li>
+    <li><a href="#heading-1">安装</a></li>
+  </ul>
 </nav>
 </aside>
 
 
-                
-
-<h2 id="概述">概述</h2>
-
+                <h2 id="heading">概述</h2>
 <p>Helm 是 Kubernetes 的包管理器，可以帮我们简化 kubernetes 的操作，一键部署应用。假如你的机器上已经安装了 kubectl 并且能够操作集群，那么你就可以安装 Helm 了。</p>
-
-<h2 id="安装">安装</h2>
-
+<h2 id="heading-1">安装</h2>
 <p>执行脚本安装 helm 客户端:</p>
-
-<pre><code class="language-bash">$ curl https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get | bash
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ curl https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get | bash
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
                                  Dload  Upload   Total   Spent    Left  Speed
-100  6737  100  6737    0     0  12491      0 --:--:-- --:--:-- --:--:-- 12475
+<span style="color:#ae81ff">100</span>  <span style="color:#ae81ff">6737</span>  <span style="color:#ae81ff">100</span>  <span style="color:#ae81ff">6737</span>    <span style="color:#ae81ff">0</span>     <span style="color:#ae81ff">0</span>  <span style="color:#ae81ff">12491</span>      <span style="color:#ae81ff">0</span> --:--:-- --:--:-- --:--:-- <span style="color:#ae81ff">12475</span>
 Downloading https://kubernetes-helm.storage.googleapis.com/helm-v2.9.1-linux-amd64.tar.gz
 Preparing to install into /usr/local/bin
 helm installed into /usr/local/bin/helm
-Run 'helm init' to configure helm.
-</code></pre>
-
-<p>查看客户端版本：</p>
-
-<pre><code class="language-bash">$ helm version
-Client: &amp;version.Version{SemVer:&quot;v2.9.1&quot;, GitCommit:&quot;20adb27c7c5868466912eebdf6664e7390ebe710&quot;, GitTreeState:&quot;clean&quot;}
-</code></pre>
-
-<p>安装 tiller 服务端到 kubernetes 集群：</p>
-
-<pre><code class="language-bash">$ helm init
+Run <span style="color:#e6db74">&#39;helm init&#39;</span> to configure helm.
+</code></pre></div><p>查看客户端版本：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ helm version
+Client: &amp;version.Version<span style="color:#f92672">{</span>SemVer:<span style="color:#e6db74">&#34;v2.9.1&#34;</span>, GitCommit:<span style="color:#e6db74">&#34;20adb27c7c5868466912eebdf6664e7390ebe710&#34;</span>, GitTreeState:<span style="color:#e6db74">&#34;clean&#34;</span><span style="color:#f92672">}</span>
+</code></pre></div><p>安装 tiller 服务端到 kubernetes 集群：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ helm init
 Creating /root/.helm
 Creating /root/.helm/repository
 Creating /root/.helm/repository/cache
@@ -297,46 +226,33 @@ Adding stable repo with URL: https://kubernetes-charts.storage.googleapis.com
 Adding local repo with URL: http://127.0.0.1:8879/charts
 $HELM_HOME has been configured at /root/.helm.
 
-Tiller (the Helm server-side component) has been installed into your Kubernetes Cluster.
+Tiller <span style="color:#f92672">(</span>the Helm server-side component<span style="color:#f92672">)</span> has been installed into your Kubernetes Cluster.
 
-Please note: by default, Tiller is deployed with an insecure 'allow unauthenticated users' policy.
+Please note: by default, Tiller is deployed with an insecure <span style="color:#e6db74">&#39;allow unauthenticated users&#39;</span> policy.
 For more information on securing your installation see: https://docs.helm.sh/using_helm/#securing-your-helm-installation
 Happy Helming!
-</code></pre>
-
-<p>查看 tiller 是否启动成功:</p>
-
-<pre><code class="language-bash">$ kubectl get pods --namespace=kube-system | grep tiller
-tiller-deploy-dccdb6fd9-2df4r          0/1       ImagePullBackOff   0          14h
-</code></pre>
-
-<p>如果状态是 ImagePullBackOff ，说明是镜像问题，一般是未拉取到镜像（国内机器拉取不到 gcr.io 下的镜像) 可以查看下是什么镜像:</p>
-
-<pre><code class="language-bash">$ kubectl describe pod tiller-deploy-dccdb6fd9-2df4r --namespace=kube-system
+</code></pre></div><p>查看 tiller 是否启动成功:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ kubectl get pods --namespace<span style="color:#f92672">=</span>kube-system | grep tiller
+tiller-deploy-dccdb6fd9-2df4r          0/1       ImagePullBackOff   <span style="color:#ae81ff">0</span>          14h
+</code></pre></div><p>如果状态是 ImagePullBackOff ，说明是镜像问题，一般是未拉取到镜像（国内机器拉取不到 gcr.io 下的镜像) 可以查看下是什么镜像:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ kubectl describe pod tiller-deploy-dccdb6fd9-2df4r --namespace<span style="color:#f92672">=</span>kube-system
 Events:
   Type     Reason   Age                   From                Message
   ----     ------   ----                  ----                -------
-  Warning  Failed   36m (x5 over 12h)     kubelet, k8s-node1  Failed to pull image &quot;gcr.io/kubernetes-helm/tiller:v2.9.1&quot;: rpc error: code = Unknown desc = Get https://gcr.io/v1/_ping: dial tcp 64.233.189.82:443: i/o timeout
-  Normal   BackOff  11m (x3221 over 14h)  kubelet, k8s-node1  Back-off pulling image &quot;gcr.io/kubernetes-helm/tiller:v2.9.1&quot;
-  Warning  Failed   6m (x3237 over 14h)   kubelet, k8s-node1  Error: ImagePullBackOff
-  Warning  Failed   1m (x15 over 14h)     kubelet, k8s-node1  Failed to pull image &quot;gcr.io/kubernetes-helm/tiller:v2.9.1&quot;: rpc error: code = Unknown desc = Get https://gcr.io/v1/_ping: dial tcp 64.233.188.82:443: i/o timeout
-</code></pre>
+  Warning  Failed   36m <span style="color:#f92672">(</span>x5 over 12h<span style="color:#f92672">)</span>     kubelet, k8s-node1  Failed to pull image <span style="color:#e6db74">&#34;gcr.io/kubernetes-helm/tiller:v2.9.1&#34;</span>: rpc error: code <span style="color:#f92672">=</span> Unknown desc <span style="color:#f92672">=</span> Get https://gcr.io/v1/_ping: dial tcp 64.233.189.82:443: i/o timeout
+  Normal   BackOff  11m <span style="color:#f92672">(</span>x3221 over 14h<span style="color:#f92672">)</span>  kubelet, k8s-node1  Back-off pulling image <span style="color:#e6db74">&#34;gcr.io/kubernetes-helm/tiller:v2.9.1&#34;</span>
+  Warning  Failed   6m <span style="color:#f92672">(</span>x3237 over 14h<span style="color:#f92672">)</span>   kubelet, k8s-node1  Error: ImagePullBackOff
+  Warning  Failed   1m <span style="color:#f92672">(</span>x15 over 14h<span style="color:#f92672">)</span>     kubelet, k8s-node1  Failed to pull image <span style="color:#e6db74">&#34;gcr.io/kubernetes-helm/tiller:v2.9.1&#34;</span>: rpc error: code <span style="color:#f92672">=</span> Unknown desc <span style="color:#f92672">=</span> Get https://gcr.io/v1/_ping: dial tcp 64.233.188.82:443: i/o timeout
+</code></pre></div><p>把这个没拉取到镜像想办法下载到这台机器上。当我们看到状态为 <code>Running</code> 说明 tiller 已经成功运行了:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ kubectl get pods -n kube-system | grep tiller
+tiller-deploy-dccdb6fd9-2df4r                   1/1       Running   <span style="color:#ae81ff">1</span>          41d
+</code></pre></div><p>默认安装的 tiller 权限很小，我们执行下面的脚本给它加最大权限，这样方便我们可以用 helm 部署应用到任意 namespace 下:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl create serviceaccount --namespace<span style="color:#f92672">=</span>kube-system tiller
 
-<p>把这个没拉取到镜像想办法下载到这台机器上。当我们看到状态为 <code>Running</code> 说明 tiller 已经成功运行了:</p>
+kubectl create clusterrolebinding tiller-cluster-rule --clusterrole<span style="color:#f92672">=</span>cluster-admin --serviceaccount<span style="color:#f92672">=</span>kube-system:tiller
 
-<pre><code class="language-bash">$ kubectl get pods -n kube-system | grep tiller
-tiller-deploy-dccdb6fd9-2df4r                   1/1       Running   1          41d
-</code></pre>
-
-<p>默认安装的 tiller 权限很小，我们执行下面的脚本给它加最大权限，这样方便我们可以用 helm 部署应用到任意 namespace 下:</p>
-
-<pre><code class="language-bash">kubectl create serviceaccount --namespace=kube-system tiller
-
-kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
-
-kubectl patch deploy --namespace=kube-system tiller-deploy -p '{&quot;spec&quot;:{&quot;template&quot;:{&quot;spec&quot;:{&quot;serviceAccount&quot;:&quot;tiller&quot;}}}}'
-</code></pre>
-
+kubectl patch deploy --namespace<span style="color:#f92672">=</span>kube-system tiller-deploy -p <span style="color:#e6db74">&#39;{&#34;spec&#34;:{&#34;template&#34;:{&#34;spec&#34;:{&#34;serviceAccount&#34;:&#34;tiller&#34;}}}}&#39;</span>
+</code></pre></div>
             </article>
 
             <ul class="pager blog-pager">
@@ -370,50 +286,28 @@ kubectl patch deploy --namespace=kube-system tiller-deploy -p '{&quot;spec&quot;
                 
             </div>
             
-            
-            
-            
-<div>
-    <section id="datecount">
-        <h4 id="date"> Mon Jul 23, 2018</h4>
-    </section>
-    <h5 id="wc">600 Words|Read in about 2 Min</h5>
-    <h5 id="tags">Tags: 
-        
-        <a href="https://imroc.io/tags/kubernetes/">kubernetes</a> &nbsp;
-    </h5>
-</div>
-
-            
-            </div>
-            
-			
-               <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-<aside id=comments>
-    <div>
-        <h2> Comments </h2>
-    </div>
-    <div id="container"></div>
-    <link rel="stylesheet" href="https://imroc.io/static/gitment/default.css">
-    <script src="https://imroc.io/static/gitment/gitment.browser.js"></script>
-    <script>
-        var gitment = new Gitment({
-			owner: 'imroc', 
-			repo: 'imroc.github.io', 
-            oauth: {
-				client_id: 'd05b8f959b3111c6fb63',
-				client_secret: 'f30ef76ea0050ed731ace76f7fbf684ae5d28fbc',
-            },
-        })
-        gitment.render('container')
-    </script>
-</aside>
-</div>
-
-			
         </div>
     </div>
-    </section>
+    
+    <div id="gitalk-container"></div>
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+      var gitalk = new Gitalk({
+          clientID: 'd05b8f959b3111c6fb63',
+          clientSecret: 'f30ef76ea0050ed731ace76f7fbf684ae5d28fbc',
+          repo: 'blog',
+          owner: 'imroc',
+          admin: ['imroc'],
+          labels: ['Gitalk'],
+          title: '快速安装 Helm',
+          createIssueManually: false,
+          id: '',
+          distractionFreeMode: true
+      });
+      gitalk.render('gitalk-container');
+    </script>
+
 </div>
 
     <footer>
@@ -472,7 +366,7 @@ kubectl patch deploy --namespace=kube-system tiller-deploy -p '{&quot;spec&quot;
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.49.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.62.0</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>
@@ -480,15 +374,7 @@ kubectl patch deploy --namespace=kube-system tiller-deploy -p '{&quot;spec&quot;
   </div>
 </footer>
 
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script src="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe-ui-default.min.js"></script>
-<script src="https://cdn.staticfile.org/photoswipe/4.1.2/photoswipe.js"></script>
-<script src="https://imroc.io/js/auto-render.min.js"></script>
-<script src="https://imroc.io/js/main.js"></script>
-<script src="https://imroc.io/static/prism/prism.js"></script>
-<script src="https://cdn.staticfile.org/KaTeX/0.7.1/katex.min.js"></script>
-<script> renderMathInElement(document.body); </script>
-
+<script src='/js/bundle.min.879361cd590eb97fa7b7459c2fecb6f66e7b5c798ccdbbad966b1d4d0adce056.js' integrity='sha256-h5NhzVkOuX&#43;nt0WcL&#43;y29m57XHmMzbutlmsdTQrc4FY='></script>
 
 
 
