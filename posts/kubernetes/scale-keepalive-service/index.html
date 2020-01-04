@@ -212,69 +212,72 @@ var _hmt = _hmt || [];
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#f92672">package</span> <span style="color:#a6e22e">main</span>
 
 <span style="color:#f92672">import</span> (
- <span style="color:#e6db74">&#34;net&#34;</span>
- <span style="color:#e6db74">&#34;github.com/gin-gonic/gin&#34;</span>
- <span style="color:#e6db74">&#34;net/http&#34;</span>
+	<span style="color:#e6db74">&#34;net&#34;</span>
+	<span style="color:#e6db74">&#34;github.com/gin-gonic/gin&#34;</span>
+	<span style="color:#e6db74">&#34;net/http&#34;</span>
 )
 
 <span style="color:#75715e">//重新定义net.Listener
 </span><span style="color:#75715e"></span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">counterListener</span> <span style="color:#66d9ef">struct</span> {
- <span style="color:#a6e22e">net</span>.<span style="color:#a6e22e">Listener</span>
+	<span style="color:#a6e22e">net</span>.<span style="color:#a6e22e">Listener</span>
 }
+
 <span style="color:#75715e">//重写net.Listener.Accept(),对接收到的连接注入请求计数器
 </span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">counterListener</span>) <span style="color:#a6e22e">Accept</span>() (<span style="color:#a6e22e">net</span>.<span style="color:#a6e22e">Conn</span>, <span style="color:#66d9ef">error</span>) {
- <span style="color:#a6e22e">conn</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">Listener</span>.<span style="color:#a6e22e">Accept</span>()
- <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
-  <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>, <span style="color:#a6e22e">err</span>
- }
- <span style="color:#66d9ef">return</span> <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">counterConn</span>{<span style="color:#a6e22e">Conn</span>: <span style="color:#a6e22e">conn</span>}, <span style="color:#66d9ef">nil</span>
+	<span style="color:#a6e22e">conn</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">Listener</span>.<span style="color:#a6e22e">Accept</span>()
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+		<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>, <span style="color:#a6e22e">err</span>
+	}
+	<span style="color:#66d9ef">return</span> <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">counterConn</span>{<span style="color:#a6e22e">Conn</span>: <span style="color:#a6e22e">conn</span>}, <span style="color:#66d9ef">nil</span>
 }
+
 <span style="color:#75715e">//定义计数器counter和计数方法Increment()
 </span><span style="color:#75715e"></span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">counter</span> <span style="color:#66d9ef">int</span>
+
 <span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">counter</span>) <span style="color:#a6e22e">Increment</span>() <span style="color:#66d9ef">int</span> {
- <span style="color:#f92672">*</span><span style="color:#a6e22e">c</span><span style="color:#f92672">++</span>
- <span style="color:#66d9ef">return</span> int(<span style="color:#f92672">*</span><span style="color:#a6e22e">c</span>)
+	<span style="color:#f92672">*</span><span style="color:#a6e22e">c</span><span style="color:#f92672">++</span>
+	<span style="color:#66d9ef">return</span> int(<span style="color:#f92672">*</span><span style="color:#a6e22e">c</span>)
 }
 
 <span style="color:#75715e">//重新定义net.Conn,注入计数器ct
 </span><span style="color:#75715e"></span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">counterConn</span> <span style="color:#66d9ef">struct</span> {
- <span style="color:#a6e22e">net</span>.<span style="color:#a6e22e">Conn</span>
- <span style="color:#a6e22e">ct</span> <span style="color:#a6e22e">counter</span>
+	<span style="color:#a6e22e">net</span>.<span style="color:#a6e22e">Conn</span>
+	<span style="color:#a6e22e">ct</span> <span style="color:#a6e22e">counter</span>
 }
 
 <span style="color:#75715e">//重写net.Conn.LocalAddr()，返回本地网络地址的同时返回该连接累计处理过的请求数
 </span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">counterConn</span>) <span style="color:#a6e22e">LocalAddr</span>() <span style="color:#a6e22e">net</span>.<span style="color:#a6e22e">Addr</span> {
- <span style="color:#66d9ef">return</span> <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">counterAddr</span>{<span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">Conn</span>.<span style="color:#a6e22e">LocalAddr</span>(), <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">ct</span>}
+	<span style="color:#66d9ef">return</span> <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">counterAddr</span>{<span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">Conn</span>.<span style="color:#a6e22e">LocalAddr</span>(), <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">ct</span>}
 }
 
 <span style="color:#75715e">//定义TCP连接计数器,指向连接累计请求的计数器
 </span><span style="color:#75715e"></span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">counterAddr</span> <span style="color:#66d9ef">struct</span> {
- <span style="color:#a6e22e">net</span>.<span style="color:#a6e22e">Addr</span>
- <span style="color:#f92672">*</span><span style="color:#a6e22e">counter</span>
+	<span style="color:#a6e22e">net</span>.<span style="color:#a6e22e">Addr</span>
+	<span style="color:#f92672">*</span><span style="color:#a6e22e">counter</span>
 }
 
 <span style="color:#66d9ef">func</span> <span style="color:#a6e22e">main</span>() {
- <span style="color:#a6e22e">r</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">gin</span>.<span style="color:#a6e22e">New</span>()
- <span style="color:#a6e22e">r</span>.<span style="color:#a6e22e">Use</span>(<span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">gin</span>.<span style="color:#a6e22e">Context</span>) {
-  <span style="color:#a6e22e">localAddr</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">Request</span>.<span style="color:#a6e22e">Context</span>().<span style="color:#a6e22e">Value</span>(<span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">LocalAddrContextKey</span>)
-  <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">ct</span>, <span style="color:#a6e22e">ok</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">localAddr</span>.(<span style="color:#66d9ef">interface</span>{ <span style="color:#a6e22e">Increment</span>() <span style="color:#66d9ef">int</span> }); <span style="color:#a6e22e">ok</span> {
-   <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">ct</span>.<span style="color:#a6e22e">Increment</span>() <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">1000</span> {
-    <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">Header</span>(<span style="color:#e6db74">&#34;Connection&#34;</span>, <span style="color:#e6db74">&#34;close&#34;</span>)
-   }
-  }
-  <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">Next</span>()
- })
- <span style="color:#a6e22e">r</span>.<span style="color:#a6e22e">GET</span>(<span style="color:#e6db74">&#34;/&#34;</span>, <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">gin</span>.<span style="color:#a6e22e">Context</span>) {
-  <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">String</span>(<span style="color:#ae81ff">200</span>, <span style="color:#e6db74">&#34;plain/text&#34;</span>, <span style="color:#e6db74">&#34;hello&#34;</span>)
- })
- <span style="color:#a6e22e">l</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">net</span>.<span style="color:#a6e22e">Listen</span>(<span style="color:#e6db74">&#34;tcp&#34;</span>, <span style="color:#e6db74">&#34;:8080&#34;</span>)
- <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
-  panic(<span style="color:#a6e22e">err</span>)
- }
- <span style="color:#a6e22e">err</span> = <span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">Serve</span>(<span style="color:#f92672">&amp;</span><span style="color:#a6e22e">counterListener</span>{<span style="color:#a6e22e">l</span>}, <span style="color:#a6e22e">r</span>)
- <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
-  panic(<span style="color:#a6e22e">err</span>)
- }
+	<span style="color:#a6e22e">r</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">gin</span>.<span style="color:#a6e22e">New</span>()
+	<span style="color:#a6e22e">r</span>.<span style="color:#a6e22e">Use</span>(<span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">gin</span>.<span style="color:#a6e22e">Context</span>) {
+		<span style="color:#a6e22e">localAddr</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">Request</span>.<span style="color:#a6e22e">Context</span>().<span style="color:#a6e22e">Value</span>(<span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">LocalAddrContextKey</span>)
+		<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">ct</span>, <span style="color:#a6e22e">ok</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">localAddr</span>.(<span style="color:#66d9ef">interface</span>{ <span style="color:#a6e22e">Increment</span>() <span style="color:#66d9ef">int</span> }); <span style="color:#a6e22e">ok</span> {
+			<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">ct</span>.<span style="color:#a6e22e">Increment</span>() <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">1000</span> {
+				<span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">Header</span>(<span style="color:#e6db74">&#34;Connection&#34;</span>, <span style="color:#e6db74">&#34;close&#34;</span>)
+			}
+		}
+		<span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">Next</span>()
+	})
+	<span style="color:#a6e22e">r</span>.<span style="color:#a6e22e">GET</span>(<span style="color:#e6db74">&#34;/&#34;</span>, <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">gin</span>.<span style="color:#a6e22e">Context</span>) {
+		<span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">String</span>(<span style="color:#ae81ff">200</span>, <span style="color:#e6db74">&#34;plain/text&#34;</span>, <span style="color:#e6db74">&#34;hello&#34;</span>)
+	})
+	<span style="color:#a6e22e">l</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">net</span>.<span style="color:#a6e22e">Listen</span>(<span style="color:#e6db74">&#34;tcp&#34;</span>, <span style="color:#e6db74">&#34;:8080&#34;</span>)
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+		panic(<span style="color:#a6e22e">err</span>)
+	}
+	<span style="color:#a6e22e">err</span> = <span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">Serve</span>(<span style="color:#f92672">&amp;</span><span style="color:#a6e22e">counterListener</span>{<span style="color:#a6e22e">l</span>}, <span style="color:#a6e22e">r</span>)
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+		panic(<span style="color:#a6e22e">err</span>)
+	}
 }
 </code></pre></div>
             </article>
