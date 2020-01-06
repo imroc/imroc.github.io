@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  
+  <url>
+    <loc>https://imroc.io/en/categories/</loc>
+    <lastmod>2019-11-30T15:32:00+08:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh"
+                href="https://imroc.io/categories/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://imroc.io/en/categories/"
+                />
+  </url>
+  
+  <url>
+    <loc>https://imroc.io/en/categories/kubernetes/</loc>
+    <lastmod>2019-11-30T15:32:00+08:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh"
+                href="https://imroc.io/categories/kubernetes/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://imroc.io/en/categories/kubernetes/"
+                />
+  </url>
+  
+  <url>
+    <loc>https://imroc.io/en/tags/kubernetes/</loc>
+    <lastmod>2019-11-30T15:32:00+08:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh"
+                href="https://imroc.io/tags/kubernetes/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://imroc.io/en/tags/kubernetes/"
+                />
+  </url>
+  
+  <url>
+    <loc>https://imroc.io/en/posts/kubernetes/service-topology/</loc>
+    <lastmod>2019-11-30T15:32:00+08:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh"
+                href="https://imroc.io/posts/kubernetes/service-topology/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://imroc.io/en/posts/kubernetes/service-topology/"
+                />
+  </url>
+  
+  <url>
+    <loc>https://imroc.io/en/posts/</loc>
+    <lastmod>2019-11-30T15:32:00+08:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh"
+                href="https://imroc.io/posts/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://imroc.io/en/posts/"
+                />
+  </url>
+  
+  <url>
+    <loc>https://imroc.io/en/</loc>
+    <lastmod>2019-11-30T15:32:00+08:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh"
+                href="https://imroc.io/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://imroc.io/en/"
+                />
+  </url>
+  
+  <url>
+    <loc>https://imroc.io/en/tags/</loc>
+    <lastmod>2019-11-30T15:32:00+08:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh"
+                href="https://imroc.io/tags/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://imroc.io/en/tags/"
+                />
+  </url>
+  
+</urlset>
