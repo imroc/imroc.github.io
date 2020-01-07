@@ -9,9 +9,9 @@
   <meta name="description" content="imroc.io|roc的博客|Cloud Native|Kubernetes|Go|Golang" />
   <meta property="og:title" content="通俗理解Kubernetes中Service、Ingress与Ingress Controller的作用与关系" />
   <meta name="twitter:title" content="通俗理解Kubernetes中Service、Ingress与Ingress Controller的作用与关系" />
-  <meta name="description" content="通俗的讲: Service 是后端真实服务的抽象，一个 Service 可以代表多个相同的后端服务 Ingress 是反向代理规则，用来规定 HTTP/S 请求应该被转发到哪个 Service 上，比如根据请求中不同的">
-  <meta property="og:description" content="通俗的讲: Service 是后端真实服务的抽象，一个 Service 可以代表多个相同的后端服务 Ingress 是反向代理规则，用来规定 HTTP/S 请求应该被转发到哪个 Service 上，比如根据请求中不同的">
-  <meta name="twitter:description" content="通俗的讲: Service 是后端真实服务的抽象，一个 Service 可以代表多个相同的后端服务 Ingress 是反向代理规则，用来规定 HTTP/S 请求应该被转发到哪个 Service 上，比如根据请求中不同的">
+  <meta name="description" content="通俗的讲: Service 是后端真实服务的抽象，一个 Service 可以代表多个相同的后端服务 Ingress 是反向代理规则，用来规定 HTTP/S 请求应该被转发到哪个 Service 上，比如根据请求中不同的 Host 和 url 路径让请求落到不同的 Service 上 Ingress Controller 就是一个反向代理程序，它负责解析 Ingress 的反向代理规则，如果 Ingress 有增删改的变动，所有的 Ingress Controller 都会及时更新自己相应的转发规则，当 Ingress Controller 收到请求后就会根据这些规则将请求转发到对应的 Service。 Kubernetes 并没有自带 Ingress Controller，它只是一种标准，具体实现有多种，需要自己单独安装，常用的是 Nginx Ingress Controller 和 Traefik Ingress Controller。 所以 Ingress 是一种转发规则的抽象，Ingress Controller 的实现需要根据这些 Ingress 规则来将请求转发到对应的 Service，我画了个图方便大家理解： 从图中可以看出，Ingress Controller 收到请求，匹配 Ingress 转发规则，匹配到了就转发到后端 Service，而 Service 可能代表的后端 Pod 有多个，选出一个转发到那个 Pod，最终由那个 Pod 处理请求。 有同学可能会问，既然 Ingress Controller 要接受外面的请求，而 Ingress Controller 是部署在集群中的，怎么让 Ingress Controller 本身能够被外面访问到呢，有几种方式： Ingress Controller 用 Deployment 方式部署，给它添加一个 Service，类型为 LoadBalancer，这样会自动生成一个 IP 地址，通过">
+  <meta property="og:description" content="通俗的讲: Service 是后端真实服务的抽象，一个 Service 可以代表多个相同的后端服务 Ingress 是反向代理规则，用来规定 HTTP/S 请求应该被转发到哪个 Service 上，比如根据请求中不同的 Host 和 url 路径让请求落到不同的 Service 上 Ingress Controller 就是一个反向代理程序，它负责解析 Ingress 的反向代理规则，如果 Ingress 有增删改的变动，所有的 Ingress Controller 都会及时更新自己相应的转发规则，当 Ingress Controller 收到请求后就会根据这些规则将请求转发到对应的 Service。 Kubernetes 并没有自带 Ingress Controller，它只是一种标准，具体实现有多种，需要自己单独安装，常用的是 Nginx Ingress Controller 和 Traefik Ingress Controller。 所以 Ingress 是一种转发规则的抽象，Ingress Controller 的实现需要根据这些 Ingress 规则来将请求转发到对应的 Service，我画了个图方便大家理解： 从图中可以看出，Ingress Controller 收到请求，匹配 Ingress 转发规则，匹配到了就转发到后端 Service，而 Service 可能代表的后端 Pod 有多个，选出一个转发到那个 Pod，最终由那个 Pod 处理请求。 有同学可能会问，既然 Ingress Controller 要接受外面的请求，而 Ingress Controller 是部署在集群中的，怎么让 Ingress Controller 本身能够被外面访问到呢，有几种方式： Ingress Controller 用 Deployment 方式部署，给它添加一个 Service，类型为 LoadBalancer，这样会自动生成一个 IP 地址，通过">
+  <meta name="twitter:description" content="通俗的讲: Service 是后端真实服务的抽象，一个 Service 可以代表多个相同的后端服务 Ingress 是反向代理规则，用来规定 HTTP/S 请求应该被转发到哪个 Service 上，比如根据请求中不同的 Host 和 url 路径让请求落到不同的 Service 上 Ingress Controller 就是一个反向代理程序，它负责解析 Ingress 的反向代理规则， …">
   <meta name="author" content="{Description { .Site.Author.name }}"/>
   <link href='https://imroc.io/favicon.png' rel='icon' type='image/x-icon'/>
   <meta property="og:image" content="https://res.cloudinary.com/imroc/image/upload/v1521031841/avatar.png" />
@@ -34,7 +34,7 @@
 
 
 
-<link rel="stylesheet" href='/css/bundle.min.43522e1b6746447005cecd1381cc12a654c0364de88961016cdf5f133529476d.css' integrity='sha256-Q1IuG2dGRHAFzs0TgcwSplTANk3oiWEBbN9fEzUpR20='>
+<link rel="stylesheet" href='/css/bundle.min.6d79a1ed52242954f10363d8f656c7d97a028dddf359f0e72a30b5cabd73ffa7.css' integrity='sha256-bXmh7VIkKVTxA2PY9lbH2XoCjd3zWfDnKjC1yr1z/6c='>
   --><script>
 var _hmt = _hmt || [];
 (function() {
@@ -217,7 +217,7 @@ var _hmt = _hmt || [];
                      
                     <span class="post-meta">
   
-  发表于 July 24, 2018
+  发表于 2018-07-24
   
   
 </span>
@@ -254,7 +254,18 @@ var _hmt = _hmt || [];
 <div class="container" role="main" itemscope itemtype="http://schema.org/Article">
     <div class="row">
         <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-
+            
+            <div>
+                
+                <h5 id="tags" style="margin-top: 30px;">标签：
+                  
+                      <a
+                        href='https://imroc.io/tags/kubernetes/'>kubernetes</a>
+                      &nbsp;
+                  
+                </h5>
+            </div>
+            
             <article role="main" class="blog-post" itemprop="articleBody" id="content">
                 
 <aside class="toc">
@@ -443,7 +454,11 @@ var _hmt = _hmt || [];
   </div>
 </footer>
 
-<script src='/js/bundle.min.21f7d58c95d27f6c2ca78a820bd04dd19724828061fc1cd5fd72c409096ef914.js' integrity='sha256-IffVjJXSf2wsp4qCC9BN0ZckgoBh/BzV/XLECQlu&#43;RQ='></script>
+<script>
+  window.copyText='复制'==''?"Copy":'复制'
+  window.copiedText='已复制!'==''?"Copied":'已复制!'
+</script>
+<script src='/js/bundle.min.6a754f8d216cf8a16e94d637ea3a64c3f888c80c75c107d9acbb56503c8553cc.js' integrity='sha256-anVPjSFs&#43;KFulNY36jpkw/iIyAx1wQfZrLtWUDyFU8w='></script>
 
 
 

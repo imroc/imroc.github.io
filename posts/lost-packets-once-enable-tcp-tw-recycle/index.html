@@ -9,9 +9,9 @@
   <meta name="description" content="imroc.io|roc的博客|Cloud Native|Kubernetes|Go|Golang" />
   <meta property="og:title" content="Kubernetes 踩坑分享：开启tcp_tw_recycle内核参数在NAT环境会丢包" />
   <meta name="twitter:title" content="Kubernetes 踩坑分享：开启tcp_tw_recycle内核参数在NAT环境会丢包" />
-  <meta name="description" content="原因 tcp_tw_recycle参数。它用来快速回收TIME_WAIT连接，不过如果在NAT环境下会引发问题。 RFC1323中有如下一段描述">
-  <meta property="og:description" content="原因 tcp_tw_recycle参数。它用来快速回收TIME_WAIT连接，不过如果在NAT环境下会引发问题。 RFC1323中有如下一段描述">
-  <meta name="twitter:description" content="原因 tcp_tw_recycle参数。它用来快速回收TIME_WAIT连接，不过如果在NAT环境下会引发问题。 RFC1323中有如下一段描述">
+  <meta name="description" content="原因 tcp_tw_recycle参数。它用来快速回收TIME_WAIT连接，不过如果在NAT环境下会引发问题。 RFC1323中有如下一段描述： An additional mechanism could be added to the TCP, a per-host cache of the last timestamp received from any connection. This value could then be used in the PAWS mechanism to reject old duplicate segments from earlier incarnations of the connection, if the timestamp clock can be guaranteed to have ticked at least once since the old connection was open. This would require that the TIME-WAIT delay plus the RTT together must be at least one tick of the sender’s timestamp clock. Such an extension is not part of the proposal of this RFC. 大概意思是说TCP有一种行为，可以缓存每个连接最新的时间戳，后续请求中如果时间戳小于缓存的时间戳，即视为无效，相应的数据包会被丢弃。 Linux是否启用这种行为取决于tcp_timestamps和tcp_tw_recycle，因为tcp_timestamps缺省就是开启的，所以当tcp_tw_recycle被开启后，实际上这种行为就被激活了，当客户端或服务端以NAT方式构建的时候就可能出现问题，下面以客户端NAT为例来说明： 当多个客户端通过NAT方式联网并与服务端交互时，服务端看到的是同一个IP，也就是说对服务端而言这些客户端实际上等同于一个，可惜由于这些客户端的时间戳可能存在差异，于是乎从服务端的视角看，便可能出现时间戳错乱的现象，进而直接导致时间">
+  <meta property="og:description" content="原因 tcp_tw_recycle参数。它用来快速回收TIME_WAIT连接，不过如果在NAT环境下会引发问题。 RFC1323中有如下一段描述： An additional mechanism could be added to the TCP, a per-host cache of the last timestamp received from any connection. This value could then be used in the PAWS mechanism to reject old duplicate segments from earlier incarnations of the connection, if the timestamp clock can be guaranteed to have ticked at least once since the old connection was open. This would require that the TIME-WAIT delay plus the RTT together must be at least one tick of the sender’s timestamp clock. Such an extension is not part of the proposal of this RFC. 大概意思是说TCP有一种行为，可以缓存每个连接最新的时间戳，后续请求中如果时间戳小于缓存的时间戳，即视为无效，相应的数据包会被丢弃。 Linux是否启用这种行为取决于tcp_timestamps和tcp_tw_recycle，因为tcp_timestamps缺省就是开启的，所以当tcp_tw_recycle被开启后，实际上这种行为就被激活了，当客户端或服务端以NAT方式构建的时候就可能出现问题，下面以客户端NAT为例来说明： 当多个客户端通过NAT方式联网并与服务端交互时，服务端看到的是同一个IP，也就是说对服务端而言这些客户端实际上等同于一个，可惜由于这些客户端的时间戳可能存在差异，于是乎从服务端的视角看，便可能出现时间戳错乱的现象，进而直接导致时间">
+  <meta name="twitter:description" content="原因 tcp_tw_recycle参数。它用来快速回收TIME_WAIT连接，不过如果在NAT环境下会引发问题。 RFC1323中有如下一段描述： An additional mechanism could be added to the TCP, a per-host cache of the last timestamp received from any connection. This …">
   <meta name="author" content="{Description { .Site.Author.name }}"/>
   <link href='https://imroc.io/favicon.png' rel='icon' type='image/x-icon'/>
   <meta property="og:image" content="https://res.cloudinary.com/imroc/image/upload/v1521031841/avatar.png" />
@@ -34,7 +34,7 @@
 
 
 
-<link rel="stylesheet" href='/css/bundle.min.43522e1b6746447005cecd1381cc12a654c0364de88961016cdf5f133529476d.css' integrity='sha256-Q1IuG2dGRHAFzs0TgcwSplTANk3oiWEBbN9fEzUpR20='>
+<link rel="stylesheet" href='/css/bundle.min.6d79a1ed52242954f10363d8f656c7d97a028dddf359f0e72a30b5cabd73ffa7.css' integrity='sha256-bXmh7VIkKVTxA2PY9lbH2XoCjd3zWfDnKjC1yr1z/6c='>
   --><script>
 var _hmt = _hmt || [];
 (function() {
@@ -217,7 +217,7 @@ var _hmt = _hmt || [];
                      
                     <span class="post-meta">
   
-  发表于 June 9, 2019
+  发表于 2019-06-09
   
   
 </span>
@@ -254,7 +254,18 @@ var _hmt = _hmt || [];
 <div class="container" role="main" itemscope itemtype="http://schema.org/Article">
     <div class="row">
         <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-
+            
+            <div>
+                
+                <h5 id="tags" style="margin-top: 30px;">标签：
+                  
+                      <a
+                        href='https://imroc.io/tags/kubernetes/'>kubernetes</a>
+                      &nbsp;
+                  
+                </h5>
+            </div>
+            
             <article role="main" class="blog-post" itemprop="articleBody" id="content">
                 
 <aside class="toc">
@@ -462,7 +473,11 @@ RFC1323中有如下一段描述：</p>
   </div>
 </footer>
 
-<script src='/js/bundle.min.21f7d58c95d27f6c2ca78a820bd04dd19724828061fc1cd5fd72c409096ef914.js' integrity='sha256-IffVjJXSf2wsp4qCC9BN0ZckgoBh/BzV/XLECQlu&#43;RQ='></script>
+<script>
+  window.copyText='复制'==''?"Copy":'复制'
+  window.copiedText='已复制!'==''?"Copied":'已复制!'
+</script>
+<script src='/js/bundle.min.6a754f8d216cf8a16e94d637ea3a64c3f888c80c75c107d9acbb56503c8553cc.js' integrity='sha256-anVPjSFs&#43;KFulNY36jpkw/iIyAx1wQfZrLtWUDyFU8w='></script>
 
 
 

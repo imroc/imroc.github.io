@@ -9,9 +9,9 @@
   <meta name="description" content="imroc.io|roc的博客|Cloud Native|Kubernetes|Go|Golang" />
   <meta property="og:title" content="Kubernetes 最佳实践：解决长连接服务扩容失效" />
   <meta name="twitter:title" content="Kubernetes 最佳实践：解决长连接服务扩容失效" />
-  <meta name="description" content="在现网运营中，有很多场景为了提高效率，一般都采用建立长连接的方式来请求。我们发现在客户端以长连接请求服务端的场景下，K8S的自动扩容会失效。">
-  <meta property="og:description" content="在现网运营中，有很多场景为了提高效率，一般都采用建立长连接的方式来请求。我们发现在客户端以长连接请求服务端的场景下，K8S的自动扩容会失效。">
-  <meta name="twitter:description" content="在现网运营中，有很多场景为了提高效率，一般都采用建立长连接的方式来请求。我们发现在客户端以长连接请求服务端的场景下，K8S的自动扩容会失效。">
+  <meta name="description" content="在现网运营中，有很多场景为了提高效率，一般都采用建立长连接的方式来请求。我们发现在客户端以长连接请求服务端的场景下，K8S的自动扩容会失效。原因是客户端长连接一直保留在老的Pod容器中，新扩容的Pod没有新的连接过来，导致K8S按照步长扩容第一批Pod之后就停止了扩容操作，而且新扩容的Pod没能承载请求，进而出现服务过载的情况，自动扩容失去了意义。 对长连接扩容失效的问题，我们的解决方法是将长连接转换为短连接。我们参考了 nginx keepalive 的设计，nginx 中 keepalive_requests 这个配置项设定了一个TCP连接能处理的最大请求数，达到设定值(比如1000)之后服务端会在 http 的 Header 头标记 “Connection:close”，通知客户端处理完当前的请求后关闭连接，新的请求需要重新建立TCP连接，所以这个过程中不会出现请求失败，同时又达到了将长连接按需转换为短连接的目的。通过这个办法客户端和云K8S服务端处理完一批请求后不断的更新TCP连接，自动扩容的新Pod能接收到新的连接请求，从而解决了自动扩容失效的问题。 由于Golang并没有提供方法可以获取到每个连接处理过的请求数，我们重写了 net.Listener 和 net.Conn，注入请求计数器，对每个连接处">
+  <meta property="og:description" content="在现网运营中，有很多场景为了提高效率，一般都采用建立长连接的方式来请求。我们发现在客户端以长连接请求服务端的场景下，K8S的自动扩容会失效。原因是客户端长连接一直保留在老的Pod容器中，新扩容的Pod没有新的连接过来，导致K8S按照步长扩容第一批Pod之后就停止了扩容操作，而且新扩容的Pod没能承载请求，进而出现服务过载的情况，自动扩容失去了意义。 对长连接扩容失效的问题，我们的解决方法是将长连接转换为短连接。我们参考了 nginx keepalive 的设计，nginx 中 keepalive_requests 这个配置项设定了一个TCP连接能处理的最大请求数，达到设定值(比如1000)之后服务端会在 http 的 Header 头标记 “Connection:close”，通知客户端处理完当前的请求后关闭连接，新的请求需要重新建立TCP连接，所以这个过程中不会出现请求失败，同时又达到了将长连接按需转换为短连接的目的。通过这个办法客户端和云K8S服务端处理完一批请求后不断的更新TCP连接，自动扩容的新Pod能接收到新的连接请求，从而解决了自动扩容失效的问题。 由于Golang并没有提供方法可以获取到每个连接处理过的请求数，我们重写了 net.Listener 和 net.Conn，注入请求计数器，对每个连接处">
+  <meta name="twitter:description" content="在现网运营中，有很多场景为了提高效率，一般都采用建立长连接的方式来请求。我们发现在客户端以长连接请求服务端的场景下，K8S的自动扩容会失效。原因是客户端长连接一直保留在老的Pod容器中，新扩容的Pod没有新的连接过来，导致K8S按照步长扩容第一批Pod之后就停止了扩容操作，而且新扩容的Pod没能承载请求，进而出现服务过载的情况，自动扩容失去了意义。 对长连接扩容失效的问题，我们的解决方法是将长连接 …">
   <meta name="author" content="{Description { .Site.Author.name }}"/>
   <link href='https://imroc.io/favicon.png' rel='icon' type='image/x-icon'/>
   <meta property="og:image" content="https://res.cloudinary.com/imroc/image/upload/v1521031841/avatar.png" />
@@ -34,7 +34,7 @@
 
 
 
-<link rel="stylesheet" href='/css/bundle.min.43522e1b6746447005cecd1381cc12a654c0364de88961016cdf5f133529476d.css' integrity='sha256-Q1IuG2dGRHAFzs0TgcwSplTANk3oiWEBbN9fEzUpR20='>
+<link rel="stylesheet" href='/css/bundle.min.6d79a1ed52242954f10363d8f656c7d97a028dddf359f0e72a30b5cabd73ffa7.css' integrity='sha256-bXmh7VIkKVTxA2PY9lbH2XoCjd3zWfDnKjC1yr1z/6c='>
   --><script>
 var _hmt = _hmt || [];
 (function() {
@@ -217,7 +217,7 @@ var _hmt = _hmt || [];
                      
                     <span class="post-meta">
   
-  发表于 June 6, 2019
+  发表于 2019-06-06
   
   
 </span>
@@ -254,7 +254,18 @@ var _hmt = _hmt || [];
 <div class="container" role="main" itemscope itemtype="http://schema.org/Article">
     <div class="row">
         <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-
+            
+            <div>
+                
+                <h5 id="tags" style="margin-top: 30px;">标签：
+                  
+                      <a
+                        href='https://imroc.io/tags/kubernetes/'>kubernetes</a>
+                      &nbsp;
+                  
+                </h5>
+            </div>
+            
             <article role="main" class="blog-post" itemprop="articleBody" id="content">
                 
 <aside class="toc">
@@ -508,7 +519,11 @@ var _hmt = _hmt || [];
   </div>
 </footer>
 
-<script src='/js/bundle.min.21f7d58c95d27f6c2ca78a820bd04dd19724828061fc1cd5fd72c409096ef914.js' integrity='sha256-IffVjJXSf2wsp4qCC9BN0ZckgoBh/BzV/XLECQlu&#43;RQ='></script>
+<script>
+  window.copyText='复制'==''?"Copy":'复制'
+  window.copiedText='已复制!'==''?"Copied":'已复制!'
+</script>
+<script src='/js/bundle.min.6a754f8d216cf8a16e94d637ea3a64c3f888c80c75c107d9acbb56503c8553cc.js' integrity='sha256-anVPjSFs&#43;KFulNY36jpkw/iIyAx1wQfZrLtWUDyFU8w='></script>
 
 
 

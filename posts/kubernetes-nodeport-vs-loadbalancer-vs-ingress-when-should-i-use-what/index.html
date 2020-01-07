@@ -9,9 +9,9 @@
   <meta name="description" content="imroc.io|roc的博客|Cloud Native|Kubernetes|Go|Golang" />
   <meta property="og:title" content="对比Kubernetes的Nodeport、Loadbalancer和Ingress，什么时候该用哪种" />
   <meta name="twitter:title" content="对比Kubernetes的Nodeport、Loadbalancer和Ingress，什么时候该用哪种" />
-  <meta name="description" content="本文翻译自：https://medium.com/google-cloud/kubernetes-nodeport-vs-loadbalan">
-  <meta property="og:description" content="本文翻译自：https://medium.com/google-cloud/kubernetes-nodeport-vs-loadbalan">
-  <meta name="twitter:description" content="本文翻译自：https://medium.com/google-cloud/kubernetes-nodeport-vs-loadbalan">
+  <meta name="description" content="本文翻译自：https://medium.com/google-cloud/kubernetes-nodeport-vs-loadbalancer-vs-ingress-when-should-i-use-what-922f010849e0 最近，有人问我 NodePort，LoadBalancer 和 Ingress 之间的区别是什么。 它们是将外部流量引入群集的不同方式，并且实现方式不一样。 我们来看看它们是如何工作的，以及什么时候该用哪种。 **注意：**本文适用于 Google Kubernetes Engine。 如果你在其他公有云、混合云、minikube 等上运行，可能会略有不同。 例如，您不能在 minikube 上使用 LoadBalancer。 我也没有深入技术细节。 如果您有兴趣了解更多，官方文档是一个很好的资源！ ClusterIP ClusterIP 服务是默认的 Kubernetes 服务。 它为您提供集群内部其他应用程序可以访问的服务， 外部无法访问。 ClusterIP 服务的 YAML 类似这样： apiVersion: v1 kind: Service metadata: name: my-internal-service selector: app: my-app spec: type: ClusterIP ports: - name: http port: 80 targetPort: 80 protocol: TCP 如果你不能从集群外部上访问一个 ClusterIP 服务，我为什么要谈论它？ 因为你可以使用 Kubernetes Proxy 来访问它！ 启动 Kubernetes Proxy: $ kubectl proxy --port=8080 现在，你可以使用如下的 Kubernetes API 访问服务： http://localhost:8080/api/v1/proxy/namespaces/&lt;NAMESPACE&gt;/services/&lt;SERVICE-NAME&gt;:&lt;PORT-NAME&gt;/ 所以，如果要访问我们刚刚定义的服务，可以使用下面的地址： http://localhost:8080/api/v1/proxy/namespaces/default/services/my-internal-service:http/">
+  <meta property="og:description" content="本文翻译自：https://medium.com/google-cloud/kubernetes-nodeport-vs-loadbalancer-vs-ingress-when-should-i-use-what-922f010849e0 最近，有人问我 NodePort，LoadBalancer 和 Ingress 之间的区别是什么。 它们是将外部流量引入群集的不同方式，并且实现方式不一样。 我们来看看它们是如何工作的，以及什么时候该用哪种。 **注意：**本文适用于 Google Kubernetes Engine。 如果你在其他公有云、混合云、minikube 等上运行，可能会略有不同。 例如，您不能在 minikube 上使用 LoadBalancer。 我也没有深入技术细节。 如果您有兴趣了解更多，官方文档是一个很好的资源！ ClusterIP ClusterIP 服务是默认的 Kubernetes 服务。 它为您提供集群内部其他应用程序可以访问的服务， 外部无法访问。 ClusterIP 服务的 YAML 类似这样： apiVersion: v1 kind: Service metadata: name: my-internal-service selector: app: my-app spec: type: ClusterIP ports: - name: http port: 80 targetPort: 80 protocol: TCP 如果你不能从集群外部上访问一个 ClusterIP 服务，我为什么要谈论它？ 因为你可以使用 Kubernetes Proxy 来访问它！ 启动 Kubernetes Proxy: $ kubectl proxy --port=8080 现在，你可以使用如下的 Kubernetes API 访问服务： http://localhost:8080/api/v1/proxy/namespaces/&lt;NAMESPACE&gt;/services/&lt;SERVICE-NAME&gt;:&lt;PORT-NAME&gt;/ 所以，如果要访问我们刚刚定义的服务，可以使用下面的地址： http://localhost:8080/api/v1/proxy/namespaces/default/services/my-internal-service:http/">
+  <meta name="twitter:description" content="本文翻译自：https://medium.com/google-cloud/kubernetes-nodeport-vs-loadbalancer-vs-ingress-when-should-i-use-what-922f010849e0 最近，有人问我 NodePort，LoadBalancer 和 Ingress 之间的区别是什么。 它们是将外部流量引入群集的不同方式，并且实现方式不一样。  …">
   <meta name="author" content="{Description { .Site.Author.name }}"/>
   <link href='https://imroc.io/favicon.png' rel='icon' type='image/x-icon'/>
   <meta property="og:image" content="https://res.cloudinary.com/imroc/image/upload/v1521031841/avatar.png" />
@@ -34,7 +34,7 @@
 
 
 
-<link rel="stylesheet" href='/css/bundle.min.43522e1b6746447005cecd1381cc12a654c0364de88961016cdf5f133529476d.css' integrity='sha256-Q1IuG2dGRHAFzs0TgcwSplTANk3oiWEBbN9fEzUpR20='>
+<link rel="stylesheet" href='/css/bundle.min.6d79a1ed52242954f10363d8f656c7d97a028dddf359f0e72a30b5cabd73ffa7.css' integrity='sha256-bXmh7VIkKVTxA2PY9lbH2XoCjd3zWfDnKjC1yr1z/6c='>
   --><script>
 var _hmt = _hmt || [];
 (function() {
@@ -217,7 +217,7 @@ var _hmt = _hmt || [];
                      
                     <span class="post-meta">
   
-  发表于 March 13, 2018
+  发表于 2018-03-13
   
   
 </span>
@@ -254,7 +254,18 @@ var _hmt = _hmt || [];
 <div class="container" role="main" itemscope itemtype="http://schema.org/Article">
     <div class="row">
         <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-
+            
+            <div>
+                
+                <h5 id="tags" style="margin-top: 30px;">标签：
+                  
+                      <a
+                        href='https://imroc.io/tags/kubernetes/'>kubernetes</a>
+                      &nbsp;
+                  
+                </h5>
+            </div>
+            
             <article role="main" class="blog-post" itemprop="articleBody" id="content">
                 
 <aside class="toc">
@@ -542,7 +553,11 @@ spec:
   </div>
 </footer>
 
-<script src='/js/bundle.min.21f7d58c95d27f6c2ca78a820bd04dd19724828061fc1cd5fd72c409096ef914.js' integrity='sha256-IffVjJXSf2wsp4qCC9BN0ZckgoBh/BzV/XLECQlu&#43;RQ='></script>
+<script>
+  window.copyText='复制'==''?"Copy":'复制'
+  window.copiedText='已复制!'==''?"Copied":'已复制!'
+</script>
+<script src='/js/bundle.min.6a754f8d216cf8a16e94d637ea3a64c3f888c80c75c107d9acbb56503c8553cc.js' integrity='sha256-anVPjSFs&#43;KFulNY36jpkw/iIyAx1wQfZrLtWUDyFU8w='></script>
 
 
 

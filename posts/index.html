@@ -31,7 +31,7 @@
 
 
 
-<link rel="stylesheet" href='/css/bundle.min.43522e1b6746447005cecd1381cc12a654c0364de88961016cdf5f133529476d.css' integrity='sha256-Q1IuG2dGRHAFzs0TgcwSplTANk3oiWEBbN9fEzUpR20='>
+<link rel="stylesheet" href='/css/bundle.min.6d79a1ed52242954f10363d8f656c7d97a028dddf359f0e72a30b5cabd73ffa7.css' integrity='sha256-bXmh7VIkKVTxA2PY9lbH2XoCjd3zWfDnKjC1yr1z/6c='>
   --><script>
 var _hmt = _hmt || [];
 (function() {
@@ -217,11 +217,47 @@ var _hmt = _hmt || [];
               </a>
 
               <p class="post-meta">
-                发表于 December 15, 2019
+                发表于 2019-12-15
               </p>
               <div class="post-entry">
                 
-                  大家好，我是 roc，来自腾讯云容器服务(TKE)团队，之前发过一篇干货满满的爆火文章 Kubernetes 网络疑难杂症排查分享，包含多个疑难杂症的排查案例分享，
+                  <p>之前发过一篇干货满满的爆火文章 <a href="https://imroc.io/posts/kubernetes/troubleshooting-with-kubernetes-network/">Kubernetes 网络疑难杂症排查分享</a>，包含多个疑难杂症的排查案例分享，信息量巨大。这次我又带来了续集，只讲一个案例，但信息量也不小，Are you ready ?</p>
+<h2 id="heading">问题反馈</h2>
+<p>有用户反馈 Deployment 滚动更新的时候，业务日志偶尔会报 &ldquo;No route to host&rdquo; 的错误。</p>
+<h2 id="heading-1">分析</h2>
+<p>之前没遇到滚动更新会报 &ldquo;No route to host&rdquo; 的问题，我们先看下滚动更新导致连接异常有哪些常见的报错:</p>
+<ul>
+<li>
+<p><code>Connection reset by peer</code>: 连接被重置。通常是连接建立过，但 server 端发现 client 发的包不对劲就返回 RST，应用层就报错连接被重置。比如在 server 滚动更新过程中，client 给 server 发的请求还没完全结束，或者本身是一个类似 grpc 的多路复用长连接，当 server 对应的旧 Pod 删除(没有做优雅结束，停止时没有关闭连接)，新 Pod 很快创建启动并且刚好有跟之前旧 Pod 一样的 IP，这时 kube-proxy 也没感知到这个 IP 其实已经被删除然后又被重建了，针对这个 IP 的规则就不会更新，旧的连接依然发往这个 IP，但旧 Pod 已经不在了，后面继续发包时依然转发给这个 Pod IP，最终会被转发到这个有相同 IP 的新 Pod 上，而新 Pod 收到此包时检查报文发现不对劲，就返回 RST 给 client 告知将连接重置。针对这种情况，建议应用自身处理好优雅结束：Pod 进入 Terminating 状态后会发送 <code>SIGTERM</code> 信号给业务进程，业务进程的代码需处理这个信号，在进程退出前关闭所有连接。</p>
+</li>
+<li>
+<p><code>Connection refused</code>: 连接被拒绝。通常是连接还没建立，client 正在发 SYN 包请求建立连接，但到了 server 之后发现端口没监听，内核就返回 RST 包，然后应用层就报错连接被拒绝。比如在 server 滚动更新过程中，旧的 Pod 中的进程很快就停止了(网卡还未完全销毁)，但 client 所在节点的 iptables/ipvs 规则还没更新，包就可能会被转发到了这个停止的 Pod (由于 k8s 的 controller 模式，从 Pod 删除到 service 的 endpoint 更新，再到 kube-proxy watch 到更新并更新 节点上的 iptables/ipvs 规则，这个过程是异步的，中间存在一点时间差，所以有可能存在 Pod 中的进程已经没有监听，但 iptables/ipvs 规则还没更新的情况)。针对这种情况，建议给容器加一个 preStop，在真正销毁 Pod 之前等待一段时间，留时间给 kube-proxy 更新转发规则，更新完之后就不会再有新连接往这个旧 Pod 转发了，preStop 示例:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">lifecycle:
+  preStop:
+    exec:
+      command:
+      - /bin/bash
+      - -c
+      - sleep <span style="color:#ae81ff">30</span>
+</code></pre></div><p>另外，还可能是新的 Pod 启动比较慢，虽然状态已经 Ready，但实际上可能端口还没监听，新的请求被转发到这个还没完全启动的 Pod 就会报错连接被拒绝。针对这种情况，建议给容器加就绪检查 (readinessProbe)，让容器真正启动完之后才将其状态置为 Ready，然后 kube-proxy 才会更新转发规则，这样就能保证新的请求只被转发到完全启动的 Pod，readinessProbe 示例:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">readinessProbe:
+  httpGet:
+    path: /healthz
+    port: <span style="color:#ae81ff">80</span>
+    httpHeaders:
+    - name: X-Custom-Header
+      value: Awesome
+  initialDelaySeconds: <span style="color:#ae81ff">15</span>
+  timeoutSeconds: <span style="color:#ae81ff">1</span>
+</code></pre></div></li>
+<li>
+<p><code>Connection timed out</code>: 连接超时。通常是连接还没建立，client 发 SYN 请求建立连接一直等到超时时间都没有收到 ACK，然后就报错连接超时。这个可能场景跟前面 <code>Connection refused</code> 可能的场景类似，不同点在于端口有监听，但进程无法正常响应了: 转发规则还没更新，旧 Pod 的进程正在停止过程中，虽然端口有监听，但已经不响应了；或者转发规则更新了，新 Pod 端口也监听了，但还没有真正就绪，还没有能力处理新请求。针对这些情况的建议跟前面一样：加 preStop 和 readinessProbe。</p>
+</li>
+</ul>
+<p>下面我们来继续分析下滚动更新时发生 <code>No route to host</code> 的可能情况。</p>
+<p>这个报错很明显，IP 无法路由，通常是将报文发到了一个已经彻底销毁的 Pod (网卡已经不在)。不可能发到一个网卡还没创建好的 Pod，因为即便不加存活检查，也是要等到 Pod 网络初始化完后才可能 Ready，然后 kube-proxy 才会更新转发规则。</p>
+<p>什么情况下会转发到一个已经彻底销毁的 Pod？ 借鉴前面几种滚动更新的报错分析，我们推测应该是 Pod 很快销毁了但转发规则还没更新，从而新的请求被转发了这个已经销毁的 Pod，最终报文到达这个 Pod 所在 PodCIDR 的 Node 上时，Node 发现本机已经没有这个 IP 的容器，然后 Node 就返回 ICMP 包告知 client 这个 IP 不可达，client 收到 ICMP 后，应用层就会报错 &ldquo;No route to host&rdquo;。</p>
+<p>所以根据我们的分析，关键点在于 Pod 销毁太快，转发规则还没来得及更新，导致后来的请求被转发到已销毁的 Pod。针对这种情况，我们可以给容器加一个 preStop，留时间给 kube-proxy 更新转发规则来解决，参考 《Kubernetes实践指南》中的部分章节: <a href="https://k8s.imroc.io/best-practice/high-availability-deployment-of-applications#smooth-update-using-prestophook-and-readinessprobe">https://k8s.imroc.io/best-practice/high-availability-deployment-of-applications#smooth-update-using-prestophook-and-readinessprobe</a></p>
                   <a href="https://imroc.io/posts/kubernetes-no-route-to-host/" class="post-read-more">[阅读全文]</a>
                 
               </div>
@@ -236,19 +272,37 @@ var _hmt = _hmt || [];
             </article>
           
             <article class="post-preview">
-              <a href="https://imroc.io/posts/service-topology/">
+              <a href="https://imroc.io/posts/kubernetes-service-topology/">
                 <h2 class="post-title">k8s v1.17 新特性预告: 拓扑感知服务路由</h2>
 
                 
               </a>
 
               <p class="post-meta">
-                发表于 November 26, 2019
+                发表于 2019-11-26
               </p>
               <div class="post-entry">
                 
-                  大家好，我是 roc，来自腾讯云容器服务(TKE)团队，今天给大家介绍下我参与开发的一个 k8s v1.17 新特性: 拓扑感知服务路由。 名词解释 拓扑域: 表示在集
-                  <a href="https://imroc.io/posts/service-topology/" class="post-read-more">[阅读全文]</a>
+                  <p>今天给大家介绍下我参与开发的一个 k8s v1.17 新特性: 拓扑感知服务路由。</p>
+<h2 id="heading">名词解释</h2>
+<ul>
+<li>拓扑域: 表示在集群中的某一类 &ldquo;地方&rdquo;，比如某节点、某机架、某可用区或某地域等，这些都可以作为某种拓扑域。</li>
+<li>endpoint: k8s 某个服务的某个 ip+port，通常是 pod 的 ip+port。</li>
+<li>service: k8s 的 service 资源(服务)，关联一组 endpoint ，访问 service 会被转发到关联的某个 endpoint 上。</li>
+</ul>
+<h2 id="heading-1">背景</h2>
+<p>拓扑感知服务路由，此特性最初由杜军大佬提出并设计。为什么要设计此特性呢？想象一下，k8s 集群节点分布在不同的地方，service 对应的 endpoints 分布在不同节点，传统转发策略会对所有 endpoint 做负载均衡，通常会等概率转发，当访问 service 时，流量就可能被分散打到这些不同的地方。虽然 service 转发做了负载均衡，但如果 endpoint 距离比较远，流量转发过去网络时延就相对比较高，会影响网络性能，在某些情况下甚至还可能会付出额外的流量费用。要是如能实现 service 就近转发 endpoint，是不是就可以实现降低网络时延，提升网络性能了呢？是的！这也正是该特性所提出的目的和意义。</p>
+<h2 id="k8s-">k8s 亲和性</h2>
+<p>service 的就近转发实际就是一种网络的亲和性，倾向于转发到离自己比较近的 endpoint。在此特性之前，已经在调度和存储方面有一些亲和性的设计与实现:</p>
+<ul>
+<li>节点亲和性 (Node Affinity): 让 Pod 被调度到符合一些期望条件的 Node 上，比如限制调度到某一可用区，或者要求节点支持 GPU，这算是调度亲和，调度结果取决于节点属性。</li>
+<li>Pod 亲和性与反亲和性 (Pod Affinity/AntiAffinity): 让一组 Pod 调度到同一拓扑域的节点上，或者打散到不同拓扑域的节点， 这也算是调度亲和，调度结果取决于其它 Pod。</li>
+<li>数据卷拓扑感知调度 (Volume Topology-aware Scheduling): 让 Pod 只被调度到符合其绑定的存储所在拓扑域的节点上，这算是调度与存储的亲和，调度结果取决于存储的拓扑域。</li>
+<li>本地数据卷 (Local Persistent Volume): 让 Pod 使用本地数据卷，比如高性能 SSD，在某些需要高 IOPS 低时延的场景很有用，它还会保证 Pod 始终被调度到同一节点，数据就不会不丢失，这也算是调度与存储的亲和，调度结果取决于存储所在节点。</li>
+<li>数据卷拓扑感知动态创建 (Topology-Aware Volume Dynamic Provisioning): 先调度 Pod，再根据 Pod 所在节点的拓扑域来创建存储，这算是存储与调度的亲和，存储的创建取决于调度的结果。</li>
+</ul>
+<p>而 k8s 目前在网络方面还没有亲和性能力，拓扑感知服务路由这个新特性恰好可以补齐这个的空缺，此特性使得 service 可以实现就近转发而不是所有 endpoint 等概率转发。</p>
+                  <a href="https://imroc.io/posts/kubernetes-service-topology/" class="post-read-more">[阅读全文]</a>
                 
               </div>
 
@@ -269,11 +323,19 @@ var _hmt = _hmt || [];
               </a>
 
               <p class="post-meta">
-                发表于 August 12, 2019
+                发表于 2019-08-12
               </p>
               <div class="post-entry">
                 
-                  大家好，我是 roc，来自腾讯云容器服务(TKE)团队，经常帮助用户解决各种 K8S 的疑难杂症，积累了比较丰富的经验，本文分享几个比较复杂的网络方面
+                  <p>大家好，我是 roc，来自腾讯云容器服务(TKE)团队，经常帮助用户解决各种 K8S 的疑难杂症，积累了比较丰富的经验，本文分享几个比较复杂的网络方面的问题排查和解决思路，深入分析并展开相关知识，信息量巨大，相关经验不足的同学可能需要细细品味才能消化，我建议收藏本文反复研读，当完全看懂后我相信你的功底会更加扎实，解决问题的能力会大大提升。</p>
+<blockquote>
+<p>本文发现的问题是在使用 TKE 时遇到的，不同厂商的网络环境可能不一样，文中会对不同的问题的网络环境进行说明</p>
+</blockquote>
+<!-- raw HTML omitted -->
+<p><img src="https://imroc.io/assets/meme/dengguangshi.png" alt=""></p>
+<h2 id="-vpc--nodeport-">跨 VPC 访问 NodePort 经常超时</h2>
+<p>现象: 从 VPC a 访问 VPC b 的 TKE 集群的某个节点的 NodePort，有时候正常，有时候会卡住直到超时。</p>
+<p>原因怎么查？</p>
                   <a href="https://imroc.io/posts/troubleshooting-with-kubernetes-network/" class="post-read-more">[阅读全文]</a>
                 
               </div>
@@ -295,11 +357,11 @@ var _hmt = _hmt || [];
               </a>
 
               <p class="post-meta">
-                发表于 June 9, 2019
+                发表于 2019-06-09
               </p>
               <div class="post-entry">
                 
-                  原因 tcp_tw_recycle参数。它用来快速回收TIME_WAIT连接，不过如果在NAT环境下会引发问题。 RFC1323中有如下一段描述
+                  原因 tcp_tw_recycle参数。它用来快速回收TIME_WAIT连接，不过如果在NAT环境下会引发问题。 RFC1323中有如下一段描述： An additional mechanism could be added to the TCP, a per-host cache of the last timestamp received from any connection. This value could then be used in the PAWS mechanism to reject old duplicate segments from earlier incarnations of the connection, if the timestamp clock can be guaranteed to have ticked at least once since the old connection was open. This would require that the TIME-WAIT delay plus the RTT together must be at least one tick of the sender’s timestamp clock. Such an extension is not part of the proposal of this RFC. 大概意思是说TCP有一种行为，可以缓存每个连接最新的时间戳，后续请求中如果时间戳小于缓存的时间戳，即视为无效，相应的数据包会被丢弃。 Linux是否启用这种行为取决于tcp_timestamps和tcp_tw_recycle，因为tcp_timestamps缺省就是开启的，所以当tcp_tw_recycle被开启后，实际上这种行为就被激活了，当客户端或服务端以NAT方式构建的时候就可能出现问题，下面以客户端NAT为例来说明： 当多个客户端通过NAT方式联网并与服务端交互时，服务端看到的是同一个IP，也就是说对服务端而言这些客户端实际上等同于一个，可惜由于这些客户端的时间戳可能存在差异，于是乎从服务端的视角看，便可能出现时间戳错乱的现象，进而直接导致时间
                   <a href="https://imroc.io/posts/lost-packets-once-enable-tcp-tw-recycle/" class="post-read-more">[阅读全文]</a>
                 
               </div>
@@ -321,12 +383,37 @@ var _hmt = _hmt || [];
               </a>
 
               <p class="post-meta">
-                发表于 June 8, 2019
+                发表于 2019-06-08
               </p>
               <div class="post-entry">
                 
-                  内存碎片化造成的危害 节点的内存碎片化严重，导致docker运行容器时，无法分到大的内存块，导致start docker失败。最终导致服务更新时
-                  <a href="https://imroc.io/posts/handle-memory-fragmentation/" class="post-read-more">[阅读全文]</a>
+                  <h2 id="heading">内存碎片化造成的危害</h2>
+<p>节点的内存碎片化严重，导致docker运行容器时，无法分到大的内存块，导致start docker失败。最终导致服务更新时，状态一直都是启动中</p>
+<h2 id="heading-1">判断是否内存碎片化严重</h2>
+<p>内核日志显示：</p>
+<p><img src="https://imroc.io/assets/blog/handle-memory-fragmentation-1.png" alt=""></p>
+<p><img src="https://imroc.io/assets/blog/handle-memory-fragmentation-2.png" alt=""></p>
+<p>进一步查看的系统内存(cache多可能是io导致的，为了提高io效率留下的缓存，这部分内存实际是可以释放的)：</p>
+<p><img src="https://imroc.io/assets/blog/handle-memory-fragmentation-3.png" alt=""></p>
+<p>查看slab (后面的0多表示伙伴系统没有大块内存了)：</p>
+<p><img src="https://imroc.io/assets/blog/handle-memory-fragmentation-4.png" alt=""></p>
+<h2 id="heading-2">解决方法</h2>
+<ul>
+<li>周期性地或者在发现大块内存不足时，先进行drop_cache操作:</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">echo <span style="color:#ae81ff">3</span> &gt; /proc/sys/vm/drop_caches
+</code></pre></div><ul>
+<li>必要时候进行内存整理，开销会比较大，会造成业务卡住一段时间(慎用):</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">echo <span style="color:#ae81ff">1</span> &gt; /proc/sys/vm/compact_memory
+</code></pre></div><h2 id="heading-3">附录</h2>
+<p>相关链接：</p>
+<ul>
+<li><a href="https://www.lijiaocn.com/%E9%97%AE%E9%A2%98/2017/11/13/problem-unable-create-nf-conn.html">https://www.lijiaocn.com/%E9%97%AE%E9%A2%98/2017/11/13/problem-unable-create-nf-conn.html</a></li>
+<li><a href="https://blog.csdn.net/wqhlmark64/article/details/79143975">https://blog.csdn.net/wqhlmark64/article/details/79143975</a></li>
+<li><a href="https://huataihuang.gitbooks.io/cloud-atlas/content/os/linux/kernel/memory/drop_caches_and_compact_memory.html">https://huataihuang.gitbooks.io/cloud-atlas/content/os/linux/kernel/memory/drop_caches_and_compact_memory.html</a></li>
+</ul>
+
                 
               </div>
 
@@ -347,11 +434,11 @@ var _hmt = _hmt || [];
               </a>
 
               <p class="post-meta">
-                发表于 June 6, 2019
+                发表于 2019-06-06
               </p>
               <div class="post-entry">
                 
-                  在现网运营中，有很多场景为了提高效率，一般都采用建立长连接的方式来请求。我们发现在客户端以长连接请求服务端的场景下，K8S的自动扩容会失效。
+                  在现网运营中，有很多场景为了提高效率，一般都采用建立长连接的方式来请求。我们发现在客户端以长连接请求服务端的场景下，K8S的自动扩容会失效。原因是客户端长连接一直保留在老的Pod容器中，新扩容的Pod没有新的连接过来，导致K8S按照步长扩容第一批Pod之后就停止了扩容操作，而且新扩容的Pod没能承载请求，进而出现服务过载的情况，自动扩容失去了意义。 对长连接扩容失效的问题，我们的解决方法是将长连接转换为短连接。我们参考了 nginx keepalive 的设计，nginx 中 keepalive_requests 这个配置项设定了一个TCP连接能处理的最大请求数，达到设定值(比如1000)之后服务端会在 http 的 Header 头标记 “Connection:close”，通知客户端处理完当前的请求后关闭连接，新的请求需要重新建立TCP连接，所以这个过程中不会出现请求失败，同时又达到了将长连接按需转换为短连接的目的。通过这个办法客户端和云K8S服务端处理完一批请求后不断的更新TCP连接，自动扩容的新Pod能接收到新的连接请求，从而解决了自动扩容失效的问题。 由于Golang并没有提供方法可以获取到每个连接处理过的请求数，我们重写了 net.Listener 和 net.Conn，注入请求计数器，对每个连接处
                   <a href="https://imroc.io/posts/kubernetes-scale-keepalive-service/" class="post-read-more">[阅读全文]</a>
                 
               </div>
@@ -373,11 +460,11 @@ var _hmt = _hmt || [];
               </a>
 
               <p class="post-meta">
-                发表于 May 19, 2019
+                发表于 2019-05-19
               </p>
               <div class="post-entry">
                 
-                  在使用 kubernetes 跑应用的时候，可能会遇到一些网络问题，比较常见的是服务端无响应(超时)或回包内容不正常，如果没找出各种配置上有问题，这时我们需要确认
+                  在使用 kubernetes 跑应用的时候，可能会遇到一些网络问题，比较常见的是服务端无响应(超时)或回包内容不正常，如果没找出各种配置上有问题，这时我们需要确认数据包到底有没有最终被路由到容器里，或者报文到达容器的内容和出容器的内容符不符合预期，通过分析报文可以进一步缩小问题范围。那么如何在容器内抓包呢？本文提供实用的脚本一键进入容器网络命名空间(netns)，使用宿主机上的tcpdump进行抓包。 使用脚本一键进入 pod netns 抓包 发现某个服务不通，最好将其副本数调为1，并找到这个副本 pod 所在节点和 pod 名称 kubectl get pod -o wide 登录 pod 所在节点，将如下脚本粘贴到 shell (注册函数到当前登录的 shell，我们后面用) function e() { set -eu ns=${2-&#34;default&#34;} pod=`kubectl -n $ns describe pod $1 | grep -A10 &#34;^Containers:&#34; | grep -Eo &#39;docker://.*$&#39; | head -n 1 | sed &#39;s/docker:\/\/\(.*\)$/\1/&#39;` pid=`docker inspect -f {{.State.Pid}} $pod` echo &#34;entering pod netns for $ns/$1&#34; cmd=&#34;nsenter -n --target $pid&#34; echo $cmd $cmd } 一键进入 pod 所在的 netns，格式：e POD_NAME NAMESPACE，示例： e istio-galley-58c7c7c646-m6568 istio-system e proxy-5546768954-9rxg6 # 省略 NAMESPACE 默认为 default 这时已经进入 pod 的 netns，可以执行宿主机上的 ip a 或 ifconfig 来查看容器的网卡，执行 netstat -tunlp 查看当前容器监听了哪些端口，再通过 tcpdump 抓包： tcpdump -i eth0 -w test.pcap port 80 ctrl-c 停止抓包，再用 scp 或 sz 将抓下来的包下载到本地使用 wireshark 分析，提供一些常用的 wireshark 过滤语法： # 使用 telnet 连上并发送一些测试文本，
                   <a href="https://imroc.io/posts/capture-packets-in-container/" class="post-read-more">[阅读全文]</a>
                 
               </div>
@@ -399,11 +486,11 @@ var _hmt = _hmt || [];
               </a>
 
               <p class="post-meta">
-                发表于 April 7, 2019
+                发表于 2019-04-07
               </p>
               <div class="post-entry">
                 
-                  设计目标 当前实现将用户 pod 流量转发到 proxy 的默认方式是使用 privileged 权限的 istio-init 这个 init container 来做的（运行脚本写入 iptables），Istio CNI 插件的主要设计目标
+                  设计目标 当前实现将用户 pod 流量转发到 proxy 的默认方式是使用 privileged 权限的 istio-init 这个 init container 来做的（运行脚本写入 iptables），Istio CNI 插件的主要设计目标是消除这个 privileged 权限的 init container，换成利用 k8s CNI 机制来实现相同功能的替代方案 原理 Istio CNI Plugin 不是 istio 提出类似 k8s CNI 的插件扩展机制，而是 k8s CNI 的一个具体实现 k8s CNI 插件是一条链，在创建和销毁pod的时候会调用链上所有插件来安装和卸载容器的网络，istio CNI Plugin 即为 CNI 插件的一个实现，相当于在创建销毁pod这些hook点来针对istio的pod做网络配置：写入iptables，让该 pod 所在的 network namespace 的网络流量转发到 proxy 进程 当然也就要求集群启用 CNI，kubelet 启动参数: --network-plugin=cni （该参数只有两个可选项：kubenet, cni） 实现方式 运行一个名为 istio-cni-node 的 daemonset 运行在每个节点，用于安装 istio CNI 插件 该 CNI 插件负责写入 iptables 规则，让用户 pod 所在 netns 的流量都转发到这个 pod 中 proxy 的进程 当启用 istio cni 后，sidecar 的自动注入或istioctl kube-inject将不再注入 initContainers (istio-init) istio-cni-node 工作流程 复制 Istio CNI 插件二进制程序到CNI的bin目录（即kubelet启动参数--cni-bin-dir指定的路径，默认是/opt/cni/b
                   <a href="https://imroc.io/posts/istio-cni/" class="post-read-more">[阅读全文]</a>
                 
               </div>
@@ -429,11 +516,11 @@ var _hmt = _hmt || [];
               </a>
 
               <p class="post-meta">
-                发表于 March 10, 2019
+                发表于 2019-03-10
               </p>
               <div class="post-entry">
                 
-                  是否有过因为使用 kubectl 经常需要重复输入命名空间而苦恼？是否觉得应该要有个记住命名空间的功能，自动记住上次使用的命名空间，不需要每次都输入？可惜没
+                  是否有过因为使用 kubectl 经常需要重复输入命名空间而苦恼？是否觉得应该要有个记住命名空间的功能，自动记住上次使用的命名空间，不需要每次都输入？可惜没有这种功能，但是，本文会教你一个非常巧妙的方法完美帮你解决这个痛点。 k 命令 将如下脚本粘贴到当前shell(注册k命令到当前终端session): function k() { cmdline=`HISTTIMEFORMAT=&#34;&#34; history | awk &#39;$2 == &#34;kubectl&#34; &amp;&amp; (/-n/ || /--namespace/) {for(i=2;i&lt;=NF;i++)printf(&#34;%s &#34;,$i);print &#34;&#34;}&#39; | tail -n 1` regs=(&#39;\-n [\w\-\d]+&#39; &#39;\-n=[\w\-\d]+&#39; &#39;\-\-namespace [\w\-\d]+&#39; &#39;\-\-namespace=[\w\-\d]+&#39;) for i in &#34;${!regs[@]}&#34;; do reg=${regs[i]} nsarg=`echo $cmdline | grep -o -P &#34;$reg&#34;` if [[ &#34;$nsarg&#34; == &#34;&#34; ]]; then continue fi cmd=&#34;kubectl $nsarg$@&#34; echo &#34;$cmd&#34; $cmd return done cmd=&#34;kubectl $@&#34; echo &#34;$cmd&#34; $cmd } mac 用户可以使用 dash 的 snippets 功能快速将上面的函数粘贴，使用 kk. 作为触发键 (dash snippets可以全局监听键盘输入，使用指定的输入作为触发而展开配置的内容，相当于是全局代码片段)，以后在某个终端想使用 k 的时候按下 kk. 就可以将 k 命令注册到当前终端，dash snippets 配置如图所示： 将 k 当作 kubectl 来用，只是不需要输入命名空间，它会调用 kubectl 并自动加上上次使用的非默认的命名空间，如果想切换命名空间，再常规的使用一次 kubectl 就行，下面是示范： 哈哈，是否感觉可以少输入很多字符，提高 kubectl 使用效率了？这是目前我探索解决 kubectl 重复输入命名空间的最好方案，一开始是受 fuck命令 的启发，想用 go 语言开发个 k 命令，但是发现两个缺点： 需要安装二进制才可以使
                   <a href="https://imroc.io/posts/efficient-kubectl/" class="post-read-more">[阅读全文]</a>
                 
               </div>
@@ -455,11 +542,11 @@ var _hmt = _hmt || [];
               </a>
 
               <p class="post-meta">
-                发表于 December 22, 2018
+                发表于 2018-12-22
               </p>
               <div class="post-entry">
                 
-                  需求 集群对外暴露了一个公网IP作为流量入口(可以是 Ingress 或 Service)，DNS 解析配置了一个泛域名指向该IP（比如 *.test.imroc.
+                  需求 集群对外暴露了一个公网IP作为流量入口(可以是 Ingress 或 Service)，DNS 解析配置了一个泛域名指向该IP（比如 *.test.imroc.io），现希望根据请求中不同 Host 转发到不同的后端 Service。比如 a.test.imroc.io 的请求被转发到 my-svc-a，b.test.imroc.io 的请求转发到 my-svc-b 简单做法 先说一种简单的方法，这也是大多数人的第一反应：配置 Ingress 规则 假如泛域名有两个不同 Host 分别转发到不同 Service，Ingress 类似这样写: apiVersion: extensions/v1beta1 kind: Ingress metadata: name: my-ingress spec: rules: - host: a.test.imroc.io http: paths: - backend: serviceName: my-svc-a servicePort: 80 path: / - host: b.test.imroc.io http: paths: - backend: serviceName: my-svc-b servicePort: 80 path: / 但是！如果 Host 非常多会怎样？（比如200+） 每次新增 Host 都要改 Ingress 规则，太麻烦 单个 Ingress 上面的规则越来越多，更改规则对 LB 的压力变大，可能会导致偶尔访问不了 正确姿势 我们可以约定请求中泛域名 Host 通配符的 * 号匹配到的字符跟 Service 的名字相关联（可以是相等，或者 Service 统一在前面加个前缀，比如 a.test.imroc.io 转发到 my-svc-a 这个 Service)，集群内起一个反向代理服务，匹配泛域名的请求全部转发到这个代理服务上，这个代理服务只做一件简单的事，解析 Host，正则匹配抓取泛域名中 * 号这部分，把它转换为 Service 名字，然后在集群里转发（集群 DNS 解析) 这个反向代理服务可
                   <a href="https://imroc.io/posts/kubernetes-wildcard-domain-forward/" class="post-read-more">[阅读全文]</a>
                 
               </div>
@@ -550,7 +637,11 @@ var _hmt = _hmt || [];
   </div>
 </footer>
 
-<script src='/js/bundle.min.21f7d58c95d27f6c2ca78a820bd04dd19724828061fc1cd5fd72c409096ef914.js' integrity='sha256-IffVjJXSf2wsp4qCC9BN0ZckgoBh/BzV/XLECQlu&#43;RQ='></script>
+<script>
+  window.copyText='复制'==''?"Copy":'复制'
+  window.copiedText='已复制!'==''?"Copied":'已复制!'
+</script>
+<script src='/js/bundle.min.6a754f8d216cf8a16e94d637ea3a64c3f888c80c75c107d9acbb56503c8553cc.js' integrity='sha256-anVPjSFs&#43;KFulNY36jpkw/iIyAx1wQfZrLtWUDyFU8w='></script>
 
 
 

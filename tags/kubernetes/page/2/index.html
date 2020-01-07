@@ -31,7 +31,7 @@
 
 
 
-<link rel="stylesheet" href='/css/bundle.min.43522e1b6746447005cecd1381cc12a654c0364de88961016cdf5f133529476d.css' integrity='sha256-Q1IuG2dGRHAFzs0TgcwSplTANk3oiWEBbN9fEzUpR20='>
+<link rel="stylesheet" href='/css/bundle.min.6d79a1ed52242954f10363d8f656c7d97a028dddf359f0e72a30b5cabd73ffa7.css' integrity='sha256-bXmh7VIkKVTxA2PY9lbH2XoCjd3zWfDnKjC1yr1z/6c='>
   --><script>
 var _hmt = _hmt || [];
 (function() {
@@ -217,11 +217,11 @@ var _hmt = _hmt || [];
               </a>
 
               <p class="post-meta">
-                发表于 July 24, 2018
+                发表于 2018-07-24
               </p>
               <div class="post-entry">
                 
-                  通俗的讲: Service 是后端真实服务的抽象，一个 Service 可以代表多个相同的后端服务 Ingress 是反向代理规则，用来规定 HTTP/S 请求应该被转发到哪个 Service 上，比如根据请求中不同的
+                  通俗的讲: Service 是后端真实服务的抽象，一个 Service 可以代表多个相同的后端服务 Ingress 是反向代理规则，用来规定 HTTP/S 请求应该被转发到哪个 Service 上，比如根据请求中不同的 Host 和 url 路径让请求落到不同的 Service 上 Ingress Controller 就是一个反向代理程序，它负责解析 Ingress 的反向代理规则，如果 Ingress 有增删改的变动，所有的 Ingress Controller 都会及时更新自己相应的转发规则，当 Ingress Controller 收到请求后就会根据这些规则将请求转发到对应的 Service。 Kubernetes 并没有自带 Ingress Controller，它只是一种标准，具体实现有多种，需要自己单独安装，常用的是 Nginx Ingress Controller 和 Traefik Ingress Controller。 所以 Ingress 是一种转发规则的抽象，Ingress Controller 的实现需要根据这些 Ingress 规则来将请求转发到对应的 Service，我画了个图方便大家理解： 从图中可以看出，Ingress Controller 收到请求，匹配 Ingress 转发规则，匹配到了就转发到后端 Service，而 Service 可能代表的后端 Pod 有多个，选出一个转发到那个 Pod，最终由那个 Pod 处理请求。 有同学可能会问，既然 Ingress Controller 要接受外面的请求，而 Ingress Controller 是部署在集群中的，怎么让 Ingress Controller 本身能够被外面访问到呢，有几种方式： Ingress Controller 用 Deployment 方式部署，给它添加一个 Service，类型为 LoadBalancer，这样会自动生成一个 IP 地址，通过
                   <a href="https://imroc.io/posts/understand-service-ingress-and-ingress-controller/" class="post-read-more">[阅读全文]</a>
                 
               </div>
@@ -243,11 +243,11 @@ var _hmt = _hmt || [];
               </a>
 
               <p class="post-meta">
-                发表于 July 23, 2018
+                发表于 2018-07-23
               </p>
               <div class="post-entry">
                 
-                  概述 Kubernetes Dashboard 是一个可以可视化查看和操作 Kubernetes 集群的一个插件 本文利用 Helm 部署它，所以请确保 Helm 已安装，安装方法参考：https://imroc.io/po
+                  概述 Kubernetes Dashboard 是一个可以可视化查看和操作 Kubernetes 集群的一个插件 本文利用 Helm 部署它，所以请确保 Helm 已安装，安装方法参考：https://imroc.io/posts/kubernetes/install-helm 本文使用 Nginx Ingress Controller 暴露 Kubernetes Dashboard 服务到外部，Nginx Ingress Controller 安装参考：https://imroc.io/posts/kubernetes/use-nginx-ingress-controller-to-expose-service 有域名，并且配置 DNS，IP 指向 Ingress Controller 对外暴露的地址 本文使用 cert-manager 生成免费证书，安装和使用参考：https://imroc.io/posts/kubernetes/let-ingress-enable-free-https-with-cert-manager 安装 先自定义 helm 的 chart 配置: vi values.yaml #Default values for kubernetes-dashboard # This is a YAML-formatted file. # Declare name/value pairs to be passed into your templates. # name: value image: repository: k8s.gcr.io/kubernetes-dashboard-amd64 tag: v1.8.3 pullPolicy: IfNotPresent replicaCount: 1 ## Here labels can be added to the kubernetes dashboard deployment ## labels: {} # kubernetes.io/cluster-service: &#34;true&#34; # kubernetes.io/name: &#34;Kubernetes Dashboard&#34; ## Additional container arguments ## #extraArgs: # - --enable-insecure-login # - --system-banner=&#34;Welcome to Kubernetes&#34; # - --port=8444 # By default, https uses 8443 so we move it away to something else # - --insecure-port=8443 # The chart has 8443 hard coded as a containerPort in the deployment spec so we must use this internally for the http service # - --insecure-bind-address=0.0.0.0 ## Node labels for pod assignment ## Ref: https://kubernetes.io/docs/user-guide/node-selection/ ## nodeSelector: {} ## List of node taints to tolerate (requires Kubernetes &gt;= 1.6) tolerations: [] # - key: &#34;key&#34; # operator: &#34;Equal|Exists&#34; # value: &#34;value&#34; # effect: &#34;NoSchedule|PreferNoSchedule|NoExecute&#34; service: type:
                   <a href="https://imroc.io/posts/deploy-kubernetes-dashboard-and-enable-free-https/" class="post-read-more">[阅读全文]</a>
                 
               </div>
@@ -269,11 +269,11 @@ var _hmt = _hmt || [];
               </a>
 
               <p class="post-meta">
-                发表于 July 23, 2018
+                发表于 2018-07-23
               </p>
               <div class="post-entry">
                 
-                  概述 cert-manager 是替代 kube-lego 的一个开源项目，用于在 Kubernetes 集群中自动提供 HTTPS 证书，支持 Let’s Encrypt, HashiCorp Vault 这些免费证书的签发。 本文使用 Helm 安装，所以请确保 Helm 已安装，安装
+                  概述 cert-manager 是替代 kube-lego 的一个开源项目，用于在 Kubernetes 集群中自动提供 HTTPS 证书，支持 Let’s Encrypt, HashiCorp Vault 这些免费证书的签发。 本文使用 Helm 安装，所以请确保 Helm 已安装，安装方法参考：https://imroc.io/posts/kubernetes/install-helm 你的集群必须已经装有 Ingress Controller，如果还没有，参考：https://imroc.io/posts/kubernetes/use-nginx-ingress-controller-to-expose-service 需要颁发免费证书的域名配置DNS记录，IP 指向 Ingress Controller 对外暴露的地址 开源地址：https://github.com/jetstack/cert-manager 文档地址：https://cert-manager.readthedocs.io 安装 cert-manager helm install \ --name cert-manager \ --namespace kube-system \ stable/cert-manager 一键安装，非常简单。 生成免费证书 我们需要先创建一个签发机构，cert-manager 给我们提供了 Issuer 和 ClusterIssuer 这两种用于创建签发机构的自定义资源对象，Issuer 只能用来签发自己所在 namespace 下的证书，ClusterIssuer 可以签发任意 namespace 下的证书，这里以 ClusterIssuer 为例创建一个签发机构： vi issuer.yaml apiVersion: certmanager.k8s.io/v1alpha1 kind:
                   <a href="https://imroc.io/posts/let-ingress-enable-free-https-with-cert-manager/" class="post-read-more">[阅读全文]</a>
                 
               </div>
@@ -295,11 +295,11 @@ var _hmt = _hmt || [];
               </a>
 
               <p class="post-meta">
-                发表于 July 23, 2018
+                发表于 2018-07-23
               </p>
               <div class="post-entry">
                 
-                  概述 Nginx Ingress Controller 是 Kubernetes Ingress Controller 的一种实现，作为反向代理将外部流量导入集群内部，实现将 Kubernetes 内部的 Service 暴露给外部，这样我们就能通过公网或内网直接访问集群内部的服
+                  概述 Nginx Ingress Controller 是 Kubernetes Ingress Controller 的一种实现，作为反向代理将外部流量导入集群内部，实现将 Kubernetes 内部的 Service 暴露给外部，这样我们就能通过公网或内网直接访问集群内部的服务。本文使用 Helm 来安装，所以请确保 Helm 已安装，安装方法参考：https://imroc.io/posts/kubernetes/install-helm/ 导入流量的方式 要想暴露内部流量，就需要让 Ingress Controller 自身能够对外提供服务，主要有以下两种方式： Ingress Controller 使用 Deployment 部署，Service 类型指定为 LoadBalancer 优点：最简单 缺点：需要集群有 Cloud Provider 并且支持 LoadBalancer, 一般云厂商托管的 kubernetes 集群支持，并且使用 LoadBalancer 是付费的，因为他会给你每个 LoadBalancer 类型的 Service 分配公网 IP 地址 Ingress Controller 使用 DeamonSet 部署，Pod 指定 hostPort 来暴露端口 优点：免费 缺点：没有高可用保证，如果需要高可用就得自己去搞 使用 LoadBalancer 导入流量 这种方式部署 Nginx Ingress Controller 最简单，只要保证上面说的前提：集群有 Cloud Provider 并且支持 LoadBalancer，如果你是使用云厂商的 Kubernetes 集群，保证你集群所使用的云厂商的账号有足够的余额，执行下面的命令一键安装： helm install --name nginx-ingress --namespace kube-system stable/nginx-ingress 因为 stable/nginx-ingress 这个 helm 的 chart 包默认就是使用的这种方式部署。 部署完了我们可以查看 LoadBalancer 给我们分配的 IP 地址： $ kubectl get svc -n kube-system NAME TYPE CLUSTER-IP EXTERNAL-IP PORT(S) AGE nginx-ingress-controller LoadBalancer 10.3.255.138 119.28.121.125 80:30113/TCP,443:32564/TCP 21h EXTERNAL-IP 就是我们需要的
                   <a href="https://imroc.io/posts/use-nginx-ingress-controller-to-expose-service/" class="post-read-more">[阅读全文]</a>
                 
               </div>
@@ -321,11 +321,11 @@ var _hmt = _hmt || [];
               </a>
 
               <p class="post-meta">
-                发表于 March 13, 2018
+                发表于 2018-03-13
               </p>
               <div class="post-entry">
                 
-                  本文翻译自：https://medium.com/google-cloud/kubernetes-nodeport-vs-loadbalan
+                  本文翻译自：https://medium.com/google-cloud/kubernetes-nodeport-vs-loadbalancer-vs-ingress-when-should-i-use-what-922f010849e0 最近，有人问我 NodePort，LoadBalancer 和 Ingress 之间的区别是什么。 它们是将外部流量引入群集的不同方式，并且实现方式不一样。 我们来看看它们是如何工作的，以及什么时候该用哪种。 **注意：**本文适用于 Google Kubernetes Engine。 如果你在其他公有云、混合云、minikube 等上运行，可能会略有不同。 例如，您不能在 minikube 上使用 LoadBalancer。 我也没有深入技术细节。 如果您有兴趣了解更多，官方文档是一个很好的资源！ ClusterIP ClusterIP 服务是默认的 Kubernetes 服务。 它为您提供集群内部其他应用程序可以访问的服务， 外部无法访问。 ClusterIP 服务的 YAML 类似这样： apiVersion: v1 kind: Service metadata: name: my-internal-service selector: app: my-app spec: type: ClusterIP ports: - name: http port: 80 targetPort: 80 protocol: TCP 如果你不能从集群外部上访问一个 ClusterIP 服务，我为什么要谈论它？ 因为你可以使用 Kubernetes Proxy 来访问它！ 启动 Kubernetes Proxy: $ kubectl proxy --port=8080 现在，你可以使用如下的 Kubernetes API 访问服务： http://localhost:8080/api/v1/proxy/namespaces/&lt;NAMESPACE&gt;/services/&lt;SERVICE-NAME&gt;:&lt;PORT-NAME&gt;/ 所以，如果要访问我们刚刚定义的服务，可以使用下面的地址： http://localhost:8080/api/v1/proxy/namespaces/default/services/my-internal-service:http/
                   <a href="https://imroc.io/posts/kubernetes-nodeport-vs-loadbalancer-vs-ingress-when-should-i-use-what/" class="post-read-more">[阅读全文]</a>
                 
               </div>
@@ -347,11 +347,11 @@ var _hmt = _hmt || [];
               </a>
 
               <p class="post-meta">
-                发表于 March 12, 2018
+                发表于 2018-03-12
               </p>
               <div class="post-entry">
                 
-                  前言 我最近开始研究 kubernetes 源码，希望将阅读笔记记录下来，分享阅读思路和心得，更好的理解 kubernetes，这是第一篇，从 kube-apiserver 开始。 开始 k8s各组件
+                  前言 我最近开始研究 kubernetes 源码，希望将阅读笔记记录下来，分享阅读思路和心得，更好的理解 kubernetes，这是第一篇，从 kube-apiserver 开始。 开始 k8s各组件main包在cmd目录下，即各个程序的入口处，来看看 kube-apiserver 的源码 注： 三点代表省略的代码，只关注主要的代码，让思路更清晰 cmd/kube-apiserver/apiserver.go func main() { ... command := app.NewAPIServerCommand() ... if err := command.Execute(); err != nil { fmt.Fprintf(os.Stderr, &#34;error: %v\n&#34;, err) os.Exit(1) } } 各组件程序都是用 cobra 来管理、解析命令行参数的，main 包下面还有 app 包，app 包才是包含创建 cobra 命令逻辑的地方，所以其实 main 包的逻辑特别简单，主要是调用执行函数就可以了。那么问题来了，为什么要这样设计？答案很简单，有没有注意到还有个 hyperkube 程序？它把很多组件的功能都综合在一起了，安装的时候我们就不需要准备那么多程序，比如执行 hyperkube apiserver 和直接执行kube-apiserver 效果是一样的。由于各组件程序把创建 cobra 命令的逻辑都提取到下面的 app 包了，hyperkube 就只可以直接调用这些，所以 hyperkube 的 main 包就仅仅需要一个 main 文件就可以了，各组件程序代码有更新，hyperkube 重新编译也能获取更新，所以提取 app 包是一种解耦的方法。 app.NewAPIServerCommand() 返回 *cobra.Command,执行 command.Execute() 最终会调用 *cobra.Command 的 Run 字段的函数，我们来看看 app.NewAPIServerCommand() 是如何构造 *cobra.Command 的。 func NewAPIServerCommand()
                   <a href="https://imroc.io/posts/kubernetes-source-code-reading-notes-kube-apiserver-code-main-line/" class="post-read-more">[阅读全文]</a>
                 
               </div>
@@ -377,11 +377,11 @@ var _hmt = _hmt || [];
               </a>
 
               <p class="post-meta">
-                发表于 March 9, 2018
+                发表于 2018-03-09
               </p>
               <div class="post-entry">
                 
-                  为什么要同步 安装kubernetes的时候，我们需要用到 gcr.io/google_containers 下面的一些镜像，在国内是不能直接下载的。如果用 Self Host 方式安装，master 上的组件除
+                  为什么要同步 安装kubernetes的时候，我们需要用到 gcr.io/google_containers 下面的一些镜像，在国内是不能直接下载的。如果用 Self Host 方式安装，master 上的组件除开kubelet之外都用容器运行，甚至 CNI 插件也是容器运行，比如 flannel，在 quay.io/coreos 下面，在国内下载非常慢。但是我们可以把这些镜像同步到我们的docker hub仓库里，再配个docker hub加速器，这样下载镜像就很快了。 原理 Katacoda 是一个在线学习平台，在web上提供学习需要的服务器终端，里面包含学习所需的环境，我们可以利用docker的课程的终端来同步，因为里面有docker环境，可以执行 docker login，docker pull，docker tag，docker push 等命令来实现同步镜像。 但是手工去执行命令很麻烦，如果要同步的镜像和tag比较多，手工操作那就是浪费生命，我们可以利用程序代替手工操作，不过 Katacoda 为了安全起见，不允许执行外来的二进制程序，但是可以shell脚本，我写好了脚本，大家只需要粘贴进去根据自己需要稍稍修改下，然后运行就可以了。 Let's Do It 点击 这里 进入docker课程 点击 START SCENARIO 或 终端右上角全屏按钮将终端放大 安装脚本依赖的 jq 命令 apt install jq 登录docker hub docker login 创建
                   <a href="https://imroc.io/posts/sync-images-to-docker-hub-using-katacoda/" class="post-read-more">[阅读全文]</a>
                 
               </div>
@@ -474,7 +474,11 @@ var _hmt = _hmt || [];
   </div>
 </footer>
 
-<script src='/js/bundle.min.21f7d58c95d27f6c2ca78a820bd04dd19724828061fc1cd5fd72c409096ef914.js' integrity='sha256-IffVjJXSf2wsp4qCC9BN0ZckgoBh/BzV/XLECQlu&#43;RQ='></script>
+<script>
+  window.copyText='复制'==''?"Copy":'复制'
+  window.copiedText='已复制!'==''?"Copied":'已复制!'
+</script>
+<script src='/js/bundle.min.6a754f8d216cf8a16e94d637ea3a64c3f888c80c75c107d9acbb56503c8553cc.js' integrity='sha256-anVPjSFs&#43;KFulNY36jpkw/iIyAx1wQfZrLtWUDyFU8w='></script>
 
 
 

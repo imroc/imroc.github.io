@@ -19,7 +19,7 @@
       <pubDate>Fri, 07 Dec 2018 18:05:00 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
       <guid>https://imroc.io/posts/git-trick-modify-history/</guid>
-      <description>修改历史 修改最新一条历史 如果内容需要改就直接改，然后 git add 进去，然后执行 git commit --amend 会弹出 git commit message 的编辑窗口，会填充之前 commit 时写的 message 内容，如果需要改就直</description>
+      <description>修改历史 修改最新一条历史 如果内容需要改就直接改，然后 git add 进去，然后执行 git commit --amend 会弹出 git commit message 的编辑窗口，会填充之前 commit 时写的 message 内容，如果需要改就直接编辑，不需要改就不动，最后保存退出 (:wq) 修改指定某条历史 不小心暴露敏感信息到历史？使用如下操作修改历史： 找到需要修改的历史更前面的一条 commit 的 id 并复制，记为 &amp;lt;commit id&amp;gt; git rebase -i &amp;lt;commit id&amp;gt; 将显示的第一个 pick 改为 edit 保存并退出 (:wq) 对需要修改的文件进行修改，然后 git add 进去 提交：git commit --amend 完成: git rebase --continue 同步代码 强制 push 到远程： git push -f origin &amp;lt;local-branch&amp;gt;:&amp;lt;remote-branch&amp;gt; 其它伙伴同步到自己机器： git fetch git reset --hard origin/&amp;lt;remote-branch&amp;gt;</description>
     </item>
     
     <item>
@@ -28,7 +28,7 @@
       <pubDate>Sun, 21 Oct 2018 23:00:00 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
       <guid>https://imroc.io/posts/chrome/</guid>
-      <description>推荐两款插件， SurfingKeys 和 Steward，让你全键盘高效操作浏览器。老规矩，附视频教学。 SurfingKeys 模拟 vim 的快捷键有两款 Chrome 插件，分别是 Vimium 和 Surfingkey</description>
+      <description>推荐两款插件， SurfingKeys 和 Steward，让你全键盘高效操作浏览器。老规矩，附视频教学。 SurfingKeys 模拟 vim 的快捷键有两款 Chrome 插件，分别是 Vimium 和 Surfingkeys，虽然 Vimium 用的人数更多，但是我觉得 Surfingkeys 的键位设计更舒服，单手就能完成常用的操作。按 &amp;ldquo;?&amp;rdquo; 号就能弹出快捷键帮助页: 常用快捷键 快捷键 功能 d 和 e 向下和向上翻页 j 和 k 向下和向上翻一点 gg 和 G 滚动到最上面和最下面 E 和 R 向左和向右切换标签页 S 和 D 历史的前进与后退 r 刷新网页 on 新建标签页 x 关闭标签页 X 打开最近关闭的标签页 f 选择打开链接 i 选择输入框 gi 进入第一个输入框 v 进入可视模式 b 搜索书签 Steward Steward 可以说是 Chrome 中的 Alfred，通过执行命令来完成一些便捷操作。 Surfingkeys 在新标签页下是不起作用的，比如我们切换到了没有网页的新标签页，这时用 SurfingKeys 的快捷键我们也无法切换标签页或关闭标签页或者是查找书签。这时候我推荐使用自带的快捷键进行标签切换和关闭，这样也很容易，但是查找和打开书签操作如果去点书签栏就太麻烦了，我想在新标签页下也能进行书签的搜索打开。Steward 就可以做到，mac 使用 cmd+k 激活 Steward，windows 使用 ctrl+k。 bm 就是书签搜索命令，这是我最常用的，它还有许多其它命令，通过 help</description>
     </item>
     
     <item>
@@ -37,7 +37,7 @@
       <pubDate>Sun, 21 Oct 2018 07:00:00 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
       <guid>https://imroc.io/posts/alfred-and-dash/</guid>
-      <description>Alfred 使用 Alfred 可以让你在 macOS 程序间自由切换、快速查找或打开文件、调起浏览器进行网页搜索、 还可以做计算器。 另外，还有许多其它搜索功能以及付费的工作流特</description>
+      <description>Alfred 使用 Alfred 可以让你在 macOS 程序间自由切换、快速查找或打开文件、调起浏览器进行网页搜索、 还可以做计算器。 另外，还有许多其它搜索功能以及付费的工作流特性，Powerpack 就是 Alfred 工作流模块，需要付费才能使用，不过，我觉得免费的功能已经完全够用了， 而且很简洁，功能太多咱也学不过来。 下载安装 Alfred 官网是 https://www.alfredapp.com/ 禁用自带的 Spotlight macOS 自带了搜索工具 Spotlight, 但是功能相对于 Alfred 就弱爆了，它默认的快捷键是 cmd+space，我们最好禁用它，进入 系统偏好设置-键盘-快捷键-聚焦，然后取消勾选 显示“聚焦”搜索 并且将 Alfred 的热键也设为 cmd+space 程序间快速切换 我们之前常用的程序切换方式有： cmd+tab 和 shift+cmd+tab 切换程序 在触摸板三根手指上滑打开调度中心，结合三根手指左右滑切换桌面，然后选择要切换的程序 它们的缺点很明显，程序窗口所在的位置不一定是固定的，需要观察一下才能找到，而且如果打开的程序非常多，找起来就更麻烦。如果用 Alfred， 则只需输入能匹配程序名称部分的简短字母就能找到（如果程序含中文名，使用拼音也能搜到)， 再按下回车就能切换到指定程序上，比如切换到 Google Chrome，只需要输入 chr 就能定位到 Chrome 浏览器。 快速查找和打开文件或目录 Alfred 还支持很多指令，find 是在磁盘找到文</description>
     </item>
     
     <item>
@@ -46,7 +46,7 @@
       <pubDate>Sat, 20 Oct 2018 01:35:00 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
       <guid>https://imroc.io/posts/oh-my-zsh/</guid>
-      <description>shell 有多种，大多数人接触比较多的是 bash， 不管是 mac 还是各个 linux 发行版，默认的 shell 基本都是 bash，虽然 bash 功能已经丰富了，但对于极客们来说，界面不</description>
+      <description>shell 有多种，大多数人接触比较多的是 bash， 不管是 mac 还是各个 linux 发行版，默认的 shell 基本都是 bash，虽然 bash 功能已经丰富了，但对于极客们来说，界面不够炫，提示功能也不够强大。而 zsh 功能及其强大，只是配置过于复杂，后来就有了 oh-my-zsh 开源项目，配置难度大大降低。 Github地址: https://github.com/robbyrussell/oh-my-zsh 安装 sh -c &amp;#34;$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)&amp;#34; 更改系统默认 shell chsh -s /bin/zsh 更改zsh配置文件 vim ~/.zshrc 修改主题 ZSH_THEME=&amp;#34;robbyrussell&amp;#34; 默认的 robbyrussell 主题也挺好看 更多主题看过来： https://github.com/robbyrussell/oh-my-zsh/wiki/Themes 配置插件 oh-my-zsh 还支持插件，插件存放目录为： ~/.oh-my-zsh/plugins 这个目录中每个子目录都是一个插件，目录名即为插件名，默认不开启，需要在 ~/.zshrc 中该配置开启，比如: plugins=( git git-flow docker kubectl brew npm helm ) 这些插件可以给你常用的命令做用法提示，使用 tab 键触发。我这里再推荐另外三个不是内置的插件，需要将它们单独下载到 ~/.oh-my-zsh/plugins 并且加到上面的 plugins 配置列表中以启用插件： 插件 功能 地址 zsh-autosuggestions 自动提示输入提示 https://github.com/zsh-users/zsh-autosuggestions zsh-syntax-highlighting 高亮命令输入 https://github.com/zsh-users/zsh-syntax-highlighting zsh-history-substring-search 查找匹配前缀的历史输入 https://github.com/zsh-users/zsh-history-substring-search zsh-autosuggestions 默认使用方向右键来将建议的历史填充到命令行输入，按这个键需要挪下右手，不方便，可以映射下，我这里使用 ctrl+space bindkey &amp;#39;^ &amp;#39; autosuggest-accept 再给 zsh-history-substring-search 绑下快捷键，上下翻匹配输入前缀的历史输入，我这里使用 ctrl+n 和 ctrl+p bindkey -M emacs &amp;#39;^P&amp;#39; history-substring-search-up bindkey -M emacs &amp;#39;^N&amp;#39; history-substring-search-down 注: 以上插件的快捷键绑定的配置写在 ~/.zshrc 中 source $ZSH/oh-my-zsh.sh 这句下面的位置 使用效果演</description>
     </item>
     
   </channel>

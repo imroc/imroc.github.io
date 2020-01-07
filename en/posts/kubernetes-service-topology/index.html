@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title> Kubernetes v1.17 new feature preview: topology-aware service routing - imroc.io|roc的博客|Cloud Native|Kubernetes|Go|Golang</title>
+  <meta name="description" content="imroc.io|roc的博客|Cloud Native|Kubernetes|Go|Golang" />
+  <meta property="og:title" content="Kubernetes v1.17 new feature preview: topology-aware service routing" />
+  <meta name="twitter:title" content="Kubernetes v1.17 new feature preview: topology-aware service routing" />
+  <meta name="description" content="Hello everyone, I&#39;m roc, from the Tencent Kubernetes Engine (TKE) team. Today I will introduce a new feature of kubernetes in v1.17 that I am involved in: topology-aware service routing.
+ This article is translated from my Chinese blog post, which received a great response in China and was reprinted by many well-known Chinese container technology media accounts.
+ Glossary  Topological domain: Indicates a certain type of &ldquo;place&rdquo; in the cluster, such as node, rack, zone or region etc. endpoint: An ip:port of a kubernetes service, usually the ip:port of a pod. service: kubernetes service resource, associated with a set of endpoints, traffic of access to the service will be forwarded to its&rsquo; associated endpoints.  Background Topology-aware service routing, simply called Service Topology. This feature was originally proposed and designed by Jun Du (@m1093782566). Why design this feature? Imagine that the kubernetes cluster nodes are distributed in different places and the endpoints corresponding to the service are distributed in different nodes. The traditional forwarding strategy will load balance all endpoints and usually forward them with equal probability. When accessing the service, the traffic may be scattered and hit these different places. Although service forwarding is load-balanced, if the endpoints are far away, the network forwarding will have a high latency, which will affect network performance, and in some cases may even pay additional traffic costs. If the service can forward the endpoints nearby, will it be possible to reduce network latency and improve network performance? Yes! And this is exactly the purpose and significance of this feature.
+Kubernetes Affinity The service&#39;s nearest forwarding is actually a kind of network affinity, and it tends to forward to the endpoints closer to itself. Prior to this feature, there have been some other affinity designs and implementations in terms of scheduling and storage:
+ Node Affinity: Allows Pods to be scheduled to Nodes that meet certain expectations, such as limiting scheduling to a certain Availability Zone, or requiring nodes to support GPUs. This is considered scheduling affinity, and the scheduling results depend on node attributes. Pod affinity and anti-affinity: Allows pod to be scheduled depends on ther pods. E.g. Let a group of pods to be scheduled to nodes in the same topology domain, or dispersed to nodes in different topology domains. This is also can be considered as scheduling affinity, and the scheduling result depends on other pods. Volume Topology-aware Scheduling: Allows Pods to be scheduled only to nodes that match the topology domain of the storage to which they are bound. This is considered as the affinity of scheduling and storage. The scheduling result depends on the topology domain of the storage. Local Persistent Volume: Let Pod use local data volume, such as high-performance SSD, which is useful in some scenarios that require high IOPS and low latency. It also guarantees that the Pod is always scheduled to the same node, and the data will not lost. This is also can considered as the affinity of scheduling and storage. The scheduling result depends on the node where the storage is located.">
+  <meta property="og:description" content="Hello everyone, I&#39;m roc, from the Tencent Kubernetes Engine (TKE) team. Today I will introduce a new feature of kubernetes in v1.17 that I am involved in: topology-aware service routing.
+ This article is translated from my Chinese blog post, which received a great response in China and was reprinted by many well-known Chinese container technology media accounts.
+ Glossary  Topological domain: Indicates a certain type of &ldquo;place&rdquo; in the cluster, such as node, rack, zone or region etc. endpoint: An ip:port of a kubernetes service, usually the ip:port of a pod. service: kubernetes service resource, associated with a set of endpoints, traffic of access to the service will be forwarded to its&rsquo; associated endpoints.  Background Topology-aware service routing, simply called Service Topology. This feature was originally proposed and designed by Jun Du (@m1093782566). Why design this feature? Imagine that the kubernetes cluster nodes are distributed in different places and the endpoints corresponding to the service are distributed in different nodes. The traditional forwarding strategy will load balance all endpoints and usually forward them with equal probability. When accessing the service, the traffic may be scattered and hit these different places. Although service forwarding is load-balanced, if the endpoints are far away, the network forwarding will have a high latency, which will affect network performance, and in some cases may even pay additional traffic costs. If the service can forward the endpoints nearby, will it be possible to reduce network latency and improve network performance? Yes! And this is exactly the purpose and significance of this feature.
+Kubernetes Affinity The service&#39;s nearest forwarding is actually a kind of network affinity, and it tends to forward to the endpoints closer to itself. Prior to this feature, there have been some other affinity designs and implementations in terms of scheduling and storage:
+ Node Affinity: Allows Pods to be scheduled to Nodes that meet certain expectations, such as limiting scheduling to a certain Availability Zone, or requiring nodes to support GPUs. This is considered scheduling affinity, and the scheduling results depend on node attributes. Pod affinity and anti-affinity: Allows pod to be scheduled depends on ther pods. E.g. Let a group of pods to be scheduled to nodes in the same topology domain, or dispersed to nodes in different topology domains. This is also can be considered as scheduling affinity, and the scheduling result depends on other pods. Volume Topology-aware Scheduling: Allows Pods to be scheduled only to nodes that match the topology domain of the storage to which they are bound. This is considered as the affinity of scheduling and storage. The scheduling result depends on the topology domain of the storage. Local Persistent Volume: Let Pod use local data volume, such as high-performance SSD, which is useful in some scenarios that require high IOPS and low latency. It also guarantees that the Pod is always scheduled to the same node, and the data will not lost. This is also can considered as the affinity of scheduling and storage. The scheduling result depends on the node where the storage is located.">
+  <meta name="twitter:description" content="Hello everyone, I&#39;m roc, from the Tencent Kubernetes Engine (TKE) team. Today I will introduce a new feature of kubernetes in v1.17 that I am involved in: topology-aware service routing.
+ This article …">
+  <meta name="author" content="{Description { .Site.Author.name }}"/>
+  <link href='https://imroc.io/favicon.png' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://res.cloudinary.com/imroc/image/upload/v1521031841/avatar.png" />
+  <meta name="twitter:image" content="https://res.cloudinary.com/imroc/image/upload/v1521031841/avatar.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@imrocchan" />
+  <meta name="twitter:creator" content="@imrocchan" />
+  <meta property="og:url" content="https://imroc.io/en/posts/kubernetes-service-topology/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="roc" />
+
+  <meta name="generator" content="Hugo 0.62.0" />
+  <link rel="canonical" href="https://imroc.io/en/posts/kubernetes-service-topology/" />
+  <link rel="alternate" href="https://imroc.io/en/index.xml" type="application/rss+xml" title="roc">
+
+  
+  <link href="https://fonts.googleapis.com/css?family=Lora:400,400i,700%7COpen+Sans:400,700" rel="stylesheet">
+
+  
+
+
+
+<link rel="stylesheet" href='/css/bundle.min.6d79a1ed52242954f10363d8f656c7d97a028dddf359f0e72a30b5cabd73ffa7.css' integrity='sha256-bXmh7VIkKVTxA2PY9lbH2XoCjd3zWfDnKjC1yr1z/6c='>
+  --><script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?05e1e8b7484a08c51cd0953664168cd7";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://imroc.io/en/">roc</a>
+    </div>
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">Categories</a>
+              <div class="navlinks-children">
+                
+                
+                  <a href="https://imroc.io/categories/kubernetes">kubernetes</a>
+                
+                
+                  <a href="https://imroc.io/categories/docker">docker</a>
+                
+                
+                  <a href="https://imroc.io/categories/golang">golang</a>
+                
+                
+                  <a href="https://imroc.io/categories/arch">架构</a>
+                
+                
+                  <a href="https://imroc.io/categories/istio">istio</a>
+                
+                
+                  <a href="https://imroc.io/categories/geek">极客</a>
+                
+              </div>
+            </li>
+          
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">Books</a>
+              <div class="navlinks-children">
+                
+                
+                  <a href="https://k8s.imroc.io">Kubernetes Practice Guide</a>
+                
+              </div>
+            </li>
+          
+        
+
+        
+          
+            <li>
+              
+                
+                  <a href="/zh" lang="zh">中文</a>
+                
+              
+                
+              
+            </li>
+          
+        
+
+        
+        <li>
+          <a href="#modalSearch" data-toggle="modal" data-target="#modalSearch" style="outline: none;">
+            <span id="searchGlyph" class="glyphicon glyphicon-search"></span>
+          </a>
+        </li>
+        
+      </ul>
+    </div>
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="roc" href="https://imroc.io/en/">
+            <img class="avatar-img" src="https://res.cloudinary.com/imroc/image/upload/v1521031841/avatar.png" alt="roc" />
+          </a>
+        
+      </div>
+    </div>
+  </div>
+</nav>
+
+
+  <div id="modalSearch" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">搜索</h4>
+        </div>
+        <div class="modal-body">
+            
+<div class="aa-input-container" id="aa-input-container">
+    <input type="search" id="aa-search-input" class="aa-input-search" placeholder="Search for titles or URIs..."
+        name="search" autocomplete="off" />
+    <svg class="aa-input-icon" viewBox="654 -372 1664 1664">
+        <path
+            d="M1806,332c0-123.3-43.8-228.8-131.5-316.5C1586.8-72.2,1481.3-116,1358-116s-228.8,43.8-316.5,131.5  C953.8,103.2,910,208.7,910,332s43.8,228.8,131.5,316.5C1129.2,736.2,1234.7,780,1358,780s228.8-43.8,316.5-131.5  C1762.2,560.8,1806,455.3,1806,332z M2318,1164c0,34.7-12.7,64.7-38,90s-55.3,38-90,38c-36,0-66-12.7-90-38l-343-342  c-119.3,82.7-252.3,124-399,124c-95.3,0-186.5-18.5-273.5-55.5s-162-87-225-150s-113-138-150-225S654,427.3,654,332  s18.5-186.5,55.5-273.5s87-162,150-225s138-113,225-150S1262.7-372,1358-372s186.5,18.5,273.5,55.5s162,87,225,150s113,138,150,225  S2062,236.7,2062,332c0,146.7-41.3,279.7-124,399l343,343C2305.7,1098.7,2318,1128.7,2318,1164z" />
+    </svg>
+</div>
+
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/algoliasearch.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/autocomplete.min.js"></script>
+<script>
+    var client = algoliasearch("B6Q6PSGUV5", "d04f855d3a39eed8ad8d9365ba7c86af");
+    var index = client.initIndex("imroc-blog-en");
+    
+    autocomplete('#aa-search-input', {
+        hint: false
+    }, {
+        source: autocomplete.sources.hits(index, {
+            hitsPerPage: 5
+        }),
+        
+        displayKey: 'name',
+        
+        templates: {
+            
+            suggestion: function (suggestion) {
+                return '<span>' + '<a href="/' + suggestion.uri + '">' + suggestion._highlightResult.title.value +
+                        '</a></span>';
+            }
+        }
+    });
+</script>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    
+  
+  
+  
+
+
+
+
+  
+    <div id="header-big-imgs" data-num-img=1 data-img-src-1="https://imroc.io/assets/blog/network-banner.jpeg" data-img-desc-1="Network"></div>
+  
+
+  <header class="header-section has-img">
+    
+      <div class="intro-header big-img">
+        
+        
+        <div class="container">
+          <div class="row">
+              <div class="col-lg-12 col-md-12 col-md-offset-0">
+                
+                <div class="post-heading">
+                
+                  
+                     <h1>Kubernetes v1.17 new feature preview: topology-aware service routing</h1>
+                     
+                    <span class="post-meta">
+  
+  Posted on November 30, 2019
+  
+  &nbsp;&bull;&nbsp; Other languages: <a href="https://imroc.io/posts/kubernetes-service-topology/" lang="zh">中文</a>
+</span>
+
+
+                    
+                  
+                  
+              </div>
+            </div>
+          </div>
+        </div>
+        <span class="img-desc" style="display: inline;"></span>
+      </div>
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12 col-md-12 col-md-offset-0">
+            <div class="posts-heading">
+                <h1 align="center">Kubernetes v1.17 new feature preview: topology-aware service routing</h1>
+                
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main" itemscope itemtype="http://schema.org/Article">
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            
+            <div>
+                
+                <h5 id="tags" style="margin-top: 30px;">Tags:
+                  
+                      <a
+                        href='https://imroc.io/en/tags/kubernetes/'>kubernetes</a>
+                      &nbsp;
+                  
+                </h5>
+            </div>
+            
+            <article role="main" class="blog-post" itemprop="articleBody" id="content">
+                
+<aside class="toc">
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#glossary">Glossary</a></li>
+    <li><a href="#background">Background</a></li>
+    <li><a href="#kubernetes-affinity">Kubernetes Affinity</a></li>
+    <li><a href="#how-to-implement">How to implement</a></li>
+    <li><a href="#prerequisites">Prerequisites</a></li>
+    <li><a href="#how-to-enable-this-feature">How to Enable This Feature</a></li>
+    <li><a href="#how-to-use">How to Use</a></li>
+    <li><a href="#story-bebind">Story Bebind</a></li>
+    <li><a href="#at-the-end">At the End</a></li>
+    <li><a href="#references">References</a></li>
+  </ul>
+</nav>
+</aside>
+
+
+                <p>Hello everyone, I'm roc, from the Tencent Kubernetes Engine (TKE) team. Today I will introduce a new feature of kubernetes in v1.17 that I am involved in: topology-aware service routing.</p>
+<blockquote>
+<p>This article is translated from my Chinese blog post, which received a great response in China and was reprinted by many well-known Chinese container technology media accounts.</p>
+</blockquote>
+<h2 id="glossary">Glossary</h2>
+<ul>
+<li>Topological domain: Indicates a certain type of &ldquo;place&rdquo; in the cluster, such as node, rack, zone or region etc.</li>
+<li>endpoint: An ip:port of a kubernetes service, usually the ip:port of a pod.</li>
+<li>service: kubernetes service resource, associated with a set of endpoints, traffic of access to the service will be forwarded to its&rsquo; associated endpoints.</li>
+</ul>
+<h2 id="background">Background</h2>
+<p>Topology-aware service routing, simply called <code>Service Topology</code>. This feature was originally proposed and designed by Jun Du (<a href="https://github.com/m1093782566">@m1093782566</a>). Why design this feature? Imagine that the kubernetes cluster nodes are distributed in different places and the endpoints corresponding to the service are distributed in different nodes. The traditional forwarding strategy will load balance all endpoints and usually forward them with equal probability. When accessing the service, the traffic may be scattered and hit these different places. Although service forwarding is load-balanced, if the endpoints are far away, the network forwarding will have a high latency, which will affect network performance, and in some cases may even pay additional traffic costs. If the service can forward the endpoints nearby, will it be possible to reduce network latency and improve network performance? Yes! And this is exactly the purpose and significance of this feature.</p>
+<h2 id="kubernetes-affinity">Kubernetes Affinity</h2>
+<p>The service's nearest forwarding is actually a kind of network affinity, and it tends to forward to the endpoints closer to itself. Prior to this feature, there have been some other affinity designs and implementations in terms of scheduling and storage:</p>
+<ul>
+<li>Node Affinity: Allows Pods to be scheduled to Nodes that meet certain expectations, such as limiting scheduling to a certain Availability Zone, or requiring nodes to support GPUs. This is considered scheduling affinity, and the scheduling results depend on node attributes.</li>
+<li>Pod affinity and anti-affinity: Allows pod to be scheduled depends on ther pods. E.g. Let a group of pods to be scheduled to nodes in the same topology domain, or dispersed to nodes in different topology domains. This is also can be considered as scheduling affinity, and the scheduling result depends on other pods.</li>
+<li>Volume Topology-aware Scheduling: Allows Pods to be scheduled only to nodes that match the topology domain of the storage to which they are bound. This is considered as the affinity of scheduling and storage. The scheduling result depends on the topology domain of the storage.</li>
+<li>Local Persistent Volume: Let Pod use local data volume, such as high-performance SSD, which is useful in some scenarios that require high IOPS and low latency. It also guarantees that the Pod is always scheduled to the same node, and the data will not lost. This is also can considered as the affinity of scheduling and storage. The scheduling result depends on the node where the storage is located.</li>
+<li>Topology-Aware Volume Dynamic Provisioning: The Pod is scheduled first, and then the storage is created according to the topology domain of the node that pod been scheduled onto. This can be considered as the affinity between storage and scheduling, and the creation of storage depends on the scheduling result.</li>
+</ul>
+<p>However, kubernetes currently does not have an affinity capability on the network side. The new feature of topology-aware service routing can just fill this gap. This feature enables services can be forwarded nearby instead of all endpoints with equal probability forwarding.</p>
+<h2 id="how-to-implement">How to implement</h2>
+<p>We know that the service forwarding is mainly achieved by the kube-proxy process on the node, by watching apiserver to obtain the endpoints corresponding to the service, and then convert these relationship to iptables or ipvs rules; for headless service, it is mainly achieved by kube-dns or coredns, dynamically resolve service to different endpoint IPs. The key point of implementing service nearby forwarding is how to forward traffic to an endpoint in the same topology domain as the current node, that is, endpoint filtering is performed, and some endpoints that match the current node topology domain are selected for forwarding.</p>
+<p>So how to determine whether the endpoint is in the same topology domain as the current node? As long as the topology information of the endpoint can be obtained, it can be known by comparing it with the current node topology. So how to get the topology information of the endpoint? The answer is through the label of the node where the endpoint is located. We can use the node label to describe the topology domain.</p>
+<p>Usually when the node is initialized, the controller-manager will label the node with many labels, such as <code>kubernetes.io/hostname</code>, which represents the hostname of the node to distinguish the node; In addition, kubernetes cluster provided by cloud vendors, or cluster deployed with cloud-controller-manager, usually it will also label the node with <code>failure-domain.beta.kubernetes.io/zone</code> and <code>failure-domain.beta.kubernetes.io/region</code> to distinguish the availability zone and the region where the node is located, but since v1.17, they will be renamed to <code>topology.kubernetes.io/zone</code> and <code>topology.kubernetes.io/region</code>, see <a href="https://github.com/kubernetes/kubernetes/pull/81431">PR 81431</a>.</p>
+<p>So how to find these labels of the node where it is located according to the endpoint? The answer is <a href="https://kubernetes.io/docs/concepts/services-networking/endpoint-slices/">Endpoint Slice</a>. This feature was released  alpha in v1.16, and will graduate to beta in v1.17. It is equivalent to the enhanced version of the Endpoint API, which solves large-scale endpoint performance problems by sharding endpoints into slices. And it also can carry more information, including the topology information of the node where the endpoint is located. The topology-aware service routing feature will obtain these topology information through the <code>Endpoint Slice</code> to implement endpoint filtering (filter out endpoints in the same topology domain), and then convert to iptables or ipvs rules to implement nearby forwarding.</p>
+<p>You may have noticed that usually the iptables/ipvs rules for forwarding services on each node are basically the same, but after the topology-aware service routing feature is enabled, the forwarding rules on each node may be different, because different nodes has different topology information, resulting in different filtered endpoints. It is because of this that service forwarding no longer has the same probability, and the flexible nearby forwarding can be achieved.</p>
+<p>Topology-aware service routing for headless services is not currently supported, and is planned to be supported in the beta phase. Because the headless service does not generate forwarding rules through kube-proxy, but instead implements dynamic DNS resolution, kube-dns/coredns needs to be modified to support this feature.</p>
+<h2 id="prerequisites">Prerequisites</h2>
+<p>To enable the topology awareness service routing feature of the current alpha implementation, the following prerequisites must be met:</p>
+<ul>
+<li>Kubernetes 1.17 or later</li>
+<li>Kube-proxy running in iptables mode or IPVS mode (Only this two modes are implemented in alpha)</li>
+<li>Enable <a href="/docs/concepts/services-networking/endpoint-slices/">Endpoint Slices</a> (Although this feature will graduate to beta in v1.17, it will not enabled by default)</li>
+</ul>
+<h2 id="how-to-enable-this-feature">How to Enable This Feature</h2>
+<p>Enable feature gate <code>ServiceTopology</code> and <code>EndpointSlice</code> for all kubernetes components:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">--feature-gates=&#34;ServiceTopology=true,EndpointSlice=true&#34;
+</code></pre></div><h2 id="how-to-use">How to Use</h2>
+<p>Add the <code>topologyKeys</code> field to the Service spec, which indicates the list of topological domains selected by the service in priority order, corresponding to the key of the node label. When accessing this service, it will be found if there is an endpoint with the topology information corresponding to the topology key, and the value is related to the current node. The same, if it is, then select this topology key as the current topology domain, and filter out all the other endpoints in this topology domain for forwarding; if no endpoint is found in the current topology key (topology domain), it will try the second topology key, and so on; if all topology keys have not been matched after traversing the endpoints, it will refuse to forward, just like this service does not have any backend.</p>
+<p>There is a special topology key &ldquo;<code>*</code>&rdquo;, which can match all endpoints. If <code>topologyKeys</code> contains <code>*</code>, it must be at the end of the list, usually when there is no endpoint matched for any topology key, just fallback to forward to any endpoint (avoid packet loss).</p>
+<p>The current topology key supports the following possible values (more will be added in the future):</p>
+<ul>
+<li><code>kubernetes.io/hostname</code>: Represents the hostname of the node, usually put it first in the list, which means that if the local machine has an endpoint, it will be forwarded directly to the local machine's endpoint.</li>
+<li><code>topology.kubernetes.io/zone</code>: Represents the availability zone where the node is located, usually placed after <code>kubernetes.io/hostname</code>, which means that if there is no endpoint in current node, it will be forwarded to the endpoint on other nodes in the current availability zone.</li>
+<li><code>topology.kubernetes.io/region</code>: It indicates the region where it is located, which means that it will be forwarded to the endpoint of the current region. This should be used less, because usually all nodes will only be in the same region. If nodes crosses the region, the latency will be very high between nodes&rsquo; communication.</li>
+<li><code>*</code>: Ignoring the topological domain and matching all endpoints, it is usually used as an guaranteed strategy to avoid packet loss and can only be placed at the end of the list.</li>
+</ul>
+<p>In addition, there are the following constraints:</p>
+<ul>
+<li><code>topologyKeys</code> is not compatible with <code>externalTrafficPolicy=Local</code>, they are mutually exclusive. If <code>externalTrafficPolicy</code> is<code> Local</code>, then <code>topologyKeys</code> cannot be defined and vice versa.</li>
+<li>topology key must be in a valid label format and up to 16 keys.</li>
+</ul>
+<p>Here is a simple Service example:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">apiVersion: v1
+kind: Service
+metadata:
+  name: nginx
+spec:
+  type: ClusterIP
+  ports:
+  - name: http
+    port: <span style="color:#ae81ff">80</span>
+    protocol: TCP
+    targetPort: <span style="color:#ae81ff">80</span>
+  selector:
+    app: nginx
+  topologyKeys:
+  - <span style="color:#e6db74">&#34;kubernetes.io/hostname&#34;</span>
+  - <span style="color:#e6db74">&#34;topology.kubernetes.io/zone&#34;</span>
+  - <span style="color:#e6db74">&#34;*&#34;</span>
+</code></pre></div><p>Explanation: When accessing the nginx service, To see if current node has an endpoint of this service at first. If there is, then pick one and route to it; if not, see if there is an endpoint in the current availability zone where current node is located. If there is, pick one and route to it, if still not, it pick an endpoint randomly and route to it.</p>
+<p><img src="https://imroc.io/assets/blog/service-topology.png" alt=""></p>
+<p>The above picture is an example of one of the situation: when Pod accesses the nginx service, it finds that current node does not have any endpoint, then it search endpoints in the current availability zone, and found one and forward to it. (does not consider forwarding to endpoints in another availability zone)</p>
+<h2 id="story-bebind">Story Bebind</h2>
+<p>There are some differences between the original KEP design and the current implementation. The implementation has changed twice, but it also promotes the development of other features. Let me tell the story.</p>
+<p>The initial design is to let kube-proxy directly watch nodes to get endpoints&rsquo; topology information in alpha. Each node will has a global node cache. Find the corresponding node cache through the endpoint's <code>nodeName</code> field, and then check the label contained by node to get the endpoint's topological domain. In the case of a large number of cluster nodes, kube-proxy will consume a lot of resources, but the advantage is that the implementation is very simple, and it can be used as the alpha phase implementation. In beta, we can switch from watch node to watch A newly designed <code>PodLocator</code> API, as an intermediary for topology information storage, to avoid watching huge node objects.</p>
+<p>In fact, at the beginning, I followed the way of the watch node, and finally implemented this feature after a lot of effort. Later, metadata-only watch is been supported in kubernetes v1.15, see <a href="https://github.com/kubernetes/kubernetes/pull/71548">PR 71548</a>. Using this feature, we can just only watch the metadata of the node, instead of watching the entire node, which can greatly reduce the amount of data transmitted and cached. Then I changed the implementation from watch node to watch node metadata; Even so, metadata is updated frequently, mainly because <code>resourceVersion</code> changes frequently (kubelet reports node status), so although watch node metadata is better than watch node, it may still cause a lot of unnecessary network traffic, but as an alpha implementation is acceptable.</p>
+<p>Unfortunately, this implementation was not merged before the v1.16 code freeze, because there are a few small details that have not been well discussed and accepted. In fact, during the implementation of the watch node, the <code>Endpoint Slice</code> feature was proposed. At the stage of this feature discussion, we thought that we could use it to carry topology information, so that the feature of topology-aware service routing can directly use the <code>Endpoint Slice</code> to get topology information, and PodLocator API can also been replaced. But since it is still in the very early stage and the code has not been merged yet, so the alpha implementation does not consider the watch Endpint Slice. And later, the Endpoint Slice feature was released alpha in v1.16.</p>
+<p>Since topology-aware service routing was not fit into v1.16, after the v1.17 cycle started, there was more time to discuss small details, and the code of <code>Endpoint Slice</code> has been merged, so I changed the implementation again, from watch node metadata to watch <code>Endpoint Slice</code>, which did what I planned to do in the beta phase at the alpha stage. Finally, the implementation code of this feature merged into master.</p>
+<h2 id="at-the-end">At the End</h2>
+<p>Topology-aware service routing can implement service forwarding nearby, reduce network latency, and improve the network performance for kubernetes. This feature will be release alpha in kubernetes v1.17 in early December. Let's look forward to it!</p>
+<h2 id="references">References</h2>
+<ul>
+<li>KEP: EndpintSlice - <a href="https://github.com/kubernetes/enhancements/blob/master/keps/sig-network/20190603-EndpointSlice-API.md">https://github.com/kubernetes/enhancements/blob/master/keps/sig-network/20190603-EndpointSlice-API.md</a></li>
+<li>Proposal: Volume Topology-aware Scheduling - <a href="https://github.com/kubernetes/community/blob/master/contributors/design-proposals/storage/volume-topology-scheduling.md">https://github.com/kubernetes/community/blob/master/contributors/design-proposals/storage/volume-topology-scheduling.md</a></li>
+<li>PR: Service Topology implementation for Kubernetes - <a href="https://github.com/kubernetes/kubernetes/pull/72046">https://github.com/kubernetes/kubernetes/pull/72046</a></li>
+<li>Proposal: Inter-pod topological affinity and anti-affinity - <a href="https://github.com/kubernetes/community/blob/master/contributors/design-proposals/scheduling/podaffinity.md">https://github.com/kubernetes/community/blob/master/contributors/design-proposals/scheduling/podaffinity.md</a></li>
+<li>Topology-Aware Volume Provisioning in Kubernetes - <a href="https://kubernetes.io/blog/2018/10/11/topology-aware-volume-provisioning-in-kubernetes/">https://kubernetes.io/blog/2018/10/11/topology-aware-volume-provisioning-in-kubernetes/</a></li>
+<li>Kubernetes 1.14: Local Persistent Volumes GA - <a href="https://kubernetes.io/blog/2019/04/04/kubernetes-1.14-local-persistent-volumes-ga/">https://kubernetes.io/blog/2019/04/04/kubernetes-1.14-local-persistent-volumes-ga/</a></li>
+<li>KubeCon Speech: Topology-aware service routing for kubernetes coming soon! - <a href="https://v.qq.com/x/page/t0893nn9zqa.html">https://v.qq.com/x/page/t0893nn9zqa.html</a></li>
+<li>Topology-aware service routing official documents (only available after v1.17 is released) - <a href="https://kubernetes.io/docs/concepts/services-networking/service-topology/">https://kubernetes.io/docs/concepts/services-networking/service-topology/</a></li>
+<li>KEP: Topology-aware service routing - <a href="https://github.com/kubernetes/enhancements/blob/master/keps/sig-network/20181024-service-topology.md">https://github.com/kubernetes/enhancements/blob/master/keps/sig-network/20181024-service-topology.md</a> (This document will be updated later because the implementation is no longer the same as the design)</li>
+</ul>
+
+            </article>
+
+            <ul class="pager blog-pager">
+
+                 
+            </ul>
+
+          
+            <div class="entry-shang text-center">
+    <p>「真诚赞赏，手留余香」</p>
+    <button class="zs show-zs btn btn-bred">赞赏</button>
+</div>
+<div class="zs-modal-bg"></div>
+<div class="zs-modal-box">
+    <div class="zs-modal-head">
+        <button type="button" class="close">×</button>
+        <span class="author"><img src="/favicon.png"/>roc</span>
+        <p class="tip"><i></i><span>请我喝杯咖啡？</span></p>
+    </div>
+    <div class="zs-modal-body">
+        <div class="zs-modal-btns">
+            <button class="btn btn-blink" data-num="2">2元</button>
+            <button class="btn btn-blink" data-num="5">5元</button>
+            <button class="btn btn-blink" data-num="10">10元</button>
+            <button class="btn btn-blink" data-num="50">50元</button>
+            <button class="btn btn-blink" data-num="100">100元</button>
+            <button class="btn btn-blink" data-num="1">任意金额</button>
+        </div>
+        <div class="zs-modal-pay">
+            <button class="btn btn-bred" id="pay-text">2元</button>
+            <p>使用<span id="pay-type">微信</span>扫描二维码完成支付</p>
+            <img src="/img/wechat-2.png" id="pay-image"/>
+        </div>
+    </div>
+    <div class="zs-modal-footer">
+        <label>
+            <input type="radio" name="zs-type" value="wechat" class="zs-type" checked="checked">
+            <span class="zs-wechat"><img src="/img/wechat-btn.png" /></span>
+        </label>
+        <label>
+            <input type="radio" name="zs-type" value="alipay" class="zs-type">
+            <span class="zs-alipay"><img src="/img/alipay-btn.png" /></span>
+        </label>
+    </div>
+</div>
+          
+
+          
+            
+
+          
+
+          
+            
+<div id="gitalk-container"></div>
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+<script>
+  var gitalk = new Gitalk({
+      clientID: 'd05b8f959b3111c6fb63',
+      clientSecret: 'f30ef76ea0050ed731ace76f7fbf684ae5d28fbc',
+      repo: 'imroc.github.io',
+      owner: 'imroc',
+      admin: 'imroc',
+      labels: ['Gitalk'],
+      title: 'Kubernetes v1.17 new feature preview: topology-aware service routing',
+      createIssueManually: false,
+      id: 'kubernetes-service-topology-en',
+      distractionFreeMode: true
+  });
+  gitalk.render('gitalk-container');
+</script>
+          
+        </div>
+    </div>
+</div>
+
+    <footer>
+  <div id="copyright">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+          <ul class="list-inline text-center footer-links">
+            
+                <li>
+                  <a href="mailto:roc@imroc.io" title="Email me">
+                    <span class="fa-stack fa-lg">
+                      <i class="fa fa-circle fa-stack-2x"></i>
+                      <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="https://github.com/imroc" title="GitHub">
+                    <span class="fa-stack fa-lg">
+                      <i class="fa fa-circle fa-stack-2x"></i>
+                      <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="https://twitter.com/imrocchan" title="Twitter">
+                    <span class="fa-stack fa-lg">
+                      <i class="fa fa-circle fa-stack-2x"></i>
+                      <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                    </span>
+                  </a>
+                </li>
+            
+            <li>
+              <a href="https://imroc.io/en/index.xml" title="RSS">
+                <span class="fa-stack fa-lg">
+                  <i class="fa fa-circle fa-stack-2x"></i>
+                  <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                </span>
+              </a>
+            </li>
+            
+          </ul>
+          <p class="credits copyright text-muted">
+          &copy;2017-2019
+            
+              
+                <a href="/about">roc</a>
+              
+            
+            &nbsp;&bull;&nbsp;
+            November 30,2019
+            updated
+          </p>
+          <p class="credits theme-by text-muted">
+            <a href="http://gohugo.io">Hugo v0.62.0</a> powered &nbsp;&bull;&nbsp; Theme by <a href="https://github.com/imroc/xhugo">xhugo</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  window.copyText='Copy'==''?"Copy":'Copy'
+  window.copiedText='Copied'==''?"Copied":'Copied'
+</script>
+<script src='/js/bundle.min.6a754f8d216cf8a16e94d637ea3a64c3f888c80c75c107d9acbb56503c8553cc.js' integrity='sha256-anVPjSFs&#43;KFulNY36jpkw/iIyAx1wQfZrLtWUDyFU8w='></script>
+
+
+
+
+
+
+  </body>
+</html>
+

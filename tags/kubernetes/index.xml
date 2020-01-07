@@ -19,16 +19,70 @@
       <pubDate>Sun, 15 Dec 2019 12:03:00 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
       <guid>https://imroc.io/posts/kubernetes-no-route-to-host/</guid>
-      <description>大家好，我是 roc，来自腾讯云容器服务(TKE)团队，之前发过一篇干货满满的爆火文章 Kubernetes 网络疑难杂症排查分享，包含多个疑难杂症的排查案例分享，</description>
+      <description>&lt;p&gt;之前发过一篇干货满满的爆火文章 &lt;a href=&#34;https://imroc.io/posts/kubernetes/troubleshooting-with-kubernetes-network/&#34;&gt;Kubernetes 网络疑难杂症排查分享&lt;/a&gt;，包含多个疑难杂症的排查案例分享，信息量巨大。这次我又带来了续集，只讲一个案例，但信息量也不小，Are you ready ?&lt;/p&gt;
+&lt;h2 id=&#34;heading&#34;&gt;问题反馈&lt;/h2&gt;
+&lt;p&gt;有用户反馈 Deployment 滚动更新的时候，业务日志偶尔会报 &amp;ldquo;No route to host&amp;rdquo; 的错误。&lt;/p&gt;
+&lt;h2 id=&#34;heading-1&#34;&gt;分析&lt;/h2&gt;
+&lt;p&gt;之前没遇到滚动更新会报 &amp;ldquo;No route to host&amp;rdquo; 的问题，我们先看下滚动更新导致连接异常有哪些常见的报错:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;Connection reset by peer&lt;/code&gt;: 连接被重置。通常是连接建立过，但 server 端发现 client 发的包不对劲就返回 RST，应用层就报错连接被重置。比如在 server 滚动更新过程中，client 给 server 发的请求还没完全结束，或者本身是一个类似 grpc 的多路复用长连接，当 server 对应的旧 Pod 删除(没有做优雅结束，停止时没有关闭连接)，新 Pod 很快创建启动并且刚好有跟之前旧 Pod 一样的 IP，这时 kube-proxy 也没感知到这个 IP 其实已经被删除然后又被重建了，针对这个 IP 的规则就不会更新，旧的连接依然发往这个 IP，但旧 Pod 已经不在了，后面继续发包时依然转发给这个 Pod IP，最终会被转发到这个有相同 IP 的新 Pod 上，而新 Pod 收到此包时检查报文发现不对劲，就返回 RST 给 client 告知将连接重置。针对这种情况，建议应用自身处理好优雅结束：Pod 进入 Terminating 状态后会发送 &lt;code&gt;SIGTERM&lt;/code&gt; 信号给业务进程，业务进程的代码需处理这个信号，在进程退出前关闭所有连接。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;Connection refused&lt;/code&gt;: 连接被拒绝。通常是连接还没建立，client 正在发 SYN 包请求建立连接，但到了 server 之后发现端口没监听，内核就返回 RST 包，然后应用层就报错连接被拒绝。比如在 server 滚动更新过程中，旧的 Pod 中的进程很快就停止了(网卡还未完全销毁)，但 client 所在节点的 iptables/ipvs 规则还没更新，包就可能会被转发到了这个停止的 Pod (由于 k8s 的 controller 模式，从 Pod 删除到 service 的 endpoint 更新，再到 kube-proxy watch 到更新并更新 节点上的 iptables/ipvs 规则，这个过程是异步的，中间存在一点时间差，所以有可能存在 Pod 中的进程已经没有监听，但 iptables/ipvs 规则还没更新的情况)。针对这种情况，建议给容器加一个 preStop，在真正销毁 Pod 之前等待一段时间，留时间给 kube-proxy 更新转发规则，更新完之后就不会再有新连接往这个旧 Pod 转发了，preStop 示例:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;lifecycle:
+  preStop:
+    exec:
+      command:
+      - /bin/bash
+      - -c
+      - sleep &lt;span style=&#34;color:#ae81ff&#34;&gt;30&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;另外，还可能是新的 Pod 启动比较慢，虽然状态已经 Ready，但实际上可能端口还没监听，新的请求被转发到这个还没完全启动的 Pod 就会报错连接被拒绝。针对这种情况，建议给容器加就绪检查 (readinessProbe)，让容器真正启动完之后才将其状态置为 Ready，然后 kube-proxy 才会更新转发规则，这样就能保证新的请求只被转发到完全启动的 Pod，readinessProbe 示例:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;readinessProbe:
+  httpGet:
+    path: /healthz
+    port: &lt;span style=&#34;color:#ae81ff&#34;&gt;80&lt;/span&gt;
+    httpHeaders:
+    - name: X-Custom-Header
+      value: Awesome
+  initialDelaySeconds: &lt;span style=&#34;color:#ae81ff&#34;&gt;15&lt;/span&gt;
+  timeoutSeconds: &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;Connection timed out&lt;/code&gt;: 连接超时。通常是连接还没建立，client 发 SYN 请求建立连接一直等到超时时间都没有收到 ACK，然后就报错连接超时。这个可能场景跟前面 &lt;code&gt;Connection refused&lt;/code&gt; 可能的场景类似，不同点在于端口有监听，但进程无法正常响应了: 转发规则还没更新，旧 Pod 的进程正在停止过程中，虽然端口有监听，但已经不响应了；或者转发规则更新了，新 Pod 端口也监听了，但还没有真正就绪，还没有能力处理新请求。针对这些情况的建议跟前面一样：加 preStop 和 readinessProbe。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;下面我们来继续分析下滚动更新时发生 &lt;code&gt;No route to host&lt;/code&gt; 的可能情况。&lt;/p&gt;
+&lt;p&gt;这个报错很明显，IP 无法路由，通常是将报文发到了一个已经彻底销毁的 Pod (网卡已经不在)。不可能发到一个网卡还没创建好的 Pod，因为即便不加存活检查，也是要等到 Pod 网络初始化完后才可能 Ready，然后 kube-proxy 才会更新转发规则。&lt;/p&gt;
+&lt;p&gt;什么情况下会转发到一个已经彻底销毁的 Pod？ 借鉴前面几种滚动更新的报错分析，我们推测应该是 Pod 很快销毁了但转发规则还没更新，从而新的请求被转发了这个已经销毁的 Pod，最终报文到达这个 Pod 所在 PodCIDR 的 Node 上时，Node 发现本机已经没有这个 IP 的容器，然后 Node 就返回 ICMP 包告知 client 这个 IP 不可达，client 收到 ICMP 后，应用层就会报错 &amp;ldquo;No route to host&amp;rdquo;。&lt;/p&gt;
+&lt;p&gt;所以根据我们的分析，关键点在于 Pod 销毁太快，转发规则还没来得及更新，导致后来的请求被转发到已销毁的 Pod。针对这种情况，我们可以给容器加一个 preStop，留时间给 kube-proxy 更新转发规则来解决，参考 《Kubernetes实践指南》中的部分章节: &lt;a href=&#34;https://k8s.imroc.io/best-practice/high-availability-deployment-of-applications#smooth-update-using-prestophook-and-readinessprobe&#34;&gt;https://k8s.imroc.io/best-practice/high-availability-deployment-of-applications#smooth-update-using-prestophook-and-readinessprobe&lt;/a&gt;&lt;/p&gt;</description>
     </item>
     
     <item>
       <title>k8s v1.17 新特性预告: 拓扑感知服务路由</title>
-      <link>https://imroc.io/posts/service-topology/</link>
+      <link>https://imroc.io/posts/kubernetes-service-topology/</link>
       <pubDate>Tue, 26 Nov 2019 16:49:00 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/service-topology/</guid>
-      <description>大家好，我是 roc，来自腾讯云容器服务(TKE)团队，今天给大家介绍下我参与开发的一个 k8s v1.17 新特性: 拓扑感知服务路由。 名词解释 拓扑域: 表示在集</description>
+      <guid>https://imroc.io/posts/kubernetes-service-topology/</guid>
+      <description>&lt;p&gt;今天给大家介绍下我参与开发的一个 k8s v1.17 新特性: 拓扑感知服务路由。&lt;/p&gt;
+&lt;h2 id=&#34;heading&#34;&gt;名词解释&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;拓扑域: 表示在集群中的某一类 &amp;ldquo;地方&amp;rdquo;，比如某节点、某机架、某可用区或某地域等，这些都可以作为某种拓扑域。&lt;/li&gt;
+&lt;li&gt;endpoint: k8s 某个服务的某个 ip+port，通常是 pod 的 ip+port。&lt;/li&gt;
+&lt;li&gt;service: k8s 的 service 资源(服务)，关联一组 endpoint ，访问 service 会被转发到关联的某个 endpoint 上。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;heading-1&#34;&gt;背景&lt;/h2&gt;
+&lt;p&gt;拓扑感知服务路由，此特性最初由杜军大佬提出并设计。为什么要设计此特性呢？想象一下，k8s 集群节点分布在不同的地方，service 对应的 endpoints 分布在不同节点，传统转发策略会对所有 endpoint 做负载均衡，通常会等概率转发，当访问 service 时，流量就可能被分散打到这些不同的地方。虽然 service 转发做了负载均衡，但如果 endpoint 距离比较远，流量转发过去网络时延就相对比较高，会影响网络性能，在某些情况下甚至还可能会付出额外的流量费用。要是如能实现 service 就近转发 endpoint，是不是就可以实现降低网络时延，提升网络性能了呢？是的！这也正是该特性所提出的目的和意义。&lt;/p&gt;
+&lt;h2 id=&#34;k8s-&#34;&gt;k8s 亲和性&lt;/h2&gt;
+&lt;p&gt;service 的就近转发实际就是一种网络的亲和性，倾向于转发到离自己比较近的 endpoint。在此特性之前，已经在调度和存储方面有一些亲和性的设计与实现:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;节点亲和性 (Node Affinity): 让 Pod 被调度到符合一些期望条件的 Node 上，比如限制调度到某一可用区，或者要求节点支持 GPU，这算是调度亲和，调度结果取决于节点属性。&lt;/li&gt;
+&lt;li&gt;Pod 亲和性与反亲和性 (Pod Affinity/AntiAffinity): 让一组 Pod 调度到同一拓扑域的节点上，或者打散到不同拓扑域的节点， 这也算是调度亲和，调度结果取决于其它 Pod。&lt;/li&gt;
+&lt;li&gt;数据卷拓扑感知调度 (Volume Topology-aware Scheduling): 让 Pod 只被调度到符合其绑定的存储所在拓扑域的节点上，这算是调度与存储的亲和，调度结果取决于存储的拓扑域。&lt;/li&gt;
+&lt;li&gt;本地数据卷 (Local Persistent Volume): 让 Pod 使用本地数据卷，比如高性能 SSD，在某些需要高 IOPS 低时延的场景很有用，它还会保证 Pod 始终被调度到同一节点，数据就不会不丢失，这也算是调度与存储的亲和，调度结果取决于存储所在节点。&lt;/li&gt;
+&lt;li&gt;数据卷拓扑感知动态创建 (Topology-Aware Volume Dynamic Provisioning): 先调度 Pod，再根据 Pod 所在节点的拓扑域来创建存储，这算是存储与调度的亲和，存储的创建取决于调度的结果。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;而 k8s 目前在网络方面还没有亲和性能力，拓扑感知服务路由这个新特性恰好可以补齐这个的空缺，此特性使得 service 可以实现就近转发而不是所有 endpoint 等概率转发。&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -37,7 +91,15 @@
       <pubDate>Mon, 12 Aug 2019 16:59:00 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
       <guid>https://imroc.io/posts/troubleshooting-with-kubernetes-network/</guid>
-      <description>大家好，我是 roc，来自腾讯云容器服务(TKE)团队，经常帮助用户解决各种 K8S 的疑难杂症，积累了比较丰富的经验，本文分享几个比较复杂的网络方面</description>
+      <description>&lt;p&gt;大家好，我是 roc，来自腾讯云容器服务(TKE)团队，经常帮助用户解决各种 K8S 的疑难杂症，积累了比较丰富的经验，本文分享几个比较复杂的网络方面的问题排查和解决思路，深入分析并展开相关知识，信息量巨大，相关经验不足的同学可能需要细细品味才能消化，我建议收藏本文反复研读，当完全看懂后我相信你的功底会更加扎实，解决问题的能力会大大提升。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;本文发现的问题是在使用 TKE 时遇到的，不同厂商的网络环境可能不一样，文中会对不同的问题的网络环境进行说明&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;&lt;img src=&#34;https://imroc.io/assets/meme/dengguangshi.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;-vpc--nodeport-&#34;&gt;跨 VPC 访问 NodePort 经常超时&lt;/h2&gt;
+&lt;p&gt;现象: 从 VPC a 访问 VPC b 的 TKE 集群的某个节点的 NodePort，有时候正常，有时候会卡住直到超时。&lt;/p&gt;
+&lt;p&gt;原因怎么查？&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -46,7 +108,7 @@
       <pubDate>Sun, 09 Jun 2019 22:00:00 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
       <guid>https://imroc.io/posts/lost-packets-once-enable-tcp-tw-recycle/</guid>
-      <description>原因 tcp_tw_recycle参数。它用来快速回收TIME_WAIT连接，不过如果在NAT环境下会引发问题。 RFC1323中有如下一段描述</description>
+      <description>原因 tcp_tw_recycle参数。它用来快速回收TIME_WAIT连接，不过如果在NAT环境下会引发问题。 RFC1323中有如下一段描述： An additional mechanism could be added to the TCP, a per-host cache of the last timestamp received from any connection. This value could then be used in the PAWS mechanism to reject old duplicate segments from earlier incarnations of the connection, if the timestamp clock can be guaranteed to have ticked at least once since the old connection was open. This would require that the TIME-WAIT delay plus the RTT together must be at least one tick of the sender’s timestamp clock. Such an extension is not part of the proposal of this RFC. 大概意思是说TCP有一种行为，可以缓存每个连接最新的时间戳，后续请求中如果时间戳小于缓存的时间戳，即视为无效，相应的数据包会被丢弃。 Linux是否启用这种行为取决于tcp_timestamps和tcp_tw_recycle，因为tcp_timestamps缺省就是开启的，所以当tcp_tw_recycle被开启后，实际上这种行为就被激活了，当客户端或服务端以NAT方式构建的时候就可能出现问题，下面以客户端NAT为例来说明： 当多个客户端通过NAT方式联网并与服务端交互时，服务端看到的是同一个IP，也就是说对服务端而言这些客户端实际上等同于一个，可惜由于这些客户端的时间戳可能存在差异，于是乎从服务端的视角看，便可能出现时间戳错乱的现象，进而直接导致时间</description>
     </item>
     
     <item>
@@ -55,7 +117,7 @@
       <pubDate>Sat, 08 Jun 2019 13:59:00 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
       <guid>https://imroc.io/posts/handle-memory-fragmentation/</guid>
-      <description>内存碎片化造成的危害 节点的内存碎片化严重，导致docker运行容器时，无法分到大的内存块，导致start docker失败。最终导致服务更新时</description>
+      <description>内存碎片化造成的危害 节点的内存碎片化严重，导致docker运行容器时，无法分到大的内存块，导致start docker失败。最终导致服务更新时，状态一直都是启动中 判断是否内存碎片化严重 内核日志显示： 进一步查看的系统内存(cache多可能是io导致的，为了提高io效率留下的缓存，这部分内存实际是可以释放的)： 查看slab (后面的0多表示伙伴系统没有大块内存了)： 解决方法 周期性地或者在发现大块内存不足时，先进行drop_cache操作: echo 3 &amp;gt; /proc/sys/vm/drop_caches 必要时候进行内存整理，开销会比较大，会造成业务卡住一段时间(慎用): echo 1 &amp;gt; /proc/sys/vm/compact_memory 附录 相关链接： https://www.lijiaocn.com/%E9%97%AE%E9%A2%98/2017/11/13/problem-unable-create-nf-conn.html https://blog.csdn.net/wqhlmark64/article/details/79143975 https://huataihuang.gitbooks.io/cloud-atlas/content/os/linux/kernel/memory/drop_caches_and_compact_memory.html</description>
     </item>
     
     <item>
@@ -64,7 +126,7 @@
       <pubDate>Thu, 06 Jun 2019 17:06:00 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
       <guid>https://imroc.io/posts/kubernetes-scale-keepalive-service/</guid>
-      <description>在现网运营中，有很多场景为了提高效率，一般都采用建立长连接的方式来请求。我们发现在客户端以长连接请求服务端的场景下，K8S的自动扩容会失效。</description>
+      <description>在现网运营中，有很多场景为了提高效率，一般都采用建立长连接的方式来请求。我们发现在客户端以长连接请求服务端的场景下，K8S的自动扩容会失效。原因是客户端长连接一直保留在老的Pod容器中，新扩容的Pod没有新的连接过来，导致K8S按照步长扩容第一批Pod之后就停止了扩容操作，而且新扩容的Pod没能承载请求，进而出现服务过载的情况，自动扩容失去了意义。 对长连接扩容失效的问题，我们的解决方法是将长连接转换为短连接。我们参考了 nginx keepalive 的设计，nginx 中 keepalive_requests 这个配置项设定了一个TCP连接能处理的最大请求数，达到设定值(比如1000)之后服务端会在 http 的 Header 头标记 “Connection:close”，通知客户端处理完当前的请求后关闭连接，新的请求需要重新建立TCP连接，所以这个过程中不会出现请求失败，同时又达到了将长连接按需转换为短连接的目的。通过这个办法客户端和云K8S服务端处理完一批请求后不断的更新TCP连接，自动扩容的新Pod能接收到新的连接请求，从而解决了自动扩容失效的问题。 由于Golang并没有提供方法可以获取到每个连接处理过的请求数，我们重写了 net.Listener 和 net.Conn，注入请求计数器，对每个连接处</description>
     </item>
     
     <item>
@@ -73,7 +135,7 @@
       <pubDate>Sun, 19 May 2019 11:24:00 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
       <guid>https://imroc.io/posts/capture-packets-in-container/</guid>
-      <description>在使用 kubernetes 跑应用的时候，可能会遇到一些网络问题，比较常见的是服务端无响应(超时)或回包内容不正常，如果没找出各种配置上有问题，这时我们需要确认</description>
+      <description>在使用 kubernetes 跑应用的时候，可能会遇到一些网络问题，比较常见的是服务端无响应(超时)或回包内容不正常，如果没找出各种配置上有问题，这时我们需要确认数据包到底有没有最终被路由到容器里，或者报文到达容器的内容和出容器的内容符不符合预期，通过分析报文可以进一步缩小问题范围。那么如何在容器内抓包呢？本文提供实用的脚本一键进入容器网络命名空间(netns)，使用宿主机上的tcpdump进行抓包。 使用脚本一键进入 pod netns 抓包 发现某个服务不通，最好将其副本数调为1，并找到这个副本 pod 所在节点和 pod 名称 kubectl get pod -o wide 登录 pod 所在节点，将如下脚本粘贴到 shell (注册函数到当前登录的 shell，我们后面用) function e() { set -eu ns=${2-&amp;#34;default&amp;#34;} pod=`kubectl -n $ns describe pod $1 | grep -A10 &amp;#34;^Containers:&amp;#34; | grep -Eo &amp;#39;docker://.*$&amp;#39; | head -n 1 | sed &amp;#39;s/docker:\/\/\(.*\)$/\1/&amp;#39;` pid=`docker inspect -f {{.State.Pid}} $pod` echo &amp;#34;entering pod netns for $ns/$1&amp;#34; cmd=&amp;#34;nsenter -n --target $pid&amp;#34; echo $cmd $cmd } 一键进入 pod 所在的 netns，格式：e POD_NAME NAMESPACE，示例： e istio-galley-58c7c7c646-m6568 istio-system e proxy-5546768954-9rxg6 # 省略 NAMESPACE 默认为 default 这时已经进入 pod 的 netns，可以执行宿主机上的 ip a 或 ifconfig 来查看容器的网卡，执行 netstat -tunlp 查看当前容器监听了哪些端口，再通过 tcpdump 抓包： tcpdump -i eth0 -w test.pcap port 80 ctrl-c 停止抓包，再用 scp 或 sz 将抓下来的包下载到本地使用 wireshark 分析，提供一些常用的 wireshark 过滤语法： # 使用 telnet 连上并发送一些测试文本，</description>
     </item>
     
     <item>
@@ -82,7 +144,7 @@
       <pubDate>Sun, 10 Mar 2019 14:05:00 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
       <guid>https://imroc.io/posts/efficient-kubectl/</guid>
-      <description>是否有过因为使用 kubectl 经常需要重复输入命名空间而苦恼？是否觉得应该要有个记住命名空间的功能，自动记住上次使用的命名空间，不需要每次都输入？可惜没</description>
+      <description>是否有过因为使用 kubectl 经常需要重复输入命名空间而苦恼？是否觉得应该要有个记住命名空间的功能，自动记住上次使用的命名空间，不需要每次都输入？可惜没有这种功能，但是，本文会教你一个非常巧妙的方法完美帮你解决这个痛点。 k 命令 将如下脚本粘贴到当前shell(注册k命令到当前终端session): function k() { cmdline=`HISTTIMEFORMAT=&amp;#34;&amp;#34; history | awk &amp;#39;$2 == &amp;#34;kubectl&amp;#34; &amp;amp;&amp;amp; (/-n/ || /--namespace/) {for(i=2;i&amp;lt;=NF;i++)printf(&amp;#34;%s &amp;#34;,$i);print &amp;#34;&amp;#34;}&amp;#39; | tail -n 1` regs=(&amp;#39;\-n [\w\-\d]+&amp;#39; &amp;#39;\-n=[\w\-\d]+&amp;#39; &amp;#39;\-\-namespace [\w\-\d]+&amp;#39; &amp;#39;\-\-namespace=[\w\-\d]+&amp;#39;) for i in &amp;#34;${!regs[@]}&amp;#34;; do reg=${regs[i]} nsarg=`echo $cmdline | grep -o -P &amp;#34;$reg&amp;#34;` if [[ &amp;#34;$nsarg&amp;#34; == &amp;#34;&amp;#34; ]]; then continue fi cmd=&amp;#34;kubectl $nsarg$@&amp;#34; echo &amp;#34;$cmd&amp;#34; $cmd return done cmd=&amp;#34;kubectl $@&amp;#34; echo &amp;#34;$cmd&amp;#34; $cmd } mac 用户可以使用 dash 的 snippets 功能快速将上面的函数粘贴，使用 kk. 作为触发键 (dash snippets可以全局监听键盘输入，使用指定的输入作为触发而展开配置的内容，相当于是全局代码片段)，以后在某个终端想使用 k 的时候按下 kk. 就可以将 k 命令注册到当前终端，dash snippets 配置如图所示： 将 k 当作 kubectl 来用，只是不需要输入命名空间，它会调用 kubectl 并自动加上上次使用的非默认的命名空间，如果想切换命名空间，再常规的使用一次 kubectl 就行，下面是示范： 哈哈，是否感觉可以少输入很多字符，提高 kubectl 使用效率了？这是目前我探索解决 kubectl 重复输入命名空间的最好方案，一开始是受 fuck命令 的启发，想用 go 语言开发个 k 命令，但是发现两个缺点： 需要安装二进制才可以使</description>
     </item>
     
     <item>
@@ -91,7 +153,7 @@
       <pubDate>Sat, 22 Dec 2018 01:09:00 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
       <guid>https://imroc.io/posts/kubernetes-wildcard-domain-forward/</guid>
-      <description>需求 集群对外暴露了一个公网IP作为流量入口(可以是 Ingress 或 Service)，DNS 解析配置了一个泛域名指向该IP（比如 *.test.imroc.</description>
+      <description>需求 集群对外暴露了一个公网IP作为流量入口(可以是 Ingress 或 Service)，DNS 解析配置了一个泛域名指向该IP（比如 *.test.imroc.io），现希望根据请求中不同 Host 转发到不同的后端 Service。比如 a.test.imroc.io 的请求被转发到 my-svc-a，b.test.imroc.io 的请求转发到 my-svc-b 简单做法 先说一种简单的方法，这也是大多数人的第一反应：配置 Ingress 规则 假如泛域名有两个不同 Host 分别转发到不同 Service，Ingress 类似这样写: apiVersion: extensions/v1beta1 kind: Ingress metadata: name: my-ingress spec: rules: - host: a.test.imroc.io http: paths: - backend: serviceName: my-svc-a servicePort: 80 path: / - host: b.test.imroc.io http: paths: - backend: serviceName: my-svc-b servicePort: 80 path: / 但是！如果 Host 非常多会怎样？（比如200+） 每次新增 Host 都要改 Ingress 规则，太麻烦 单个 Ingress 上面的规则越来越多，更改规则对 LB 的压力变大，可能会导致偶尔访问不了 正确姿势 我们可以约定请求中泛域名 Host 通配符的 * 号匹配到的字符跟 Service 的名字相关联（可以是相等，或者 Service 统一在前面加个前缀，比如 a.test.imroc.io 转发到 my-svc-a 这个 Service)，集群内起一个反向代理服务，匹配泛域名的请求全部转发到这个代理服务上，这个代理服务只做一件简单的事，解析 Host，正则匹配抓取泛域名中 * 号这部分，把它转换为 Service 名字，然后在集群里转发（集群 DNS 解析) 这个反向代理服务可</description>
     </item>
     
     <item>
@@ -100,7 +162,7 @@
       <pubDate>Fri, 21 Dec 2018 16:10:00 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
       <guid>https://imroc.io/posts/kubernetes-analysis-exitcode/</guid>
-      <description>使用 kubectl describe pod 查看异常的 pod 的状态，在容器列表里看 State 字段，其中 ExitCode 即程序退出时的状态码，正常退出时为0。如果不为0，表示异常退出，我们可以分析下原因</description>
+      <description>使用 kubectl describe pod 查看异常的 pod 的状态，在容器列表里看 State 字段，其中 ExitCode 即程序退出时的状态码，正常退出时为0。如果不为0，表示异常退出，我们可以分析下原因。 退出状态码的区间 必须在 0-255 之间 0 表示正常退出 外界中断将程序退出的时候状态码区间在 129-255，(操作系统给程序发送中断信号，比如 kill -9 是 SIGKILL，ctrl+c 是 SIGINT) 一般程序自身原因导致的异常退出状态区间在 1-128 (这只是一般约定，程序如果一定要用129-255的状态码也是可以的) 假如写代码指定的退出状态码时不在 0-255 之间，例如: exit(-1)，这时会自动做一个转换，最终呈现的状态码还是会在 0-255 之间。我们把状态码记为 code 当指定的退出时状态码为负数，那么转换公式如下: 256 - (|code| % 256) 当指定的退出时状态码为正数，那么转换公式如下: code % 256 常见异常状态码 137 此状态码一般是因为 pod 中容器内存达到了它的资源限制(resources.limits)，一般是内存溢出(OOM)，CPU达到限制只需要不分时间片给程序就可以。因为限制资源是通过 linux 的 cgroup 实现的，所以 cgroup 会将此容器强制杀掉，类似于 kill -9 还可能是宿主机本身资源不够用了(OOM)，内核会选取一些进程杀掉来释放内存 不管是 cgroup 限制杀掉进程还是</description>
     </item>
     
     <item>
@@ -109,7 +171,7 @@
       <pubDate>Tue, 24 Jul 2018 22:19:37 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
       <guid>https://imroc.io/posts/understand-service-ingress-and-ingress-controller/</guid>
-      <description>通俗的讲: Service 是后端真实服务的抽象，一个 Service 可以代表多个相同的后端服务 Ingress 是反向代理规则，用来规定 HTTP/S 请求应该被转发到哪个 Service 上，比如根据请求中不同的</description>
+      <description>通俗的讲: Service 是后端真实服务的抽象，一个 Service 可以代表多个相同的后端服务 Ingress 是反向代理规则，用来规定 HTTP/S 请求应该被转发到哪个 Service 上，比如根据请求中不同的 Host 和 url 路径让请求落到不同的 Service 上 Ingress Controller 就是一个反向代理程序，它负责解析 Ingress 的反向代理规则，如果 Ingress 有增删改的变动，所有的 Ingress Controller 都会及时更新自己相应的转发规则，当 Ingress Controller 收到请求后就会根据这些规则将请求转发到对应的 Service。 Kubernetes 并没有自带 Ingress Controller，它只是一种标准，具体实现有多种，需要自己单独安装，常用的是 Nginx Ingress Controller 和 Traefik Ingress Controller。 所以 Ingress 是一种转发规则的抽象，Ingress Controller 的实现需要根据这些 Ingress 规则来将请求转发到对应的 Service，我画了个图方便大家理解： 从图中可以看出，Ingress Controller 收到请求，匹配 Ingress 转发规则，匹配到了就转发到后端 Service，而 Service 可能代表的后端 Pod 有多个，选出一个转发到那个 Pod，最终由那个 Pod 处理请求。 有同学可能会问，既然 Ingress Controller 要接受外面的请求，而 Ingress Controller 是部署在集群中的，怎么让 Ingress Controller 本身能够被外面访问到呢，有几种方式： Ingress Controller 用 Deployment 方式部署，给它添加一个 Service，类型为 LoadBalancer，这样会自动生成一个 IP 地址，通过</description>
     </item>
     
     <item>
@@ -118,7 +180,7 @@
       <pubDate>Mon, 23 Jul 2018 21:49:54 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
       <guid>https://imroc.io/posts/deploy-kubernetes-dashboard-and-enable-free-https/</guid>
-      <description>概述 Kubernetes Dashboard 是一个可以可视化查看和操作 Kubernetes 集群的一个插件 本文利用 Helm 部署它，所以请确保 Helm 已安装，安装方法参考：https://imroc.io/po</description>
+      <description>概述 Kubernetes Dashboard 是一个可以可视化查看和操作 Kubernetes 集群的一个插件 本文利用 Helm 部署它，所以请确保 Helm 已安装，安装方法参考：https://imroc.io/posts/kubernetes/install-helm 本文使用 Nginx Ingress Controller 暴露 Kubernetes Dashboard 服务到外部，Nginx Ingress Controller 安装参考：https://imroc.io/posts/kubernetes/use-nginx-ingress-controller-to-expose-service 有域名，并且配置 DNS，IP 指向 Ingress Controller 对外暴露的地址 本文使用 cert-manager 生成免费证书，安装和使用参考：https://imroc.io/posts/kubernetes/let-ingress-enable-free-https-with-cert-manager 安装 先自定义 helm 的 chart 配置: vi values.yaml #Default values for kubernetes-dashboard # This is a YAML-formatted file. # Declare name/value pairs to be passed into your templates. # name: value image: repository: k8s.gcr.io/kubernetes-dashboard-amd64 tag: v1.8.3 pullPolicy: IfNotPresent replicaCount: 1 ## Here labels can be added to the kubernetes dashboard deployment ## labels: {} # kubernetes.io/cluster-service: &amp;#34;true&amp;#34; # kubernetes.io/name: &amp;#34;Kubernetes Dashboard&amp;#34; ## Additional container arguments ## #extraArgs: # - --enable-insecure-login # - --system-banner=&amp;#34;Welcome to Kubernetes&amp;#34; # - --port=8444 # By default, https uses 8443 so we move it away to something else # - --insecure-port=8443 # The chart has 8443 hard coded as a containerPort in the deployment spec so we must use this internally for the http service # - --insecure-bind-address=0.0.0.0 ## Node labels for pod assignment ## Ref: https://kubernetes.io/docs/user-guide/node-selection/ ## nodeSelector: {} ## List of node taints to tolerate (requires Kubernetes &amp;gt;= 1.6) tolerations: [] # - key: &amp;#34;key&amp;#34; # operator: &amp;#34;Equal|Exists&amp;#34; # value: &amp;#34;value&amp;#34; # effect: &amp;#34;NoSchedule|PreferNoSchedule|NoExecute&amp;#34; service: type:</description>
     </item>
     
     <item>
@@ -127,7 +189,7 @@
       <pubDate>Mon, 23 Jul 2018 20:08:01 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
       <guid>https://imroc.io/posts/let-ingress-enable-free-https-with-cert-manager/</guid>
-      <description>概述 cert-manager 是替代 kube-lego 的一个开源项目，用于在 Kubernetes 集群中自动提供 HTTPS 证书，支持 Let’s Encrypt, HashiCorp Vault 这些免费证书的签发。 本文使用 Helm 安装，所以请确保 Helm 已安装，安装</description>
+      <description>概述 cert-manager 是替代 kube-lego 的一个开源项目，用于在 Kubernetes 集群中自动提供 HTTPS 证书，支持 Let’s Encrypt, HashiCorp Vault 这些免费证书的签发。 本文使用 Helm 安装，所以请确保 Helm 已安装，安装方法参考：https://imroc.io/posts/kubernetes/install-helm 你的集群必须已经装有 Ingress Controller，如果还没有，参考：https://imroc.io/posts/kubernetes/use-nginx-ingress-controller-to-expose-service 需要颁发免费证书的域名配置DNS记录，IP 指向 Ingress Controller 对外暴露的地址 开源地址：https://github.com/jetstack/cert-manager 文档地址：https://cert-manager.readthedocs.io 安装 cert-manager helm install \ --name cert-manager \ --namespace kube-system \ stable/cert-manager 一键安装，非常简单。 生成免费证书 我们需要先创建一个签发机构，cert-manager 给我们提供了 Issuer 和 ClusterIssuer 这两种用于创建签发机构的自定义资源对象，Issuer 只能用来签发自己所在 namespace 下的证书，ClusterIssuer 可以签发任意 namespace 下的证书，这里以 ClusterIssuer 为例创建一个签发机构： vi issuer.yaml apiVersion: certmanager.k8s.io/v1alpha1 kind:</description>
     </item>
     
     <item>
@@ -136,7 +198,7 @@
       <pubDate>Mon, 23 Jul 2018 14:29:37 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
       <guid>https://imroc.io/posts/use-nginx-ingress-controller-to-expose-service/</guid>
-      <description>概述 Nginx Ingress Controller 是 Kubernetes Ingress Controller 的一种实现，作为反向代理将外部流量导入集群内部，实现将 Kubernetes 内部的 Service 暴露给外部，这样我们就能通过公网或内网直接访问集群内部的服</description>
+      <description>概述 Nginx Ingress Controller 是 Kubernetes Ingress Controller 的一种实现，作为反向代理将外部流量导入集群内部，实现将 Kubernetes 内部的 Service 暴露给外部，这样我们就能通过公网或内网直接访问集群内部的服务。本文使用 Helm 来安装，所以请确保 Helm 已安装，安装方法参考：https://imroc.io/posts/kubernetes/install-helm/ 导入流量的方式 要想暴露内部流量，就需要让 Ingress Controller 自身能够对外提供服务，主要有以下两种方式： Ingress Controller 使用 Deployment 部署，Service 类型指定为 LoadBalancer 优点：最简单 缺点：需要集群有 Cloud Provider 并且支持 LoadBalancer, 一般云厂商托管的 kubernetes 集群支持，并且使用 LoadBalancer 是付费的，因为他会给你每个 LoadBalancer 类型的 Service 分配公网 IP 地址 Ingress Controller 使用 DeamonSet 部署，Pod 指定 hostPort 来暴露端口 优点：免费 缺点：没有高可用保证，如果需要高可用就得自己去搞 使用 LoadBalancer 导入流量 这种方式部署 Nginx Ingress Controller 最简单，只要保证上面说的前提：集群有 Cloud Provider 并且支持 LoadBalancer，如果你是使用云厂商的 Kubernetes 集群，保证你集群所使用的云厂商的账号有足够的余额，执行下面的命令一键安装： helm install --name nginx-ingress --namespace kube-system stable/nginx-ingress 因为 stable/nginx-ingress 这个 helm 的 chart 包默认就是使用的这种方式部署。 部署完了我们可以查看 LoadBalancer 给我们分配的 IP 地址： $ kubectl get svc -n kube-system NAME TYPE CLUSTER-IP EXTERNAL-IP PORT(S) AGE nginx-ingress-controller LoadBalancer 10.3.255.138 119.28.121.125 80:30113/TCP,443:32564/TCP 21h EXTERNAL-IP 就是我们需要的</description>
     </item>
     
     <item>
@@ -145,7 +207,7 @@
       <pubDate>Tue, 13 Mar 2018 22:45:26 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
       <guid>https://imroc.io/posts/kubernetes-nodeport-vs-loadbalancer-vs-ingress-when-should-i-use-what/</guid>
-      <description>本文翻译自：https://medium.com/google-cloud/kubernetes-nodeport-vs-loadbalan</description>
+      <description>本文翻译自：https://medium.com/google-cloud/kubernetes-nodeport-vs-loadbalancer-vs-ingress-when-should-i-use-what-922f010849e0 最近，有人问我 NodePort，LoadBalancer 和 Ingress 之间的区别是什么。 它们是将外部流量引入群集的不同方式，并且实现方式不一样。 我们来看看它们是如何工作的，以及什么时候该用哪种。 **注意：**本文适用于 Google Kubernetes Engine。 如果你在其他公有云、混合云、minikube 等上运行，可能会略有不同。 例如，您不能在 minikube 上使用 LoadBalancer。 我也没有深入技术细节。 如果您有兴趣了解更多，官方文档是一个很好的资源！ ClusterIP ClusterIP 服务是默认的 Kubernetes 服务。 它为您提供集群内部其他应用程序可以访问的服务， 外部无法访问。 ClusterIP 服务的 YAML 类似这样： apiVersion: v1 kind: Service metadata: name: my-internal-service selector: app: my-app spec: type: ClusterIP ports: - name: http port: 80 targetPort: 80 protocol: TCP 如果你不能从集群外部上访问一个 ClusterIP 服务，我为什么要谈论它？ 因为你可以使用 Kubernetes Proxy 来访问它！ 启动 Kubernetes Proxy: $ kubectl proxy --port=8080 现在，你可以使用如下的 Kubernetes API 访问服务： http://localhost:8080/api/v1/proxy/namespaces/&amp;lt;NAMESPACE&amp;gt;/services/&amp;lt;SERVICE-NAME&amp;gt;:&amp;lt;PORT-NAME&amp;gt;/ 所以，如果要访问我们刚刚定义的服务，可以使用下面的地址： http://localhost:8080/api/v1/proxy/namespaces/default/services/my-internal-service:http/</description>
     </item>
     
     <item>
@@ -154,7 +216,7 @@
       <pubDate>Mon, 12 Mar 2018 11:47:19 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
       <guid>https://imroc.io/posts/kubernetes-source-code-reading-notes-kube-apiserver-code-main-line/</guid>
-      <description>前言 我最近开始研究 kubernetes 源码，希望将阅读笔记记录下来，分享阅读思路和心得，更好的理解 kubernetes，这是第一篇，从 kube-apiserver 开始。 开始 k8s各组件</description>
+      <description>前言 我最近开始研究 kubernetes 源码，希望将阅读笔记记录下来，分享阅读思路和心得，更好的理解 kubernetes，这是第一篇，从 kube-apiserver 开始。 开始 k8s各组件main包在cmd目录下，即各个程序的入口处，来看看 kube-apiserver 的源码 注： 三点代表省略的代码，只关注主要的代码，让思路更清晰 cmd/kube-apiserver/apiserver.go func main() { ... command := app.NewAPIServerCommand() ... if err := command.Execute(); err != nil { fmt.Fprintf(os.Stderr, &amp;#34;error: %v\n&amp;#34;, err) os.Exit(1) } } 各组件程序都是用 cobra 来管理、解析命令行参数的，main 包下面还有 app 包，app 包才是包含创建 cobra 命令逻辑的地方，所以其实 main 包的逻辑特别简单，主要是调用执行函数就可以了。那么问题来了，为什么要这样设计？答案很简单，有没有注意到还有个 hyperkube 程序？它把很多组件的功能都综合在一起了，安装的时候我们就不需要准备那么多程序，比如执行 hyperkube apiserver 和直接执行kube-apiserver 效果是一样的。由于各组件程序把创建 cobra 命令的逻辑都提取到下面的 app 包了，hyperkube 就只可以直接调用这些，所以 hyperkube 的 main 包就仅仅需要一个 main 文件就可以了，各组件程序代码有更新，hyperkube 重新编译也能获取更新，所以提取 app 包是一种解耦的方法。 app.NewAPIServerCommand() 返回 *cobra.Command,执行 command.Execute() 最终会调用 *cobra.Command 的 Run 字段的函数，我们来看看 app.NewAPIServerCommand() 是如何构造 *cobra.Command 的。 func NewAPIServerCommand()</description>
     </item>
     
     <item>
@@ -163,7 +225,7 @@
       <pubDate>Fri, 09 Mar 2018 10:39:17 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
       <guid>https://imroc.io/posts/sync-images-to-docker-hub-using-katacoda/</guid>
-      <description>为什么要同步 安装kubernetes的时候，我们需要用到 gcr.io/google_containers 下面的一些镜像，在国内是不能直接下载的。如果用 Self Host 方式安装，master 上的组件除</description>
+      <description>为什么要同步 安装kubernetes的时候，我们需要用到 gcr.io/google_containers 下面的一些镜像，在国内是不能直接下载的。如果用 Self Host 方式安装，master 上的组件除开kubelet之外都用容器运行，甚至 CNI 插件也是容器运行，比如 flannel，在 quay.io/coreos 下面，在国内下载非常慢。但是我们可以把这些镜像同步到我们的docker hub仓库里，再配个docker hub加速器，这样下载镜像就很快了。 原理 Katacoda 是一个在线学习平台，在web上提供学习需要的服务器终端，里面包含学习所需的环境，我们可以利用docker的课程的终端来同步，因为里面有docker环境，可以执行 docker login，docker pull，docker tag，docker push 等命令来实现同步镜像。 但是手工去执行命令很麻烦，如果要同步的镜像和tag比较多，手工操作那就是浪费生命，我们可以利用程序代替手工操作，不过 Katacoda 为了安全起见，不允许执行外来的二进制程序，但是可以shell脚本，我写好了脚本，大家只需要粘贴进去根据自己需要稍稍修改下，然后运行就可以了。 Let&#39;s Do It 点击 这里 进入docker课程 点击 START SCENARIO 或 终端右上角全屏按钮将终端放大 安装脚本依赖的 jq 命令 apt install jq 登录docker hub docker login 创建</description>
     </item>
     
   </channel>

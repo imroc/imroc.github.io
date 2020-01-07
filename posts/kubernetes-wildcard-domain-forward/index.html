@@ -9,9 +9,9 @@
   <meta name="description" content="imroc.io|roc的博客|Cloud Native|Kubernetes|Go|Golang" />
   <meta property="og:title" content="Kubernetes 泛域名动态 Service 转发解决方案" />
   <meta name="twitter:title" content="Kubernetes 泛域名动态 Service 转发解决方案" />
-  <meta name="description" content="需求 集群对外暴露了一个公网IP作为流量入口(可以是 Ingress 或 Service)，DNS 解析配置了一个泛域名指向该IP（比如 *.test.imroc.">
-  <meta property="og:description" content="需求 集群对外暴露了一个公网IP作为流量入口(可以是 Ingress 或 Service)，DNS 解析配置了一个泛域名指向该IP（比如 *.test.imroc.">
-  <meta name="twitter:description" content="需求 集群对外暴露了一个公网IP作为流量入口(可以是 Ingress 或 Service)，DNS 解析配置了一个泛域名指向该IP（比如 *.test.imroc.">
+  <meta name="description" content="需求 集群对外暴露了一个公网IP作为流量入口(可以是 Ingress 或 Service)，DNS 解析配置了一个泛域名指向该IP（比如 *.test.imroc.io），现希望根据请求中不同 Host 转发到不同的后端 Service。比如 a.test.imroc.io 的请求被转发到 my-svc-a，b.test.imroc.io 的请求转发到 my-svc-b 简单做法 先说一种简单的方法，这也是大多数人的第一反应：配置 Ingress 规则 假如泛域名有两个不同 Host 分别转发到不同 Service，Ingress 类似这样写: apiVersion: extensions/v1beta1 kind: Ingress metadata: name: my-ingress spec: rules: - host: a.test.imroc.io http: paths: - backend: serviceName: my-svc-a servicePort: 80 path: / - host: b.test.imroc.io http: paths: - backend: serviceName: my-svc-b servicePort: 80 path: / 但是！如果 Host 非常多会怎样？（比如200&#43;） 每次新增 Host 都要改 Ingress 规则，太麻烦 单个 Ingress 上面的规则越来越多，更改规则对 LB 的压力变大，可能会导致偶尔访问不了 正确姿势 我们可以约定请求中泛域名 Host 通配符的 * 号匹配到的字符跟 Service 的名字相关联（可以是相等，或者 Service 统一在前面加个前缀，比如 a.test.imroc.io 转发到 my-svc-a 这个 Service)，集群内起一个反向代理服务，匹配泛域名的请求全部转发到这个代理服务上，这个代理服务只做一件简单的事，解析 Host，正则匹配抓取泛域名中 * 号这部分，把它转换为 Service 名字，然后在集群里转发（集群 DNS 解析) 这个反向代理服务可">
+  <meta property="og:description" content="需求 集群对外暴露了一个公网IP作为流量入口(可以是 Ingress 或 Service)，DNS 解析配置了一个泛域名指向该IP（比如 *.test.imroc.io），现希望根据请求中不同 Host 转发到不同的后端 Service。比如 a.test.imroc.io 的请求被转发到 my-svc-a，b.test.imroc.io 的请求转发到 my-svc-b 简单做法 先说一种简单的方法，这也是大多数人的第一反应：配置 Ingress 规则 假如泛域名有两个不同 Host 分别转发到不同 Service，Ingress 类似这样写: apiVersion: extensions/v1beta1 kind: Ingress metadata: name: my-ingress spec: rules: - host: a.test.imroc.io http: paths: - backend: serviceName: my-svc-a servicePort: 80 path: / - host: b.test.imroc.io http: paths: - backend: serviceName: my-svc-b servicePort: 80 path: / 但是！如果 Host 非常多会怎样？（比如200&#43;） 每次新增 Host 都要改 Ingress 规则，太麻烦 单个 Ingress 上面的规则越来越多，更改规则对 LB 的压力变大，可能会导致偶尔访问不了 正确姿势 我们可以约定请求中泛域名 Host 通配符的 * 号匹配到的字符跟 Service 的名字相关联（可以是相等，或者 Service 统一在前面加个前缀，比如 a.test.imroc.io 转发到 my-svc-a 这个 Service)，集群内起一个反向代理服务，匹配泛域名的请求全部转发到这个代理服务上，这个代理服务只做一件简单的事，解析 Host，正则匹配抓取泛域名中 * 号这部分，把它转换为 Service 名字，然后在集群里转发（集群 DNS 解析) 这个反向代理服务可">
+  <meta name="twitter:description" content="需求 集群对外暴露了一个公网IP作为流量入口(可以是 Ingress 或 Service)，DNS 解析配置了一个泛域名指向该IP（比如 *.test.imroc.io），现希望根据请求中不同 Host 转发到不同的后端 Service。比如 a.test.imroc.io 的请求被转发到 my-svc-a，b.test.imroc.io 的请求转发到 my-svc-b 简单做法 先说一种简单的方 …">
   <meta name="author" content="{Description { .Site.Author.name }}"/>
   <link href='https://imroc.io/favicon.png' rel='icon' type='image/x-icon'/>
   <meta property="og:image" content="https://res.cloudinary.com/imroc/image/upload/v1521031841/avatar.png" />
@@ -34,7 +34,7 @@
 
 
 
-<link rel="stylesheet" href='/css/bundle.min.43522e1b6746447005cecd1381cc12a654c0364de88961016cdf5f133529476d.css' integrity='sha256-Q1IuG2dGRHAFzs0TgcwSplTANk3oiWEBbN9fEzUpR20='>
+<link rel="stylesheet" href='/css/bundle.min.6d79a1ed52242954f10363d8f656c7d97a028dddf359f0e72a30b5cabd73ffa7.css' integrity='sha256-bXmh7VIkKVTxA2PY9lbH2XoCjd3zWfDnKjC1yr1z/6c='>
   --><script>
 var _hmt = _hmt || [];
 (function() {
@@ -217,7 +217,7 @@ var _hmt = _hmt || [];
                      
                     <span class="post-meta">
   
-  发表于 December 22, 2018
+  发表于 2018-12-22
   
   
 </span>
@@ -254,7 +254,18 @@ var _hmt = _hmt || [];
 <div class="container" role="main" itemscope itemtype="http://schema.org/Article">
     <div class="row">
         <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-
+            
+            <div>
+                
+                <h5 id="tags" style="margin-top: 30px;">标签：
+                  
+                      <a
+                        href='https://imroc.io/tags/kubernetes/'>kubernetes</a>
+                      &nbsp;
+                  
+                </h5>
+            </div>
+            
             <article role="main" class="blog-post" itemprop="articleBody" id="content">
                 
 <aside class="toc">
@@ -659,7 +670,11 @@ spec:
   </div>
 </footer>
 
-<script src='/js/bundle.min.21f7d58c95d27f6c2ca78a820bd04dd19724828061fc1cd5fd72c409096ef914.js' integrity='sha256-IffVjJXSf2wsp4qCC9BN0ZckgoBh/BzV/XLECQlu&#43;RQ='></script>
+<script>
+  window.copyText='复制'==''?"Copy":'复制'
+  window.copiedText='已复制!'==''?"Copied":'已复制!'
+</script>
+<script src='/js/bundle.min.6a754f8d216cf8a16e94d637ea3a64c3f888c80c75c107d9acbb56503c8553cc.js' integrity='sha256-anVPjSFs&#43;KFulNY36jpkw/iIyAx1wQfZrLtWUDyFU8w='></script>
 
 
 

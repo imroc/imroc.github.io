@@ -31,7 +31,7 @@
 
 
 
-<link rel="stylesheet" href='/css/bundle.min.43522e1b6746447005cecd1381cc12a654c0364de88961016cdf5f133529476d.css' integrity='sha256-Q1IuG2dGRHAFzs0TgcwSplTANk3oiWEBbN9fEzUpR20='>
+<link rel="stylesheet" href='/css/bundle.min.6d79a1ed52242954f10363d8f656c7d97a028dddf359f0e72a30b5cabd73ffa7.css' integrity='sha256-bXmh7VIkKVTxA2PY9lbH2XoCjd3zWfDnKjC1yr1z/6c='>
   --><script>
 var _hmt = _hmt || [];
 (function() {
@@ -217,12 +217,33 @@ var _hmt = _hmt || [];
               </a>
 
               <p class="post-meta">
-                发表于 December 7, 2018
+                发表于 2018-12-07
               </p>
               <div class="post-entry">
                 
-                  修改历史 修改最新一条历史 如果内容需要改就直接改，然后 git add 进去，然后执行 git commit --amend 会弹出 git commit message 的编辑窗口，会填充之前 commit 时写的 message 内容，如果需要改就直
-                  <a href="https://imroc.io/posts/git-trick-modify-history/" class="post-read-more">[阅读全文]</a>
+                  <h2 id="heading">修改历史</h2>
+<h4 id="heading-1">修改最新一条历史</h4>
+<p>如果内容需要改就直接改，然后 <code>git add</code> 进去，然后执行</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git commit --amend
+</code></pre></div><p>会弹出 <code>git commit message</code> 的编辑窗口，会填充之前 commit 时写的 message 内容，如果需要改就直接编辑，不需要改就不动，最后保存退出 (<code>:wq</code>)</p>
+<h4 id="heading-2">修改指定某条历史</h4>
+<p>不小心暴露敏感信息到历史？使用如下操作修改历史：</p>
+<ul>
+<li>找到需要修改的历史更前面的一条 commit 的 id 并复制，记为 <code>&lt;commit id&gt;</code></li>
+<li><code>git rebase -i &lt;commit id&gt;</code></li>
+<li>将显示的第一个 <code>pick</code> 改为 <code>edit</code></li>
+<li>保存并退出 (<code>:wq</code>)</li>
+<li>对需要修改的文件进行修改，然后 <code>git add</code> 进去</li>
+<li>提交：<code>git commit --amend</code></li>
+<li>完成: <code>git rebase --continue</code></li>
+</ul>
+<h4 id="heading-3">同步代码</h4>
+<p>强制 push 到远程：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git push -f origin &lt;local-branch&gt;:&lt;remote-branch&gt;
+</code></pre></div><p>其它伙伴同步到自己机器：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git fetch
+git reset --hard origin/&lt;remote-branch&gt;
+</code></pre></div>
                 
               </div>
 
@@ -305,7 +326,11 @@ var _hmt = _hmt || [];
   </div>
 </footer>
 
-<script src='/js/bundle.min.21f7d58c95d27f6c2ca78a820bd04dd19724828061fc1cd5fd72c409096ef914.js' integrity='sha256-IffVjJXSf2wsp4qCC9BN0ZckgoBh/BzV/XLECQlu&#43;RQ='></script>
+<script>
+  window.copyText='复制'==''?"Copy":'复制'
+  window.copiedText='已复制!'==''?"Copied":'已复制!'
+</script>
+<script src='/js/bundle.min.6a754f8d216cf8a16e94d637ea3a64c3f888c80c75c107d9acbb56503c8553cc.js' integrity='sha256-anVPjSFs&#43;KFulNY36jpkw/iIyAx1wQfZrLtWUDyFU8w='></script>
 
 
 
