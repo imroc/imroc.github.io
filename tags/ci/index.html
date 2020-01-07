@@ -221,7 +221,7 @@ var _hmt = _hmt || [];
               </p>
               <div class="post-entry">
                 
-                  利用Gitlab和Jenkins做CI(持续集成) 最近用到持续集成顺便总结在这里，都是用的最新版。搭建过程中还有一个demo，提交代码到 gitlab 自动触发 jenkins 任务，自动编译代码和 docker 镜像并上传。 安装运行 Gitlab gitlab 国内安装很麻烦，用官方的源装不了，因为在国外，太慢，链接会断掉。国内清华有 gitlab 的 apt 和 yum 源，但是我试过安装 CentOS 7 的 gitlab ，到最后都会一直卡住结束不了。直接下载清华 gitlab 的 rpm mirror 安装也是一样，所以我还是选择用 docker 启动 gitlab（提前配好 docker hub 加速器） 准备镜像 docker pull gitlab/gitlab-ee:latest 准备 gitlab 所需目录 mkdir gitlab cd gitlab mkdir config logs data 准备启动脚本 （替换想要的启动端口，ip 地址替换为访问你的 gitlab 的地址，也可以替换想要的挂载目录） vi run #! /bin/bash sudo docker run -d --rm \ -p 8088:8088 \ --name gitlab \ --env GITLAB_OMNIBUS_CONFIG=&#34;external_url &#39;http://118.24.64.246:8088/&#39;; gitlab_rails[&#39;lfs_enabled&#39;] = true;&#34; \ -v $PWD/config:/etc/gitlab \ -v $PWD/logs:/var/log/gitlab \ -v $PWD/data:/var/opt/gitlab \ gitlab/gitlab-ee:latest EOF 赋予执行权限 chmod +x run 启动 gitlab ./run 查看 gitlab 控制台输出 docker logs -f gitlab 访问 gitlab，打开脚本中配置的 external_url 地址，设置管理员密码和注册 gitlab 账号，登录并添加自己的 SSH key 。创建 repo ，git clone 到本地，后面我们提交代码到这个 repo ，触发 jenkins 的持续集成。 安装运行 Jenkins jenkins 建议直接安装在宿主机，不用 docker 方式，因为持续集成需要安装各种我们用到的工具，这些工具可能后面根据需要才安装，重启不能让这些工具丢失。比如编译 java 源码需要装
+                  利用Gitlab和Jenkins做CI(持续集成) 最近用到持续集成顺便总结在这里，都是用的最新版。搭建过程中还有一个demo，提交代码到 gitlab 自
                   <a href="https://imroc.io/posts/ci-with-gitlab-and-jenkins/" class="post-read-more">[阅读全文]</a>
                 
               </div>

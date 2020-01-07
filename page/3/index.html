@@ -268,7 +268,7 @@ var _hmt = _hmt || [];
 
               <div class="post-entry">
                 
-                  本文翻译自：https://medium.com/google-cloud/kubernetes-nodeport-vs-loadbalancer-vs-ingress-when-should-i-use-what-922f010849e0 最近，有人问我 NodePort，LoadBalancer 和 Ingress 之间的区别是什么。 它们是将外部流量引入群集的不同方式，并且实现方式不一样。 我们来看看它们是如何工作的，以及什么时候该用哪种。 **注意：**本文适用于 Google Kubernetes Engine。 如果你在其他公有云、混合云、minikube 等上运行，可能会略有不同。 例如，您不能在 minikube 上使用 LoadBalancer。 我也没有深入技术细节。 如果您有兴趣了解更多，官方文档是一个很好的资源！ ClusterIP ClusterIP 服务是默认的 Kubernetes 服务。 它为您提供集群内部其他应用程序可以访问的服务， 外部无法访问。 ClusterIP 服务的 YAML 类似这样： apiVersion: v1 kind: Service metadata: name: my-internal-service selector: app: my-app spec: type: ClusterIP ports: - name: http port: 80 targetPort: 80 protocol: TCP 如果你不能从集群外部上访问一个 ClusterIP 服务，我为什么要谈论它？ 因为你可以使用 Kubernetes Proxy 来访问它！ 启动 Kubernetes Proxy: $ kubectl proxy --port=8080 现在，你可以使用如下的 Kubernetes API 访问服务： http://localhost:8080/api/v1/proxy/namespaces/&lt;NAMESPACE&gt;/services/&lt;SERVICE-NAME&gt;:&lt;PORT-NAME&gt;/ 所以，如果要访问我们刚刚定义的服务，可以使用下面的地址： http://localhost:8080/api/v1/proxy/namespaces/default/services/my-internal-service:http/
+                  本文翻译自：https://medium.com/google-cloud/kubernetes-nodeport-vs-loadbalan
                   <a href="https://imroc.io/posts/kubernetes-nodeport-vs-loadbalancer-vs-ingress-when-should-i-use-what/" class="post-read-more">[阅读全文]</a>
                 
               </div>
@@ -299,7 +299,7 @@ var _hmt = _hmt || [];
 
               <div class="post-entry">
                 
-                  前言 我最近开始研究 kubernetes 源码，希望将阅读笔记记录下来，分享阅读思路和心得，更好的理解 kubernetes，这是第一篇，从 kube-apiserver 开始。 开始 k8s各组件main包在cmd目录下，即各个程序的入口处，来看看 kube-apiserver 的源码 注： 三点代表省略的代码，只关注主要的代码，让思路更清晰 cmd/kube-apiserver/apiserver.go func main() { ... command := app.NewAPIServerCommand() ... if err := command.Execute(); err != nil { fmt.Fprintf(os.Stderr, &#34;error: %v\n&#34;, err) os.Exit(1) } } 各组件程序都是用 cobra 来管理、解析命令行参数的，main 包下面还有 app 包，app 包才是包含创建 cobra 命令逻辑的地方，所以其实 main 包的逻辑特别简单，主要是调用执行函数就可以了。那么问题来了，为什么要这样设计？答案很简单，有没有注意到还有个 hyperkube 程序？它把很多组件的功能都综合在一起了，安装的时候我们就不需要准备那么多程序，比如执行 hyperkube apiserver 和直接执行kube-apiserver 效果是一样的。由于各组件程序把创建 cobra 命令的逻辑都提取到下面的 app 包了，hyperkube 就只可以直接调用这些，所以 hyperkube 的 main 包就仅仅需要一个 main 文件就可以了，各组件程序代码有更新，hyperkube 重新编译也能获取更新，所以提取 app 包是一种解耦的方法。 app.NewAPIServerCommand() 返回 *cobra.Command,执行 command.Execute() 最终会调用 *cobra.Command 的 Run 字段的函数，我们来看看 app.NewAPIServerCommand() 是如何构造 *cobra.Command 的。 func NewAPIServerCommand()
+                  前言 我最近开始研究 kubernetes 源码，希望将阅读笔记记录下来，分享阅读思路和心得，更好的理解 kubernetes，这是第一篇，从 kube-apiserver 开始。 开始 k8s各组件
                   <a href="https://imroc.io/posts/kubernetes-source-code-reading-notes-kube-apiserver-code-main-line/" class="post-read-more">[阅读全文]</a>
                 
               </div>
@@ -334,7 +334,7 @@ var _hmt = _hmt || [];
 
               <div class="post-entry">
                 
-                  为什么要同步 安装kubernetes的时候，我们需要用到 gcr.io/google_containers 下面的一些镜像，在国内是不能直接下载的。如果用 Self Host 方式安装，master 上的组件除开kubelet之外都用容器运行，甚至 CNI 插件也是容器运行，比如 flannel，在 quay.io/coreos 下面，在国内下载非常慢。但是我们可以把这些镜像同步到我们的docker hub仓库里，再配个docker hub加速器，这样下载镜像就很快了。 原理 Katacoda 是一个在线学习平台，在web上提供学习需要的服务器终端，里面包含学习所需的环境，我们可以利用docker的课程的终端来同步，因为里面有docker环境，可以执行 docker login，docker pull，docker tag，docker push 等命令来实现同步镜像。 但是手工去执行命令很麻烦，如果要同步的镜像和tag比较多，手工操作那就是浪费生命，我们可以利用程序代替手工操作，不过 Katacoda 为了安全起见，不允许执行外来的二进制程序，但是可以shell脚本，我写好了脚本，大家只需要粘贴进去根据自己需要稍稍修改下，然后运行就可以了。 Let's Do It 点击 这里 进入docker课程 点击 START SCENARIO 或 终端右上角全屏按钮将终端放大 安装脚本依赖的 jq 命令 apt install jq 登录docker hub docker login 创建
+                  为什么要同步 安装kubernetes的时候，我们需要用到 gcr.io/google_containers 下面的一些镜像，在国内是不能直接下载的。如果用 Self Host 方式安装，master 上的组件除
                   <a href="https://imroc.io/posts/sync-images-to-docker-hub-using-katacoda/" class="post-read-more">[阅读全文]</a>
                 
               </div>
@@ -368,7 +368,7 @@ var _hmt = _hmt || [];
 
               <div class="post-entry">
                 
-                  概述 Hugo可以让你轻松生成静态网站，比如个人博客、API文档、公司主页等，你只需要提供markdown格式的文本，它就能帮你渲染成各种你想要的样式，只需要安装想要的主题，写好对应的markdown内容，就能快速编译出一个静态网站。 安装hugo 参考官方：http://gohugo.io/getting-started/installing/ 创建网站 首先初始化你的网站，假如 mysite 是存放网站相关文件的目录： hugo new site mysite 这会在当前路径创建一个 mysite 目录，进入该路径： cd mysite 目录如下： ▸ archetypes/ ▸ content/ ▸ layouts/ ▸ static/ ▸ themes/ config.toml config.toml 是网站的配置文件，包含一些基本配置和主题特有的配置。 这几个文件夹的作用分别是： archetypes：包括内容类型，在创建新内容时自动生成内容的配置 content：包括网站内容，全部使用markdown格式 layouts：包括了网站的模版，决定内容如何呈现 static：包括了css, js, fonts, media等，决定网站的外观 themes：用于存放主题 在创建页面之前需要安装想要的主题，官方有收集一些：https://themes.gohugo.io/ 在这里我用我博客的主题xhugo作示例，下载到themes
+                  概述 Hugo可以让你轻松生成静态网站，比如个人博客、API文档、公司主页等，你只需要提供markdown格式的文本，它就能帮你渲染成各种你想
                   <a href="https://imroc.io/posts/building-website-for-free-using-hugo-and-github-pages/" class="post-read-more">[阅读全文]</a>
                 
               </div>
@@ -399,7 +399,7 @@ var _hmt = _hmt || [];
 
               <div class="post-entry">
                 
-                  append函数返回更新后的slice（长度和容量可能会变），必须重新用slice的变量接收，不然无法编译通过 为了弄明白为什么，首先我们需要清楚几件事： slice的底层是数组，一片连续的内存，slice变量只是存储该slice在底层数组的起始位置、结束位置以及容量。 它的长度可以通过起始位置和结束位置算出来，容量也可以通过起点位置到底层数组的末端位置的长度算出来，多个slice可以指向同一个底层数组。所以slice和数组指针不同，数组指针主要存储底层数组的首地址。 因为Go函数传递默认是值拷贝，将slice变量传入append函数相当于传了原slice变量的一个副本，注意不是拷贝底层数组，因为slice变量并不是数组，它仅仅是存储了底层数组的一些信息。 所以说，当它改变传入的slice变量的信息，原slice变量并不会有任何变化，打印原slice变量和之前也会一模一样。该函数会返回修改后的slice变量，因为原slice并不会变，假如没有任何slice变量接收返回的值，那么此次append操作就没有意义了。所以必须要有slice变量重新接收修改后的slice变量，不然编译器会报错。Go不希望
+                  append函数返回更新后的slice（长度和容量可能会变），必须重新用slice的变量接收，不然无法编译通过 为了弄明白为什么，首先我们需要
                   <a href="https://imroc.io/posts/golang-append/" class="post-read-more">[阅读全文]</a>
                 
               </div>
@@ -430,7 +430,7 @@ var _hmt = _hmt || [];
 
               <div class="post-entry">
                 
-                  总结下Go的package设计哲学 明确目的 在准备设计一个包之前，我们需要明确它的目的。 包的命名就必须明确体现其目的，而不仅仅是为了存放代码。像标准库的io,http,fmt这些包名就很好，而像util.helper,common这种命名就是反面教材。 可用性 想想使用这个包的人真正的需求，包的使用一定要直观、简单。 在不断迭代开发、优化、完善的时候，不能让引用这个的程序出错。 防止出现需要类型断言具体类型的需求。 让单个包的代码量简化到最少，减少bug，易于掌控。 可移植性 始终追求最高可移植性。 如果包合理实用，就不要过多在意其它人的意见，没有适合所有人的完美的包。 不要让包成为单一依赖点(即所有其它包都依赖它)，每个包都有自己的设计目的，可能多个包会有重复的类型，即便重复定义也不要让包成为单一依赖点，这是API设计原则。 项目结构组织的最佳实践 有两种类型的项目，一种是生成可运行程序的项目(application project)，另一种是专门用于被其它项目引用的套件项目(kit project)。 对于套件项目，结构组织根据实际项目用途而定，而对于可运行程序的项目，用这样的结构： ├── cmd ├── internal └── vendor ve
+                  总结下Go的package设计哲学 明确目的 在准备设计一个包之前，我们需要明确它的目的。 包的命名就必须明确体现其目的，而不仅仅是为了存放代码。
                   <a href="https://imroc.io/posts/golang-package/" class="post-read-more">[阅读全文]</a>
                 
               </div>
@@ -461,12 +461,8 @@ var _hmt = _hmt || [];
 
               <div class="post-entry">
                 
-                  <p>直接上代码:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">for</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Tick</span>(<span style="color:#ae81ff">30</span> <span style="color:#f92672">*</span> <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Millisecond</span>) {
-	<span style="color:#a6e22e">doSomthing</span>()
-}
-</code></pre></div><p>因为time.Tick()返回的是一个channel,每隔指定的时间会有数据从channel中出来，for range不仅能遍历map,slice,array还能取出channel中数据，range前面可以不用变量接收，所以可以简写成上面的形式。</p>
-
+                  直接上代码: for range time.Tick(30 * time.Millisecond) { doSomthing() } 因为time.Tick()返回的是一个channel,每隔指定的时间会有数据从channel中出来，for ran
+                  <a href="https://imroc.io/posts/golang-for-range-time-tick/" class="post-read-more">[阅读全文]</a>
                 
               </div>
 
@@ -496,15 +492,8 @@ var _hmt = _hmt || [];
 
               <div class="post-entry">
                 
-                  <p>很多时候我们需要让main函数不退出，让它在后台一直执行，例如：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">main</span>() {
-	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">i</span> &lt; <span style="color:#ae81ff">20</span>; <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span> { <span style="color:#75715e">//启动20个协程处理消息队列中的消息
-</span><span style="color:#75715e"></span>		<span style="color:#a6e22e">c</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">consumer</span>.<span style="color:#a6e22e">New</span>()
-		<span style="color:#66d9ef">go</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">Start</span>()
-	}
-	<span style="color:#66d9ef">select</span> {} <span style="color:#75715e">// 阻塞
-</span><span style="color:#75715e"></span>}
-</code></pre></div>
+                  很多时候我们需要让main函数不退出，让它在后台一直执行，例如： func main() { for i := 0; i &lt; 20; i++ { //启动20个协程处理消息队列中的消息 c := consumer.New() go c.Start() } select
+                  <a href="https://imroc.io/posts/golang-select/" class="post-read-more">[阅读全文]</a>
                 
               </div>
 

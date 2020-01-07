@@ -221,29 +221,8 @@ var _hmt = _hmt || [];
               </p>
               <div class="post-entry">
                 
-                  <h2 id="heading">修改历史</h2>
-<h4 id="heading-1">修改最新一条历史</h4>
-<p>如果内容需要改就直接改，然后 <code>git add</code> 进去，然后执行</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git commit --amend
-</code></pre></div><p>会弹出 <code>git commit message</code> 的编辑窗口，会填充之前 commit 时写的 message 内容，如果需要改就直接编辑，不需要改就不动，最后保存退出 (<code>:wq</code>)</p>
-<h4 id="heading-2">修改指定某条历史</h4>
-<p>不小心暴露敏感信息到历史？使用如下操作修改历史：</p>
-<ul>
-<li>找到需要修改的历史更前面的一条 commit 的 id 并复制，记为 <code>&lt;commit id&gt;</code></li>
-<li><code>git rebase -i &lt;commit id&gt;</code></li>
-<li>将显示的第一个 <code>pick</code> 改为 <code>edit</code></li>
-<li>保存并退出 (<code>:wq</code>)</li>
-<li>对需要修改的文件进行修改，然后 <code>git add</code> 进去</li>
-<li>提交：<code>git commit --amend</code></li>
-<li>完成: <code>git rebase --continue</code></li>
-</ul>
-<h4 id="heading-3">同步代码</h4>
-<p>强制 push 到远程：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git push -f origin &lt;local-branch&gt;:&lt;remote-branch&gt;
-</code></pre></div><p>其它伙伴同步到自己机器：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git fetch
-git reset --hard origin/&lt;remote-branch&gt;
-</code></pre></div>
+                  修改历史 修改最新一条历史 如果内容需要改就直接改，然后 git add 进去，然后执行 git commit --amend 会弹出 git commit message 的编辑窗口，会填充之前 commit 时写的 message 内容，如果需要改就直
+                  <a href="https://imroc.io/posts/git-trick-modify-history/" class="post-read-more">[阅读全文]</a>
                 
               </div>
 

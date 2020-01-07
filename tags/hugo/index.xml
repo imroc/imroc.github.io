@@ -19,7 +19,7 @@
       <pubDate>Tue, 16 Jan 2018 20:35:06 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
       <guid>https://imroc.io/posts/building-website-for-free-using-hugo-and-github-pages/</guid>
-      <description>概述 Hugo可以让你轻松生成静态网站，比如个人博客、API文档、公司主页等，你只需要提供markdown格式的文本，它就能帮你渲染成各种你想要的样式，只需要安装想要的主题，写好对应的markdown内容，就能快速编译出一个静态网站。 安装hugo 参考官方：http://gohugo.io/getting-started/installing/ 创建网站 首先初始化你的网站，假如 mysite 是存放网站相关文件的目录： hugo new site mysite 这会在当前路径创建一个 mysite 目录，进入该路径： cd mysite 目录如下： ▸ archetypes/ ▸ content/ ▸ layouts/ ▸ static/ ▸ themes/ config.toml config.toml 是网站的配置文件，包含一些基本配置和主题特有的配置。 这几个文件夹的作用分别是： archetypes：包括内容类型，在创建新内容时自动生成内容的配置 content：包括网站内容，全部使用markdown格式 layouts：包括了网站的模版，决定内容如何呈现 static：包括了css, js, fonts, media等，决定网站的外观 themes：用于存放主题 在创建页面之前需要安装想要的主题，官方有收集一些：https://themes.gohugo.io/ 在这里我用我博客的主题xhugo作示例，下载到themes</description>
+      <description>概述 Hugo可以让你轻松生成静态网站，比如个人博客、API文档、公司主页等，你只需要提供markdown格式的文本，它就能帮你渲染成各种你想</description>
     </item>
     
   </channel>

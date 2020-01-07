@@ -268,7 +268,7 @@ var _hmt = _hmt || [];
 
               <div class="post-entry">
                 
-                  使用 kubectl describe pod 查看异常的 pod 的状态，在容器列表里看 State 字段，其中 ExitCode 即程序退出时的状态码，正常退出时为0。如果不为0，表示异常退出，我们可以分析下原因。 退出状态码的区间 必须在 0-255 之间 0 表示正常退出 外界中断将程序退出的时候状态码区间在 129-255，(操作系统给程序发送中断信号，比如 kill -9 是 SIGKILL，ctrl+c 是 SIGINT) 一般程序自身原因导致的异常退出状态区间在 1-128 (这只是一般约定，程序如果一定要用129-255的状态码也是可以的) 假如写代码指定的退出状态码时不在 0-255 之间，例如: exit(-1)，这时会自动做一个转换，最终呈现的状态码还是会在 0-255 之间。我们把状态码记为 code 当指定的退出时状态码为负数，那么转换公式如下: 256 - (|code| % 256) 当指定的退出时状态码为正数，那么转换公式如下: code % 256 常见异常状态码 137 此状态码一般是因为 pod 中容器内存达到了它的资源限制(resources.limits)，一般是内存溢出(OOM)，CPU达到限制只需要不分时间片给程序就可以。因为限制资源是通过 linux 的 cgroup 实现的，所以 cgroup 会将此容器强制杀掉，类似于 kill -9 还可能是宿主机本身资源不够用了(OOM)，内核会选取一些进程杀掉来释放内存 不管是 cgroup 限制杀掉进程还是
+                  使用 kubectl describe pod 查看异常的 pod 的状态，在容器列表里看 State 字段，其中 ExitCode 即程序退出时的状态码，正常退出时为0。如果不为0，表示异常退出，我们可以分析下原因
                   <a href="https://imroc.io/posts/kubernetes-analysis-exitcode/" class="post-read-more">[阅读全文]</a>
                 
               </div>
@@ -299,29 +299,8 @@ var _hmt = _hmt || [];
 
               <div class="post-entry">
                 
-                  <h2 id="heading">修改历史</h2>
-<h4 id="heading-1">修改最新一条历史</h4>
-<p>如果内容需要改就直接改，然后 <code>git add</code> 进去，然后执行</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git commit --amend
-</code></pre></div><p>会弹出 <code>git commit message</code> 的编辑窗口，会填充之前 commit 时写的 message 内容，如果需要改就直接编辑，不需要改就不动，最后保存退出 (<code>:wq</code>)</p>
-<h4 id="heading-2">修改指定某条历史</h4>
-<p>不小心暴露敏感信息到历史？使用如下操作修改历史：</p>
-<ul>
-<li>找到需要修改的历史更前面的一条 commit 的 id 并复制，记为 <code>&lt;commit id&gt;</code></li>
-<li><code>git rebase -i &lt;commit id&gt;</code></li>
-<li>将显示的第一个 <code>pick</code> 改为 <code>edit</code></li>
-<li>保存并退出 (<code>:wq</code>)</li>
-<li>对需要修改的文件进行修改，然后 <code>git add</code> 进去</li>
-<li>提交：<code>git commit --amend</code></li>
-<li>完成: <code>git rebase --continue</code></li>
-</ul>
-<h4 id="heading-3">同步代码</h4>
-<p>强制 push 到远程：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git push -f origin &lt;local-branch&gt;:&lt;remote-branch&gt;
-</code></pre></div><p>其它伙伴同步到自己机器：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git fetch
-git reset --hard origin/&lt;remote-branch&gt;
-</code></pre></div>
+                  修改历史 修改最新一条历史 如果内容需要改就直接改，然后 git add 进去，然后执行 git commit --amend 会弹出 git commit message 的编辑窗口，会填充之前 commit 时写的 message 内容，如果需要改就直
+                  <a href="https://imroc.io/posts/git-trick-modify-history/" class="post-read-more">[阅读全文]</a>
                 
               </div>
 
@@ -358,7 +337,7 @@ git reset --hard origin/&lt;remote-branch&gt;
 
               <div class="post-entry">
                 
-                  推荐两款插件， SurfingKeys 和 Steward，让你全键盘高效操作浏览器。老规矩，附视频教学。 SurfingKeys 模拟 vim 的快捷键有两款 Chrome 插件，分别是 Vimium 和 Surfingkeys，虽然 Vimium 用的人数更多，但是我觉得 Surfingkeys 的键位设计更舒服，单手就能完成常用的操作。按 &ldquo;?&rdquo; 号就能弹出快捷键帮助页: 常用快捷键 快捷键 功能 d 和 e 向下和向上翻页 j 和 k 向下和向上翻一点 gg 和 G 滚动到最上面和最下面 E 和 R 向左和向右切换标签页 S 和 D 历史的前进与后退 r 刷新网页 on 新建标签页 x 关闭标签页 X 打开最近关闭的标签页 f 选择打开链接 i 选择输入框 gi 进入第一个输入框 v 进入可视模式 b 搜索书签 Steward Steward 可以说是 Chrome 中的 Alfred，通过执行命令来完成一些便捷操作。 Surfingkeys 在新标签页下是不起作用的，比如我们切换到了没有网页的新标签页，这时用 SurfingKeys 的快捷键我们也无法切换标签页或关闭标签页或者是查找书签。这时候我推荐使用自带的快捷键进行标签切换和关闭，这样也很容易，但是查找和打开书签操作如果去点书签栏就太麻烦了，我想在新标签页下也能进行书签的搜索打开。Steward 就可以做到，mac 使用 cmd+k 激活 Steward，windows 使用 ctrl+k。 bm 就是书签搜索命令，这是我最常用的，它还有许多其它命令，通过 help
+                  推荐两款插件， SurfingKeys 和 Steward，让你全键盘高效操作浏览器。老规矩，附视频教学。 SurfingKeys 模拟 vim 的快捷键有两款 Chrome 插件，分别是 Vimium 和 Surfingkey
                   <a href="https://imroc.io/posts/chrome/" class="post-read-more">[阅读全文]</a>
                 
               </div>
@@ -393,7 +372,7 @@ git reset --hard origin/&lt;remote-branch&gt;
 
               <div class="post-entry">
                 
-                  Alfred 使用 Alfred 可以让你在 macOS 程序间自由切换、快速查找或打开文件、调起浏览器进行网页搜索、 还可以做计算器。 另外，还有许多其它搜索功能以及付费的工作流特性，Powerpack 就是 Alfred 工作流模块，需要付费才能使用，不过，我觉得免费的功能已经完全够用了， 而且很简洁，功能太多咱也学不过来。 下载安装 Alfred 官网是 https://www.alfredapp.com/ 禁用自带的 Spotlight macOS 自带了搜索工具 Spotlight, 但是功能相对于 Alfred 就弱爆了，它默认的快捷键是 cmd+space，我们最好禁用它，进入 系统偏好设置-键盘-快捷键-聚焦，然后取消勾选 显示“聚焦”搜索 并且将 Alfred 的热键也设为 cmd+space 程序间快速切换 我们之前常用的程序切换方式有： cmd+tab 和 shift+cmd+tab 切换程序 在触摸板三根手指上滑打开调度中心，结合三根手指左右滑切换桌面，然后选择要切换的程序 它们的缺点很明显，程序窗口所在的位置不一定是固定的，需要观察一下才能找到，而且如果打开的程序非常多，找起来就更麻烦。如果用 Alfred， 则只需输入能匹配程序名称部分的简短字母就能找到（如果程序含中文名，使用拼音也能搜到)， 再按下回车就能切换到指定程序上，比如切换到 Google Chrome，只需要输入 chr 就能定位到 Chrome 浏览器。 快速查找和打开文件或目录 Alfred 还支持很多指令，find 是在磁盘找到文
+                  Alfred 使用 Alfred 可以让你在 macOS 程序间自由切换、快速查找或打开文件、调起浏览器进行网页搜索、 还可以做计算器。 另外，还有许多其它搜索功能以及付费的工作流特
                   <a href="https://imroc.io/posts/alfred-and-dash/" class="post-read-more">[阅读全文]</a>
                 
               </div>
@@ -428,7 +407,7 @@ git reset --hard origin/&lt;remote-branch&gt;
 
               <div class="post-entry">
                 
-                  shell 有多种，大多数人接触比较多的是 bash， 不管是 mac 还是各个 linux 发行版，默认的 shell 基本都是 bash，虽然 bash 功能已经丰富了，但对于极客们来说，界面不够炫，提示功能也不够强大。而 zsh 功能及其强大，只是配置过于复杂，后来就有了 oh-my-zsh 开源项目，配置难度大大降低。 Github地址: https://github.com/robbyrussell/oh-my-zsh 安装 sh -c &#34;$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)&#34; 更改系统默认 shell chsh -s /bin/zsh 更改zsh配置文件 vim ~/.zshrc 修改主题 ZSH_THEME=&#34;robbyrussell&#34; 默认的 robbyrussell 主题也挺好看 更多主题看过来： https://github.com/robbyrussell/oh-my-zsh/wiki/Themes 配置插件 oh-my-zsh 还支持插件，插件存放目录为： ~/.oh-my-zsh/plugins 这个目录中每个子目录都是一个插件，目录名即为插件名，默认不开启，需要在 ~/.zshrc 中该配置开启，比如: plugins=( git git-flow docker kubectl brew npm helm ) 这些插件可以给你常用的命令做用法提示，使用 tab 键触发。我这里再推荐另外三个不是内置的插件，需要将它们单独下载到 ~/.oh-my-zsh/plugins 并且加到上面的 plugins 配置列表中以启用插件： 插件 功能 地址 zsh-autosuggestions 自动提示输入提示 https://github.com/zsh-users/zsh-autosuggestions zsh-syntax-highlighting 高亮命令输入 https://github.com/zsh-users/zsh-syntax-highlighting zsh-history-substring-search 查找匹配前缀的历史输入 https://github.com/zsh-users/zsh-history-substring-search zsh-autosuggestions 默认使用方向右键来将建议的历史填充到命令行输入，按这个键需要挪下右手，不方便，可以映射下，我这里使用 ctrl+space bindkey &#39;^ &#39; autosuggest-accept 再给 zsh-history-substring-search 绑下快捷键，上下翻匹配输入前缀的历史输入，我这里使用 ctrl+n 和 ctrl+p bindkey -M emacs &#39;^P&#39; history-substring-search-up bindkey -M emacs &#39;^N&#39; history-substring-search-down 注: 以上插件的快捷键绑定的配置写在 ~/.zshrc 中 source $ZSH/oh-my-zsh.sh 这句下面的位置 使用效果演
+                  shell 有多种，大多数人接触比较多的是 bash， 不管是 mac 还是各个 linux 发行版，默认的 shell 基本都是 bash，虽然 bash 功能已经丰富了，但对于极客们来说，界面不
                   <a href="https://imroc.io/posts/oh-my-zsh/" class="post-read-more">[阅读全文]</a>
                 
               </div>
@@ -459,7 +438,7 @@ git reset --hard origin/&lt;remote-branch&gt;
 
               <div class="post-entry">
                 
-                  通俗的讲: Service 是后端真实服务的抽象，一个 Service 可以代表多个相同的后端服务 Ingress 是反向代理规则，用来规定 HTTP/S 请求应该被转发到哪个 Service 上，比如根据请求中不同的 Host 和 url 路径让请求落到不同的 Service 上 Ingress Controller 就是一个反向代理程序，它负责解析 Ingress 的反向代理规则，如果 Ingress 有增删改的变动，所有的 Ingress Controller 都会及时更新自己相应的转发规则，当 Ingress Controller 收到请求后就会根据这些规则将请求转发到对应的 Service。 Kubernetes 并没有自带 Ingress Controller，它只是一种标准，具体实现有多种，需要自己单独安装，常用的是 Nginx Ingress Controller 和 Traefik Ingress Controller。 所以 Ingress 是一种转发规则的抽象，Ingress Controller 的实现需要根据这些 Ingress 规则来将请求转发到对应的 Service，我画了个图方便大家理解： 从图中可以看出，Ingress Controller 收到请求，匹配 Ingress 转发规则，匹配到了就转发到后端 Service，而 Service 可能代表的后端 Pod 有多个，选出一个转发到那个 Pod，最终由那个 Pod 处理请求。 有同学可能会问，既然 Ingress Controller 要接受外面的请求，而 Ingress Controller 是部署在集群中的，怎么让 Ingress Controller 本身能够被外面访问到呢，有几种方式： Ingress Controller 用 Deployment 方式部署，给它添加一个 Service，类型为 LoadBalancer，这样会自动生成一个 IP 地址，通过
+                  通俗的讲: Service 是后端真实服务的抽象，一个 Service 可以代表多个相同的后端服务 Ingress 是反向代理规则，用来规定 HTTP/S 请求应该被转发到哪个 Service 上，比如根据请求中不同的
                   <a href="https://imroc.io/posts/understand-service-ingress-and-ingress-controller/" class="post-read-more">[阅读全文]</a>
                 
               </div>
@@ -490,7 +469,7 @@ git reset --hard origin/&lt;remote-branch&gt;
 
               <div class="post-entry">
                 
-                  概述 Kubernetes Dashboard 是一个可以可视化查看和操作 Kubernetes 集群的一个插件 本文利用 Helm 部署它，所以请确保 Helm 已安装，安装方法参考：https://imroc.io/posts/kubernetes/install-helm 本文使用 Nginx Ingress Controller 暴露 Kubernetes Dashboard 服务到外部，Nginx Ingress Controller 安装参考：https://imroc.io/posts/kubernetes/use-nginx-ingress-controller-to-expose-service 有域名，并且配置 DNS，IP 指向 Ingress Controller 对外暴露的地址 本文使用 cert-manager 生成免费证书，安装和使用参考：https://imroc.io/posts/kubernetes/let-ingress-enable-free-https-with-cert-manager 安装 先自定义 helm 的 chart 配置: vi values.yaml #Default values for kubernetes-dashboard # This is a YAML-formatted file. # Declare name/value pairs to be passed into your templates. # name: value image: repository: k8s.gcr.io/kubernetes-dashboard-amd64 tag: v1.8.3 pullPolicy: IfNotPresent replicaCount: 1 ## Here labels can be added to the kubernetes dashboard deployment ## labels: {} # kubernetes.io/cluster-service: &#34;true&#34; # kubernetes.io/name: &#34;Kubernetes Dashboard&#34; ## Additional container arguments ## #extraArgs: # - --enable-insecure-login # - --system-banner=&#34;Welcome to Kubernetes&#34; # - --port=8444 # By default, https uses 8443 so we move it away to something else # - --insecure-port=8443 # The chart has 8443 hard coded as a containerPort in the deployment spec so we must use this internally for the http service # - --insecure-bind-address=0.0.0.0 ## Node labels for pod assignment ## Ref: https://kubernetes.io/docs/user-guide/node-selection/ ## nodeSelector: {} ## List of node taints to tolerate (requires Kubernetes &gt;= 1.6) tolerations: [] # - key: &#34;key&#34; # operator: &#34;Equal|Exists&#34; # value: &#34;value&#34; # effect: &#34;NoSchedule|PreferNoSchedule|NoExecute&#34; service: type:
+                  概述 Kubernetes Dashboard 是一个可以可视化查看和操作 Kubernetes 集群的一个插件 本文利用 Helm 部署它，所以请确保 Helm 已安装，安装方法参考：https://imroc.io/po
                   <a href="https://imroc.io/posts/deploy-kubernetes-dashboard-and-enable-free-https/" class="post-read-more">[阅读全文]</a>
                 
               </div>
@@ -521,7 +500,7 @@ git reset --hard origin/&lt;remote-branch&gt;
 
               <div class="post-entry">
                 
-                  概述 cert-manager 是替代 kube-lego 的一个开源项目，用于在 Kubernetes 集群中自动提供 HTTPS 证书，支持 Let’s Encrypt, HashiCorp Vault 这些免费证书的签发。 本文使用 Helm 安装，所以请确保 Helm 已安装，安装方法参考：https://imroc.io/posts/kubernetes/install-helm 你的集群必须已经装有 Ingress Controller，如果还没有，参考：https://imroc.io/posts/kubernetes/use-nginx-ingress-controller-to-expose-service 需要颁发免费证书的域名配置DNS记录，IP 指向 Ingress Controller 对外暴露的地址 开源地址：https://github.com/jetstack/cert-manager 文档地址：https://cert-manager.readthedocs.io 安装 cert-manager helm install \ --name cert-manager \ --namespace kube-system \ stable/cert-manager 一键安装，非常简单。 生成免费证书 我们需要先创建一个签发机构，cert-manager 给我们提供了 Issuer 和 ClusterIssuer 这两种用于创建签发机构的自定义资源对象，Issuer 只能用来签发自己所在 namespace 下的证书，ClusterIssuer 可以签发任意 namespace 下的证书，这里以 ClusterIssuer 为例创建一个签发机构： vi issuer.yaml apiVersion: certmanager.k8s.io/v1alpha1 kind:
+                  概述 cert-manager 是替代 kube-lego 的一个开源项目，用于在 Kubernetes 集群中自动提供 HTTPS 证书，支持 Let’s Encrypt, HashiCorp Vault 这些免费证书的签发。 本文使用 Helm 安装，所以请确保 Helm 已安装，安装
                   <a href="https://imroc.io/posts/let-ingress-enable-free-https-with-cert-manager/" class="post-read-more">[阅读全文]</a>
                 
               </div>
@@ -552,7 +531,7 @@ git reset --hard origin/&lt;remote-branch&gt;
 
               <div class="post-entry">
                 
-                  概述 Nginx Ingress Controller 是 Kubernetes Ingress Controller 的一种实现，作为反向代理将外部流量导入集群内部，实现将 Kubernetes 内部的 Service 暴露给外部，这样我们就能通过公网或内网直接访问集群内部的服务。本文使用 Helm 来安装，所以请确保 Helm 已安装，安装方法参考：https://imroc.io/posts/kubernetes/install-helm/ 导入流量的方式 要想暴露内部流量，就需要让 Ingress Controller 自身能够对外提供服务，主要有以下两种方式： Ingress Controller 使用 Deployment 部署，Service 类型指定为 LoadBalancer 优点：最简单 缺点：需要集群有 Cloud Provider 并且支持 LoadBalancer, 一般云厂商托管的 kubernetes 集群支持，并且使用 LoadBalancer 是付费的，因为他会给你每个 LoadBalancer 类型的 Service 分配公网 IP 地址 Ingress Controller 使用 DeamonSet 部署，Pod 指定 hostPort 来暴露端口 优点：免费 缺点：没有高可用保证，如果需要高可用就得自己去搞 使用 LoadBalancer 导入流量 这种方式部署 Nginx Ingress Controller 最简单，只要保证上面说的前提：集群有 Cloud Provider 并且支持 LoadBalancer，如果你是使用云厂商的 Kubernetes 集群，保证你集群所使用的云厂商的账号有足够的余额，执行下面的命令一键安装： helm install --name nginx-ingress --namespace kube-system stable/nginx-ingress 因为 stable/nginx-ingress 这个 helm 的 chart 包默认就是使用的这种方式部署。 部署完了我们可以查看 LoadBalancer 给我们分配的 IP 地址： $ kubectl get svc -n kube-system NAME TYPE CLUSTER-IP EXTERNAL-IP PORT(S) AGE nginx-ingress-controller LoadBalancer 10.3.255.138 119.28.121.125 80:30113/TCP,443:32564/TCP 21h EXTERNAL-IP 就是我们需要的
+                  概述 Nginx Ingress Controller 是 Kubernetes Ingress Controller 的一种实现，作为反向代理将外部流量导入集群内部，实现将 Kubernetes 内部的 Service 暴露给外部，这样我们就能通过公网或内网直接访问集群内部的服
                   <a href="https://imroc.io/posts/use-nginx-ingress-controller-to-expose-service/" class="post-read-more">[阅读全文]</a>
                 
               </div>
@@ -583,7 +562,7 @@ git reset --hard origin/&lt;remote-branch&gt;
 
               <div class="post-entry">
                 
-                  利用Gitlab和Jenkins做CI(持续集成) 最近用到持续集成顺便总结在这里，都是用的最新版。搭建过程中还有一个demo，提交代码到 gitlab 自动触发 jenkins 任务，自动编译代码和 docker 镜像并上传。 安装运行 Gitlab gitlab 国内安装很麻烦，用官方的源装不了，因为在国外，太慢，链接会断掉。国内清华有 gitlab 的 apt 和 yum 源，但是我试过安装 CentOS 7 的 gitlab ，到最后都会一直卡住结束不了。直接下载清华 gitlab 的 rpm mirror 安装也是一样，所以我还是选择用 docker 启动 gitlab（提前配好 docker hub 加速器） 准备镜像 docker pull gitlab/gitlab-ee:latest 准备 gitlab 所需目录 mkdir gitlab cd gitlab mkdir config logs data 准备启动脚本 （替换想要的启动端口，ip 地址替换为访问你的 gitlab 的地址，也可以替换想要的挂载目录） vi run #! /bin/bash sudo docker run -d --rm \ -p 8088:8088 \ --name gitlab \ --env GITLAB_OMNIBUS_CONFIG=&#34;external_url &#39;http://118.24.64.246:8088/&#39;; gitlab_rails[&#39;lfs_enabled&#39;] = true;&#34; \ -v $PWD/config:/etc/gitlab \ -v $PWD/logs:/var/log/gitlab \ -v $PWD/data:/var/opt/gitlab \ gitlab/gitlab-ee:latest EOF 赋予执行权限 chmod +x run 启动 gitlab ./run 查看 gitlab 控制台输出 docker logs -f gitlab 访问 gitlab，打开脚本中配置的 external_url 地址，设置管理员密码和注册 gitlab 账号，登录并添加自己的 SSH key 。创建 repo ，git clone 到本地，后面我们提交代码到这个 repo ，触发 jenkins 的持续集成。 安装运行 Jenkins jenkins 建议直接安装在宿主机，不用 docker 方式，因为持续集成需要安装各种我们用到的工具，这些工具可能后面根据需要才安装，重启不能让这些工具丢失。比如编译 java 源码需要装
+                  利用Gitlab和Jenkins做CI(持续集成) 最近用到持续集成顺便总结在这里，都是用的最新版。搭建过程中还有一个demo，提交代码到 gitlab 自
                   <a href="https://imroc.io/posts/ci-with-gitlab-and-jenkins/" class="post-read-more">[阅读全文]</a>
                 
               </div>
