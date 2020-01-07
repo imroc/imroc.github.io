@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title> 教你如何全键盘操作 Chrome 浏览器 - imroc.io|roc的博客|Cloud Native|Kubernetes|Go|Golang</title>
+  <meta name="description" content="imroc.io|roc的博客|Cloud Native|Kubernetes|Go|Golang" />
+  <meta property="og:title" content="教你如何全键盘操作 Chrome 浏览器" />
+  <meta name="twitter:title" content="教你如何全键盘操作 Chrome 浏览器" />
+  <meta name="description" content="极客打开 Chrome 的正确方式，提升效率">
+  <meta property="og:description" content="极客打开 Chrome 的正确方式，提升效率">
+  <meta name="twitter:description" content="极客打开 Chrome 的正确方式，提升效率">
+  <meta name="author" content="{Description { .Site.Author.name }}"/>
+  <link href='https://imroc.io/favicon.png' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://res.cloudinary.com/imroc/image/upload/v1521031841/avatar.png" />
+  <meta name="twitter:image" content="https://res.cloudinary.com/imroc/image/upload/v1521031841/avatar.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@imrocchan" />
+  <meta name="twitter:creator" content="@imrocchan" />
+  <meta property="og:url" content="https://imroc.io/posts/chrome/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="roc" />
+
+  <meta name="generator" content="Hugo 0.62.0" />
+  <link rel="canonical" href="https://imroc.io/posts/chrome/" />
+  <link rel="alternate" href="https://imroc.io/index.xml" type="application/rss+xml" title="roc">
+
+  
+  <link href="https://fonts.googleapis.com/css?family=Lora:400,400i,700%7COpen+Sans:400,700" rel="stylesheet">
+
+  
+
+
+
+<link rel="stylesheet" href='/css/bundle.min.43522e1b6746447005cecd1381cc12a654c0364de88961016cdf5f133529476d.css' integrity='sha256-Q1IuG2dGRHAFzs0TgcwSplTANk3oiWEBbN9fEzUpR20='>
+  --><script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?05e1e8b7484a08c51cd0953664168cd7";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">切换导航</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://imroc.io/">roc</a>
+    </div>
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">分类</a>
+              <div class="navlinks-children">
+                
+                
+                  <a href="https://imroc.io/categories/kubernetes">kubernetes</a>
+                
+                
+                  <a href="https://imroc.io/categories/docker">docker</a>
+                
+                
+                  <a href="https://imroc.io/categories/golang">golang</a>
+                
+                
+                  <a href="https://imroc.io/categories/arch">架构</a>
+                
+                
+                  <a href="https://imroc.io/categories/istio">istio</a>
+                
+                
+                  <a href="https://imroc.io/categories/geek">极客</a>
+                
+              </div>
+            </li>
+          
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">书籍</a>
+              <div class="navlinks-children">
+                
+                
+                  <a href="https://k8s.imroc.io">Kubernetes 实践指南</a>
+                
+              </div>
+            </li>
+          
+        
+
+        
+          
+            <li>
+              
+                
+              
+                
+                  <a href="/en" lang="en">English</a>
+                
+              
+            </li>
+          
+        
+
+        
+        <li>
+          <a href="#modalSearch" data-toggle="modal" data-target="#modalSearch" style="outline: none;">
+            <span id="searchGlyph" class="glyphicon glyphicon-search"></span>
+          </a>
+        </li>
+        
+      </ul>
+    </div>
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="roc" href="https://imroc.io/">
+            <img class="avatar-img" src="https://res.cloudinary.com/imroc/image/upload/v1521031841/avatar.png" alt="roc" />
+          </a>
+        
+      </div>
+    </div>
+  </div>
+</nav>
+
+
+  <div id="modalSearch" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">搜索</h4>
+        </div>
+        <div class="modal-body">
+            
+<div class="aa-input-container" id="aa-input-container">
+    <input type="search" id="aa-search-input" class="aa-input-search" placeholder="Search for titles or URIs..."
+        name="search" autocomplete="off" />
+    <svg class="aa-input-icon" viewBox="654 -372 1664 1664">
+        <path
+            d="M1806,332c0-123.3-43.8-228.8-131.5-316.5C1586.8-72.2,1481.3-116,1358-116s-228.8,43.8-316.5,131.5  C953.8,103.2,910,208.7,910,332s43.8,228.8,131.5,316.5C1129.2,736.2,1234.7,780,1358,780s228.8-43.8,316.5-131.5  C1762.2,560.8,1806,455.3,1806,332z M2318,1164c0,34.7-12.7,64.7-38,90s-55.3,38-90,38c-36,0-66-12.7-90-38l-343-342  c-119.3,82.7-252.3,124-399,124c-95.3,0-186.5-18.5-273.5-55.5s-162-87-225-150s-113-138-150-225S654,427.3,654,332  s18.5-186.5,55.5-273.5s87-162,150-225s138-113,225-150S1262.7-372,1358-372s186.5,18.5,273.5,55.5s162,87,225,150s113,138,150,225  S2062,236.7,2062,332c0,146.7-41.3,279.7-124,399l343,343C2305.7,1098.7,2318,1128.7,2318,1164z" />
+    </svg>
+</div>
+
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/algoliasearch.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/autocomplete.min.js"></script>
+<script>
+    var client = algoliasearch("B6Q6PSGUV5", "d04f855d3a39eed8ad8d9365ba7c86af");
+    var index = client.initIndex("imroc-blog");
+    
+    autocomplete('#aa-search-input', {
+        hint: false
+    }, {
+        source: autocomplete.sources.hits(index, {
+            hitsPerPage: 5
+        }),
+        
+        displayKey: 'name',
+        
+        templates: {
+            
+            suggestion: function (suggestion) {
+                return '<span>' + '<a href="/' + suggestion.uri + '">' + suggestion._highlightResult.title.value +
+                        '</a></span>';
+            }
+        }
+    });
+</script>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    
+  
+  
+  
+
+
+
+
+  
+    <div id="header-big-imgs" data-num-img=1 data-img-src-1="https://res.cloudinary.com/imroc/image/upload/v1540117965/blog/banner/chrome-banner.jpg" data-img-desc-1="Chrome"></div>
+  
+
+  <header class="header-section has-img">
+    
+      <div class="intro-header big-img">
+        
+        
+        <div class="container">
+          <div class="row">
+              <div class="col-lg-12 col-md-12 col-md-offset-0">
+                
+                <div class="post-heading">
+                
+                  
+                     <h1>教你如何全键盘操作 Chrome 浏览器</h1>
+                     
+                     
+                  
+                  
+                  
+                    
+                      <hr class="small">
+                      <span class="post-subheading">极客打开 Chrome 的正确方式，提升效率</span>
+                    
+                  
+                  
+                    <span class="post-meta">
+  
+  发表于 October 21, 2018
+  
+  
+</span>
+
+
+                  
+                
+              </div>
+            </div>
+          </div>
+        </div>
+        <span class="img-desc" style="display: inline;"></span>
+      </div>
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12 col-md-12 col-md-offset-0">
+            <div class="posts-heading">
+                <h1 align="center">教你如何全键盘操作 Chrome 浏览器</h1>
+                
+                  
+                    <h2 align="center" class="posts-subheading">极客打开 Chrome 的正确方式，提升效率</h2>
+                  
+                
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main" itemscope itemtype="http://schema.org/Article">
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+            <article role="main" class="blog-post" itemprop="articleBody" id="content">
+                
+<aside class="toc">
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#surfingkeys">SurfingKeys</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#steward">Steward</a></li>
+  </ul>
+</nav>
+</aside>
+
+
+                <p>推荐两款插件， SurfingKeys 和 Steward，让你全键盘高效操作浏览器。老规矩，附视频教学。</p>
+<h2 id="surfingkeys">SurfingKeys</h2>
+<p>模拟 vim 的快捷键有两款 Chrome 插件，分别是 Vimium 和 Surfingkeys，虽然 Vimium 用的人数更多，但是我觉得 Surfingkeys 的键位设计更舒服，单手就能完成常用的操作。按 &ldquo;?&rdquo; 号就能弹出快捷键帮助页:</p>
+<h4 id="heading">常用快捷键</h4>
+<table>
+<thead>
+<tr>
+<th>快捷键</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>d 和 e</td>
+<td>向下和向上翻页</td>
+</tr>
+<tr>
+<td>j 和 k</td>
+<td>向下和向上翻一点</td>
+</tr>
+<tr>
+<td>gg 和 G</td>
+<td>滚动到最上面和最下面</td>
+</tr>
+<tr>
+<td>E 和 R</td>
+<td>向左和向右切换标签页</td>
+</tr>
+<tr>
+<td>S 和 D</td>
+<td>历史的前进与后退</td>
+</tr>
+<tr>
+<td>r</td>
+<td>刷新网页</td>
+</tr>
+<tr>
+<td>on</td>
+<td>新建标签页</td>
+</tr>
+<tr>
+<td>x</td>
+<td>关闭标签页</td>
+</tr>
+<tr>
+<td>X</td>
+<td>打开最近关闭的标签页</td>
+</tr>
+<tr>
+<td>f</td>
+<td>选择打开链接</td>
+</tr>
+<tr>
+<td>i</td>
+<td>选择输入框</td>
+</tr>
+<tr>
+<td>gi</td>
+<td>进入第一个输入框</td>
+</tr>
+<tr>
+<td>v</td>
+<td>进入可视模式</td>
+</tr>
+<tr>
+<td>b</td>
+<td>搜索书签</td>
+</tr>
+</tbody>
+</table>
+<h2 id="steward">Steward</h2>
+<p>Steward 可以说是 Chrome 中的 Alfred，通过执行命令来完成一些便捷操作。 Surfingkeys 在新标签页下是不起作用的，比如我们切换到了没有网页的新标签页，这时用 SurfingKeys 的快捷键我们也无法切换标签页或关闭标签页或者是查找书签。这时候我推荐使用自带的快捷键进行标签切换和关闭，这样也很容易，但是查找和打开书签操作如果去点书签栏就太麻烦了，我想在新标签页下也能进行书签的搜索打开。Steward 就可以做到，mac 使用 <code>cmd+k</code> 激活 Steward，windows 使用 <code>ctrl+k</code>。</p>
+<p><code>bm</code> 就是书签搜索命令，这是我最常用的，它还有许多其它命令，通过 <code>help</code> 命令可查看用法，还支持扩展。</p>
+<p>下面是视频教学:</p>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+
+            </article>
+
+            <ul class="pager blog-pager">
+
+                
+                <li class="previous">
+                    <a href="https://imroc.io/posts/alfred-and-dash/" data-toggle="tooltip" data-placement="top" title="极客工具之 Alfred 与 Dash">&larr; 前一篇</a>
+                </li>
+                 
+                <li class="next">
+                    <a href="https://imroc.io/posts/git-trick-modify-history/" data-toggle="tooltip" data-placement="top" title="Git技巧：修改历史">后一篇 &rarr;</a>
+                </li>
+                
+            </ul>
+
+          
+            <div class="entry-shang text-center">
+    <p>「真诚赞赏，手留余香」</p>
+    <button class="zs show-zs btn btn-bred">赞赏</button>
+</div>
+<div class="zs-modal-bg"></div>
+<div class="zs-modal-box">
+    <div class="zs-modal-head">
+        <button type="button" class="close">×</button>
+        <span class="author"><img src="/favicon.png"/>roc</span>
+        <p class="tip"><i></i><span>请我喝杯咖啡？</span></p>
+    </div>
+    <div class="zs-modal-body">
+        <div class="zs-modal-btns">
+            <button class="btn btn-blink" data-num="2">2元</button>
+            <button class="btn btn-blink" data-num="5">5元</button>
+            <button class="btn btn-blink" data-num="10">10元</button>
+            <button class="btn btn-blink" data-num="50">50元</button>
+            <button class="btn btn-blink" data-num="100">100元</button>
+            <button class="btn btn-blink" data-num="1">任意金额</button>
+        </div>
+        <div class="zs-modal-pay">
+            <button class="btn btn-bred" id="pay-text">2元</button>
+            <p>使用<span id="pay-type">微信</span>扫描二维码完成支付</p>
+            <img src="/img/wechat-2.png" id="pay-image"/>
+        </div>
+    </div>
+    <div class="zs-modal-footer">
+        <label>
+            <input type="radio" name="zs-type" value="wechat" class="zs-type" checked="checked">
+            <span class="zs-wechat"><img src="/img/wechat-btn.png" /></span>
+        </label>
+        <label>
+            <input type="radio" name="zs-type" value="alipay" class="zs-type">
+            <span class="zs-alipay"><img src="/img/alipay-btn.png" /></span>
+        </label>
+    </div>
+</div>
+          
+
+          
+            
+
+  <h3>See Also</h3>
+  <ul style="margin-bottom: 25px;">
+      
+      <li><a href="/posts/alfred-and-dash/">极客工具之 Alfred 与 Dash</a></li>
+      
+      <li><a href="/posts/oh-my-zsh/">极客工具之 oh-my-zsh</a></li>
+      
+  </ul>
+
+          
+
+          
+            
+<div id="gitalk-container"></div>
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+<script>
+  var gitalk = new Gitalk({
+      clientID: 'd05b8f959b3111c6fb63',
+      clientSecret: 'f30ef76ea0050ed731ace76f7fbf684ae5d28fbc',
+      repo: 'imroc.github.io',
+      owner: 'imroc',
+      admin: 'imroc',
+      labels: ['Gitalk'],
+      title: '教你如何全键盘操作 Chrome 浏览器',
+      createIssueManually: false,
+      id: 'chrome-zh',
+      distractionFreeMode: true
+  });
+  gitalk.render('gitalk-container');
+</script>
+          
+        </div>
+    </div>
+</div>
+
+    <footer>
+  <div id="copyright">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+          <ul class="list-inline text-center footer-links">
+            
+                <li>
+                  <a href="mailto:roc@imroc.io" title="Email me">
+                    <span class="fa-stack fa-lg">
+                      <i class="fa fa-circle fa-stack-2x"></i>
+                      <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="https://github.com/imroc" title="GitHub">
+                    <span class="fa-stack fa-lg">
+                      <i class="fa fa-circle fa-stack-2x"></i>
+                      <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="https://twitter.com/imrocchan" title="Twitter">
+                    <span class="fa-stack fa-lg">
+                      <i class="fa fa-circle fa-stack-2x"></i>
+                      <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                    </span>
+                  </a>
+                </li>
+            
+            <li>
+              <a href="https://imroc.io/index.xml" title="RSS">
+                <span class="fa-stack fa-lg">
+                  <i class="fa fa-circle fa-stack-2x"></i>
+                  <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                </span>
+              </a>
+            </li>
+            
+          </ul>
+          <p class="credits copyright text-muted">
+          &copy;2017-2019
+            
+              
+                <a href="/about">roc</a>
+              
+            
+            &nbsp;&bull;&nbsp;
+            December 15,2019
+            updated
+          </p>
+          <p class="credits theme-by text-muted">
+            由 <a href="http://gohugo.io">Hugo v0.62.0</a> 强力驱动 &nbsp;&bull;&nbsp; 主题 <a href="https://github.com/imroc/xhugo">xhugo</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src='/js/bundle.min.21f7d58c95d27f6c2ca78a820bd04dd19724828061fc1cd5fd72c409096ef914.js' integrity='sha256-IffVjJXSf2wsp4qCC9BN0ZckgoBh/BzV/XLECQlu&#43;RQ='></script>
+
+
+
+
+
+
+  </body>
+</html>
+

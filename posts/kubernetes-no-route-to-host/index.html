@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title> Kubernetes 疑难杂症排查分享: 诡异的 No route to host - imroc.io|roc的博客|Cloud Native|Kubernetes|Go|Golang</title>
+  <meta name="description" content="imroc.io|roc的博客|Cloud Native|Kubernetes|Go|Golang" />
+  <meta property="og:title" content="Kubernetes 疑难杂症排查分享: 诡异的 No route to host" />
+  <meta name="twitter:title" content="Kubernetes 疑难杂症排查分享: 诡异的 No route to host" />
+  <meta name="description" content="大家好，我是 roc，来自腾讯云容器服务(TKE)团队，之前发过一篇干货满满的爆火文章 Kubernetes 网络疑难杂症排查分享，包含多个疑难杂症的排查案例分享，">
+  <meta property="og:description" content="大家好，我是 roc，来自腾讯云容器服务(TKE)团队，之前发过一篇干货满满的爆火文章 Kubernetes 网络疑难杂症排查分享，包含多个疑难杂症的排查案例分享，">
+  <meta name="twitter:description" content="大家好，我是 roc，来自腾讯云容器服务(TKE)团队，之前发过一篇干货满满的爆火文章 Kubernetes 网络疑难杂症排查分享，包含多个疑难杂症的排查案例分享，">
+  <meta name="author" content="{Description { .Site.Author.name }}"/>
+  <link href='https://imroc.io/favicon.png' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://res.cloudinary.com/imroc/image/upload/v1521031841/avatar.png" />
+  <meta name="twitter:image" content="https://res.cloudinary.com/imroc/image/upload/v1521031841/avatar.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@imrocchan" />
+  <meta name="twitter:creator" content="@imrocchan" />
+  <meta property="og:url" content="https://imroc.io/posts/kubernetes-no-route-to-host/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="roc" />
+
+  <meta name="generator" content="Hugo 0.62.0" />
+  <link rel="canonical" href="https://imroc.io/posts/kubernetes-no-route-to-host/" />
+  <link rel="alternate" href="https://imroc.io/index.xml" type="application/rss+xml" title="roc">
+
+  
+  <link href="https://fonts.googleapis.com/css?family=Lora:400,400i,700%7COpen+Sans:400,700" rel="stylesheet">
+
+  
+
+
+
+<link rel="stylesheet" href='/css/bundle.min.43522e1b6746447005cecd1381cc12a654c0364de88961016cdf5f133529476d.css' integrity='sha256-Q1IuG2dGRHAFzs0TgcwSplTANk3oiWEBbN9fEzUpR20='>
+  --><script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?05e1e8b7484a08c51cd0953664168cd7";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">切换导航</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://imroc.io/">roc</a>
+    </div>
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">分类</a>
+              <div class="navlinks-children">
+                
+                
+                  <a href="https://imroc.io/categories/kubernetes">kubernetes</a>
+                
+                
+                  <a href="https://imroc.io/categories/docker">docker</a>
+                
+                
+                  <a href="https://imroc.io/categories/golang">golang</a>
+                
+                
+                  <a href="https://imroc.io/categories/arch">架构</a>
+                
+                
+                  <a href="https://imroc.io/categories/istio">istio</a>
+                
+                
+                  <a href="https://imroc.io/categories/geek">极客</a>
+                
+              </div>
+            </li>
+          
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">书籍</a>
+              <div class="navlinks-children">
+                
+                
+                  <a href="https://k8s.imroc.io">Kubernetes 实践指南</a>
+                
+              </div>
+            </li>
+          
+        
+
+        
+          
+            <li>
+              
+                
+              
+                
+                  <a href="/en" lang="en">English</a>
+                
+              
+            </li>
+          
+        
+
+        
+        <li>
+          <a href="#modalSearch" data-toggle="modal" data-target="#modalSearch" style="outline: none;">
+            <span id="searchGlyph" class="glyphicon glyphicon-search"></span>
+          </a>
+        </li>
+        
+      </ul>
+    </div>
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="roc" href="https://imroc.io/">
+            <img class="avatar-img" src="https://res.cloudinary.com/imroc/image/upload/v1521031841/avatar.png" alt="roc" />
+          </a>
+        
+      </div>
+    </div>
+  </div>
+</nav>
+
+
+  <div id="modalSearch" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">搜索</h4>
+        </div>
+        <div class="modal-body">
+            
+<div class="aa-input-container" id="aa-input-container">
+    <input type="search" id="aa-search-input" class="aa-input-search" placeholder="Search for titles or URIs..."
+        name="search" autocomplete="off" />
+    <svg class="aa-input-icon" viewBox="654 -372 1664 1664">
+        <path
+            d="M1806,332c0-123.3-43.8-228.8-131.5-316.5C1586.8-72.2,1481.3-116,1358-116s-228.8,43.8-316.5,131.5  C953.8,103.2,910,208.7,910,332s43.8,228.8,131.5,316.5C1129.2,736.2,1234.7,780,1358,780s228.8-43.8,316.5-131.5  C1762.2,560.8,1806,455.3,1806,332z M2318,1164c0,34.7-12.7,64.7-38,90s-55.3,38-90,38c-36,0-66-12.7-90-38l-343-342  c-119.3,82.7-252.3,124-399,124c-95.3,0-186.5-18.5-273.5-55.5s-162-87-225-150s-113-138-150-225S654,427.3,654,332  s18.5-186.5,55.5-273.5s87-162,150-225s138-113,225-150S1262.7-372,1358-372s186.5,18.5,273.5,55.5s162,87,225,150s113,138,150,225  S2062,236.7,2062,332c0,146.7-41.3,279.7-124,399l343,343C2305.7,1098.7,2318,1128.7,2318,1164z" />
+    </svg>
+</div>
+
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/algoliasearch.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/autocomplete.min.js"></script>
+<script>
+    var client = algoliasearch("B6Q6PSGUV5", "d04f855d3a39eed8ad8d9365ba7c86af");
+    var index = client.initIndex("imroc-blog");
+    
+    autocomplete('#aa-search-input', {
+        hint: false
+    }, {
+        source: autocomplete.sources.hits(index, {
+            hitsPerPage: 5
+        }),
+        
+        displayKey: 'name',
+        
+        templates: {
+            
+            suggestion: function (suggestion) {
+                return '<span>' + '<a href="/' + suggestion.uri + '">' + suggestion._highlightResult.title.value +
+                        '</a></span>';
+            }
+        }
+    });
+</script>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    
+  
+  
+  
+
+
+
+
+  
+    <div id="header-big-imgs" data-num-img=1 data-img-src-1="https://res.cloudinary.com/imroc/image/upload/v1515849754/blog/banner/hacker.jpg" data-img-desc-1="Hacker"></div>
+  
+
+  <header class="header-section has-img">
+    
+      <div class="intro-header big-img">
+        
+        
+        <div class="container">
+          <div class="row">
+              <div class="col-lg-12 col-md-12 col-md-offset-0">
+                
+                <div class="post-heading">
+                
+                  
+                     <h1>Kubernetes 疑难杂症排查分享: 诡异的 No route to host</h1>
+                     
+                    <span class="post-meta">
+  
+  发表于 December 15, 2019
+  
+  
+</span>
+
+
+                    
+                  
+                  
+              </div>
+            </div>
+          </div>
+        </div>
+        <span class="img-desc" style="display: inline;"></span>
+      </div>
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12 col-md-12 col-md-offset-0">
+            <div class="posts-heading">
+                <h1 align="center">Kubernetes 疑难杂症排查分享: 诡异的 No route to host</h1>
+                
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main" itemscope itemtype="http://schema.org/Article">
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+            <article role="main" class="blog-post" itemprop="articleBody" id="content">
+                
+<aside class="toc">
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#heading">问题反馈</a></li>
+    <li><a href="#heading-1">分析</a></li>
+    <li><a href="#heading-2">问题没有解决</a></li>
+    <li><a href="#heading-3">深入分析</a></li>
+    <li><a href="#heading-4">总结</a></li>
+  </ul>
+</nav>
+</aside>
+
+
+                <p>大家好，我是 roc，来自腾讯云容器服务(TKE)团队，之前发过一篇干货满满的爆火文章 <a href="https://imroc.io/posts/kubernetes/troubleshooting-with-kubernetes-network/">Kubernetes 网络疑难杂症排查分享</a>，包含多个疑难杂症的排查案例分享，信息量巨大。这次我又带来了续集，只讲一个案例，但信息量也不小，Are you ready ?</p>
+<h2 id="heading">问题反馈</h2>
+<p>有用户反馈 Deployment 滚动更新的时候，业务日志偶尔会报 &ldquo;No route to host&rdquo; 的错误。</p>
+<h2 id="heading-1">分析</h2>
+<p>之前没遇到滚动更新会报 &ldquo;No route to host&rdquo; 的问题，我们先看下滚动更新导致连接异常有哪些常见的报错:</p>
+<ul>
+<li>
+<p><code>Connection reset by peer</code>: 连接被重置。通常是连接建立过，但 server 端发现 client 发的包不对劲就返回 RST，应用层就报错连接被重置。比如在 server 滚动更新过程中，client 给 server 发的请求还没完全结束，或者本身是一个类似 grpc 的多路复用长连接，当 server 对应的旧 Pod 删除(没有做优雅结束，停止时没有关闭连接)，新 Pod 很快创建启动并且刚好有跟之前旧 Pod 一样的 IP，这时 kube-proxy 也没感知到这个 IP 其实已经被删除然后又被重建了，针对这个 IP 的规则就不会更新，旧的连接依然发往这个 IP，但旧 Pod 已经不在了，后面继续发包时依然转发给这个 Pod IP，最终会被转发到这个有相同 IP 的新 Pod 上，而新 Pod 收到此包时检查报文发现不对劲，就返回 RST 给 client 告知将连接重置。针对这种情况，建议应用自身处理好优雅结束：Pod 进入 Terminating 状态后会发送 <code>SIGTERM</code> 信号给业务进程，业务进程的代码需处理这个信号，在进程退出前关闭所有连接。</p>
+</li>
+<li>
+<p><code>Connection refused</code>: 连接被拒绝。通常是连接还没建立，client 正在发 SYN 包请求建立连接，但到了 server 之后发现端口没监听，内核就返回 RST 包，然后应用层就报错连接被拒绝。比如在 server 滚动更新过程中，旧的 Pod 中的进程很快就停止了(网卡还未完全销毁)，但 client 所在节点的 iptables/ipvs 规则还没更新，包就可能会被转发到了这个停止的 Pod (由于 k8s 的 controller 模式，从 Pod 删除到 service 的 endpoint 更新，再到 kube-proxy watch 到更新并更新 节点上的 iptables/ipvs 规则，这个过程是异步的，中间存在一点时间差，所以有可能存在 Pod 中的进程已经没有监听，但 iptables/ipvs 规则还没更新的情况)。针对这种情况，建议给容器加一个 preStop，在真正销毁 Pod 之前等待一段时间，留时间给 kube-proxy 更新转发规则，更新完之后就不会再有新连接往这个旧 Pod 转发了，preStop 示例:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">lifecycle:
+  preStop:
+    exec:
+      command:
+      - /bin/bash
+      - -c
+      - sleep <span style="color:#ae81ff">30</span>
+</code></pre></div><p>另外，还可能是新的 Pod 启动比较慢，虽然状态已经 Ready，但实际上可能端口还没监听，新的请求被转发到这个还没完全启动的 Pod 就会报错连接被拒绝。针对这种情况，建议给容器加就绪检查 (readinessProbe)，让容器真正启动完之后才将其状态置为 Ready，然后 kube-proxy 才会更新转发规则，这样就能保证新的请求只被转发到完全启动的 Pod，readinessProbe 示例:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">readinessProbe:
+  httpGet:
+    path: /healthz
+    port: <span style="color:#ae81ff">80</span>
+    httpHeaders:
+    - name: X-Custom-Header
+      value: Awesome
+  initialDelaySeconds: <span style="color:#ae81ff">15</span>
+  timeoutSeconds: <span style="color:#ae81ff">1</span>
+</code></pre></div></li>
+<li>
+<p><code>Connection timed out</code>: 连接超时。通常是连接还没建立，client 发 SYN 请求建立连接一直等到超时时间都没有收到 ACK，然后就报错连接超时。这个可能场景跟前面 <code>Connection refused</code> 可能的场景类似，不同点在于端口有监听，但进程无法正常响应了: 转发规则还没更新，旧 Pod 的进程正在停止过程中，虽然端口有监听，但已经不响应了；或者转发规则更新了，新 Pod 端口也监听了，但还没有真正就绪，还没有能力处理新请求。针对这些情况的建议跟前面一样：加 preStop 和 readinessProbe。</p>
+</li>
+</ul>
+<p>下面我们来继续分析下滚动更新时发生 <code>No route to host</code> 的可能情况。</p>
+<p>这个报错很明显，IP 无法路由，通常是将报文发到了一个已经彻底销毁的 Pod (网卡已经不在)。不可能发到一个网卡还没创建好的 Pod，因为即便不加存活检查，也是要等到 Pod 网络初始化完后才可能 Ready，然后 kube-proxy 才会更新转发规则。</p>
+<p>什么情况下会转发到一个已经彻底销毁的 Pod？ 借鉴前面几种滚动更新的报错分析，我们推测应该是 Pod 很快销毁了但转发规则还没更新，从而新的请求被转发了这个已经销毁的 Pod，最终报文到达这个 Pod 所在 PodCIDR 的 Node 上时，Node 发现本机已经没有这个 IP 的容器，然后 Node 就返回 ICMP 包告知 client 这个 IP 不可达，client 收到 ICMP 后，应用层就会报错 &ldquo;No route to host&rdquo;。</p>
+<p>所以根据我们的分析，关键点在于 Pod 销毁太快，转发规则还没来得及更新，导致后来的请求被转发到已销毁的 Pod。针对这种情况，我们可以给容器加一个 preStop，留时间给 kube-proxy 更新转发规则来解决，参考 《Kubernetes实践指南》中的部分章节: <a href="https://k8s.imroc.io/best-practice/high-availability-deployment-of-applications#smooth-update-using-prestophook-and-readinessprobe">https://k8s.imroc.io/best-practice/high-availability-deployment-of-applications#smooth-update-using-prestophook-and-readinessprobe</a></p>
+<h2 id="heading-2">问题没有解决</h2>
+<p>我们自己没有复现用户的 &ldquo;No route to host&rdquo; 的问题，可能是复现条件比较苛刻，最后将我们上面理论上的分析结论作为解决方案给到了用户。</p>
+<p>但用户尝试加了 preStop 之后，问题依然存在，服务滚动更新时偶尔还是会出现 &ldquo;No route to host&rdquo;。</p>
+<h2 id="heading-3">深入分析</h2>
+<p>为了弄清楚根本原因，我们请求用户协助搭建了一个可以复现问题的测试环境，最终这个问题在测试环境中可以稳定复现。</p>
+<p>仔细观察，实际是部署两个服务：ServiceA 和 ServiceB。使用 ab 压测工具去压测 ServiceA （短连接），然后 ServiceA 会通过 RPC 调用 ServiceB (短连接)，滚动更新的是 ServiceB，报错发生在 ServiceA 调用 ServiceB 这条链路。</p>
+<p>在 ServiceB 滚动更新期间，新的 Pod Ready 了之后会被添加到 IPVS 规则的 RS 列表，但旧的 Pod 不会立即被踢掉，而是将新的 Pod 权重置为1，旧的置为 0，通过在 client 所在节点查看 IPVS 规则可以看出来:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">root@VM-0-3-ubuntu:~# ipvsadm -ln -t 172.16.255.241:80
+Prot LocalAddress:Port Scheduler Flags
+  -&gt; RemoteAddress:Port           Forward Weight ActiveConn InActConn
+TCP  172.16.255.241:80 rr
+  -&gt; 172.16.8.106:80              Masq    <span style="color:#ae81ff">0</span>      <span style="color:#ae81ff">5</span>          <span style="color:#ae81ff">14048</span>
+  -&gt; 172.16.8.107:80              Masq    <span style="color:#ae81ff">1</span>      <span style="color:#ae81ff">2</span>          <span style="color:#ae81ff">243</span>
+</code></pre></div><p>为什么不立即踢掉旧的 Pod 呢？因为要支持优雅结束，让存量的连接处理完，等存量连接全部结束了再踢掉它(ActiveConn+InactiveConn=0)，这个逻辑可以通过这里的代码确认：https://github.com/kubernetes/kubernetes/blob/v1.17.0/pkg/proxy/ipvs/graceful_termination.go#L170</p>
+<p>然后再通过 <code>ipvsadm -lnc | grep 172.16.8.106</code> 发现旧 Pod 上的连接大多是 <code>TIME_WAIT</code> 状态，这个也容易理解：因为 ServiceA 作为 client 发起短连接请求调用 ServiceB，调用完成就会关闭连接，TCP 三次挥手后进入 <code>TIME_WAIT</code> 状态，等待 2*MSL (2 分钟) 的时长再清理连接。</p>
+<p>经过上面的分析，看起来都是符合预期的，那为什么还会出现 &ldquo;No route to host&rdquo; 呢？难道权重被置为 0 之后还有新连接往这个旧 Pod 转发？我们来抓包看下：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">root@VM-0-3-ubuntu:~# tcpdump -i eth0 host 172.16.8.106 -n -tttt
+tcpdump: verbose output suppressed, use -v or -vv <span style="color:#66d9ef">for</span> full protocol decode
+listening on eth0, link-type EN10MB <span style="color:#f92672">(</span>Ethernet<span style="color:#f92672">)</span>, capture size <span style="color:#ae81ff">262144</span> bytes
+2019-12-13 11:49:47.319093 IP 10.0.0.3.36708 &gt; 172.16.8.106.80: Flags <span style="color:#f92672">[</span>S<span style="color:#f92672">]</span>, seq 3988339656, win 29200, options <span style="color:#f92672">[</span>mss 1460,sackOK,TS val <span style="color:#ae81ff">3751111666</span> ecr 0,nop,wscale 9<span style="color:#f92672">]</span>, length <span style="color:#ae81ff">0</span>
+2019-12-13 11:49:47.319133 IP 10.0.0.3.36706 &gt; 172.16.8.106.80: Flags <span style="color:#f92672">[</span>S<span style="color:#f92672">]</span>, seq 109196945, win 29200, options <span style="color:#f92672">[</span>mss 1460,sackOK,TS val <span style="color:#ae81ff">3751111666</span> ecr 0,nop,wscale 9<span style="color:#f92672">]</span>, length <span style="color:#ae81ff">0</span>
+2019-12-13 11:49:47.319144 IP 10.0.0.3.36704 &gt; 172.16.8.106.80: Flags <span style="color:#f92672">[</span>S<span style="color:#f92672">]</span>, seq 1838682063, win 29200, options <span style="color:#f92672">[</span>mss 1460,sackOK,TS val <span style="color:#ae81ff">3751111666</span> ecr 0,nop,wscale 9<span style="color:#f92672">]</span>, length <span style="color:#ae81ff">0</span>
+2019-12-13 11:49:47.319153 IP 10.0.0.3.36702 &gt; 172.16.8.106.80: Flags <span style="color:#f92672">[</span>S<span style="color:#f92672">]</span>, seq 1591982963, win 29200, options <span style="color:#f92672">[</span>mss 1460,sackOK,TS val <span style="color:#ae81ff">3751111666</span> ecr 0,nop,wscale 9<span style="color:#f92672">]</span>, length <span style="color:#ae81ff">0</span>
+</code></pre></div><p>果然是！即使权重为 0，仍然会尝试发 SYN 包跟这个旧 Pod 建立连接，但永远无法收到 ACK，因为旧 Pod 已经销毁了。为什么会这样呢？难道是 IPVS 内核模块的调度算法有问题？尝试去看了下 linux 内核源码，并没有发现哪个调度策略的实现函数会将新连接调度到权重为 0 的 rs 上。</p>
+<p>这就奇怪了，可能不是调度算法的问题？继续尝试看更多的代码，主要是 <code>net/netfilter/ipvs/ip_vs_core.c</code> 中的 <code>ip_vs_in</code> 函数，也就是 IPVS 模块处理报文的主要入口，发现它会先在本地连接转发表看这个包是否已经有对应的连接了（匹配五元组），如果有就说明它不是新连接也就不会调度，直接发给这个连接对应的之前已经调度过的 rs (也不会判断权重)；如果没匹配到说明这个包是新的连接，就会走到调度这里 (rr, wrr 等调度策略)，这个逻辑看起来也没问题。</p>
+<p>那为什么会转发到权重为 0 的 rs ？难道是匹配连接这里出问题了？新的连接匹配到了旧的连接？我开始做实验验证这个猜想，修改一下这里的逻辑：检查匹配到的连接对应的 rs 如果权重为 0，则重新调度。然后重新编译和加载 IPVS 内核模块，再重新压测一下，发现问题解决了！没有报 &ldquo;No route to host&rdquo; 了。</p>
+<p>虽然通过改内核源码解决了，但我知道这不是一个好的解决方案，它会导致 IPVS 不支持连接的优雅结束，因为不再转发包给权重为 0 的 rs，存量的连接就会立即中断。</p>
+<p>继续陷入深思&hellip;&hellip;</p>
+<p>这个实验只是证明了猜想：新连接匹配到了旧连接。那为什么会这样呢？难道新连接报文的五元组跟旧连接的相同了？</p>
+<p>经过一番思考，发现这个是有可能的。因为 ServiceA 作为 client 请求 ServiceB，不同请求的源 IP 始终是相同的，关键点在于源端口是否可能相同。由于 ServiceA 向 ServiceB 发起大量短连接，ServiceA 所在节点就会有大量 <code>TIME_WAIT</code> 状态的连接，需要等 2 分钟 (2*MSL) 才会清理，而由于连接量太大，每次发起的连接都会占用一个源端口，当源端口不够用了，就会重用 <code>TIME_WAIT</code> 状态连接的源端口，这个时候当报文进入 IPVS 模块，检测到它的五元组跟本地连接转发表中的某个连接一致(<code>TIME_WAIT</code> 状态)，就以为它是一个存量连接，然后直接将报文转发给这个连接之前对应的 rs 上，然而这个 rs 对应的 Pod 早已销毁，所以抓包看到的现象是将 SYN 发给了旧 Pod，并且无法收到 ACK，伴随着返回 ICMP 告知这个 IP 不可达，也被应用解释为 &ldquo;No route to host&rdquo;。</p>
+<p>后来无意间又发现一个还在 open 状态的 issue，虽然还没提到 &ldquo;No route to host&rdquo; 关键字，但讨论的跟我们这个其实是同一个问题。我也参与了讨论，有兴趣的同学可以看下：https://github.com/kubernetes/kubernetes/issues/81775</p>
+<h2 id="heading-4">总结</h2>
+<p>这个问题通常发生的场景就是类似于我们测试环境这种：ServiceA 对外提供服务，当外部发起请求，ServiceA 会通过 rpc 或 http 调用 ServiceB，如果外部请求量变大，ServiceA 调用 ServiceB 的量也会跟着变大，大到一定程度，ServiceA 所在节点源端口不够用，复用 <code>TIME_WAIT</code> 状态连接的源端口，导致五元组跟 IPVS 里连接转发表中的 <code>TIME_WAIT</code> 连接相同，IPVS 就认为这是一个存量连接的报文，就不判断权重直接转发给之前的 rs，导致转发到已销毁的 Pod，从而发生 &ldquo;No route to host&rdquo;。</p>
+<p>如何规避？集群规模小可以使用 iptables 模式，如果需要使用 ipvs 模式，可以增加 ServiceA 的副本，并且配置反亲和性 (podAntiAffinity)，让 ServiceA 的 Pod 部署到不同节点，分摊流量，避免流量集中到某一个节点，导致调用 ServiceB 时源端口复用。</p>
+<p>如何彻底解决？暂时还没有一个完美的方案。</p>
+<p>Issue 85517 讨论让 kube-proxy 支持自定义配置几种连接状态的超时时间，但这对 <code>TIME_WAIT</code> 状态无效。</p>
+<p>Issue 81308 讨论 IVPS 的优雅结束是否不考虑不活跃的连接 (包括 <code>TIME_WAIT</code> 状态的连接)，也就是只考虑活跃连接，当活跃连接数为 0 之后立即踢掉 rs。这个确实可以更快的踢掉 rs，但无法让优雅结束做到那么优雅了，并且有人测试了，即便是不考虑不活跃连接，当请求量很大，还是不能很快踢掉 rs，因为源端口复用还是会导致不断有新的连接占用旧的连接，在较新的内核版本，<code>SYN_RECV</code> 状态也被视为活跃连接，所以活跃连接数还是不会很快降到 0。</p>
+<p>这个问题的终极解决方案该走向何方，我们拭目以待，感兴趣的同学可以持续关注 issue 81775 并参与讨论。想学习更多 K8S 知识，可以关注本人的开源书《Kubernetes实践指南》: <a href="https://k8s.imroc.io">https://k8s.imroc.io</a></p>
+
+            </article>
+
+            <ul class="pager blog-pager">
+
+                
+                <li class="previous">
+                    <a href="https://imroc.io/posts/service-topology/" data-toggle="tooltip" data-placement="top" title="k8s v1.17 新特性预告: 拓扑感知服务路由">&larr; 前一篇</a>
+                </li>
+                 
+            </ul>
+
+          
+            <div class="entry-shang text-center">
+    <p>「真诚赞赏，手留余香」</p>
+    <button class="zs show-zs btn btn-bred">赞赏</button>
+</div>
+<div class="zs-modal-bg"></div>
+<div class="zs-modal-box">
+    <div class="zs-modal-head">
+        <button type="button" class="close">×</button>
+        <span class="author"><img src="/favicon.png"/>roc</span>
+        <p class="tip"><i></i><span>请我喝杯咖啡？</span></p>
+    </div>
+    <div class="zs-modal-body">
+        <div class="zs-modal-btns">
+            <button class="btn btn-blink" data-num="2">2元</button>
+            <button class="btn btn-blink" data-num="5">5元</button>
+            <button class="btn btn-blink" data-num="10">10元</button>
+            <button class="btn btn-blink" data-num="50">50元</button>
+            <button class="btn btn-blink" data-num="100">100元</button>
+            <button class="btn btn-blink" data-num="1">任意金额</button>
+        </div>
+        <div class="zs-modal-pay">
+            <button class="btn btn-bred" id="pay-text">2元</button>
+            <p>使用<span id="pay-type">微信</span>扫描二维码完成支付</p>
+            <img src="/img/wechat-2.png" id="pay-image"/>
+        </div>
+    </div>
+    <div class="zs-modal-footer">
+        <label>
+            <input type="radio" name="zs-type" value="wechat" class="zs-type" checked="checked">
+            <span class="zs-wechat"><img src="/img/wechat-btn.png" /></span>
+        </label>
+        <label>
+            <input type="radio" name="zs-type" value="alipay" class="zs-type">
+            <span class="zs-alipay"><img src="/img/alipay-btn.png" /></span>
+        </label>
+    </div>
+</div>
+          
+
+          
+            
+
+  <h3>See Also</h3>
+  <ul style="margin-bottom: 25px;">
+      
+      <li><a href="/posts/service-topology/">k8s v1.17 新特性预告: 拓扑感知服务路由</a></li>
+      
+      <li><a href="/posts/troubleshooting-with-kubernetes-network/">Kubernetes 网络疑难杂症排查分享</a></li>
+      
+      <li><a href="/posts/lost-packets-once-enable-tcp-tw-recycle/">Kubernetes 踩坑分享：开启tcp_tw_recycle内核参数在NAT环境会丢包</a></li>
+      
+      <li><a href="/posts/handle-memory-fragmentation/">Kubernetes 最佳实践：处理内存碎片化</a></li>
+      
+      <li><a href="/posts/kubernetes-scale-keepalive-service/">Kubernetes 最佳实践：解决长连接服务扩容失效</a></li>
+      
+      <li><a href="/posts/capture-packets-in-container/">Kubernetes 问题定位技巧：容器内抓包</a></li>
+      
+      <li><a href="/posts/efficient-kubectl/">kubectl 高效技巧</a></li>
+      
+      <li><a href="/posts/kubernetes-wildcard-domain-forward/">Kubernetes 泛域名动态 Service 转发解决方案</a></li>
+      
+      <li><a href="/posts/kubernetes-analysis-exitcode/">Kubernetes 问题定位技巧：分析 ExitCode</a></li>
+      
+      <li><a href="/posts/understand-service-ingress-and-ingress-controller/">通俗理解Kubernetes中Service、Ingress与Ingress Controller的作用与关系</a></li>
+      
+  </ul>
+
+          
+
+          
+            
+<div id="gitalk-container"></div>
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+<script>
+  var gitalk = new Gitalk({
+      clientID: 'd05b8f959b3111c6fb63',
+      clientSecret: 'f30ef76ea0050ed731ace76f7fbf684ae5d28fbc',
+      repo: 'imroc.github.io',
+      owner: 'imroc',
+      admin: 'imroc',
+      labels: ['Gitalk'],
+      title: 'Kubernetes 疑难杂症排查分享: 诡异的 No route to host',
+      createIssueManually: false,
+      id: 'kubernetes-no-route-to-host-zh',
+      distractionFreeMode: true
+  });
+  gitalk.render('gitalk-container');
+</script>
+          
+        </div>
+    </div>
+</div>
+
+    <footer>
+  <div id="copyright">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+          <ul class="list-inline text-center footer-links">
+            
+                <li>
+                  <a href="mailto:roc@imroc.io" title="Email me">
+                    <span class="fa-stack fa-lg">
+                      <i class="fa fa-circle fa-stack-2x"></i>
+                      <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="https://github.com/imroc" title="GitHub">
+                    <span class="fa-stack fa-lg">
+                      <i class="fa fa-circle fa-stack-2x"></i>
+                      <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="https://twitter.com/imrocchan" title="Twitter">
+                    <span class="fa-stack fa-lg">
+                      <i class="fa fa-circle fa-stack-2x"></i>
+                      <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                    </span>
+                  </a>
+                </li>
+            
+            <li>
+              <a href="https://imroc.io/index.xml" title="RSS">
+                <span class="fa-stack fa-lg">
+                  <i class="fa fa-circle fa-stack-2x"></i>
+                  <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                </span>
+              </a>
+            </li>
+            
+          </ul>
+          <p class="credits copyright text-muted">
+          &copy;2017-2019
+            
+              
+                <a href="/about">roc</a>
+              
+            
+            &nbsp;&bull;&nbsp;
+            December 15,2019
+            updated
+          </p>
+          <p class="credits theme-by text-muted">
+            由 <a href="http://gohugo.io">Hugo v0.62.0</a> 强力驱动 &nbsp;&bull;&nbsp; 主题 <a href="https://github.com/imroc/xhugo">xhugo</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src='/js/bundle.min.21f7d58c95d27f6c2ca78a820bd04dd19724828061fc1cd5fd72c409096ef914.js' integrity='sha256-IffVjJXSf2wsp4qCC9BN0ZckgoBh/BzV/XLECQlu&#43;RQ='></script>
+
+
+
+
+
+
+  </body>
+</html>
+

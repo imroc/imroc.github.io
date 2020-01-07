@@ -172,8 +172,8 @@ var _hmt = _hmt || [];
         templates: {
             
             suggestion: function (suggestion) {
-                return '<span>' + '<a href="/posts/' + suggestion.slug + '">' +
-                    suggestion._highlightResult.title.value + '</a></span>';
+                return '<span>' + '<a href="/' + suggestion.uri + '">' + suggestion._highlightResult.title.value +
+                        '</a></span>';
             }
         }
     });
@@ -210,7 +210,7 @@ var _hmt = _hmt || [];
         <div class="posts-list">
           
             <article class="post-preview">
-              <a href="https://imroc.io/posts/hugo/building-website-for-free-using-hugo-and-github-pages/">
+              <a href="https://imroc.io/posts/building-website-for-free-using-hugo-and-github-pages/">
                 <h2 class="post-title">利用Hugo和Github Pages免费创建并永久托管网站</h2>
 
                 
@@ -222,7 +222,7 @@ var _hmt = _hmt || [];
               <div class="post-entry">
                 
                   概述 Hugo可以让你轻松生成静态网站，比如个人博客、API文档、公司主页等，你只需要提供markdown格式的文本，它就能帮你渲染成各种你想
-                  <a href="https://imroc.io/posts/hugo/building-website-for-free-using-hugo-and-github-pages/" class="post-read-more">[阅读全文]</a>
+                  <a href="https://imroc.io/posts/building-website-for-free-using-hugo-and-github-pages/" class="post-read-more">[阅读全文]</a>
                 
               </div>
 

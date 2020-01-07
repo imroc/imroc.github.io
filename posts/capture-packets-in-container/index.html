@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title> Kubernetes 问题定位技巧：容器内抓包 - imroc.io|roc的博客|Cloud Native|Kubernetes|Go|Golang</title>
+  <meta name="description" content="imroc.io|roc的博客|Cloud Native|Kubernetes|Go|Golang" />
+  <meta property="og:title" content="Kubernetes 问题定位技巧：容器内抓包" />
+  <meta name="twitter:title" content="Kubernetes 问题定位技巧：容器内抓包" />
+  <meta name="description" content="在使用 kubernetes 跑应用的时候，可能会遇到一些网络问题，比较常见的是服务端无响应(超时)或回包内容不正常，如果没找出各种配置上有问题，这时我们需要确认">
+  <meta property="og:description" content="在使用 kubernetes 跑应用的时候，可能会遇到一些网络问题，比较常见的是服务端无响应(超时)或回包内容不正常，如果没找出各种配置上有问题，这时我们需要确认">
+  <meta name="twitter:description" content="在使用 kubernetes 跑应用的时候，可能会遇到一些网络问题，比较常见的是服务端无响应(超时)或回包内容不正常，如果没找出各种配置上有问题，这时我们需要确认">
+  <meta name="author" content="{Description { .Site.Author.name }}"/>
+  <link href='https://imroc.io/favicon.png' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://res.cloudinary.com/imroc/image/upload/v1521031841/avatar.png" />
+  <meta name="twitter:image" content="https://res.cloudinary.com/imroc/image/upload/v1521031841/avatar.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@imrocchan" />
+  <meta name="twitter:creator" content="@imrocchan" />
+  <meta property="og:url" content="https://imroc.io/posts/capture-packets-in-container/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="roc" />
+
+  <meta name="generator" content="Hugo 0.62.0" />
+  <link rel="canonical" href="https://imroc.io/posts/capture-packets-in-container/" />
+  <link rel="alternate" href="https://imroc.io/index.xml" type="application/rss+xml" title="roc">
+
+  
+  <link href="https://fonts.googleapis.com/css?family=Lora:400,400i,700%7COpen+Sans:400,700" rel="stylesheet">
+
+  
+
+
+
+<link rel="stylesheet" href='/css/bundle.min.43522e1b6746447005cecd1381cc12a654c0364de88961016cdf5f133529476d.css' integrity='sha256-Q1IuG2dGRHAFzs0TgcwSplTANk3oiWEBbN9fEzUpR20='>
+  --><script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?05e1e8b7484a08c51cd0953664168cd7";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">切换导航</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://imroc.io/">roc</a>
+    </div>
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">分类</a>
+              <div class="navlinks-children">
+                
+                
+                  <a href="https://imroc.io/categories/kubernetes">kubernetes</a>
+                
+                
+                  <a href="https://imroc.io/categories/docker">docker</a>
+                
+                
+                  <a href="https://imroc.io/categories/golang">golang</a>
+                
+                
+                  <a href="https://imroc.io/categories/arch">架构</a>
+                
+                
+                  <a href="https://imroc.io/categories/istio">istio</a>
+                
+                
+                  <a href="https://imroc.io/categories/geek">极客</a>
+                
+              </div>
+            </li>
+          
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">书籍</a>
+              <div class="navlinks-children">
+                
+                
+                  <a href="https://k8s.imroc.io">Kubernetes 实践指南</a>
+                
+              </div>
+            </li>
+          
+        
+
+        
+          
+            <li>
+              
+                
+              
+                
+                  <a href="/en" lang="en">English</a>
+                
+              
+            </li>
+          
+        
+
+        
+        <li>
+          <a href="#modalSearch" data-toggle="modal" data-target="#modalSearch" style="outline: none;">
+            <span id="searchGlyph" class="glyphicon glyphicon-search"></span>
+          </a>
+        </li>
+        
+      </ul>
+    </div>
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="roc" href="https://imroc.io/">
+            <img class="avatar-img" src="https://res.cloudinary.com/imroc/image/upload/v1521031841/avatar.png" alt="roc" />
+          </a>
+        
+      </div>
+    </div>
+  </div>
+</nav>
+
+
+  <div id="modalSearch" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">搜索</h4>
+        </div>
+        <div class="modal-body">
+            
+<div class="aa-input-container" id="aa-input-container">
+    <input type="search" id="aa-search-input" class="aa-input-search" placeholder="Search for titles or URIs..."
+        name="search" autocomplete="off" />
+    <svg class="aa-input-icon" viewBox="654 -372 1664 1664">
+        <path
+            d="M1806,332c0-123.3-43.8-228.8-131.5-316.5C1586.8-72.2,1481.3-116,1358-116s-228.8,43.8-316.5,131.5  C953.8,103.2,910,208.7,910,332s43.8,228.8,131.5,316.5C1129.2,736.2,1234.7,780,1358,780s228.8-43.8,316.5-131.5  C1762.2,560.8,1806,455.3,1806,332z M2318,1164c0,34.7-12.7,64.7-38,90s-55.3,38-90,38c-36,0-66-12.7-90-38l-343-342  c-119.3,82.7-252.3,124-399,124c-95.3,0-186.5-18.5-273.5-55.5s-162-87-225-150s-113-138-150-225S654,427.3,654,332  s18.5-186.5,55.5-273.5s87-162,150-225s138-113,225-150S1262.7-372,1358-372s186.5,18.5,273.5,55.5s162,87,225,150s113,138,150,225  S2062,236.7,2062,332c0,146.7-41.3,279.7-124,399l343,343C2305.7,1098.7,2318,1128.7,2318,1164z" />
+    </svg>
+</div>
+
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/algoliasearch.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/autocomplete.min.js"></script>
+<script>
+    var client = algoliasearch("B6Q6PSGUV5", "d04f855d3a39eed8ad8d9365ba7c86af");
+    var index = client.initIndex("imroc-blog");
+    
+    autocomplete('#aa-search-input', {
+        hint: false
+    }, {
+        source: autocomplete.sources.hits(index, {
+            hitsPerPage: 5
+        }),
+        
+        displayKey: 'name',
+        
+        templates: {
+            
+            suggestion: function (suggestion) {
+                return '<span>' + '<a href="/' + suggestion.uri + '">' + suggestion._highlightResult.title.value +
+                        '</a></span>';
+            }
+        }
+    });
+</script>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    
+  
+  
+  
+
+
+
+
+  
+    <div id="header-big-imgs" data-num-img=1 data-img-src-1="https://res.cloudinary.com/imroc/image/upload/v1515849754/blog/banner/hacker.jpg" data-img-desc-1="Hacker"></div>
+  
+
+  <header class="header-section has-img">
+    
+      <div class="intro-header big-img">
+        
+        
+        <div class="container">
+          <div class="row">
+              <div class="col-lg-12 col-md-12 col-md-offset-0">
+                
+                <div class="post-heading">
+                
+                  
+                     <h1>Kubernetes 问题定位技巧：容器内抓包</h1>
+                     
+                    <span class="post-meta">
+  
+  发表于 May 19, 2019
+  
+  
+</span>
+
+
+                    
+                  
+                  
+              </div>
+            </div>
+          </div>
+        </div>
+        <span class="img-desc" style="display: inline;"></span>
+      </div>
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12 col-md-12 col-md-offset-0">
+            <div class="posts-heading">
+                <h1 align="center">Kubernetes 问题定位技巧：容器内抓包</h1>
+                
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main" itemscope itemtype="http://schema.org/Article">
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+            <article role="main" class="blog-post" itemprop="articleBody" id="content">
+                
+<aside class="toc">
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#-pod-netns-">使用脚本一键进入 pod netns 抓包</a>
+      <ul>
+        <li><a href="#heading">脚本原理</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+</aside>
+
+
+                <p>在使用 kubernetes 跑应用的时候，可能会遇到一些网络问题，比较常见的是服务端无响应(超时)或回包内容不正常，如果没找出各种配置上有问题，这时我们需要确认数据包到底有没有最终被路由到容器里，或者报文到达容器的内容和出容器的内容符不符合预期，通过分析报文可以进一步缩小问题范围。那么如何在容器内抓包呢？本文提供实用的脚本一键进入容器网络命名空间(netns)，使用宿主机上的tcpdump进行抓包。</p>
+<h2 id="-pod-netns-">使用脚本一键进入 pod netns 抓包</h2>
+<ul>
+<li>
+<p>发现某个服务不通，最好将其副本数调为1，并找到这个副本 pod 所在节点和 pod 名称</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl get pod -o wide
+</code></pre></div></li>
+<li>
+<p>登录 pod 所在节点，将如下脚本粘贴到 shell (注册函数到当前登录的 shell，我们后面用)</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">  <span style="color:#66d9ef">function</span> e<span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+      set -eu
+      ns<span style="color:#f92672">=</span><span style="color:#e6db74">${</span>2-<span style="color:#e6db74">&#34;default&#34;</span><span style="color:#e6db74">}</span>
+      pod<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>kubectl -n $ns describe pod $1 | grep -A10 <span style="color:#e6db74">&#34;^Containers:&#34;</span> | grep -Eo <span style="color:#e6db74">&#39;docker://.*$&#39;</span> | head -n <span style="color:#ae81ff">1</span> | sed <span style="color:#e6db74">&#39;s/docker:\/\/\(.*\)$/\1/&#39;</span><span style="color:#e6db74">`</span>
+      pid<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>docker inspect -f <span style="color:#f92672">{</span><span style="color:#f92672">{</span>.State.Pid<span style="color:#f92672">}</span><span style="color:#f92672">}</span> $pod<span style="color:#e6db74">`</span>
+      echo <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">entering pod netns for </span>$ns<span style="color:#e6db74">/</span>$1<span style="color:#e6db74">&#34;</span>
+      cmd<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">nsenter -n --target </span>$pid<span style="color:#e6db74">&#34;</span>
+      echo $cmd
+      $cmd
+  <span style="color:#f92672">}</span>
+</code></pre></div></li>
+<li>
+<p>一键进入 pod 所在的 netns，格式：<code>e POD_NAME NAMESPACE</code>，示例：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">e istio-galley-58c7c7c646-m6568 istio-system
+e proxy-5546768954-9rxg6 <span style="color:#75715e"># 省略 NAMESPACE 默认为 default</span>
+</code></pre></div></li>
+<li>
+<p>这时已经进入 pod 的 netns，可以执行宿主机上的 <code>ip a</code> 或 <code>ifconfig</code> 来查看容器的网卡，执行 <code>netstat -tunlp</code> 查看当前容器监听了哪些端口，再通过 <code>tcpdump</code> 抓包：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">tcpdump -i eth0 -w test.pcap port <span style="color:#ae81ff">80</span>
+</code></pre></div></li>
+<li>
+<p><code>ctrl-c</code> 停止抓包，再用 <code>scp</code> 或 <code>sz</code> 将抓下来的包下载到本地使用 <code>wireshark</code> 分析，提供一些常用的 <code>wireshark</code> 过滤语法：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># 使用 telnet 连上并发送一些测试文本，比如 &#34;lbtest&#34;，</span>
+<span style="color:#75715e"># 用下面语句可以看发送的测试报文有没有到容器</span>
+tcp contains <span style="color:#e6db74">&#34;lbtest&#34;</span>
+<span style="color:#75715e"># 如果容器提供的是http服务，可以使用 curl 发送一些测试路径的请求，</span>
+<span style="color:#75715e"># 通过下面语句过滤 uri 看报文有没有都容器</span>
+http.request.uri<span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;/mytest&#34;</span>
+</code></pre></div></li>
+</ul>
+<h3 id="heading">脚本原理</h3>
+<p>我们解释下步骤二中用到的脚本的原理</p>
+<ul>
+<li>
+<p>查看指定 pod 运行的容器 ID</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl describe pod &lt;pod&gt; -n mservice
+</code></pre></div></li>
+<li>
+<p>获得容器进程的 pid</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">docker inspect -f <span style="color:#f92672">{</span><span style="color:#f92672">{</span>.State.Pid<span style="color:#f92672">}</span><span style="color:#f92672">}</span> &lt;container&gt;
+</code></pre></div></li>
+<li>
+<p>进入该容器的 network namespace</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">nsenter -n --target &lt;PID&gt;
+</code></pre></div></li>
+</ul>
+<p>依赖宿主机的命名：<code>kubectl</code>, <code>docker</code>, <code>nsenter</code>, <code>grep</code>, <code>head</code>, <code>sed</code></p>
+
+            </article>
+
+            <ul class="pager blog-pager">
+
+                
+                <li class="previous">
+                    <a href="https://imroc.io/posts/istio-cni/" data-toggle="tooltip" data-placement="top" title="Istio 学习笔记：Istio CNI 插件">&larr; 前一篇</a>
+                </li>
+                 
+                <li class="next">
+                    <a href="https://imroc.io/posts/kubernetes-scale-keepalive-service/" data-toggle="tooltip" data-placement="top" title="Kubernetes 最佳实践：解决长连接服务扩容失效">后一篇 &rarr;</a>
+                </li>
+                
+            </ul>
+
+          
+            <div class="entry-shang text-center">
+    <p>「真诚赞赏，手留余香」</p>
+    <button class="zs show-zs btn btn-bred">赞赏</button>
+</div>
+<div class="zs-modal-bg"></div>
+<div class="zs-modal-box">
+    <div class="zs-modal-head">
+        <button type="button" class="close">×</button>
+        <span class="author"><img src="/favicon.png"/>roc</span>
+        <p class="tip"><i></i><span>请我喝杯咖啡？</span></p>
+    </div>
+    <div class="zs-modal-body">
+        <div class="zs-modal-btns">
+            <button class="btn btn-blink" data-num="2">2元</button>
+            <button class="btn btn-blink" data-num="5">5元</button>
+            <button class="btn btn-blink" data-num="10">10元</button>
+            <button class="btn btn-blink" data-num="50">50元</button>
+            <button class="btn btn-blink" data-num="100">100元</button>
+            <button class="btn btn-blink" data-num="1">任意金额</button>
+        </div>
+        <div class="zs-modal-pay">
+            <button class="btn btn-bred" id="pay-text">2元</button>
+            <p>使用<span id="pay-type">微信</span>扫描二维码完成支付</p>
+            <img src="/img/wechat-2.png" id="pay-image"/>
+        </div>
+    </div>
+    <div class="zs-modal-footer">
+        <label>
+            <input type="radio" name="zs-type" value="wechat" class="zs-type" checked="checked">
+            <span class="zs-wechat"><img src="/img/wechat-btn.png" /></span>
+        </label>
+        <label>
+            <input type="radio" name="zs-type" value="alipay" class="zs-type">
+            <span class="zs-alipay"><img src="/img/alipay-btn.png" /></span>
+        </label>
+    </div>
+</div>
+          
+
+          
+            
+
+  <h3>See Also</h3>
+  <ul style="margin-bottom: 25px;">
+      
+      <li><a href="/posts/efficient-kubectl/">kubectl 高效技巧</a></li>
+      
+      <li><a href="/posts/kubernetes-wildcard-domain-forward/">Kubernetes 泛域名动态 Service 转发解决方案</a></li>
+      
+      <li><a href="/posts/kubernetes-analysis-exitcode/">Kubernetes 问题定位技巧：分析 ExitCode</a></li>
+      
+      <li><a href="/posts/understand-service-ingress-and-ingress-controller/">通俗理解Kubernetes中Service、Ingress与Ingress Controller的作用与关系</a></li>
+      
+      <li><a href="/posts/deploy-kubernetes-dashboard-and-enable-free-https/">利用Helm一键部署Kubernetes Dashboard并启用免费HTTPS</a></li>
+      
+      <li><a href="/posts/let-ingress-enable-free-https-with-cert-manager/">利用cert-manager让Ingress启用免费的HTTPS证书</a></li>
+      
+      <li><a href="/posts/use-nginx-ingress-controller-to-expose-service/">使用Nginx Ingress Controller导入外部流量到Kubernetes集群内部</a></li>
+      
+      <li><a href="/posts/kubernetes-nodeport-vs-loadbalancer-vs-ingress-when-should-i-use-what/">对比Kubernetes的Nodeport、Loadbalancer和Ingress，什么时候该用哪种</a></li>
+      
+      <li><a href="/posts/kubernetes-source-code-reading-notes-kube-apiserver-code-main-line/">kubernetes源码阅读笔记：理清 kube-apiserver 的源码主线</a></li>
+      
+      <li><a href="/posts/sync-images-to-docker-hub-using-katacoda/">利用Katacoda免费同步Docker镜像到Docker Hub</a></li>
+      
+  </ul>
+
+          
+
+          
+            
+<div id="gitalk-container"></div>
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+<script>
+  var gitalk = new Gitalk({
+      clientID: 'd05b8f959b3111c6fb63',
+      clientSecret: 'f30ef76ea0050ed731ace76f7fbf684ae5d28fbc',
+      repo: 'imroc.github.io',
+      owner: 'imroc',
+      admin: 'imroc',
+      labels: ['Gitalk'],
+      title: 'Kubernetes 问题定位技巧：容器内抓包',
+      createIssueManually: false,
+      id: 'capture-packets-in-container-zh',
+      distractionFreeMode: true
+  });
+  gitalk.render('gitalk-container');
+</script>
+          
+        </div>
+    </div>
+</div>
+
+    <footer>
+  <div id="copyright">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+          <ul class="list-inline text-center footer-links">
+            
+                <li>
+                  <a href="mailto:roc@imroc.io" title="Email me">
+                    <span class="fa-stack fa-lg">
+                      <i class="fa fa-circle fa-stack-2x"></i>
+                      <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="https://github.com/imroc" title="GitHub">
+                    <span class="fa-stack fa-lg">
+                      <i class="fa fa-circle fa-stack-2x"></i>
+                      <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="https://twitter.com/imrocchan" title="Twitter">
+                    <span class="fa-stack fa-lg">
+                      <i class="fa fa-circle fa-stack-2x"></i>
+                      <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                    </span>
+                  </a>
+                </li>
+            
+            <li>
+              <a href="https://imroc.io/index.xml" title="RSS">
+                <span class="fa-stack fa-lg">
+                  <i class="fa fa-circle fa-stack-2x"></i>
+                  <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                </span>
+              </a>
+            </li>
+            
+          </ul>
+          <p class="credits copyright text-muted">
+          &copy;2017-2019
+            
+              
+                <a href="/about">roc</a>
+              
+            
+            &nbsp;&bull;&nbsp;
+            December 15,2019
+            updated
+          </p>
+          <p class="credits theme-by text-muted">
+            由 <a href="http://gohugo.io">Hugo v0.62.0</a> 强力驱动 &nbsp;&bull;&nbsp; 主题 <a href="https://github.com/imroc/xhugo">xhugo</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src='/js/bundle.min.21f7d58c95d27f6c2ca78a820bd04dd19724828061fc1cd5fd72c409096ef914.js' integrity='sha256-IffVjJXSf2wsp4qCC9BN0ZckgoBh/BzV/XLECQlu&#43;RQ='></script>
+
+
+
+
+
+
+  </body>
+</html>
+

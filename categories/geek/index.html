@@ -172,8 +172,8 @@ var _hmt = _hmt || [];
         templates: {
             
             suggestion: function (suggestion) {
-                return '<span>' + '<a href="/posts/' + suggestion.slug + '">' +
-                    suggestion._highlightResult.title.value + '</a></span>';
+                return '<span>' + '<a href="/' + suggestion.uri + '">' + suggestion._highlightResult.title.value +
+                        '</a></span>';
             }
         }
     });
@@ -210,7 +210,7 @@ var _hmt = _hmt || [];
         <div class="posts-list">
           
             <article class="post-preview">
-              <a href="https://imroc.io/posts/geek/git-trick-modify-history/">
+              <a href="https://imroc.io/posts/git-trick-modify-history/">
                 <h2 class="post-title">Git技巧：修改历史</h2>
 
                 
@@ -222,7 +222,7 @@ var _hmt = _hmt || [];
               <div class="post-entry">
                 
                   修改历史 修改最新一条历史 如果内容需要改就直接改，然后 git add 进去，然后执行 git commit --amend 会弹出 git commit message 的编辑窗口，会填充之前 commit 时写的 message 内容，如果需要改就直
-                  <a href="https://imroc.io/posts/geek/git-trick-modify-history/" class="post-read-more">[阅读全文]</a>
+                  <a href="https://imroc.io/posts/git-trick-modify-history/" class="post-read-more">[阅读全文]</a>
                 
               </div>
 
@@ -238,37 +238,7 @@ var _hmt = _hmt || [];
             </article>
           
             <article class="post-preview">
-              <a href="https://imroc.io/posts/geek/vscode-1/">
-                <h2 class="post-title">宇宙最强编辑器: vscode</h2>
-
-                
-                  <h3 class="post-subtitle">
-                    实现高效开发
-                  </h3>
-                
-              </a>
-
-              <p class="post-meta">
-                发表于 November 4, 2018
-              </p>
-              <div class="post-entry">
-                
-                  宇宙最强编辑器: vscode 为什么选择 vscode 程序圈经常会引发关于编辑器的圣战，争论哪一个才是世界上最好的编辑器，有人说：世界上只有三种编辑器，一种叫 vim
-                  <a href="https://imroc.io/posts/geek/vscode-1/" class="post-read-more">[阅读全文]</a>
-                
-              </div>
-
-              
-                <span class="post-meta">
-                  
-                    #<a href='https://imroc.io/tags/geek/'>geek</a>&nbsp;
-                  
-                </span>
-              
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://imroc.io/posts/geek/chrome/">
+              <a href="https://imroc.io/posts/chrome/">
                 <h2 class="post-title">教你如何全键盘操作 Chrome 浏览器</h2>
 
                 
@@ -284,7 +254,7 @@ var _hmt = _hmt || [];
               <div class="post-entry">
                 
                   推荐两款插件， SurfingKeys 和 Steward，让你全键盘高效操作浏览器。老规矩，附视频教学。 SurfingKeys 模拟 vim 的快捷键有两款 Chrome 插件，分别是 Vimium 和 Surfingkey
-                  <a href="https://imroc.io/posts/geek/chrome/" class="post-read-more">[阅读全文]</a>
+                  <a href="https://imroc.io/posts/chrome/" class="post-read-more">[阅读全文]</a>
                 
               </div>
 
@@ -298,7 +268,7 @@ var _hmt = _hmt || [];
             </article>
           
             <article class="post-preview">
-              <a href="https://imroc.io/posts/geek/alfred-and-dash/">
+              <a href="https://imroc.io/posts/alfred-and-dash/">
                 <h2 class="post-title">极客工具之 Alfred 与 Dash</h2>
 
                 
@@ -314,7 +284,7 @@ var _hmt = _hmt || [];
               <div class="post-entry">
                 
                   Alfred 使用 Alfred 可以让你在 macOS 程序间自由切换、快速查找或打开文件、调起浏览器进行网页搜索、 还可以做计算器。 另外，还有许多其它搜索功能以及付费的工作流特
-                  <a href="https://imroc.io/posts/geek/alfred-and-dash/" class="post-read-more">[阅读全文]</a>
+                  <a href="https://imroc.io/posts/alfred-and-dash/" class="post-read-more">[阅读全文]</a>
                 
               </div>
 
@@ -328,7 +298,7 @@ var _hmt = _hmt || [];
             </article>
           
             <article class="post-preview">
-              <a href="https://imroc.io/posts/geek/oh-my-zsh/">
+              <a href="https://imroc.io/posts/oh-my-zsh/">
                 <h2 class="post-title">极客工具之 oh-my-zsh</h2>
 
                 
@@ -344,7 +314,7 @@ var _hmt = _hmt || [];
               <div class="post-entry">
                 
                   shell 有多种，大多数人接触比较多的是 bash， 不管是 mac 还是各个 linux 发行版，默认的 shell 基本都是 bash，虽然 bash 功能已经丰富了，但对于极客们来说，界面不
-                  <a href="https://imroc.io/posts/geek/oh-my-zsh/" class="post-read-more">[阅读全文]</a>
+                  <a href="https://imroc.io/posts/oh-my-zsh/" class="post-read-more">[阅读全文]</a>
                 
               </div>
 

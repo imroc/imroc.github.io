@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title> 对比Kubernetes的Nodeport、Loadbalancer和Ingress，什么时候该用哪种 - imroc.io|roc的博客|Cloud Native|Kubernetes|Go|Golang</title>
+  <meta name="description" content="imroc.io|roc的博客|Cloud Native|Kubernetes|Go|Golang" />
+  <meta property="og:title" content="对比Kubernetes的Nodeport、Loadbalancer和Ingress，什么时候该用哪种" />
+  <meta name="twitter:title" content="对比Kubernetes的Nodeport、Loadbalancer和Ingress，什么时候该用哪种" />
+  <meta name="description" content="本文翻译自：https://medium.com/google-cloud/kubernetes-nodeport-vs-loadbalan">
+  <meta property="og:description" content="本文翻译自：https://medium.com/google-cloud/kubernetes-nodeport-vs-loadbalan">
+  <meta name="twitter:description" content="本文翻译自：https://medium.com/google-cloud/kubernetes-nodeport-vs-loadbalan">
+  <meta name="author" content="{Description { .Site.Author.name }}"/>
+  <link href='https://imroc.io/favicon.png' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://res.cloudinary.com/imroc/image/upload/v1521031841/avatar.png" />
+  <meta name="twitter:image" content="https://res.cloudinary.com/imroc/image/upload/v1521031841/avatar.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@imrocchan" />
+  <meta name="twitter:creator" content="@imrocchan" />
+  <meta property="og:url" content="https://imroc.io/posts/kubernetes-nodeport-vs-loadbalancer-vs-ingress-when-should-i-use-what/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="roc" />
+
+  <meta name="generator" content="Hugo 0.62.0" />
+  <link rel="canonical" href="https://imroc.io/posts/kubernetes-nodeport-vs-loadbalancer-vs-ingress-when-should-i-use-what/" />
+  <link rel="alternate" href="https://imroc.io/index.xml" type="application/rss+xml" title="roc">
+
+  
+  <link href="https://fonts.googleapis.com/css?family=Lora:400,400i,700%7COpen+Sans:400,700" rel="stylesheet">
+
+  
+
+
+
+<link rel="stylesheet" href='/css/bundle.min.43522e1b6746447005cecd1381cc12a654c0364de88961016cdf5f133529476d.css' integrity='sha256-Q1IuG2dGRHAFzs0TgcwSplTANk3oiWEBbN9fEzUpR20='>
+  --><script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?05e1e8b7484a08c51cd0953664168cd7";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">切换导航</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://imroc.io/">roc</a>
+    </div>
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">分类</a>
+              <div class="navlinks-children">
+                
+                
+                  <a href="https://imroc.io/categories/kubernetes">kubernetes</a>
+                
+                
+                  <a href="https://imroc.io/categories/docker">docker</a>
+                
+                
+                  <a href="https://imroc.io/categories/golang">golang</a>
+                
+                
+                  <a href="https://imroc.io/categories/arch">架构</a>
+                
+                
+                  <a href="https://imroc.io/categories/istio">istio</a>
+                
+                
+                  <a href="https://imroc.io/categories/geek">极客</a>
+                
+              </div>
+            </li>
+          
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">书籍</a>
+              <div class="navlinks-children">
+                
+                
+                  <a href="https://k8s.imroc.io">Kubernetes 实践指南</a>
+                
+              </div>
+            </li>
+          
+        
+
+        
+          
+            <li>
+              
+                
+              
+                
+                  <a href="/en" lang="en">English</a>
+                
+              
+            </li>
+          
+        
+
+        
+        <li>
+          <a href="#modalSearch" data-toggle="modal" data-target="#modalSearch" style="outline: none;">
+            <span id="searchGlyph" class="glyphicon glyphicon-search"></span>
+          </a>
+        </li>
+        
+      </ul>
+    </div>
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="roc" href="https://imroc.io/">
+            <img class="avatar-img" src="https://res.cloudinary.com/imroc/image/upload/v1521031841/avatar.png" alt="roc" />
+          </a>
+        
+      </div>
+    </div>
+  </div>
+</nav>
+
+
+  <div id="modalSearch" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">搜索</h4>
+        </div>
+        <div class="modal-body">
+            
+<div class="aa-input-container" id="aa-input-container">
+    <input type="search" id="aa-search-input" class="aa-input-search" placeholder="Search for titles or URIs..."
+        name="search" autocomplete="off" />
+    <svg class="aa-input-icon" viewBox="654 -372 1664 1664">
+        <path
+            d="M1806,332c0-123.3-43.8-228.8-131.5-316.5C1586.8-72.2,1481.3-116,1358-116s-228.8,43.8-316.5,131.5  C953.8,103.2,910,208.7,910,332s43.8,228.8,131.5,316.5C1129.2,736.2,1234.7,780,1358,780s228.8-43.8,316.5-131.5  C1762.2,560.8,1806,455.3,1806,332z M2318,1164c0,34.7-12.7,64.7-38,90s-55.3,38-90,38c-36,0-66-12.7-90-38l-343-342  c-119.3,82.7-252.3,124-399,124c-95.3,0-186.5-18.5-273.5-55.5s-162-87-225-150s-113-138-150-225S654,427.3,654,332  s18.5-186.5,55.5-273.5s87-162,150-225s138-113,225-150S1262.7-372,1358-372s186.5,18.5,273.5,55.5s162,87,225,150s113,138,150,225  S2062,236.7,2062,332c0,146.7-41.3,279.7-124,399l343,343C2305.7,1098.7,2318,1128.7,2318,1164z" />
+    </svg>
+</div>
+
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/algoliasearch.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/autocomplete.min.js"></script>
+<script>
+    var client = algoliasearch("B6Q6PSGUV5", "d04f855d3a39eed8ad8d9365ba7c86af");
+    var index = client.initIndex("imroc-blog");
+    
+    autocomplete('#aa-search-input', {
+        hint: false
+    }, {
+        source: autocomplete.sources.hits(index, {
+            hitsPerPage: 5
+        }),
+        
+        displayKey: 'name',
+        
+        templates: {
+            
+            suggestion: function (suggestion) {
+                return '<span>' + '<a href="/' + suggestion.uri + '">' + suggestion._highlightResult.title.value +
+                        '</a></span>';
+            }
+        }
+    });
+</script>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    
+  
+  
+  
+
+
+
+
+  
+    <div id="header-big-imgs" data-num-img=1 data-img-src-1="https://res.cloudinary.com/imroc/image/upload/v1520952425/blog/k8s/scifi-banner.jpg" data-img-desc-1="ingress"></div>
+  
+
+  <header class="header-section has-img">
+    
+      <div class="intro-header big-img">
+        
+        
+        <div class="container">
+          <div class="row">
+              <div class="col-lg-12 col-md-12 col-md-offset-0">
+                
+                <div class="post-heading">
+                
+                  
+                     <h1>对比Kubernetes的Nodeport、Loadbalancer和Ingress，什么时候该用哪种</h1>
+                     
+                    <span class="post-meta">
+  
+  发表于 March 13, 2018
+  
+  
+</span>
+
+
+                    
+                  
+                  
+              </div>
+            </div>
+          </div>
+        </div>
+        <span class="img-desc" style="display: inline;"></span>
+      </div>
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12 col-md-12 col-md-offset-0">
+            <div class="posts-heading">
+                <h1 align="center">对比Kubernetes的Nodeport、Loadbalancer和Ingress，什么时候该用哪种</h1>
+                
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main" itemscope itemtype="http://schema.org/Article">
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+            <article role="main" class="blog-post" itemprop="articleBody" id="content">
+                
+<aside class="toc">
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#clusterip">ClusterIP</a>
+      <ul>
+        <li><a href="#heading">什么时候用？</a></li>
+      </ul>
+    </li>
+    <li><a href="#nodeport">NodePort</a>
+      <ul>
+        <li><a href="#heading-1">什么时候用？</a></li>
+      </ul>
+    </li>
+    <li><a href="#loadbalancer">LoadBalancer</a>
+      <ul>
+        <li><a href="#heading-2">什么时候用？</a></li>
+      </ul>
+    </li>
+    <li><a href="#ingress">Ingress</a>
+      <ul>
+        <li><a href="#heading-3">什么时候用？</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+</aside>
+
+
+                <blockquote>
+<p>本文翻译自：<a href="https://medium.com/google-cloud/kubernetes-nodeport-vs-loadbalancer-vs-ingress-when-should-i-use-what-922f010849e0">https://medium.com/google-cloud/kubernetes-nodeport-vs-loadbalancer-vs-ingress-when-should-i-use-what-922f010849e0</a></p>
+</blockquote>
+<p>最近，有人问我 NodePort，LoadBalancer 和 Ingress 之间的区别是什么。 它们是将外部流量引入群集的不同方式，并且实现方式不一样。 我们来看看它们是如何工作的，以及什么时候该用哪种。</p>
+<p>**注意：**本文适用于 <a href="https://cloud.google.com/kubernetes-engine/">Google Kubernetes Engine</a>。 如果你在其他公有云、混合云、minikube 等上运行，可能会略有不同。 例如，您不能在 minikube 上使用 LoadBalancer。 我也没有深入技术细节。 如果您有兴趣了解更多，<a href="https://kubernetes.io/docs/concepts/services-networking/service/">官方文档</a>是一个很好的资源！</p>
+<h2 id="clusterip">ClusterIP</h2>
+<p>ClusterIP 服务是默认的 Kubernetes 服务。 它为您提供集群内部其他应用程序可以访问的服务， 外部无法访问。</p>
+<p>ClusterIP 服务的 YAML 类似这样：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">apiVersion: v1
+kind: Service
+metadata:  
+  name: my-internal-service
+selector:    
+  app: my-app
+spec:
+  type: ClusterIP
+  ports:  
+  - name: http
+    port: <span style="color:#ae81ff">80</span>
+    targetPort: <span style="color:#ae81ff">80</span>
+    protocol: TCP
+</code></pre></div><p>如果你不能从集群外部上访问一个 ClusterIP 服务，我为什么要谈论它？ 因为你可以使用 Kubernetes Proxy 来访问它！
+<!-- raw HTML omitted -->
+启动 Kubernetes Proxy:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ kubectl proxy --port<span style="color:#f92672">=</span><span style="color:#ae81ff">8080</span>
+</code></pre></div><p>现在，你可以使用如下的 Kubernetes API 访问服务：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">http://localhost:8080/api/v1/proxy/namespaces/&lt;NAMESPACE&gt;/services/&lt;SERVICE-NAME&gt;:&lt;PORT-NAME&gt;/
+</code></pre></div><p>所以，如果要访问我们刚刚定义的服务，可以使用下面的地址：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">http://localhost:8080/api/v1/proxy/namespaces/default/services/my-internal-service:http/
+</code></pre></div><h3 id="heading">什么时候用？</h3>
+<p>有几种情况可以使用 Kubernetes Proxy 来访问您的服务：</p>
+<ul>
+<li>调试您的服务，或由于某种原因直接从你笔记本电脑连接到它们</li>
+<li>允许内部流量，显示内部仪表盘等</li>
+</ul>
+<p>由于此方法要求您用已授权用户运行 kubectl ，因此您不应该使用此方法将您的服务公开到公网上或将其用于生产。</p>
+<h2 id="nodeport">NodePort</h2>
+<p>NodePort 服务是暴露服务的最原始方式。 顾名思义，NodePort 会在所有节点（VM）上打开一个特定的端口，并且发送到此端口的任何流量都将转发到该服务。
+<!-- raw HTML omitted -->
+NodePort 服务的 YAML 类似这样：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">apiVersion: v1
+kind: Service
+metadata:  
+  name: my-nodeport-service
+selector:    
+  app: my-app
+spec:
+  type: NodePort
+  ports:  
+  - name: http
+    port: <span style="color:#ae81ff">80</span>
+    targetPort: <span style="color:#ae81ff">80</span>
+    nodePort: <span style="color:#ae81ff">30036</span>
+    protocol: TCP
+</code></pre></div><p>基本上，NodePort 服务与普通的 “ClusterIP” 服务 YAML 定义有两点区别。 首先，type 是 “NodePort”。还有一个称为 nodePort 的附加端口，指定在节点上打开哪个端口。 如果你不指定这个端口，它会选择一个随机端口。</p>
+<h3 id="heading-1">什么时候用？</h3>
+<p>这种方法有许多缺点：</p>
+<ul>
+<li>每个端口只能有一个服务</li>
+<li>默认您只能使用端口30000-32767</li>
+<li>如果您的 节点/虚拟机 IP 地址发生更改，则需要处理该问题</li>
+</ul>
+<p>由于这些原因，我不建议在生产中使用这种方法。 如果您运行的服务不必始终可用，或者您非常关注成本，则此方法适用于您，比如演示程序或临时应用。</p>
+<h2 id="loadbalancer">LoadBalancer</h2>
+<p>LoadBalancer 服务暴露服务的标准方式。 在 GKE 上，这将启动一个<a href="https://cloud.google.com/compute/docs/load-balancing/network/">网络负载平衡器</a>，它将为您提供一个将所有流量转发到您的服务的IP地址。
+<!-- raw HTML omitted --></p>
+<h3 id="heading-2">什么时候用？</h3>
+<p>如果你想直接暴露一个服务，这是默认的方法(GKE上)。 您指定的端口上的所有流量都将被转发到该服务， 没有过滤、路由等。这意味着您可以发送几乎任何类型的流量，如 HTTP，TCP，UDP，Websockets，gRPC 或其他。</p>
+<p>最大的缺点是，您使用 LoadBalancer 公开的每项服务都将获得自己的 IP 地址，并且您必须为每个暴露的服务使用一个 LoadBalancer，这可能会付出比较大的代价！</p>
+<h2 id="ingress">Ingress</h2>
+<p>与以上所有例子不同，Ingress 实际上不是一种服务。相反，它位于多个服务之前，充当集群中的“智能路由器”或入口点。</p>
+<p>您可以使用 Ingress 做很多不同的事情，并且有许多类型的 Ingress 控制器，具有不同的功能。</p>
+<p>GKE 默认的 Ingress 控制器将为您启动一个 <a href="https://cloud.google.com/compute/docs/load-balancing/http/">HTTP（S）负载均衡器</a>。 这将使您可以执行基于路径和基于子域名的路由到后端服务。 例如，您可以将 foo.yourdomain.com 上的所有内容发送到 foo 服务，并将 yourdomain.com/bar/ 路径下所有内容发送到 bar 服务的。
+<!-- raw HTML omitted -->
+在 GKE 上的 <a href="https://cloud.google.com/compute/docs/load-balancing/http/">七层 HTTP 负载均衡器</a> 的 Ingress 对象 YAML 定义类似这样：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: my-ingress
+spec:
+  backend:
+    serviceName: other
+    servicePort: <span style="color:#ae81ff">8080</span>
+  rules:
+  - host: foo.mydomain.com
+    http:
+      paths:
+      - backend:
+          serviceName: foo
+          servicePort: <span style="color:#ae81ff">8080</span>
+  - host: mydomain.com
+    http:
+      paths:
+      - path: /bar/*
+        backend:
+          serviceName: bar
+          servicePort: <span style="color:#ae81ff">8080</span>
+</code></pre></div><h3 id="heading-3">什么时候用？</h3>
+<p>Ingress 可能是暴露服务最强大的方式了，但也可能是最复杂的。 来自 <a href="https://cloud.google.com/kubernetes-engine/docs/tutorials/http-balancer">Google Cloud Load Balancer</a>, <a href="https://github.com/kubernetes/ingress-nginx">Nginx</a>, <a href="https://github.com/heptio/contour">Contour</a>, <a href="https://istio.io/docs/tasks/traffic-management/ingress.html">Istio</a> 等的 Ingress 控制器类型很多。 还有用于 Ingress 控制器的插件，如 <a href="https://github.com/jetstack/cert-manager">cert-manager</a>，可以为您的服务自动提供 SSL 证书。</p>
+<p>如果您希望在相同的 IP 地址下暴露多个服务，并且这些服务都使用相同的L7协议（通常是HTTP），则 Ingress 是最有用的。 如果您使用原生 GCP 集成，您只需支付一个负载平衡器，由于 Ingress 很“智能”，您可以获得许多开箱即用的功能（如 SSL，Auth，路由等）</p>
+
+            </article>
+
+            <ul class="pager blog-pager">
+
+                
+                <li class="previous">
+                    <a href="https://imroc.io/posts/kubernetes-source-code-reading-notes-kube-apiserver-code-main-line/" data-toggle="tooltip" data-placement="top" title="kubernetes源码阅读笔记：理清 kube-apiserver 的源码主线">&larr; 前一篇</a>
+                </li>
+                 
+                <li class="next">
+                    <a href="https://imroc.io/posts/ci-with-gitlab-and-jenkins/" data-toggle="tooltip" data-placement="top" title="利用Gitlab和Jenkins做CI(持续集成)">后一篇 &rarr;</a>
+                </li>
+                
+            </ul>
+
+          
+            <div class="entry-shang text-center">
+    <p>「真诚赞赏，手留余香」</p>
+    <button class="zs show-zs btn btn-bred">赞赏</button>
+</div>
+<div class="zs-modal-bg"></div>
+<div class="zs-modal-box">
+    <div class="zs-modal-head">
+        <button type="button" class="close">×</button>
+        <span class="author"><img src="/favicon.png"/>roc</span>
+        <p class="tip"><i></i><span>请我喝杯咖啡？</span></p>
+    </div>
+    <div class="zs-modal-body">
+        <div class="zs-modal-btns">
+            <button class="btn btn-blink" data-num="2">2元</button>
+            <button class="btn btn-blink" data-num="5">5元</button>
+            <button class="btn btn-blink" data-num="10">10元</button>
+            <button class="btn btn-blink" data-num="50">50元</button>
+            <button class="btn btn-blink" data-num="100">100元</button>
+            <button class="btn btn-blink" data-num="1">任意金额</button>
+        </div>
+        <div class="zs-modal-pay">
+            <button class="btn btn-bred" id="pay-text">2元</button>
+            <p>使用<span id="pay-type">微信</span>扫描二维码完成支付</p>
+            <img src="/img/wechat-2.png" id="pay-image"/>
+        </div>
+    </div>
+    <div class="zs-modal-footer">
+        <label>
+            <input type="radio" name="zs-type" value="wechat" class="zs-type" checked="checked">
+            <span class="zs-wechat"><img src="/img/wechat-btn.png" /></span>
+        </label>
+        <label>
+            <input type="radio" name="zs-type" value="alipay" class="zs-type">
+            <span class="zs-alipay"><img src="/img/alipay-btn.png" /></span>
+        </label>
+    </div>
+</div>
+          
+
+          
+            
+
+  <h3>See Also</h3>
+  <ul style="margin-bottom: 25px;">
+      
+      <li><a href="/posts/kubernetes-source-code-reading-notes-kube-apiserver-code-main-line/">kubernetes源码阅读笔记：理清 kube-apiserver 的源码主线</a></li>
+      
+      <li><a href="/posts/sync-images-to-docker-hub-using-katacoda/">利用Katacoda免费同步Docker镜像到Docker Hub</a></li>
+      
+  </ul>
+
+          
+
+          
+            
+<div id="gitalk-container"></div>
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+<script>
+  var gitalk = new Gitalk({
+      clientID: 'd05b8f959b3111c6fb63',
+      clientSecret: 'f30ef76ea0050ed731ace76f7fbf684ae5d28fbc',
+      repo: 'imroc.github.io',
+      owner: 'imroc',
+      admin: 'imroc',
+      labels: ['Gitalk'],
+      title: '对比Kubernetes的Nodeport、Loadbalancer和Ingress，什么时候该用哪种',
+      createIssueManually: false,
+      id: 'kubernetes-nodeport-vs-loadbalancer-vs-ingress-when-should-i-use-what-zh',
+      distractionFreeMode: true
+  });
+  gitalk.render('gitalk-container');
+</script>
+          
+        </div>
+    </div>
+</div>
+
+    <footer>
+  <div id="copyright">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+          <ul class="list-inline text-center footer-links">
+            
+                <li>
+                  <a href="mailto:roc@imroc.io" title="Email me">
+                    <span class="fa-stack fa-lg">
+                      <i class="fa fa-circle fa-stack-2x"></i>
+                      <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="https://github.com/imroc" title="GitHub">
+                    <span class="fa-stack fa-lg">
+                      <i class="fa fa-circle fa-stack-2x"></i>
+                      <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="https://twitter.com/imrocchan" title="Twitter">
+                    <span class="fa-stack fa-lg">
+                      <i class="fa fa-circle fa-stack-2x"></i>
+                      <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                    </span>
+                  </a>
+                </li>
+            
+            <li>
+              <a href="https://imroc.io/index.xml" title="RSS">
+                <span class="fa-stack fa-lg">
+                  <i class="fa fa-circle fa-stack-2x"></i>
+                  <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                </span>
+              </a>
+            </li>
+            
+          </ul>
+          <p class="credits copyright text-muted">
+          &copy;2017-2019
+            
+              
+                <a href="/about">roc</a>
+              
+            
+            &nbsp;&bull;&nbsp;
+            December 15,2019
+            updated
+          </p>
+          <p class="credits theme-by text-muted">
+            由 <a href="http://gohugo.io">Hugo v0.62.0</a> 强力驱动 &nbsp;&bull;&nbsp; 主题 <a href="https://github.com/imroc/xhugo">xhugo</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src='/js/bundle.min.21f7d58c95d27f6c2ca78a820bd04dd19724828061fc1cd5fd72c409096ef914.js' integrity='sha256-IffVjJXSf2wsp4qCC9BN0ZckgoBh/BzV/XLECQlu&#43;RQ='></script>
+
+
+
+
+
+
+  </body>
+</html>
+

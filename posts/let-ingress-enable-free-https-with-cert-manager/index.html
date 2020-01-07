@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title> 利用cert-manager让Ingress启用免费的HTTPS证书 - imroc.io|roc的博客|Cloud Native|Kubernetes|Go|Golang</title>
+  <meta name="description" content="imroc.io|roc的博客|Cloud Native|Kubernetes|Go|Golang" />
+  <meta property="og:title" content="利用cert-manager让Ingress启用免费的HTTPS证书" />
+  <meta name="twitter:title" content="利用cert-manager让Ingress启用免费的HTTPS证书" />
+  <meta name="description" content="概述 cert-manager 是替代 kube-lego 的一个开源项目，用于在 Kubernetes 集群中自动提供 HTTPS 证书，支持 Let’s Encrypt, HashiCorp Vault 这些免费证书的签发。 本文使用 Helm 安装，所以请确保 Helm 已安装，安装">
+  <meta property="og:description" content="概述 cert-manager 是替代 kube-lego 的一个开源项目，用于在 Kubernetes 集群中自动提供 HTTPS 证书，支持 Let’s Encrypt, HashiCorp Vault 这些免费证书的签发。 本文使用 Helm 安装，所以请确保 Helm 已安装，安装">
+  <meta name="twitter:description" content="概述 cert-manager 是替代 kube-lego 的一个开源项目，用于在 Kubernetes 集群中自动提供 HTTPS 证书，支持 Let’s Encrypt, HashiCorp Vault 这些免费证书的签发。 本文使用 Helm 安装，所以请确保 Helm 已安装，安装">
+  <meta name="author" content="{Description { .Site.Author.name }}"/>
+  <link href='https://imroc.io/favicon.png' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://res.cloudinary.com/imroc/image/upload/v1521031841/avatar.png" />
+  <meta name="twitter:image" content="https://res.cloudinary.com/imroc/image/upload/v1521031841/avatar.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@imrocchan" />
+  <meta name="twitter:creator" content="@imrocchan" />
+  <meta property="og:url" content="https://imroc.io/posts/let-ingress-enable-free-https-with-cert-manager/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="roc" />
+
+  <meta name="generator" content="Hugo 0.62.0" />
+  <link rel="canonical" href="https://imroc.io/posts/let-ingress-enable-free-https-with-cert-manager/" />
+  <link rel="alternate" href="https://imroc.io/index.xml" type="application/rss+xml" title="roc">
+
+  
+  <link href="https://fonts.googleapis.com/css?family=Lora:400,400i,700%7COpen+Sans:400,700" rel="stylesheet">
+
+  
+
+
+
+<link rel="stylesheet" href='/css/bundle.min.43522e1b6746447005cecd1381cc12a654c0364de88961016cdf5f133529476d.css' integrity='sha256-Q1IuG2dGRHAFzs0TgcwSplTANk3oiWEBbN9fEzUpR20='>
+  --><script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?05e1e8b7484a08c51cd0953664168cd7";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">切换导航</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://imroc.io/">roc</a>
+    </div>
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">分类</a>
+              <div class="navlinks-children">
+                
+                
+                  <a href="https://imroc.io/categories/kubernetes">kubernetes</a>
+                
+                
+                  <a href="https://imroc.io/categories/docker">docker</a>
+                
+                
+                  <a href="https://imroc.io/categories/golang">golang</a>
+                
+                
+                  <a href="https://imroc.io/categories/arch">架构</a>
+                
+                
+                  <a href="https://imroc.io/categories/istio">istio</a>
+                
+                
+                  <a href="https://imroc.io/categories/geek">极客</a>
+                
+              </div>
+            </li>
+          
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">书籍</a>
+              <div class="navlinks-children">
+                
+                
+                  <a href="https://k8s.imroc.io">Kubernetes 实践指南</a>
+                
+              </div>
+            </li>
+          
+        
+
+        
+          
+            <li>
+              
+                
+              
+                
+                  <a href="/en" lang="en">English</a>
+                
+              
+            </li>
+          
+        
+
+        
+        <li>
+          <a href="#modalSearch" data-toggle="modal" data-target="#modalSearch" style="outline: none;">
+            <span id="searchGlyph" class="glyphicon glyphicon-search"></span>
+          </a>
+        </li>
+        
+      </ul>
+    </div>
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="roc" href="https://imroc.io/">
+            <img class="avatar-img" src="https://res.cloudinary.com/imroc/image/upload/v1521031841/avatar.png" alt="roc" />
+          </a>
+        
+      </div>
+    </div>
+  </div>
+</nav>
+
+
+  <div id="modalSearch" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">搜索</h4>
+        </div>
+        <div class="modal-body">
+            
+<div class="aa-input-container" id="aa-input-container">
+    <input type="search" id="aa-search-input" class="aa-input-search" placeholder="Search for titles or URIs..."
+        name="search" autocomplete="off" />
+    <svg class="aa-input-icon" viewBox="654 -372 1664 1664">
+        <path
+            d="M1806,332c0-123.3-43.8-228.8-131.5-316.5C1586.8-72.2,1481.3-116,1358-116s-228.8,43.8-316.5,131.5  C953.8,103.2,910,208.7,910,332s43.8,228.8,131.5,316.5C1129.2,736.2,1234.7,780,1358,780s228.8-43.8,316.5-131.5  C1762.2,560.8,1806,455.3,1806,332z M2318,1164c0,34.7-12.7,64.7-38,90s-55.3,38-90,38c-36,0-66-12.7-90-38l-343-342  c-119.3,82.7-252.3,124-399,124c-95.3,0-186.5-18.5-273.5-55.5s-162-87-225-150s-113-138-150-225S654,427.3,654,332  s18.5-186.5,55.5-273.5s87-162,150-225s138-113,225-150S1262.7-372,1358-372s186.5,18.5,273.5,55.5s162,87,225,150s113,138,150,225  S2062,236.7,2062,332c0,146.7-41.3,279.7-124,399l343,343C2305.7,1098.7,2318,1128.7,2318,1164z" />
+    </svg>
+</div>
+
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/algoliasearch.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/autocomplete.min.js"></script>
+<script>
+    var client = algoliasearch("B6Q6PSGUV5", "d04f855d3a39eed8ad8d9365ba7c86af");
+    var index = client.initIndex("imroc-blog");
+    
+    autocomplete('#aa-search-input', {
+        hint: false
+    }, {
+        source: autocomplete.sources.hits(index, {
+            hitsPerPage: 5
+        }),
+        
+        displayKey: 'name',
+        
+        templates: {
+            
+            suggestion: function (suggestion) {
+                return '<span>' + '<a href="/' + suggestion.uri + '">' + suggestion._highlightResult.title.value +
+                        '</a></span>';
+            }
+        }
+    });
+</script>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    
+  
+  
+  
+
+
+
+
+  
+    <div id="header-big-imgs" data-num-img=1 data-img-src-1="https://res.cloudinary.com/imroc/image/upload/v1532442989/blog/banner/blue-number.jpg" data-img-desc-1="cert"></div>
+  
+
+  <header class="header-section has-img">
+    
+      <div class="intro-header big-img">
+        
+        
+        <div class="container">
+          <div class="row">
+              <div class="col-lg-12 col-md-12 col-md-offset-0">
+                
+                <div class="post-heading">
+                
+                  
+                     <h1>利用cert-manager让Ingress启用免费的HTTPS证书</h1>
+                     
+                    <span class="post-meta">
+  
+  发表于 July 23, 2018
+  
+  
+</span>
+
+
+                    
+                  
+                  
+              </div>
+            </div>
+          </div>
+        </div>
+        <span class="img-desc" style="display: inline;"></span>
+      </div>
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12 col-md-12 col-md-offset-0">
+            <div class="posts-heading">
+                <h1 align="center">利用cert-manager让Ingress启用免费的HTTPS证书</h1>
+                
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main" itemscope itemtype="http://schema.org/Article">
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+            <article role="main" class="blog-post" itemprop="articleBody" id="content">
+                
+<aside class="toc">
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#heading">概述</a></li>
+    <li><a href="#-cert-manager">安装 cert-manager</a></li>
+    <li><a href="#heading-1">生成免费证书</a></li>
+  </ul>
+</nav>
+</aside>
+
+
+                <h2 id="heading">概述</h2>
+<p>cert-manager 是替代 kube-lego 的一个开源项目，用于在 Kubernetes 集群中自动提供 HTTPS 证书，支持 <a href="https://letsencrypt.org/">Let’s Encrypt</a>, <a href="https://www.vaultproject.io/">HashiCorp Vault</a> 这些免费证书的签发。</p>
+<ul>
+<li>本文使用 Helm 安装，所以请确保 Helm 已安装，安装方法参考：https://imroc.io/posts/kubernetes/install-helm</li>
+<li>你的集群必须已经装有 Ingress Controller，如果还没有，参考：https://imroc.io/posts/kubernetes/use-nginx-ingress-controller-to-expose-service</li>
+<li>需要颁发免费证书的域名配置DNS记录，IP 指向 Ingress Controller 对外暴露的地址</li>
+<li>开源地址：https://github.com/jetstack/cert-manager</li>
+<li>文档地址：https://cert-manager.readthedocs.io</li>
+</ul>
+<h2 id="-cert-manager">安装 cert-manager</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">helm install <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    --name cert-manager <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    --namespace kube-system <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    stable/cert-manager
+</code></pre></div><p>一键安装，非常简单。</p>
+<h2 id="heading-1">生成免费证书</h2>
+<p>我们需要先创建一个签发机构，cert-manager 给我们提供了 Issuer 和 ClusterIssuer 这两种用于创建签发机构的自定义资源对象，Issuer 只能用来签发自己所在 namespace 下的证书，ClusterIssuer 可以签发任意 namespace 下的证书，这里以 ClusterIssuer 为例创建一个签发机构：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">vi issuer.yaml
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">apiVersion: certmanager.k8s.io/v1alpha1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-prod
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: roc@imroc.io
+    privateKeySecretRef:
+      name: letsencrypt-prod
+    http01: {}
+</code></pre></div><ul>
+<li>metadata.name 是我们创建的签发机构的名称，后面我们创建证书的时候会引用它</li>
+<li>spec.acme.email 是你自己的邮箱，证书快过期的时候会有邮件提醒，不过 cert-manager 会利用 acme 协议自动给我们重新颁发证书来续期</li>
+<li>spec.acme.server 是 acme 协议的服务端，我们这里用 Let’s Encrypt，这个地址就写死成这样就行</li>
+<li>spec.acme.privateKeySecretRef 指示此签发机构的私钥将要存储到哪个 Secret 对象中，名称不重要</li>
+<li>spec.acme.http01 这里指示签发机构使用 HTTP-01 的方式进行 acme 协议 (还可以用 DNS 方式，acme 协议的目的是证明这台机器和域名都是属于你的，然后才准许给你颁发证书)</li>
+</ul>
+<p>创建：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl apply -f issuer.yaml
+</code></pre></div><p>有了签发机构，接下来我们就可以生成免费证书了，cert-manager 给我们提供了 Certificate 这个用于生成证书的自定义资源对象，它必须局限在某一个 namespace 下，证书最终会在这个 namespace 下以 Secret 的资源对象存储，假如我想在 <code>dashboard</code> 这个 namespace 下生成免费证书（这个 namespace 已存在)，创建一个 Certificate 对象：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">vi cert.yaml
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">apiVersion: certmanager.k8s.io/v1alpha1
+kind: Certificate
+metadata:
+  name: dashboard-imroc-io
+  namespace: dashboard
+spec:
+  secretName: dashboard-imroc-io-tls
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  dnsNames:
+  - dashboard.imroc.io
+  acme:
+    config:
+    - http01:
+        ingressClass: nginx
+      domains:
+      - dashboard.imroc.io
+</code></pre></div><ul>
+<li>spec.secretName 指示证书最终存到哪个 Secret 中</li>
+<li>spec.issuerRef.kind 值为 ClusterIssuer 说明签发机构不在本 namespace 下，而是在全局</li>
+<li>spec.issuerRef.name 我们创建的签发机构的名称 (ClusterIssuer.metadata.name)</li>
+<li>spec.dnsNames 指示该证书的可以用于哪些域名</li>
+<li>spec.acme.config.http01.ingressClass 使用 HTTP-01 方式校验该域名和机器时，cert-manager 会尝试创建Ingress 对象来实现该校验，如果指定该值，会给创建的 Ingress 加上 <code>kubernetes.io/ingress.class</code> 这个 annotation，如果我们的 Ingress Controller 是 Nginx Ingress Controller，指定这个字段可以让创建的 Ingress 被 Nginx Ingress Controller 处理。</li>
+<li>spec.acme.config.http01.domains 指示该证书的可以用于哪些域名</li>
+</ul>
+<p>创建：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl apply -f cert.yaml
+</code></pre></div><p>通过这些可以查看我们所创建的 Certificate 和 ClusterIssuer 对象:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ kubectl get certificate -n dashboard
+NAME                 AGE
+dashboard-imroc-io   9h
+
+$ kubectl describe -n dashboard certificate/dashboard-imroc-io
+Name:         dashboard-imroc-io
+Namespace:    dashboard
+Labels:       &lt;none&gt;
+Annotations:  kubectl.kubernetes.io/last-applied-configuration<span style="color:#f92672">=</span><span style="color:#f92672">{</span><span style="color:#e6db74">&#34;apiVersion&#34;</span>:<span style="color:#e6db74">&#34;certmanager.k8s.io/v1alpha1&#34;</span>,<span style="color:#e6db74">&#34;kind&#34;</span>:<span style="color:#e6db74">&#34;Certificate&#34;</span>,<span style="color:#e6db74">&#34;metadata&#34;</span>:<span style="color:#f92672">{</span><span style="color:#e6db74">&#34;annotations&#34;</span>:<span style="color:#f92672">{</span><span style="color:#f92672">}</span>,<span style="color:#e6db74">&#34;name&#34;</span>:<span style="color:#e6db74">&#34;dashboard-imroc-io&#34;</span>,<span style="color:#e6db74">&#34;namespace&#34;</span>:<span style="color:#e6db74">&#34;dashboard&#34;</span><span style="color:#f92672">}</span>,<span style="color:#e6db74">&#34;</span><span style="color:#e6db74">spe...
+</span><span style="color:#e6db74">API Version:  certmanager.k8s.io/v1alpha1
+</span><span style="color:#e6db74">Kind:         Certificate
+</span><span style="color:#e6db74">Metadata:
+</span><span style="color:#e6db74">  Cluster Name:
+</span><span style="color:#e6db74">  Creation Timestamp:  2018-07-23T03:57:06Z
+</span><span style="color:#e6db74">  Generation:          0
+</span><span style="color:#e6db74">  Initializers:        &lt;nil&gt;
+</span><span style="color:#e6db74">  Resource Version:    2305547834
+</span><span style="color:#e6db74">  Self Link:           /apis/certmanager.k8s.io/v1alpha1/namespaces/dashboard/certificates/dashboard-imroc-io
+</span><span style="color:#e6db74">  UID:                 7761c129-8e2c-11e8-bf16-525400319744
+</span><span style="color:#e6db74">Spec:
+</span><span style="color:#e6db74">  Acme:
+</span><span style="color:#e6db74">    Config:
+</span><span style="color:#e6db74">      Domains:
+</span><span style="color:#e6db74">        dashboard.imroc.io
+</span><span style="color:#e6db74">      Http 01:
+</span><span style="color:#e6db74">        Ingress:
+</span><span style="color:#e6db74">        Ingress Class:  nginx
+</span><span style="color:#e6db74">  Common Name:
+</span><span style="color:#e6db74">  Dns Names:
+</span><span style="color:#e6db74">    dashboard.imroc.io
+</span><span style="color:#e6db74">  Issuer Ref:
+</span><span style="color:#e6db74">    Kind:       ClusterIssuer
+</span><span style="color:#e6db74">    Name:       letsencrypt-prod
+</span><span style="color:#e6db74">  Secret Name:  dashboard-imroc-io-tls
+</span><span style="color:#e6db74">Status:
+</span><span style="color:#e6db74">  Acme:
+</span><span style="color:#e6db74">    Order:
+</span><span style="color:#e6db74">      URL:  https://acme-v02.api.letsencrypt.org/acme/order/38817431/21090610
+</span><span style="color:#e6db74">  Conditions:
+</span><span style="color:#e6db74">    Last Transition Time:  2018-07-23T03:57:56Z
+</span><span style="color:#e6db74">    Message:               Certificate issued successfully
+</span><span style="color:#e6db74">    Reason:                CertIssued
+</span><span style="color:#e6db74">    Status:                True
+</span><span style="color:#e6db74">    Type:                  Ready
+</span><span style="color:#e6db74">    Last Transition Time:  &lt;nil&gt;
+</span><span style="color:#e6db74">    Message:               Order validated
+</span><span style="color:#e6db74">    Reason:                OrderValidated
+</span><span style="color:#e6db74">    Status:                False
+</span><span style="color:#e6db74">    Type:                  ValidateFailed
+</span><span style="color:#e6db74">Events:                    &lt;none&gt;
+</span><span style="color:#e6db74">
+</span><span style="color:#e6db74"></span>$<span style="color:#e6db74"> kubectl get clusterissuer -n dashboard
+</span><span style="color:#e6db74">NAME               AGE
+</span><span style="color:#e6db74">letsencrypt-prod   9h
+</span><span style="color:#e6db74">
+</span><span style="color:#e6db74"></span>$<span style="color:#e6db74"> kubectl describe clusterissuer/letsencrypt-prod
+</span><span style="color:#e6db74">Name:         letsencrypt-prod
+</span><span style="color:#e6db74">Namespace:
+</span><span style="color:#e6db74">Labels:       &lt;none&gt;
+</span><span style="color:#e6db74">Annotations:  kubectl.kubernetes.io/last-applied-configuration={</span><span style="color:#e6db74">&#34;</span>apiVersion<span style="color:#e6db74">&#34;:&#34;</span>certmanager.k8s.io/v1alpha1<span style="color:#e6db74">&#34;,&#34;</span>kind<span style="color:#e6db74">&#34;:&#34;</span>ClusterIssuer<span style="color:#e6db74">&#34;,&#34;</span>metadata<span style="color:#e6db74">&#34;:{&#34;</span>annotations<span style="color:#e6db74">&#34;:{},&#34;</span>name<span style="color:#e6db74">&#34;:&#34;</span>letsencrypt-prod<span style="color:#e6db74">&#34;,&#34;</span>namespace<span style="color:#e6db74">&#34;:&#34;</span><span style="color:#e6db74">&#34;},&#34;</span>spec<span style="color:#e6db74">&#34;:{&#34;</span>acme...
+API Version:  certmanager.k8s.io/v1alpha1
+Kind:         ClusterIssuer
+Metadata:
+  Cluster Name:
+  Creation Timestamp:  2018-07-23T03:41:18Z
+  Generation:          <span style="color:#ae81ff">0</span>
+  Initializers:        &lt;nil&gt;
+  Resource Version:    <span style="color:#ae81ff">2305474410</span>
+  Self Link:           /apis/certmanager.k8s.io/v1alpha1/letsencrypt-prod
+  UID:                 427459c2-8e2a-11e8-bf16-525400319744
+Spec:
+  Acme:
+    Email:  roc@imroc.io
+    Http 01:
+    Private Key Secret Ref:
+      Key:
+      Name:  letsencrypt-prod
+    Server:  https://acme-v02.api.letsencrypt.org/directory
+Status:
+  Acme:
+    Uri:  https://acme-v02.api.letsencrypt.org/acme/acct/38817431
+  Conditions:
+    Last Transition Time:  2018-07-23T03:41:25Z
+    Message:               The ACME account was registered with the ACME server
+    Reason:                ACMEAccountRegistered
+    Status:                True
+    Type:                  Ready
+Events:                    &lt;none&gt;
+</code></pre></div><p>生成的证书被存到 Secret 了，可以看下在不在：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ kubectl get secret -n dashboard
+NAME                                         TYPE                                  DATA      AGE
+dashboard-imroc-io-tls                       kubernetes.io/tls                     <span style="color:#ae81ff">2</span>         9h
+</code></pre></div><p>这个 Secret 可以被我们创建的 Ingress 使用来启用免费 HTTPS，来测试一下吧：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">vi my-nginx.yaml
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: my-nginx
+spec:
+  replicas: <span style="color:#ae81ff">1</span>
+  template:
+    metadata:
+      labels:
+        run: my-nginx
+    spec:
+      containers:
+      - name: my-nginx
+        image: nginx
+        ports:
+        - containerPort: <span style="color:#ae81ff">443</span>
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-nginx
+  labels:
+    app: my-nginx
+spec:
+  ports:
+  - port: <span style="color:#ae81ff">443</span>
+    protocol: TCP
+    name: https
+  selector:
+    run: my-nginx
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: my-nginx
+  annotations:
+    kubernetes.io/ingress.class: <span style="color:#e6db74">&#34;nginx&#34;</span>
+spec:
+  rules:
+  - host: dashboard.imroc.io
+    http:
+      paths:
+      - backend:
+          serviceName: my-nginx
+          servicePort: <span style="color:#ae81ff">443</span>
+        path: /
+  tls:
+   - secretName: dashboard-imroc-io-tls
+     hosts:
+       - dashboard.imroc.io
+</code></pre></div><ul>
+<li>在 Ingress 定义的 spec.tls.secretName 引用生成的证书所在的 Secret 名称即可实现使用免费证书</li>
+<li>将 Ingress 定义的 spec.rules.host 和 spec.tls.hosts 里的域名都替换为你自己的域名</li>
+</ul>
+<p>创建：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl apply -f my-nginx.yaml
+</code></pre></div><p>现在通过域名访问，是不是就能看到 <code>Welcome to nginx!</code> 主页里呢？</p>
+
+            </article>
+
+            <ul class="pager blog-pager">
+
+                
+                <li class="previous">
+                    <a href="https://imroc.io/posts/use-nginx-ingress-controller-to-expose-service/" data-toggle="tooltip" data-placement="top" title="使用Nginx Ingress Controller导入外部流量到Kubernetes集群内部">&larr; 前一篇</a>
+                </li>
+                 
+                <li class="next">
+                    <a href="https://imroc.io/posts/deploy-kubernetes-dashboard-and-enable-free-https/" data-toggle="tooltip" data-placement="top" title="利用Helm一键部署Kubernetes Dashboard并启用免费HTTPS">后一篇 &rarr;</a>
+                </li>
+                
+            </ul>
+
+          
+            <div class="entry-shang text-center">
+    <p>「真诚赞赏，手留余香」</p>
+    <button class="zs show-zs btn btn-bred">赞赏</button>
+</div>
+<div class="zs-modal-bg"></div>
+<div class="zs-modal-box">
+    <div class="zs-modal-head">
+        <button type="button" class="close">×</button>
+        <span class="author"><img src="/favicon.png"/>roc</span>
+        <p class="tip"><i></i><span>请我喝杯咖啡？</span></p>
+    </div>
+    <div class="zs-modal-body">
+        <div class="zs-modal-btns">
+            <button class="btn btn-blink" data-num="2">2元</button>
+            <button class="btn btn-blink" data-num="5">5元</button>
+            <button class="btn btn-blink" data-num="10">10元</button>
+            <button class="btn btn-blink" data-num="50">50元</button>
+            <button class="btn btn-blink" data-num="100">100元</button>
+            <button class="btn btn-blink" data-num="1">任意金额</button>
+        </div>
+        <div class="zs-modal-pay">
+            <button class="btn btn-bred" id="pay-text">2元</button>
+            <p>使用<span id="pay-type">微信</span>扫描二维码完成支付</p>
+            <img src="/img/wechat-2.png" id="pay-image"/>
+        </div>
+    </div>
+    <div class="zs-modal-footer">
+        <label>
+            <input type="radio" name="zs-type" value="wechat" class="zs-type" checked="checked">
+            <span class="zs-wechat"><img src="/img/wechat-btn.png" /></span>
+        </label>
+        <label>
+            <input type="radio" name="zs-type" value="alipay" class="zs-type">
+            <span class="zs-alipay"><img src="/img/alipay-btn.png" /></span>
+        </label>
+    </div>
+</div>
+          
+
+          
+            
+
+  <h3>See Also</h3>
+  <ul style="margin-bottom: 25px;">
+      
+      <li><a href="/posts/use-nginx-ingress-controller-to-expose-service/">使用Nginx Ingress Controller导入外部流量到Kubernetes集群内部</a></li>
+      
+      <li><a href="/posts/kubernetes-nodeport-vs-loadbalancer-vs-ingress-when-should-i-use-what/">对比Kubernetes的Nodeport、Loadbalancer和Ingress，什么时候该用哪种</a></li>
+      
+      <li><a href="/posts/kubernetes-source-code-reading-notes-kube-apiserver-code-main-line/">kubernetes源码阅读笔记：理清 kube-apiserver 的源码主线</a></li>
+      
+      <li><a href="/posts/sync-images-to-docker-hub-using-katacoda/">利用Katacoda免费同步Docker镜像到Docker Hub</a></li>
+      
+  </ul>
+
+          
+
+          
+            
+<div id="gitalk-container"></div>
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+<script>
+  var gitalk = new Gitalk({
+      clientID: 'd05b8f959b3111c6fb63',
+      clientSecret: 'f30ef76ea0050ed731ace76f7fbf684ae5d28fbc',
+      repo: 'imroc.github.io',
+      owner: 'imroc',
+      admin: 'imroc',
+      labels: ['Gitalk'],
+      title: '利用cert-manager让Ingress启用免费的HTTPS证书',
+      createIssueManually: false,
+      id: 'let-ingress-enable-free-https-with-cert-manager-zh',
+      distractionFreeMode: true
+  });
+  gitalk.render('gitalk-container');
+</script>
+          
+        </div>
+    </div>
+</div>
+
+    <footer>
+  <div id="copyright">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+          <ul class="list-inline text-center footer-links">
+            
+                <li>
+                  <a href="mailto:roc@imroc.io" title="Email me">
+                    <span class="fa-stack fa-lg">
+                      <i class="fa fa-circle fa-stack-2x"></i>
+                      <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="https://github.com/imroc" title="GitHub">
+                    <span class="fa-stack fa-lg">
+                      <i class="fa fa-circle fa-stack-2x"></i>
+                      <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="https://twitter.com/imrocchan" title="Twitter">
+                    <span class="fa-stack fa-lg">
+                      <i class="fa fa-circle fa-stack-2x"></i>
+                      <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                    </span>
+                  </a>
+                </li>
+            
+            <li>
+              <a href="https://imroc.io/index.xml" title="RSS">
+                <span class="fa-stack fa-lg">
+                  <i class="fa fa-circle fa-stack-2x"></i>
+                  <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                </span>
+              </a>
+            </li>
+            
+          </ul>
+          <p class="credits copyright text-muted">
+          &copy;2017-2019
+            
+              
+                <a href="/about">roc</a>
+              
+            
+            &nbsp;&bull;&nbsp;
+            December 15,2019
+            updated
+          </p>
+          <p class="credits theme-by text-muted">
+            由 <a href="http://gohugo.io">Hugo v0.62.0</a> 强力驱动 &nbsp;&bull;&nbsp; 主题 <a href="https://github.com/imroc/xhugo">xhugo</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src='/js/bundle.min.21f7d58c95d27f6c2ca78a820bd04dd19724828061fc1cd5fd72c409096ef914.js' integrity='sha256-IffVjJXSf2wsp4qCC9BN0ZckgoBh/BzV/XLECQlu&#43;RQ='></script>
+
+
+
+
+
+
+  </body>
+</html>
+

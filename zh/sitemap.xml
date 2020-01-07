@@ -18,21 +18,6 @@
   </url>
   
   <url>
-    <loc>https://imroc.io/categories/kubernetes/</loc>
-    <lastmod>2019-12-15T12:03:00+08:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="https://imroc.io/en/categories/kubernetes/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="zh"
-                href="https://imroc.io/categories/kubernetes/"
-                />
-  </url>
-  
-  <url>
     <loc>https://imroc.io/tags/kubernetes/</loc>
     <lastmod>2019-12-15T12:03:00+08:00</lastmod>
     <xhtml:link
@@ -48,7 +33,22 @@
   </url>
   
   <url>
-    <loc>https://imroc.io/posts/kubernetes/no-route-to-host/</loc>
+    <loc>https://imroc.io/categories/kubernetes/</loc>
+    <lastmod>2019-12-15T12:03:00+08:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://imroc.io/en/categories/kubernetes/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh"
+                href="https://imroc.io/categories/kubernetes/"
+                />
+  </url>
+  
+  <url>
+    <loc>https://imroc.io/posts/kubernetes-no-route-to-host/</loc>
     <lastmod>2019-12-15T12:03:00+08:00</lastmod>
   </url>
   
@@ -98,58 +98,33 @@
   </url>
   
   <url>
-    <loc>https://imroc.io/posts/kubernetes/service-topology/</loc>
+    <loc>https://imroc.io/posts/service-topology/</loc>
     <lastmod>2019-11-26T16:49:00+08:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="https://imroc.io/en/posts/kubernetes/service-topology/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="zh"
-                href="https://imroc.io/posts/kubernetes/service-topology/"
-                />
   </url>
   
   <url>
-    <loc>https://imroc.io/posts/kubernetes/troubleshooting-with-kubernetes-network/</loc>
+    <loc>https://imroc.io/posts/troubleshooting-with-kubernetes-network/</loc>
     <lastmod>2019-08-12T16:59:00+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://imroc.io/posts/kubernetes/lost-packets-once-enable-tcp-tw-recycle/</loc>
+    <loc>https://imroc.io/posts/lost-packets-once-enable-tcp-tw-recycle/</loc>
     <lastmod>2019-06-09T22:00:00+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://imroc.io/posts/kubernetes/handle-memory-fragmentation/</loc>
+    <loc>https://imroc.io/posts/handle-memory-fragmentation/</loc>
     <lastmod>2019-06-08T13:59:00+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://imroc.io/posts/kubernetes/kubernetes-best-practice-handle-disk-full/</loc>
-    <lastmod>2019-06-07T19:54:00+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/posts/kubernetes/scale-keepalive-service/</loc>
+    <loc>https://imroc.io/posts/kubernetes-scale-keepalive-service/</loc>
     <lastmod>2019-06-06T17:06:00+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://imroc.io/posts/kubernetes/capture-packets-in-container/</loc>
+    <loc>https://imroc.io/posts/capture-packets-in-container/</loc>
     <lastmod>2019-05-19T11:24:00+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/posts/kubernetes/kubernetes-best-practice-grace-update/</loc>
-    <lastmod>2019-05-08T19:54:00+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/categories/istio/</loc>
-    <lastmod>2019-04-07T11:54:00+08:00</lastmod>
   </url>
   
   <url>
@@ -158,32 +133,37 @@
   </url>
   
   <url>
-    <loc>https://imroc.io/posts/istio/istio-cni/</loc>
+    <loc>https://imroc.io/categories/istio/</loc>
     <lastmod>2019-04-07T11:54:00+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://imroc.io/posts/kubernetes/efficient-kubectl/</loc>
+    <loc>https://imroc.io/posts/istio-cni/</loc>
+    <lastmod>2019-04-07T11:54:00+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://imroc.io/posts/efficient-kubectl/</loc>
     <lastmod>2019-03-10T14:05:00+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://imroc.io/posts/kubernetes/wildcard-domain-forward/</loc>
+    <loc>https://imroc.io/posts/kubernetes-wildcard-domain-forward/</loc>
     <lastmod>2018-12-22T01:09:00+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://imroc.io/posts/kubernetes/analysis-exitcode/</loc>
+    <loc>https://imroc.io/posts/kubernetes-analysis-exitcode/</loc>
     <lastmod>2018-12-21T16:10:00+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://imroc.io/categories/geek/</loc>
+    <loc>https://imroc.io/tags/geek/</loc>
     <lastmod>2018-12-07T18:05:00+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://imroc.io/tags/geek/</loc>
+    <loc>https://imroc.io/categories/geek/</loc>
     <lastmod>2018-12-07T18:05:00+08:00</lastmod>
   </url>
   
@@ -193,53 +173,43 @@
   </url>
   
   <url>
-    <loc>https://imroc.io/posts/geek/git-trick-modify-history/</loc>
+    <loc>https://imroc.io/posts/git-trick-modify-history/</loc>
     <lastmod>2018-12-07T18:05:00+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://imroc.io/posts/geek/vscode-1/</loc>
-    <lastmod>2018-11-04T00:30:00+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/posts/geek/chrome/</loc>
+    <loc>https://imroc.io/posts/chrome/</loc>
     <lastmod>2018-10-21T23:00:00+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://imroc.io/posts/geek/alfred-and-dash/</loc>
+    <loc>https://imroc.io/posts/alfred-and-dash/</loc>
     <lastmod>2018-10-21T07:00:00+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://imroc.io/posts/geek/oh-my-zsh/</loc>
+    <loc>https://imroc.io/posts/oh-my-zsh/</loc>
     <lastmod>2018-10-20T01:35:00+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://imroc.io/posts/kubernetes/understand-service-ingress-and-ingress-controller/</loc>
+    <loc>https://imroc.io/posts/understand-service-ingress-and-ingress-controller/</loc>
     <lastmod>2018-07-24T22:19:37+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://imroc.io/posts/kubernetes/deploy-kubernetes-dashboard-and-enable-free-https/</loc>
+    <loc>https://imroc.io/posts/deploy-kubernetes-dashboard-and-enable-free-https/</loc>
     <lastmod>2018-07-23T21:49:54+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://imroc.io/posts/kubernetes/let-ingress-enable-free-https-with-cert-manager/</loc>
+    <loc>https://imroc.io/posts/let-ingress-enable-free-https-with-cert-manager/</loc>
     <lastmod>2018-07-23T20:08:01+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://imroc.io/posts/kubernetes/use-nginx-ingress-controller-to-expose-service/</loc>
+    <loc>https://imroc.io/posts/use-nginx-ingress-controller-to-expose-service/</loc>
     <lastmod>2018-07-23T14:29:37+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/posts/kubernetes/install-helm/</loc>
-    <lastmod>2018-07-23T12:49:00+08:00</lastmod>
   </url>
   
   <url>
@@ -248,17 +218,17 @@
   </url>
   
   <url>
-    <loc>https://imroc.io/posts/other/ci-with-gitlab-and-jenkins/</loc>
+    <loc>https://imroc.io/posts/ci-with-gitlab-and-jenkins/</loc>
     <lastmod>2018-04-13T22:23:22+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://imroc.io/posts/kubernetes/kubernetes-nodeport-vs-loadbalancer-vs-ingress-when-should-i-use-what/</loc>
+    <loc>https://imroc.io/posts/kubernetes-nodeport-vs-loadbalancer-vs-ingress-when-should-i-use-what/</loc>
     <lastmod>2018-03-13T22:45:26+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://imroc.io/posts/kubernetes/kubernetes-source-code-reading-notes-kube-apiserver-code-main-line/</loc>
+    <loc>https://imroc.io/posts/kubernetes-source-code-reading-notes-kube-apiserver-code-main-line/</loc>
     <lastmod>2018-03-12T11:47:19+08:00</lastmod>
   </url>
   
@@ -268,18 +238,8 @@
   </url>
   
   <url>
-    <loc>https://imroc.io/posts/kubernetes/sync-images-to-docker-hub-using-katacoda/</loc>
+    <loc>https://imroc.io/posts/sync-images-to-docker-hub-using-katacoda/</loc>
     <lastmod>2018-03-09T10:39:17+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/tags/kubeadm/</loc>
-    <lastmod>2018-03-07T23:35:11+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/posts/kubernetes/install-kubernetes-1.9-on-centos7-with-kubeadm/</loc>
-    <lastmod>2018-03-07T23:35:11+08:00</lastmod>
   </url>
   
   <url>
@@ -293,88 +253,8 @@
   </url>
   
   <url>
-    <loc>https://imroc.io/posts/hugo/building-website-for-free-using-hugo-and-github-pages/</loc>
+    <loc>https://imroc.io/posts/building-website-for-free-using-hugo-and-github-pages/</loc>
     <lastmod>2018-01-16T20:35:06+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/posts/kubernetes/kubernetes-binaries/</loc>
-    <lastmod>2018-01-05T13:43:15+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/tags/filebeat/</loc>
-    <lastmod>2018-01-03T15:48:33+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/posts/other/note-for-filebeat/</loc>
-    <lastmod>2018-01-03T15:48:33+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/categories/docker/</loc>
-    <lastmod>2017-12-20T13:12:35+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/tags/docker%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/</loc>
-    <lastmod>2017-12-20T13:12:35+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/posts/docker/quick-start-for-docker-5/</loc>
-    <lastmod>2017-12-20T13:12:35+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/posts/docker/quick-start-for-docker-4/</loc>
-    <lastmod>2017-12-20T09:05:17+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/posts/docker/quick-start-for-docker-3/</loc>
-    <lastmod>2017-12-19T16:27:07+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/posts/docker/quick-start-for-docker-2/</loc>
-    <lastmod>2017-12-19T11:00:42+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/posts/docker/quick-start-for-docker-1/</loc>
-    <lastmod>2017-12-18T15:36:35+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/posts/docker/understand-docker-cmd-entrypoint/</loc>
-    <lastmod>2017-09-06T16:35:18+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/posts/docker/docker-network-communication/</loc>
-    <lastmod>2017-09-06T16:35:18+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/categories/arch/</loc>
-    <lastmod>2017-09-06T15:52:18+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/posts/arch/%E5%8D%95%E4%BD%93%E5%BA%94%E7%94%A8%E7%BC%BA%E9%99%B7%E4%B8%8E%E5%BE%AE%E6%9C%8D%E5%8A%A1%E7%89%B9%E7%82%B9/</loc>
-    <lastmod>2017-09-06T15:52:18+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/tags/%E6%9E%B6%E6%9E%84/</loc>
-    <lastmod>2017-09-06T15:52:18+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/categories/golang/</loc>
-    <lastmod>2017-09-06T15:35:18+08:00</lastmod>
   </url>
   
   <url>
@@ -383,218 +263,28 @@
   </url>
   
   <url>
-    <loc>https://imroc.io/posts/golang/golang-append/</loc>
+    <loc>https://imroc.io/categories/golang/</loc>
     <lastmod>2017-09-06T15:35:18+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://imroc.io/posts/golang/golang-package/</loc>
+    <loc>https://imroc.io/posts/golang-append/</loc>
     <lastmod>2017-09-06T15:35:18+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://imroc.io/posts/golang/golang-for-range-time-tick/</loc>
+    <loc>https://imroc.io/posts/golang-package/</loc>
     <lastmod>2017-09-06T15:35:18+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://imroc.io/posts/golang/golang-select/</loc>
+    <loc>https://imroc.io/posts/golang-for-range-time-tick/</loc>
     <lastmod>2017-09-06T15:35:18+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://imroc.io/posts/algorithm/golang%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92%E6%B1%82%E8%A7%A3%E6%9C%80%E5%A4%A7%E8%BF%9E%E7%BB%AD%E5%AD%90%E6%95%B0%E7%BB%84%E5%92%8C/</loc>
-    <lastmod>2017-09-05T15:35:18+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/posts/algorithm/golang%E5%AE%9E%E7%8E%B0%E4%BA%8C%E5%8F%89%E6%9F%A5%E6%89%BE%E6%A0%91/</loc>
-    <lastmod>2017-09-05T15:35:18+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/posts/algorithm/union-findc&#43;&#43;%E5%AE%9E%E7%8E%B0%E5%AE%9E%E7%8E%B0/</loc>
-    <lastmod>2017-09-05T15:35:18+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/posts/algorithm/union-findgolang%E5%AE%9E%E7%8E%B0/</loc>
-    <lastmod>2017-09-05T15:35:18+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/posts/algorithm/union-findjava%E5%AE%9E%E7%8E%B0/</loc>
-    <lastmod>2017-09-05T15:35:18+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/posts/algorithm/%E4%B8%89%E5%90%91%E5%88%87%E5%88%86%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8Fc-c&#43;&#43;%E5%AE%9E%E7%8E%B0/</loc>
-    <lastmod>2017-09-05T15:35:18+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/posts/algorithm/%E4%B8%89%E5%90%91%E5%88%87%E5%88%86%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8Fgolang%E5%AE%9E%E7%8E%B0/</loc>
-    <lastmod>2017-09-05T15:35:18+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/posts/algorithm/%E4%B8%89%E5%90%91%E5%88%87%E5%88%86%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8Fjava%E5%AE%9E%E7%8E%B0/</loc>
-    <lastmod>2017-09-05T15:35:18+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/posts/algorithm/%E4%BA%8C%E5%88%86%E6%B3%95%E6%9F%A5%E6%89%BEc-c&#43;&#43;%E5%AE%9E%E7%8E%B0/</loc>
-    <lastmod>2017-09-05T15:35:18+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/posts/algorithm/%E4%BA%8C%E5%88%86%E6%B3%95%E6%9F%A5%E6%89%BEgolang%E5%AE%9E%E7%8E%B0/</loc>
-    <lastmod>2017-09-05T15:35:18+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/posts/algorithm/%E4%BA%8C%E5%88%86%E6%B3%95%E6%9F%A5%E6%89%BEjava%E5%AE%9E%E7%8E%B0/</loc>
-    <lastmod>2017-09-05T15:35:18+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/posts/algorithm/%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8Fc-c&#43;&#43;-%E5%AE%9E%E7%8E%B0/</loc>
-    <lastmod>2017-09-05T15:35:18+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/posts/algorithm/%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8Fgolang%E5%AE%9E%E7%8E%B0/</loc>
-    <lastmod>2017-09-05T15:35:18+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/posts/algorithm/%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8Fjava%E5%AE%9E%E7%8E%B0/</loc>
-    <lastmod>2017-09-05T15:35:18+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/posts/algorithm/%E5%A0%86%E6%8E%92%E5%BA%8Fc-c&#43;&#43;%E5%AE%9E%E7%8E%B0/</loc>
-    <lastmod>2017-09-05T15:35:18+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/posts/algorithm/%E5%A0%86%E6%8E%92%E5%BA%8Fgolang%E5%AE%9E%E7%8E%B0/</loc>
-    <lastmod>2017-09-05T15:35:18+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/posts/algorithm/%E5%A0%86%E6%8E%92%E5%BA%8Fjava%E5%AE%9E%E7%8E%B0/</loc>
-    <lastmod>2017-09-05T15:35:18+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/posts/algorithm/%E5%B8%8C%E5%B0%94%E6%8E%92%E5%BA%8Fc-c&#43;&#43;%E5%AE%9E%E7%8E%B0/</loc>
-    <lastmod>2017-09-05T15:35:18+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/posts/algorithm/%E5%B8%8C%E5%B0%94%E6%8E%92%E5%BA%8Fgolang%E5%AE%9E%E7%8E%B0/</loc>
-    <lastmod>2017-09-05T15:35:18+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/posts/algorithm/%E5%B8%8C%E5%B0%94%E6%8E%92%E5%BA%8Fjava%E5%AE%9E%E7%8E%B0/</loc>
-    <lastmod>2017-09-05T15:35:18+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/posts/algorithm/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F%E8%87%AA%E9%A1%B6%E5%90%91%E4%B8%8B%E4%B8%8E%E8%87%AA%E5%BA%95%E5%90%91%E4%B8%8A%E4%B8%A4%E7%A7%8D%E6%96%B9%E5%BC%8Fc-c&#43;&#43;%E5%AE%9E%E7%8E%B0/</loc>
-    <lastmod>2017-09-05T15:35:18+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/posts/algorithm/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F%E8%87%AA%E9%A1%B6%E5%90%91%E4%B8%8B%E4%B8%8E%E8%87%AA%E5%BA%95%E5%90%91%E4%B8%8A%E4%B8%A4%E7%A7%8D%E6%96%B9%E5%BC%8Fgolang%E5%AE%9E%E7%8E%B0/</loc>
-    <lastmod>2017-09-05T15:35:18+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/posts/algorithm/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F%E8%87%AA%E9%A1%B6%E5%90%91%E4%B8%8B%E4%B8%8E%E8%87%AA%E5%BA%95%E5%90%91%E4%B8%8A%E4%B8%A4%E7%A7%8D%E6%96%B9%E5%BC%8Fjava%E5%AE%9E%E7%8E%B0/</loc>
-    <lastmod>2017-09-05T15:35:18+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/posts/algorithm/%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8Fc-c&#43;&#43;%E5%AE%9E%E7%8E%B0/</loc>
-    <lastmod>2017-09-05T15:35:18+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/posts/algorithm/%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8Fgolang%E5%AE%9E%E7%8E%B0/</loc>
-    <lastmod>2017-09-05T15:35:18+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/posts/algorithm/%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8Fjava%E5%AE%9E%E7%8E%B0/</loc>
-    <lastmod>2017-09-05T15:35:18+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/posts/algorithm/%E6%8F%92%E5%85%A5%E6%8E%92%E5%BA%8Fc-c&#43;&#43;%E5%AE%9E%E7%8E%B0/</loc>
-    <lastmod>2017-09-05T15:35:18+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/posts/algorithm/%E6%8F%92%E5%85%A5%E6%8E%92%E5%BA%8Fgolang%E5%AE%9E%E7%8E%B0/</loc>
-    <lastmod>2017-09-05T15:35:18+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/posts/algorithm/%E6%8F%92%E5%85%A5%E6%8E%92%E5%BA%8Fjava%E5%AE%9E%E7%8E%B0/</loc>
-    <lastmod>2017-09-05T15:35:18+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/posts/algorithm/%E6%B1%82n%E6%AC%A1%E6%96%B9%E7%9A%84%E9%AB%98%E6%95%88%E7%AE%97%E6%B3%95/</loc>
-    <lastmod>2017-09-05T15:35:18+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/posts/algorithm/%E6%B1%82%E4%B8%A4%E5%9C%86%E4%BA%A4%E7%82%B9%E7%AE%97%E6%B3%95%E4%BB%A3%E7%A0%81golang%E5%AE%9E%E7%8E%B0/</loc>
-    <lastmod>2017-09-05T15:35:18+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/posts/algorithm/%E6%B1%82%E4%B8%A4%E5%9C%86%E7%9B%B8%E4%BA%A4%E7%9A%84%E4%BA%A4%E7%82%B9%E7%9A%84%E6%96%B9%E6%B3%95/</loc>
-    <lastmod>2017-09-05T15:35:18+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/tags/%E7%AE%97%E6%B3%95/</loc>
-    <lastmod>2017-09-05T15:35:18+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/posts/algorithm/%E7%BA%BF%E6%80%A7%E5%A4%8D%E6%9D%82%E5%BA%A6%E9%80%89%E5%87%BA%E7%AC%ACk%E5%B0%8F%E5%85%83%E7%B4%A0%E4%B8%AD%E4%BD%8D%E6%95%B0%E6%9C%80%E5%B0%8F%E7%9A%84k%E4%B8%AA%E5%85%83%E7%B4%A0c-c&#43;&#43;%E5%AE%9E%E7%8E%B0/</loc>
-    <lastmod>2017-09-05T15:35:18+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/posts/algorithm/%E7%BA%BF%E6%80%A7%E5%A4%8D%E6%9D%82%E5%BA%A6%E9%80%89%E5%87%BA%E7%AC%ACk%E5%B0%8F%E5%85%83%E7%B4%A0%E4%B8%AD%E4%BD%8D%E6%95%B0%E6%9C%80%E5%B0%8F%E7%9A%84k%E4%B8%AA%E5%85%83%E7%B4%A0golang%E5%AE%9E%E7%8E%B0/</loc>
-    <lastmod>2017-09-05T15:35:18+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/posts/algorithm/%E7%BA%BF%E6%80%A7%E5%A4%8D%E6%9D%82%E5%BA%A6%E9%80%89%E5%87%BA%E7%AC%ACk%E5%B0%8F%E5%85%83%E7%B4%A0%E4%B8%AD%E4%BD%8D%E6%95%B0%E6%9C%80%E5%B0%8F%E7%9A%84k%E4%B8%AA%E5%85%83%E7%B4%A0java%E5%AE%9E%E7%8E%B0/</loc>
-    <lastmod>2017-09-05T15:35:18+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/posts/algorithm/%E9%80%89%E6%8B%A9%E6%8E%92%E5%BA%8Fc-c&#43;&#43;-%E5%AE%9E%E7%8E%B0/</loc>
-    <lastmod>2017-09-05T15:35:18+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/posts/algorithm/%E9%80%89%E6%8B%A9%E6%8E%92%E5%BA%8Fgolang%E5%AE%9E%E7%8E%B0/</loc>
-    <lastmod>2017-09-05T15:35:18+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/posts/algorithm/%E9%80%89%E6%8B%A9%E6%8E%92%E5%BA%8Fjava%E5%AE%9E%E7%8E%B0/</loc>
-    <lastmod>2017-09-05T15:35:18+08:00</lastmod>
+    <loc>https://imroc.io/posts/golang-select/</loc>
+    <lastmod>2017-09-06T15:35:18+08:00</lastmod>
   </url>
   
 </urlset>

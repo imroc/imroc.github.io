@@ -172,8 +172,8 @@ var _hmt = _hmt || [];
         templates: {
             
             suggestion: function (suggestion) {
-                return '<span>' + '<a href="/posts/' + suggestion.slug + '">' +
-                    suggestion._highlightResult.title.value + '</a></span>';
+                return '<span>' + '<a href="/' + suggestion.uri + '">' + suggestion._highlightResult.title.value +
+                        '</a></span>';
             }
         }
     });
@@ -210,7 +210,7 @@ var _hmt = _hmt || [];
         <div class="posts-list">
           
             <article class="post-preview">
-              <a href="https://imroc.io/posts/istio/istio-cni/">
+              <a href="https://imroc.io/posts/istio-cni/">
                 <h2 class="post-title">Istio 学习笔记：Istio CNI 插件</h2>
 
                 
@@ -222,7 +222,7 @@ var _hmt = _hmt || [];
               <div class="post-entry">
                 
                   设计目标 当前实现将用户 pod 流量转发到 proxy 的默认方式是使用 privileged 权限的 istio-init 这个 init container 来做的（运行脚本写入 iptables），Istio CNI 插件的主要设计目标
-                  <a href="https://imroc.io/posts/istio/istio-cni/" class="post-read-more">[阅读全文]</a>
+                  <a href="https://imroc.io/posts/istio-cni/" class="post-read-more">[阅读全文]</a>
                 
               </div>
 

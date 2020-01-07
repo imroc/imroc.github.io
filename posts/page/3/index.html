@@ -172,8 +172,8 @@ var _hmt = _hmt || [];
         templates: {
             
             suggestion: function (suggestion) {
-                return '<span>' + '<a href="/posts/' + suggestion.slug + '">' +
-                    suggestion._highlightResult.title.value + '</a></span>';
+                return '<span>' + '<a href="/' + suggestion.uri + '">' + suggestion._highlightResult.title.value +
+                        '</a></span>';
             }
         }
     });
@@ -210,115 +210,7 @@ var _hmt = _hmt || [];
         <div class="posts-list">
           
             <article class="post-preview">
-              <a href="https://imroc.io/posts/kubernetes/let-ingress-enable-free-https-with-cert-manager/">
-                <h2 class="post-title">利用cert-manager让Ingress启用免费的HTTPS证书</h2>
-
-                
-              </a>
-
-              <p class="post-meta">
-                发表于 July 23, 2018
-              </p>
-              <div class="post-entry">
-                
-                  概述 cert-manager 是替代 kube-lego 的一个开源项目，用于在 Kubernetes 集群中自动提供 HTTPS 证书，支持 Let’s Encrypt, HashiCorp Vault 这些免费证书的签发。 本文使用 Helm 安装，所以请确保 Helm 已安装，安装
-                  <a href="https://imroc.io/posts/kubernetes/let-ingress-enable-free-https-with-cert-manager/" class="post-read-more">[阅读全文]</a>
-                
-              </div>
-
-              
-                <span class="post-meta">
-                  
-                    #<a href='https://imroc.io/tags/kubernetes/'>kubernetes</a>&nbsp;
-                  
-                </span>
-              
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://imroc.io/posts/kubernetes/use-nginx-ingress-controller-to-expose-service/">
-                <h2 class="post-title">使用Nginx Ingress Controller导入外部流量到Kubernetes集群内部</h2>
-
-                
-              </a>
-
-              <p class="post-meta">
-                发表于 July 23, 2018
-              </p>
-              <div class="post-entry">
-                
-                  概述 Nginx Ingress Controller 是 Kubernetes Ingress Controller 的一种实现，作为反向代理将外部流量导入集群内部，实现将 Kubernetes 内部的 Service 暴露给外部，这样我们就能通过公网或内网直接访问集群内部的服
-                  <a href="https://imroc.io/posts/kubernetes/use-nginx-ingress-controller-to-expose-service/" class="post-read-more">[阅读全文]</a>
-                
-              </div>
-
-              
-                <span class="post-meta">
-                  
-                    #<a href='https://imroc.io/tags/kubernetes/'>kubernetes</a>&nbsp;
-                  
-                </span>
-              
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://imroc.io/posts/kubernetes/install-helm/">
-                <h2 class="post-title">快速安装 Helm</h2>
-
-                
-                  <h3 class="post-subtitle">
-                    kubernetes 的包管理器
-                  </h3>
-                
-              </a>
-
-              <p class="post-meta">
-                发表于 July 23, 2018
-              </p>
-              <div class="post-entry">
-                
-                  概述 Helm 是 Kubernetes 的包管理器，可以帮我们简化 kubernetes 的操作，一键部署应用。假如你的机器上已经安装了 kubectl 并且能够操作集群，那么你就可以安装 Helm 了。 安装 执行脚本安
-                  <a href="https://imroc.io/posts/kubernetes/install-helm/" class="post-read-more">[阅读全文]</a>
-                
-              </div>
-
-              
-                <span class="post-meta">
-                  
-                    #<a href='https://imroc.io/tags/kubernetes/'>kubernetes</a>&nbsp;
-                  
-                </span>
-              
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://imroc.io/posts/other/ci-with-gitlab-and-jenkins/">
-                <h2 class="post-title">利用Gitlab和Jenkins做CI(持续集成)</h2>
-
-                
-              </a>
-
-              <p class="post-meta">
-                发表于 April 13, 2018
-              </p>
-              <div class="post-entry">
-                
-                  利用Gitlab和Jenkins做CI(持续集成) 最近用到持续集成顺便总结在这里，都是用的最新版。搭建过程中还有一个demo，提交代码到 gitlab 自
-                  <a href="https://imroc.io/posts/other/ci-with-gitlab-and-jenkins/" class="post-read-more">[阅读全文]</a>
-                
-              </div>
-
-              
-                <span class="post-meta">
-                  
-                    #<a href='https://imroc.io/tags/ci/'>CI</a>&nbsp;
-                  
-                </span>
-              
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://imroc.io/posts/kubernetes/kubernetes-nodeport-vs-loadbalancer-vs-ingress-when-should-i-use-what/">
+              <a href="https://imroc.io/posts/kubernetes-nodeport-vs-loadbalancer-vs-ingress-when-should-i-use-what/">
                 <h2 class="post-title">对比Kubernetes的Nodeport、Loadbalancer和Ingress，什么时候该用哪种</h2>
 
                 
@@ -330,7 +222,7 @@ var _hmt = _hmt || [];
               <div class="post-entry">
                 
                   本文翻译自：https://medium.com/google-cloud/kubernetes-nodeport-vs-loadbalan
-                  <a href="https://imroc.io/posts/kubernetes/kubernetes-nodeport-vs-loadbalancer-vs-ingress-when-should-i-use-what/" class="post-read-more">[阅读全文]</a>
+                  <a href="https://imroc.io/posts/kubernetes-nodeport-vs-loadbalancer-vs-ingress-when-should-i-use-what/" class="post-read-more">[阅读全文]</a>
                 
               </div>
 
@@ -344,7 +236,7 @@ var _hmt = _hmt || [];
             </article>
           
             <article class="post-preview">
-              <a href="https://imroc.io/posts/kubernetes/kubernetes-source-code-reading-notes-kube-apiserver-code-main-line/">
+              <a href="https://imroc.io/posts/kubernetes-source-code-reading-notes-kube-apiserver-code-main-line/">
                 <h2 class="post-title">kubernetes源码阅读笔记：理清 kube-apiserver 的源码主线</h2>
 
                 
@@ -356,7 +248,7 @@ var _hmt = _hmt || [];
               <div class="post-entry">
                 
                   前言 我最近开始研究 kubernetes 源码，希望将阅读笔记记录下来，分享阅读思路和心得，更好的理解 kubernetes，这是第一篇，从 kube-apiserver 开始。 开始 k8s各组件
-                  <a href="https://imroc.io/posts/kubernetes/kubernetes-source-code-reading-notes-kube-apiserver-code-main-line/" class="post-read-more">[阅读全文]</a>
+                  <a href="https://imroc.io/posts/kubernetes-source-code-reading-notes-kube-apiserver-code-main-line/" class="post-read-more">[阅读全文]</a>
                 
               </div>
 
@@ -370,7 +262,7 @@ var _hmt = _hmt || [];
             </article>
           
             <article class="post-preview">
-              <a href="https://imroc.io/posts/kubernetes/sync-images-to-docker-hub-using-katacoda/">
+              <a href="https://imroc.io/posts/sync-images-to-docker-hub-using-katacoda/">
                 <h2 class="post-title">利用Katacoda免费同步Docker镜像到Docker Hub</h2>
 
                 
@@ -386,7 +278,7 @@ var _hmt = _hmt || [];
               <div class="post-entry">
                 
                   为什么要同步 安装kubernetes的时候，我们需要用到 gcr.io/google_containers 下面的一些镜像，在国内是不能直接下载的。如果用 Self Host 方式安装，master 上的组件除
-                  <a href="https://imroc.io/posts/kubernetes/sync-images-to-docker-hub-using-katacoda/" class="post-read-more">[阅读全文]</a>
+                  <a href="https://imroc.io/posts/sync-images-to-docker-hub-using-katacoda/" class="post-read-more">[阅读全文]</a>
                 
               </div>
 
@@ -402,41 +294,7 @@ var _hmt = _hmt || [];
             </article>
           
             <article class="post-preview">
-              <a href="https://imroc.io/posts/kubernetes/install-kubernetes-1.9-on-centos7-with-kubeadm/">
-                <h2 class="post-title">国内使用Kubeadm在CentOS 7上安装Kubernetes 1.9</h2>
-
-                
-                  <h3 class="post-subtitle">
-                    self host，ipvs替代iptables，CoreDNS替代kube-dns
-                  </h3>
-                
-              </a>
-
-              <p class="post-meta">
-                发表于 March 7, 2018
-              </p>
-              <div class="post-entry">
-                
-                  准备 修改系统配置 开启路由转发（保证 proxy 正常运行，Service 需要） sysctl -w net.ipv4.ip_forward=1 默认情况下，由于安全原因，linux是关闭了路由转发的，即同台机器不
-                  <a href="https://imroc.io/posts/kubernetes/install-kubernetes-1.9-on-centos7-with-kubeadm/" class="post-read-more">[阅读全文]</a>
-                
-              </div>
-
-              
-                <span class="post-meta">
-                  
-                    #<a href='https://imroc.io/tags/docker/'>docker</a>&nbsp;
-                  
-                    #<a href='https://imroc.io/tags/kubernetes/'>kubernetes</a>&nbsp;
-                  
-                    #<a href='https://imroc.io/tags/kubeadm/'>kubeadm</a>&nbsp;
-                  
-                </span>
-              
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://imroc.io/posts/hugo/building-website-for-free-using-hugo-and-github-pages/">
+              <a href="https://imroc.io/posts/building-website-for-free-using-hugo-and-github-pages/">
                 <h2 class="post-title">利用Hugo和Github Pages免费创建并永久托管网站</h2>
 
                 
@@ -448,7 +306,7 @@ var _hmt = _hmt || [];
               <div class="post-entry">
                 
                   概述 Hugo可以让你轻松生成静态网站，比如个人博客、API文档、公司主页等，你只需要提供markdown格式的文本，它就能帮你渲染成各种你想
-                  <a href="https://imroc.io/posts/hugo/building-website-for-free-using-hugo-and-github-pages/" class="post-read-more">[阅读全文]</a>
+                  <a href="https://imroc.io/posts/building-website-for-free-using-hugo-and-github-pages/" class="post-read-more">[阅读全文]</a>
                 
               </div>
 
@@ -462,32 +320,104 @@ var _hmt = _hmt || [];
             </article>
           
             <article class="post-preview">
-              <a href="https://imroc.io/posts/kubernetes/kubernetes-binaries/">
-                <h2 class="post-title">Kubernetes程序二进制下载集合</h2>
+              <a href="https://imroc.io/posts/golang-append/">
+                <h2 class="post-title">golang中append函数返回值必须有变量接收的原因探究</h2>
 
-                
-                  <h3 class="post-subtitle">
-                    Kubernetes Binaries
-                  </h3>
                 
               </a>
 
               <p class="post-meta">
-                发表于 January 5, 2018
+                发表于 September 6, 2017
               </p>
               <div class="post-entry">
                 
-                  前言 由于国内网络的特殊性，安装Kubernetes很多时候会采用二进制方式部署，我将涉及到的二进制利用脚本传到百度云，方便大家下载，脚本开源
-                  <a href="https://imroc.io/posts/kubernetes/kubernetes-binaries/" class="post-read-more">[阅读全文]</a>
+                  append函数返回更新后的slice（长度和容量可能会变），必须重新用slice的变量接收，不然无法编译通过 为了弄明白为什么，首先我们需要
+                  <a href="https://imroc.io/posts/golang-append/" class="post-read-more">[阅读全文]</a>
                 
               </div>
 
               
                 <span class="post-meta">
                   
-                    #<a href='https://imroc.io/tags/docker/'>docker</a>&nbsp;
+                    #<a href='https://imroc.io/tags/golang/'>golang</a>&nbsp;
                   
-                    #<a href='https://imroc.io/tags/kubernetes/'>kubernetes</a>&nbsp;
+                </span>
+              
+            </article>
+          
+            <article class="post-preview">
+              <a href="https://imroc.io/posts/golang-package/">
+                <h2 class="post-title">Go语言(golang)包设计哲学-原则与项目结构组织最佳实践</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                发表于 September 6, 2017
+              </p>
+              <div class="post-entry">
+                
+                  总结下Go的package设计哲学 明确目的 在准备设计一个包之前，我们需要明确它的目的。 包的命名就必须明确体现其目的，而不仅仅是为了存放代码。
+                  <a href="https://imroc.io/posts/golang-package/" class="post-read-more">[阅读全文]</a>
+                
+              </div>
+
+              
+                <span class="post-meta">
+                  
+                    #<a href='https://imroc.io/tags/golang/'>golang</a>&nbsp;
+                  
+                </span>
+              
+            </article>
+          
+            <article class="post-preview">
+              <a href="https://imroc.io/posts/golang-for-range-time-tick/">
+                <h2 class="post-title">Go语言技巧-使用for range time.Tick()固定间隔时间执行</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                发表于 September 6, 2017
+              </p>
+              <div class="post-entry">
+                
+                  直接上代码: for range time.Tick(30 * time.Millisecond) { doSomthing() } 因为time.Tick()返回的是一个channel,每隔指定的时间会有数据从channel中出来，for ran
+                  <a href="https://imroc.io/posts/golang-for-range-time-tick/" class="post-read-more">[阅读全文]</a>
+                
+              </div>
+
+              
+                <span class="post-meta">
+                  
+                    #<a href='https://imroc.io/tags/golang/'>golang</a>&nbsp;
+                  
+                </span>
+              
+            </article>
+          
+            <article class="post-preview">
+              <a href="https://imroc.io/posts/golang-select/">
+                <h2 class="post-title">Go语言技巧-使用select{}阻塞main函数</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                发表于 September 6, 2017
+              </p>
+              <div class="post-entry">
+                
+                  很多时候我们需要让main函数不退出，让它在后台一直执行，例如： func main() { for i := 0; i &lt; 20; i++ { //启动20个协程处理消息队列中的消息 c := consumer.New() go c.Start() } select
+                  <a href="https://imroc.io/posts/golang-select/" class="post-read-more">[阅读全文]</a>
+                
+              </div>
+
+              
+                <span class="post-meta">
+                  
+                    #<a href='https://imroc.io/tags/golang/'>golang</a>&nbsp;
                   
                 </span>
               
@@ -501,10 +431,6 @@ var _hmt = _hmt || [];
                 <a href="/posts/page/2">&larr; 上一页</a>
               </li>
             
-            
-              <li class="next">
-                <a href="/posts/page/4">下一页 &rarr;</a>
-              </li>
             
           </ul>
         

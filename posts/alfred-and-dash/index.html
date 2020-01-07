@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title> 极客工具之 Alfred 与 Dash - imroc.io|roc的博客|Cloud Native|Kubernetes|Go|Golang</title>
+  <meta name="description" content="imroc.io|roc的博客|Cloud Native|Kubernetes|Go|Golang" />
+  <meta property="og:title" content="极客工具之 Alfred 与 Dash" />
+  <meta name="twitter:title" content="极客工具之 Alfred 与 Dash" />
+  <meta name="description" content="效率神器，macOS 专属">
+  <meta property="og:description" content="效率神器，macOS 专属">
+  <meta name="twitter:description" content="效率神器，macOS 专属">
+  <meta name="author" content="{Description { .Site.Author.name }}"/>
+  <link href='https://imroc.io/favicon.png' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://res.cloudinary.com/imroc/image/upload/v1521031841/avatar.png" />
+  <meta name="twitter:image" content="https://res.cloudinary.com/imroc/image/upload/v1521031841/avatar.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@imrocchan" />
+  <meta name="twitter:creator" content="@imrocchan" />
+  <meta property="og:url" content="https://imroc.io/posts/alfred-and-dash/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="roc" />
+
+  <meta name="generator" content="Hugo 0.62.0" />
+  <link rel="canonical" href="https://imroc.io/posts/alfred-and-dash/" />
+  <link rel="alternate" href="https://imroc.io/index.xml" type="application/rss+xml" title="roc">
+
+  
+  <link href="https://fonts.googleapis.com/css?family=Lora:400,400i,700%7COpen+Sans:400,700" rel="stylesheet">
+
+  
+
+
+
+<link rel="stylesheet" href='/css/bundle.min.43522e1b6746447005cecd1381cc12a654c0364de88961016cdf5f133529476d.css' integrity='sha256-Q1IuG2dGRHAFzs0TgcwSplTANk3oiWEBbN9fEzUpR20='>
+  --><script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?05e1e8b7484a08c51cd0953664168cd7";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">切换导航</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://imroc.io/">roc</a>
+    </div>
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">分类</a>
+              <div class="navlinks-children">
+                
+                
+                  <a href="https://imroc.io/categories/kubernetes">kubernetes</a>
+                
+                
+                  <a href="https://imroc.io/categories/docker">docker</a>
+                
+                
+                  <a href="https://imroc.io/categories/golang">golang</a>
+                
+                
+                  <a href="https://imroc.io/categories/arch">架构</a>
+                
+                
+                  <a href="https://imroc.io/categories/istio">istio</a>
+                
+                
+                  <a href="https://imroc.io/categories/geek">极客</a>
+                
+              </div>
+            </li>
+          
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">书籍</a>
+              <div class="navlinks-children">
+                
+                
+                  <a href="https://k8s.imroc.io">Kubernetes 实践指南</a>
+                
+              </div>
+            </li>
+          
+        
+
+        
+          
+            <li>
+              
+                
+              
+                
+                  <a href="/en" lang="en">English</a>
+                
+              
+            </li>
+          
+        
+
+        
+        <li>
+          <a href="#modalSearch" data-toggle="modal" data-target="#modalSearch" style="outline: none;">
+            <span id="searchGlyph" class="glyphicon glyphicon-search"></span>
+          </a>
+        </li>
+        
+      </ul>
+    </div>
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="roc" href="https://imroc.io/">
+            <img class="avatar-img" src="https://res.cloudinary.com/imroc/image/upload/v1521031841/avatar.png" alt="roc" />
+          </a>
+        
+      </div>
+    </div>
+  </div>
+</nav>
+
+
+  <div id="modalSearch" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">搜索</h4>
+        </div>
+        <div class="modal-body">
+            
+<div class="aa-input-container" id="aa-input-container">
+    <input type="search" id="aa-search-input" class="aa-input-search" placeholder="Search for titles or URIs..."
+        name="search" autocomplete="off" />
+    <svg class="aa-input-icon" viewBox="654 -372 1664 1664">
+        <path
+            d="M1806,332c0-123.3-43.8-228.8-131.5-316.5C1586.8-72.2,1481.3-116,1358-116s-228.8,43.8-316.5,131.5  C953.8,103.2,910,208.7,910,332s43.8,228.8,131.5,316.5C1129.2,736.2,1234.7,780,1358,780s228.8-43.8,316.5-131.5  C1762.2,560.8,1806,455.3,1806,332z M2318,1164c0,34.7-12.7,64.7-38,90s-55.3,38-90,38c-36,0-66-12.7-90-38l-343-342  c-119.3,82.7-252.3,124-399,124c-95.3,0-186.5-18.5-273.5-55.5s-162-87-225-150s-113-138-150-225S654,427.3,654,332  s18.5-186.5,55.5-273.5s87-162,150-225s138-113,225-150S1262.7-372,1358-372s186.5,18.5,273.5,55.5s162,87,225,150s113,138,150,225  S2062,236.7,2062,332c0,146.7-41.3,279.7-124,399l343,343C2305.7,1098.7,2318,1128.7,2318,1164z" />
+    </svg>
+</div>
+
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/algoliasearch.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/autocomplete.min.js"></script>
+<script>
+    var client = algoliasearch("B6Q6PSGUV5", "d04f855d3a39eed8ad8d9365ba7c86af");
+    var index = client.initIndex("imroc-blog");
+    
+    autocomplete('#aa-search-input', {
+        hint: false
+    }, {
+        source: autocomplete.sources.hits(index, {
+            hitsPerPage: 5
+        }),
+        
+        displayKey: 'name',
+        
+        templates: {
+            
+            suggestion: function (suggestion) {
+                return '<span>' + '<a href="/' + suggestion.uri + '">' + suggestion._highlightResult.title.value +
+                        '</a></span>';
+            }
+        }
+    });
+</script>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    
+  
+  
+  
+
+
+
+
+  
+    <div id="header-big-imgs" data-num-img=1 data-img-src-1="https://res.cloudinary.com/imroc/image/upload/v1540032242/blog/geek/alfred-and-dash.png" data-img-desc-1="Alfred &amp; Dash"></div>
+  
+
+  <header class="header-section has-img">
+    
+      <div class="intro-header big-img">
+        
+        
+        <div class="container">
+          <div class="row">
+              <div class="col-lg-12 col-md-12 col-md-offset-0">
+                
+                <div class="post-heading">
+                
+                  
+                     <h1>极客工具之 Alfred 与 Dash</h1>
+                     
+                     
+                  
+                  
+                  
+                    
+                      <hr class="small">
+                      <span class="post-subheading">效率神器，macOS 专属</span>
+                    
+                  
+                  
+                    <span class="post-meta">
+  
+  发表于 October 21, 2018
+  
+  
+</span>
+
+
+                  
+                
+              </div>
+            </div>
+          </div>
+        </div>
+        <span class="img-desc" style="display: inline;"></span>
+      </div>
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12 col-md-12 col-md-offset-0">
+            <div class="posts-heading">
+                <h1 align="center">极客工具之 Alfred 与 Dash</h1>
+                
+                  
+                    <h2 align="center" class="posts-subheading">效率神器，macOS 专属</h2>
+                  
+                
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main" itemscope itemtype="http://schema.org/Article">
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+            <article role="main" class="blog-post" itemprop="articleBody" id="content">
+                
+<aside class="toc">
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#alfred">Alfred</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#dash">Dash</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#heading-6">推荐系统快捷键</a></li>
+  </ul>
+</nav>
+</aside>
+
+
+                <h2 id="alfred">Alfred</h2>
+<p>使用 Alfred 可以让你在 macOS 程序间自由切换、快速查找或打开文件、调起浏览器进行网页搜索、 还可以做计算器。 另外，还有许多其它搜索功能以及付费的工作流特性，Powerpack 就是 Alfred 工作流模块，需要付费才能使用，不过，我觉得免费的功能已经完全够用了， 而且很简洁，功能太多咱也学不过来。</p>
+<h4 id="heading">下载安装</h4>
+<p>Alfred 官网是 <a href="https://www.alfredapp.com/">https://www.alfredapp.com/</a></p>
+<h4 id="-spotlight">禁用自带的 Spotlight</h4>
+<p>macOS 自带了搜索工具 Spotlight, 但是功能相对于 Alfred 就弱爆了，它默认的快捷键是 <code>cmd+space</code>，我们最好禁用它，进入 <code>系统偏好设置-键盘-快捷键-聚焦</code>，然后取消勾选 <code>显示“聚焦”搜索</code></p>
+<p><img src="https://res.cloudinary.com/imroc/image/upload/v1540031377/blog/geek/alfred-disable-spotlight.png" alt="alfred setting"></p>
+<p>并且将 Alfred 的热键也设为 <code>cmd+space</code></p>
+<p><img src="https://res.cloudinary.com/imroc/image/upload/v1540031375/blog/geek/alfred-setting.png" alt="alfred setting"></p>
+<h4 id="heading-1">程序间快速切换</h4>
+<p>我们之前常用的程序切换方式有：</p>
+<ul>
+<li>cmd+tab 和 shift+cmd+tab 切换程序</li>
+<li>在触摸板三根手指上滑打开调度中心，结合三根手指左右滑切换桌面，然后选择要切换的程序</li>
+</ul>
+<p>它们的缺点很明显，程序窗口所在的位置不一定是固定的，需要观察一下才能找到，而且如果打开的程序非常多，找起来就更麻烦。如果用 Alfred， 则只需输入能匹配程序名称部分的简短字母就能找到（如果程序含中文名，使用拼音也能搜到)， 再按下回车就能切换到指定程序上，比如切换到 <code>Google Chrome</code>，只需要输入 <code>chr</code> 就能定位到 Chrome 浏览器。</p>
+<p><img src="https://res.cloudinary.com/imroc/image/upload/v1540031373/blog/geek/alfred-search-app.png" alt="search app"></p>
+<h4 id="heading-2">快速查找和打开文件或目录</h4>
+<p>Alfred 还支持很多指令，<code>find</code> 是在磁盘找到文件，回车后就将搜到的文件或目录显示在 Finder 中，搜索是瞬间完成的，灰常灰常快。</p>
+<p><img src="https://res.cloudinary.com/imroc/image/upload/v1540031373/blog/geek/alfred-find.png" alt="aflred find"></p>
+<p><code>open</code> 命令与 <code>find</code> 类似，唯一的区别是 <code>open</code> 会将文件直接通过默认的打开方式打开而不是显示在 <code>Finder</code> 中。</p>
+<h4 id="heading-3">计算器</h4>
+<p>偶尔我们需要做些数学计算，打开自带的计算器太麻烦，而且功能很弱，面对复杂的数学表达式输入显得不够直观简单，利用 Alfred 可以直接输入可读性很好的运算表达式，非常直观简单。</p>
+<p><img src="https://res.cloudinary.com/imroc/image/upload/v1540031373/blog/geek/alfred-calculator.png" alt="aflred calculator"></p>
+<h4 id="heading-4">网页搜索</h4>
+<p>没有输入命令的情况下，如果你的输入无法找到对应的程序，默认就会推荐到网页搜索</p>
+<p><img src="https://res.cloudinary.com/imroc/image/upload/v1540031376/blog/geek/alfred-search-web.png" alt="aflred search web"></p>
+<p>你也可以一开始就指定用某个搜索引擎搜索，比如谷歌默认用的 <code>gg</code> 命令</p>
+<p><img src="https://res.cloudinary.com/imroc/image/upload/v1540031373/blog/geek/alfred-search-google.png" alt="aflred search google"></p>
+<p>你还可以自定义搜索引擎，比如百度、淘宝、京东、Github 等，以添加 Github 为例，打开 Alfred 的 <code>Preferences-Features-Web Search-Add Custom Search</code>， 各选项填写如下：</p>
+<ul>
+<li>Search URL: <a href="https://github.com/search?q=%7Bquery%7D">https://github.com/search?q={query}</a></li>
+<li>Title: Search with Github for {query}</li>
+<li>Keyword: gh</li>
+</ul>
+<p><img src="https://res.cloudinary.com/imroc/image/upload/v1540031374/blog/geek/alfred-custom-search.png" alt="aflred custom search"></p>
+<p><code>{query}</code> 是会填充的搜索词变量，随便在 Github 搜索一个关键词，然后复制 url ，将搜索词替换为 <code>{query}</code> 就得到 <code>Search URL</code> 了，其它搜索引擎的 <code>Search URL</code> 也同理可得。</p>
+<p>现在在 Alfred 中输入 <code>gh</code> 命令就可以搜索 Github 项目了，如果希望搜索的时候显示 Github 的 logo，可以自己把 logo 图片文件拖到上图设置右侧方框处。</p>
+<h2 id="dash">Dash</h2>
+<p>很多人应该都知道 Dash ，程序员看文档的神器，但其实它还有一个功能: <code>Snippets</code>，这才是我频繁使用它的原因。它可以让你不受编辑器约束，在任意可以输入的地方都快速输入代码片段或者叫做文本模板，避免重复输入，提高效率。我会举一些实际使用的例子让你知道它为什么这么爽。</p>
+<h4 id="heading-5">下载安装</h4>
+<p>Dash 的官网是 <a href="https://kapeli.com/dash">https://kapeli.com/dash</a></p>
+<h4 id="-dash-">确保 Dash 权限</h4>
+<p>进入 <code>系统偏好设置-键盘-快捷键-服务</code>，确保搜索下面的 <code>Look Up in Dash</code> 是勾选状态</p>
+<p><img src="https://res.cloudinary.com/imroc/image/upload/v1540031374/blog/geek/dash-setting.png" alt="dash setting"></p>
+<h4 id="-snippet">添加 Snippet</h4>
+<p>进入 Dash 的 Snippets，我们尝试添加一个，就拿我经常要输入的命令的举例</p>
+<p><img src="https://res.cloudinary.com/imroc/image/upload/v1540031375/blog/geek/dash-snippets.png" alt="dash snippets"></p>
+<p>新建了一个名字是 <code>kx.</code> 的 <code>Snippet</code>，不管我们在哪输入了这个名字，他都会触发这个 <code>Snippet</code>，我习惯用 &ldquo;.&rdquo; 号来触发，所以在名字默认都加了 &ldquo;.&rdquo;</p>
+<p>来看下使用效果</p>
+<p><img src="https://res.cloudinary.com/imroc/image/upload/v1540031374/blog/geek/dash-demo.gif" alt="dash demo"></p>
+<p>除了方便我们快速输入常用而又冗长的命令之外，你还可以把常用的服务器 ip 也做成 <code>Snippet</code>，起个容易记得名字，这样你的服务器 ip 很多也不怕了， 不需要查服务器 ip 列表，直接输入 <code>Snippet</code> 名称。你也可以把你的公钥也做成 <code>Snippet</code>，这样就可以很方便把公钥输入到服务器的 <code>~/.ssh/authorized_keys</code> ，以便让我们不输入密码就可以登录服务器。当然你写代码的时候还可以用它来键入代码片段，不过它和 vscode 兼容性有点不好，有时会输入不想要的字符。我建议代码片段功能就用编辑器或 IDE 自带的，功能更加丰富点。</p>
+<h2 id="heading-6">推荐系统快捷键</h2>
+<ul>
+<li>在 <code>系统偏好设置-键盘-修饰键</code> 把 <code>大写锁定键</code> 映射为 <code>Control</code> 键，因为 ctrl 用的实在太频繁了，自带的键盘和其它普通的键盘的 ctrl 键位不好按，像 hhkb 这种键盘的 ctrl 键本身就在普通键盘的大写锁定键位置，所以就不用映射。</li>
+<li>在 <code>系统偏好设置-键盘-调度中心</code>，将 <code>向左移动一个空间</code> 快捷键绑定为 <code>ctrl+,</code>，<code>向右移动一个空间</code> 快捷键绑定为 <code>ctrl+.</code>。这样多个桌面空间之间的切换也很方便了，快捷键也不会跟其它软件冲突。</li>
+</ul>
+<p>最后，我还录了一个视频供大家参考学习：</p>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+
+            </article>
+
+            <ul class="pager blog-pager">
+
+                
+                <li class="previous">
+                    <a href="https://imroc.io/posts/oh-my-zsh/" data-toggle="tooltip" data-placement="top" title="极客工具之 oh-my-zsh">&larr; 前一篇</a>
+                </li>
+                 
+                <li class="next">
+                    <a href="https://imroc.io/posts/chrome/" data-toggle="tooltip" data-placement="top" title="教你如何全键盘操作 Chrome 浏览器">后一篇 &rarr;</a>
+                </li>
+                
+            </ul>
+
+          
+            <div class="entry-shang text-center">
+    <p>「真诚赞赏，手留余香」</p>
+    <button class="zs show-zs btn btn-bred">赞赏</button>
+</div>
+<div class="zs-modal-bg"></div>
+<div class="zs-modal-box">
+    <div class="zs-modal-head">
+        <button type="button" class="close">×</button>
+        <span class="author"><img src="/favicon.png"/>roc</span>
+        <p class="tip"><i></i><span>请我喝杯咖啡？</span></p>
+    </div>
+    <div class="zs-modal-body">
+        <div class="zs-modal-btns">
+            <button class="btn btn-blink" data-num="2">2元</button>
+            <button class="btn btn-blink" data-num="5">5元</button>
+            <button class="btn btn-blink" data-num="10">10元</button>
+            <button class="btn btn-blink" data-num="50">50元</button>
+            <button class="btn btn-blink" data-num="100">100元</button>
+            <button class="btn btn-blink" data-num="1">任意金额</button>
+        </div>
+        <div class="zs-modal-pay">
+            <button class="btn btn-bred" id="pay-text">2元</button>
+            <p>使用<span id="pay-type">微信</span>扫描二维码完成支付</p>
+            <img src="/img/wechat-2.png" id="pay-image"/>
+        </div>
+    </div>
+    <div class="zs-modal-footer">
+        <label>
+            <input type="radio" name="zs-type" value="wechat" class="zs-type" checked="checked">
+            <span class="zs-wechat"><img src="/img/wechat-btn.png" /></span>
+        </label>
+        <label>
+            <input type="radio" name="zs-type" value="alipay" class="zs-type">
+            <span class="zs-alipay"><img src="/img/alipay-btn.png" /></span>
+        </label>
+    </div>
+</div>
+          
+
+          
+            
+
+  <h3>See Also</h3>
+  <ul style="margin-bottom: 25px;">
+      
+      <li><a href="/posts/oh-my-zsh/">极客工具之 oh-my-zsh</a></li>
+      
+  </ul>
+
+          
+
+          
+            
+<div id="gitalk-container"></div>
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+<script>
+  var gitalk = new Gitalk({
+      clientID: 'd05b8f959b3111c6fb63',
+      clientSecret: 'f30ef76ea0050ed731ace76f7fbf684ae5d28fbc',
+      repo: 'imroc.github.io',
+      owner: 'imroc',
+      admin: 'imroc',
+      labels: ['Gitalk'],
+      title: '极客工具之 Alfred 与 Dash',
+      createIssueManually: false,
+      id: 'alfred-and-dash-zh',
+      distractionFreeMode: true
+  });
+  gitalk.render('gitalk-container');
+</script>
+          
+        </div>
+    </div>
+</div>
+
+    <footer>
+  <div id="copyright">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+          <ul class="list-inline text-center footer-links">
+            
+                <li>
+                  <a href="mailto:roc@imroc.io" title="Email me">
+                    <span class="fa-stack fa-lg">
+                      <i class="fa fa-circle fa-stack-2x"></i>
+                      <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="https://github.com/imroc" title="GitHub">
+                    <span class="fa-stack fa-lg">
+                      <i class="fa fa-circle fa-stack-2x"></i>
+                      <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="https://twitter.com/imrocchan" title="Twitter">
+                    <span class="fa-stack fa-lg">
+                      <i class="fa fa-circle fa-stack-2x"></i>
+                      <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                    </span>
+                  </a>
+                </li>
+            
+            <li>
+              <a href="https://imroc.io/index.xml" title="RSS">
+                <span class="fa-stack fa-lg">
+                  <i class="fa fa-circle fa-stack-2x"></i>
+                  <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                </span>
+              </a>
+            </li>
+            
+          </ul>
+          <p class="credits copyright text-muted">
+          &copy;2017-2019
+            
+              
+                <a href="/about">roc</a>
+              
+            
+            &nbsp;&bull;&nbsp;
+            December 15,2019
+            updated
+          </p>
+          <p class="credits theme-by text-muted">
+            由 <a href="http://gohugo.io">Hugo v0.62.0</a> 强力驱动 &nbsp;&bull;&nbsp; 主题 <a href="https://github.com/imroc/xhugo">xhugo</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src='/js/bundle.min.21f7d58c95d27f6c2ca78a820bd04dd19724828061fc1cd5fd72c409096ef914.js' integrity='sha256-IffVjJXSf2wsp4qCC9BN0ZckgoBh/BzV/XLECQlu&#43;RQ='></script>
+
+
+
+
+
+
+  </body>
+</html>
+

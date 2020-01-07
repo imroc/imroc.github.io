@@ -172,8 +172,8 @@ var _hmt = _hmt || [];
         templates: {
             
             suggestion: function (suggestion) {
-                return '<span>' + '<a href="/posts/' + suggestion.slug + '">' +
-                    suggestion._highlightResult.title.value + '</a></span>';
+                return '<span>' + '<a href="/' + suggestion.uri + '">' + suggestion._highlightResult.title.value +
+                        '</a></span>';
             }
         }
     });
@@ -210,7 +210,7 @@ var _hmt = _hmt || [];
         <div class="posts-list">
           
             <article class="post-preview">
-              <a href="https://imroc.io/posts/geek/git-trick-modify-history/">
+              <a href="https://imroc.io/posts/git-trick-modify-history/">
                 <h2 class="post-title">Git技巧：修改历史</h2>
 
                 
@@ -222,7 +222,7 @@ var _hmt = _hmt || [];
               <div class="post-entry">
                 
                   修改历史 修改最新一条历史 如果内容需要改就直接改，然后 git add 进去，然后执行 git commit --amend 会弹出 git commit message 的编辑窗口，会填充之前 commit 时写的 message 内容，如果需要改就直
-                  <a href="https://imroc.io/posts/geek/git-trick-modify-history/" class="post-read-more">[阅读全文]</a>
+                  <a href="https://imroc.io/posts/git-trick-modify-history/" class="post-read-more">[阅读全文]</a>
                 
               </div>
 

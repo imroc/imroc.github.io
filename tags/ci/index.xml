@@ -5,7 +5,7 @@
     <link>https://imroc.io/tags/ci/</link>
     <description>Recent content in CI on roc</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>zh-cn</language>
+    <language>zh</language>
     <managingEditor>roc@imroc.io (roc)</managingEditor>
     <webMaster>roc@imroc.io (roc)</webMaster>
     <lastBuildDate>Fri, 13 Apr 2018 22:23:22 +0800</lastBuildDate>
@@ -15,10 +15,10 @@
     
     <item>
       <title>利用Gitlab和Jenkins做CI(持续集成)</title>
-      <link>https://imroc.io/posts/other/ci-with-gitlab-and-jenkins/</link>
+      <link>https://imroc.io/posts/ci-with-gitlab-and-jenkins/</link>
       <pubDate>Fri, 13 Apr 2018 22:23:22 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/other/ci-with-gitlab-and-jenkins/</guid>
+      <guid>https://imroc.io/posts/ci-with-gitlab-and-jenkins/</guid>
       <description>利用Gitlab和Jenkins做CI(持续集成) 最近用到持续集成顺便总结在这里，都是用的最新版。搭建过程中还有一个demo，提交代码到 gitlab 自</description>
     </item>
     

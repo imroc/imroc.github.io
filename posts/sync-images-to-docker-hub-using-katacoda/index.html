@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title> 利用Katacoda免费同步Docker镜像到Docker Hub - imroc.io|roc的博客|Cloud Native|Kubernetes|Go|Golang</title>
+  <meta name="description" content="imroc.io|roc的博客|Cloud Native|Kubernetes|Go|Golang" />
+  <meta property="og:title" content="利用Katacoda免费同步Docker镜像到Docker Hub" />
+  <meta name="twitter:title" content="利用Katacoda免费同步Docker镜像到Docker Hub" />
+  <meta name="description" content="无需买服务器，脚本批量同步">
+  <meta property="og:description" content="无需买服务器，脚本批量同步">
+  <meta name="twitter:description" content="无需买服务器，脚本批量同步">
+  <meta name="author" content="{Description { .Site.Author.name }}"/>
+  <link href='https://imroc.io/favicon.png' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://res.cloudinary.com/imroc/image/upload/v1521031841/avatar.png" />
+  <meta name="twitter:image" content="https://res.cloudinary.com/imroc/image/upload/v1521031841/avatar.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@imrocchan" />
+  <meta name="twitter:creator" content="@imrocchan" />
+  <meta property="og:url" content="https://imroc.io/posts/sync-images-to-docker-hub-using-katacoda/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="roc" />
+
+  <meta name="generator" content="Hugo 0.62.0" />
+  <link rel="canonical" href="https://imroc.io/posts/sync-images-to-docker-hub-using-katacoda/" />
+  <link rel="alternate" href="https://imroc.io/index.xml" type="application/rss+xml" title="roc">
+
+  
+  <link href="https://fonts.googleapis.com/css?family=Lora:400,400i,700%7COpen+Sans:400,700" rel="stylesheet">
+
+  
+
+
+
+<link rel="stylesheet" href='/css/bundle.min.43522e1b6746447005cecd1381cc12a654c0364de88961016cdf5f133529476d.css' integrity='sha256-Q1IuG2dGRHAFzs0TgcwSplTANk3oiWEBbN9fEzUpR20='>
+  --><script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?05e1e8b7484a08c51cd0953664168cd7";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">切换导航</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://imroc.io/">roc</a>
+    </div>
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">分类</a>
+              <div class="navlinks-children">
+                
+                
+                  <a href="https://imroc.io/categories/kubernetes">kubernetes</a>
+                
+                
+                  <a href="https://imroc.io/categories/docker">docker</a>
+                
+                
+                  <a href="https://imroc.io/categories/golang">golang</a>
+                
+                
+                  <a href="https://imroc.io/categories/arch">架构</a>
+                
+                
+                  <a href="https://imroc.io/categories/istio">istio</a>
+                
+                
+                  <a href="https://imroc.io/categories/geek">极客</a>
+                
+              </div>
+            </li>
+          
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">书籍</a>
+              <div class="navlinks-children">
+                
+                
+                  <a href="https://k8s.imroc.io">Kubernetes 实践指南</a>
+                
+              </div>
+            </li>
+          
+        
+
+        
+          
+            <li>
+              
+                
+              
+                
+                  <a href="/en" lang="en">English</a>
+                
+              
+            </li>
+          
+        
+
+        
+        <li>
+          <a href="#modalSearch" data-toggle="modal" data-target="#modalSearch" style="outline: none;">
+            <span id="searchGlyph" class="glyphicon glyphicon-search"></span>
+          </a>
+        </li>
+        
+      </ul>
+    </div>
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="roc" href="https://imroc.io/">
+            <img class="avatar-img" src="https://res.cloudinary.com/imroc/image/upload/v1521031841/avatar.png" alt="roc" />
+          </a>
+        
+      </div>
+    </div>
+  </div>
+</nav>
+
+
+  <div id="modalSearch" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">搜索</h4>
+        </div>
+        <div class="modal-body">
+            
+<div class="aa-input-container" id="aa-input-container">
+    <input type="search" id="aa-search-input" class="aa-input-search" placeholder="Search for titles or URIs..."
+        name="search" autocomplete="off" />
+    <svg class="aa-input-icon" viewBox="654 -372 1664 1664">
+        <path
+            d="M1806,332c0-123.3-43.8-228.8-131.5-316.5C1586.8-72.2,1481.3-116,1358-116s-228.8,43.8-316.5,131.5  C953.8,103.2,910,208.7,910,332s43.8,228.8,131.5,316.5C1129.2,736.2,1234.7,780,1358,780s228.8-43.8,316.5-131.5  C1762.2,560.8,1806,455.3,1806,332z M2318,1164c0,34.7-12.7,64.7-38,90s-55.3,38-90,38c-36,0-66-12.7-90-38l-343-342  c-119.3,82.7-252.3,124-399,124c-95.3,0-186.5-18.5-273.5-55.5s-162-87-225-150s-113-138-150-225S654,427.3,654,332  s18.5-186.5,55.5-273.5s87-162,150-225s138-113,225-150S1262.7-372,1358-372s186.5,18.5,273.5,55.5s162,87,225,150s113,138,150,225  S2062,236.7,2062,332c0,146.7-41.3,279.7-124,399l343,343C2305.7,1098.7,2318,1128.7,2318,1164z" />
+    </svg>
+</div>
+
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/algoliasearch.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/autocomplete.min.js"></script>
+<script>
+    var client = algoliasearch("B6Q6PSGUV5", "d04f855d3a39eed8ad8d9365ba7c86af");
+    var index = client.initIndex("imroc-blog");
+    
+    autocomplete('#aa-search-input', {
+        hint: false
+    }, {
+        source: autocomplete.sources.hits(index, {
+            hitsPerPage: 5
+        }),
+        
+        displayKey: 'name',
+        
+        templates: {
+            
+            suggestion: function (suggestion) {
+                return '<span>' + '<a href="/' + suggestion.uri + '">' + suggestion._highlightResult.title.value +
+                        '</a></span>';
+            }
+        }
+    });
+</script>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    
+  
+  
+  
+
+
+
+
+  
+    <div id="header-big-imgs" data-num-img=1 data-img-src-1="https://res.cloudinary.com/imroc/image/upload/v1520576438/blog/k8s/dark-shadows.jpg" data-img-desc-1="Katacoda"></div>
+  
+
+  <header class="header-section has-img">
+    
+      <div class="intro-header big-img">
+        
+        
+        <div class="container">
+          <div class="row">
+              <div class="col-lg-12 col-md-12 col-md-offset-0">
+                
+                <div class="post-heading">
+                
+                  
+                     <h1>利用Katacoda免费同步Docker镜像到Docker Hub</h1>
+                     
+                     
+                  
+                  
+                  
+                    
+                      <hr class="small">
+                      <span class="post-subheading">无需买服务器，脚本批量同步</span>
+                    
+                  
+                  
+                    <span class="post-meta">
+  
+  发表于 March 9, 2018
+  
+  
+</span>
+
+
+                  
+                
+              </div>
+            </div>
+          </div>
+        </div>
+        <span class="img-desc" style="display: inline;"></span>
+      </div>
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12 col-md-12 col-md-offset-0">
+            <div class="posts-heading">
+                <h1 align="center">利用Katacoda免费同步Docker镜像到Docker Hub</h1>
+                
+                  
+                    <h2 align="center" class="posts-subheading">无需买服务器，脚本批量同步</h2>
+                  
+                
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main" itemscope itemtype="http://schema.org/Article">
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+            <article role="main" class="blog-post" itemprop="articleBody" id="content">
+                
+<aside class="toc">
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#heading">为什么要同步</a></li>
+    <li><a href="#heading-1">原理</a></li>
+    <li><a href="#lets-do-it">Let's Do It</a></li>
+  </ul>
+</nav>
+</aside>
+
+
+                <h2 id="heading">为什么要同步</h2>
+<p>安装kubernetes的时候，我们需要用到 gcr.io/google_containers 下面的一些镜像，在国内是不能直接下载的。如果用 Self Host 方式安装，master 上的组件除开kubelet之外都用容器运行，甚至 CNI 插件也是容器运行，比如 flannel，在 quay.io/coreos 下面，在国内下载非常慢。但是我们可以把这些镜像同步到我们的docker hub仓库里，再配个docker hub加速器，这样下载镜像就很快了。</p>
+<h2 id="heading-1">原理</h2>
+<p>Katacoda 是一个在线学习平台，在web上提供学习需要的服务器终端，里面包含学习所需的环境，我们可以利用docker的课程的终端来同步，因为里面有docker环境，可以执行 <code>docker login</code>，<code>docker pull</code>，<code>docker tag</code>，<code>docker push</code> 等命令来实现同步镜像。</p>
+<p>但是手工去执行命令很麻烦，如果要同步的镜像和tag比较多，手工操作那就是浪费生命，我们可以利用程序代替手工操作，不过 Katacoda 为了安全起见，不允许执行外来的二进制程序，但是可以shell脚本，我写好了脚本，大家只需要粘贴进去根据自己需要稍稍修改下，然后运行就可以了。</p>
+<h2 id="lets-do-it">Let's Do It</h2>
+<p>点击 <a href="https://www.katacoda.com/courses/docker/deploying-first-container">这里</a> 进入docker课程</p>
+<!-- raw HTML omitted -->
+<p>点击 <code>START SCENARIO</code> 或 终端右上角全屏按钮将终端放大</p>
+<!-- raw HTML omitted -->
+<p>安装脚本依赖的 <code>jq</code> 命令</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">apt install jq
+</code></pre></div><p>登录docker hub</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">docker login
+</code></pre></div><p>创建脚本并赋予执行权限</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">touch sync
+chmod +x sync
+</code></pre></div><!-- raw HTML omitted -->
+<p>编辑脚本，可以使用自带的vim编辑器</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">vim sync
+</code></pre></div><p>将脚本粘贴进去</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e">#! /bin/bash
+</span><span style="color:#75715e"></span>
+docker_repo<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;k8smirror&#34;</span> <span style="color:#75715e"># your docker hub username or organization name</span>
+registry<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;gcr.io&#34;</span> <span style="color:#75715e"># the registry of original image, e.g. gcr.io, quay.io</span>
+repo<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;google_containers&#34;</span> <span style="color:#75715e"># the repository name of original image</span>
+
+
+sync_one<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">{</span>
+  docker pull <span style="color:#e6db74">${</span>registry<span style="color:#e6db74">}</span>/<span style="color:#e6db74">${</span>repo<span style="color:#e6db74">}</span>/<span style="color:#e6db74">${</span>1<span style="color:#e6db74">}</span>:<span style="color:#e6db74">${</span>2<span style="color:#e6db74">}</span>
+  docker tag <span style="color:#e6db74">${</span>registry<span style="color:#e6db74">}</span>/<span style="color:#e6db74">${</span>repo<span style="color:#e6db74">}</span>/<span style="color:#e6db74">${</span>1<span style="color:#e6db74">}</span>:<span style="color:#e6db74">${</span>2<span style="color:#e6db74">}</span> docker.io/<span style="color:#e6db74">${</span>docker_repo<span style="color:#e6db74">}</span>/<span style="color:#e6db74">${</span>1<span style="color:#e6db74">}</span>:<span style="color:#e6db74">${</span>2<span style="color:#e6db74">}</span>
+  docker push docker.io/<span style="color:#e6db74">${</span>docker_repo<span style="color:#e6db74">}</span>/<span style="color:#e6db74">${</span>1<span style="color:#e6db74">}</span>:<span style="color:#e6db74">${</span>2<span style="color:#e6db74">}</span>
+  docker rmi -f <span style="color:#e6db74">${</span>registry<span style="color:#e6db74">}</span>/<span style="color:#e6db74">${</span>repo<span style="color:#e6db74">}</span>/<span style="color:#e6db74">${</span>1<span style="color:#e6db74">}</span>:<span style="color:#e6db74">${</span>2<span style="color:#e6db74">}</span> docker.io/<span style="color:#e6db74">${</span>docker_repo<span style="color:#e6db74">}</span>/<span style="color:#e6db74">${</span>1<span style="color:#e6db74">}</span>:<span style="color:#e6db74">${</span>2<span style="color:#e6db74">}</span>
+<span style="color:#f92672">}</span>
+
+sync_all_tags<span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+  <span style="color:#66d9ef">for</span> image in $*; <span style="color:#66d9ef">do</span>
+    tags_str<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>curl https://<span style="color:#e6db74">${</span>registry<span style="color:#e6db74">}</span>/v2/<span style="color:#e6db74">${</span>repo<span style="color:#e6db74">}</span>/$image/tags/list | jq <span style="color:#e6db74">&#39;.tags&#39;</span> -c | sed <span style="color:#e6db74">&#39;s/\[/\(/g&#39;</span> | sed <span style="color:#e6db74">&#39;s/\]/\)/g&#39;</span> | sed <span style="color:#e6db74">&#39;s/,/ /g&#39;</span><span style="color:#e6db74">`</span>
+    echo <span style="color:#e6db74">&#34;</span>$image<span style="color:#e6db74"> </span>$tags_str<span style="color:#e6db74">&#34;</span>
+    src<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">
+</span><span style="color:#e6db74">sync_one(){
+</span><span style="color:#e6db74">  docker pull </span><span style="color:#e6db74">${</span>registry<span style="color:#e6db74">}</span><span style="color:#e6db74">/</span><span style="color:#e6db74">${</span>repo<span style="color:#e6db74">}</span><span style="color:#e6db74">/\${1}:\${2}
+</span><span style="color:#e6db74">  docker tag </span><span style="color:#e6db74">${</span>registry<span style="color:#e6db74">}</span><span style="color:#e6db74">/</span><span style="color:#e6db74">${</span>repo<span style="color:#e6db74">}</span><span style="color:#e6db74">/\${1}:\${2} docker.io/</span><span style="color:#e6db74">${</span>docker_repo<span style="color:#e6db74">}</span><span style="color:#e6db74">/\${1}:\${2}
+</span><span style="color:#e6db74">  docker push docker.io/</span><span style="color:#e6db74">${</span>docker_repo<span style="color:#e6db74">}</span><span style="color:#e6db74">/\${1}:\${2}
+</span><span style="color:#e6db74">  docker rmi -f </span><span style="color:#e6db74">${</span>registry<span style="color:#e6db74">}</span><span style="color:#e6db74">/</span><span style="color:#e6db74">${</span>repo<span style="color:#e6db74">}</span><span style="color:#e6db74">/\${1}:\${2} docker.io/</span><span style="color:#e6db74">${</span>docker_repo<span style="color:#e6db74">}</span><span style="color:#e6db74">/\${1}:\${2}
+</span><span style="color:#e6db74">}
+</span><span style="color:#e6db74">tags=</span><span style="color:#e6db74">${</span>tags_str<span style="color:#e6db74">}</span><span style="color:#e6db74">
+</span><span style="color:#e6db74">echo \&#34;</span>$image<span style="color:#e6db74"> </span><span style="color:#e6db74">${</span>tags_str<span style="color:#e6db74">}</span><span style="color:#e6db74">\&#34;
+</span><span style="color:#e6db74">for tag in \${tags[@]}
+</span><span style="color:#e6db74">do
+</span><span style="color:#e6db74">  sync_one </span>$image<span style="color:#e6db74"> \${tag}
+</span><span style="color:#e6db74">done;</span><span style="color:#e6db74">&#34;</span>
+    bash -c <span style="color:#e6db74">&#34;</span>$src<span style="color:#e6db74">&#34;</span>
+  <span style="color:#66d9ef">done</span> 
+<span style="color:#f92672">}</span>
+
+sync_with_tags<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">{</span>
+  image<span style="color:#f92672">=</span>$1
+  skip<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>
+  <span style="color:#66d9ef">for</span> tag in $*; <span style="color:#66d9ef">do</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> $skip -eq <span style="color:#ae81ff">1</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
+	  skip<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>
+    <span style="color:#66d9ef">else</span>
+      sync_one $image $tag
+	<span style="color:#66d9ef">fi</span>
+  <span style="color:#66d9ef">done</span> 
+<span style="color:#f92672">}</span>
+
+sync_after_tag<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">{</span>
+  image<span style="color:#f92672">=</span>$1
+  start_tag<span style="color:#f92672">=</span>$2
+  tags_str<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>curl https://<span style="color:#e6db74">${</span>registry<span style="color:#e6db74">}</span>/v2/<span style="color:#e6db74">${</span>repo<span style="color:#e6db74">}</span>/$image/tags/list | jq <span style="color:#e6db74">&#39;.tags&#39;</span> -c | sed <span style="color:#e6db74">&#39;s/\[/\(/g&#39;</span> | sed <span style="color:#e6db74">&#39;s/\]/\)/g&#39;</span> | sed <span style="color:#e6db74">&#39;s/,/ /g&#39;</span><span style="color:#e6db74">`</span>
+  echo <span style="color:#e6db74">&#34;</span>$image<span style="color:#e6db74"> </span>$tags_str<span style="color:#e6db74">&#34;</span>
+  src<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">
+</span><span style="color:#e6db74">sync_one(){
+</span><span style="color:#e6db74">  docker pull </span><span style="color:#e6db74">${</span>registry<span style="color:#e6db74">}</span><span style="color:#e6db74">/</span><span style="color:#e6db74">${</span>repo<span style="color:#e6db74">}</span><span style="color:#e6db74">/\${1}:\${2}
+</span><span style="color:#e6db74">  docker tag </span><span style="color:#e6db74">${</span>registry<span style="color:#e6db74">}</span><span style="color:#e6db74">/</span><span style="color:#e6db74">${</span>repo<span style="color:#e6db74">}</span><span style="color:#e6db74">/\${1}:\${2} docker.io/</span><span style="color:#e6db74">${</span>docker_repo<span style="color:#e6db74">}</span><span style="color:#e6db74">/\${1}:\${2}
+</span><span style="color:#e6db74">  docker push docker.io/</span><span style="color:#e6db74">${</span>docker_repo<span style="color:#e6db74">}</span><span style="color:#e6db74">/\${1}:\${2}
+</span><span style="color:#e6db74">  docker rmi -f </span><span style="color:#e6db74">${</span>registry<span style="color:#e6db74">}</span><span style="color:#e6db74">/</span><span style="color:#e6db74">${</span>repo<span style="color:#e6db74">}</span><span style="color:#e6db74">/\${1}:\${2} docker.io/</span><span style="color:#e6db74">${</span>docker_repo<span style="color:#e6db74">}</span><span style="color:#e6db74">/\${1}:\${2}
+</span><span style="color:#e6db74">}
+</span><span style="color:#e6db74">tags=</span><span style="color:#e6db74">${</span>tags_str<span style="color:#e6db74">}</span><span style="color:#e6db74">
+</span><span style="color:#e6db74">start=0
+</span><span style="color:#e6db74">for tag in \${tags[@]}; do
+</span><span style="color:#e6db74">  if [ \$start -eq 1 ]; then
+</span><span style="color:#e6db74">    sync_one </span>$image<span style="color:#e6db74"> \$tag
+</span><span style="color:#e6db74">  elif [ \$tag == &#39;</span>$start_tag<span style="color:#e6db74">&#39; ]; then
+</span><span style="color:#e6db74">    start=1
+</span><span style="color:#e6db74">  fi
+</span><span style="color:#e6db74">done</span><span style="color:#e6db74">&#34;</span>
+  bash -c <span style="color:#e6db74">&#34;</span>$src<span style="color:#e6db74">&#34;</span>
+<span style="color:#f92672">}</span>
+
+get_tags<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">{</span>
+  image<span style="color:#f92672">=</span>$1
+  curl https://<span style="color:#e6db74">${</span>registry<span style="color:#e6db74">}</span>/v2/<span style="color:#e6db74">${</span>repo<span style="color:#e6db74">}</span>/$image/tags/list | jq <span style="color:#e6db74">&#39;.tags&#39;</span> -c
+<span style="color:#f92672">}</span>
+
+<span style="color:#75715e">#sync_with_tags etcd 2.0.12 2.0.13 # sync etcd:2.0.12 and etcd:2.0.13</span>
+<span style="color:#75715e">#sync_after_tag etcd 2.0.8 # sync tag after etcd:2.0.8</span>
+<span style="color:#75715e">#sync_all_tags etcd hyperkube # sync all tags of etcd and hyperkube</span>
+</code></pre></div><p>脚本中有一些参数需要根据你自己情况修改，可以使用它自带的vim在线修改，也可以在你本地改好在粘贴上去</p>
+<ul>
+<li><code>docker_repo</code> 改为你的Docker Hub账号组织名</li>
+<li><code>registry</code> 改为被同步镜像所在仓库的域名</li>
+<li><code>repo</code> 改为被同步镜像所在仓库的账号或组织名</li>
+</ul>
+<p>在脚本最后，可以调用写好的函数来实现镜像同步，举例：</p>
+<ul>
+<li>
+<p>同步一个镜像中指定的一个或多个tag</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sync_with_tags etcd 2.0.12 2.0.13 
+</code></pre></div></li>
+<li>
+<p>从某个tag后面的tag开始一直同步到最后（tag顺序按照字母数字来的，不是上传日期；Katacoda 终端用久了会断连，可能处于安全原因考虑，断开之后可以看tag同步到哪一个了，然后执行类似下面的命令从断连的tag开始同步）</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sync_after_tag etcd 2.0.8
+</code></pre></div></li>
+<li>
+<p>同步一个或多个镜像的所有tag</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sync_all_tags etcd hyperkube
+</code></pre></div></li>
+</ul>
+<p>最后执行脚本</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">./sync
+</code></pre></div><p>这就开始同步了，Katacoda 服务器在国外，下载 gcr.io 或 quay.io 上那些镜像都很快，上传 Docker Hub 也很快，如果断连了，可以在 Docker Hub 上查最新上传的 tag 是哪个（如：https://hub.docker.com/r/k8smirror/hyperkube/tags/  把<code>k8smirror</code>改为你的docker用户名或组织名，<code>hyperkube</code>改为镜像名），然后改脚本，用 <code>sync_after_tag</code> 这个函数继续上传。</p>
+
+            </article>
+
+            <ul class="pager blog-pager">
+
+                
+                <li class="previous">
+                    <a href="https://imroc.io/posts/building-website-for-free-using-hugo-and-github-pages/" data-toggle="tooltip" data-placement="top" title="利用Hugo和Github Pages免费创建并永久托管网站">&larr; 前一篇</a>
+                </li>
+                 
+                <li class="next">
+                    <a href="https://imroc.io/posts/kubernetes-source-code-reading-notes-kube-apiserver-code-main-line/" data-toggle="tooltip" data-placement="top" title="kubernetes源码阅读笔记：理清 kube-apiserver 的源码主线">后一篇 &rarr;</a>
+                </li>
+                
+            </ul>
+
+          
+            <div class="entry-shang text-center">
+    <p>「真诚赞赏，手留余香」</p>
+    <button class="zs show-zs btn btn-bred">赞赏</button>
+</div>
+<div class="zs-modal-bg"></div>
+<div class="zs-modal-box">
+    <div class="zs-modal-head">
+        <button type="button" class="close">×</button>
+        <span class="author"><img src="/favicon.png"/>roc</span>
+        <p class="tip"><i></i><span>请我喝杯咖啡？</span></p>
+    </div>
+    <div class="zs-modal-body">
+        <div class="zs-modal-btns">
+            <button class="btn btn-blink" data-num="2">2元</button>
+            <button class="btn btn-blink" data-num="5">5元</button>
+            <button class="btn btn-blink" data-num="10">10元</button>
+            <button class="btn btn-blink" data-num="50">50元</button>
+            <button class="btn btn-blink" data-num="100">100元</button>
+            <button class="btn btn-blink" data-num="1">任意金额</button>
+        </div>
+        <div class="zs-modal-pay">
+            <button class="btn btn-bred" id="pay-text">2元</button>
+            <p>使用<span id="pay-type">微信</span>扫描二维码完成支付</p>
+            <img src="/img/wechat-2.png" id="pay-image"/>
+        </div>
+    </div>
+    <div class="zs-modal-footer">
+        <label>
+            <input type="radio" name="zs-type" value="wechat" class="zs-type" checked="checked">
+            <span class="zs-wechat"><img src="/img/wechat-btn.png" /></span>
+        </label>
+        <label>
+            <input type="radio" name="zs-type" value="alipay" class="zs-type">
+            <span class="zs-alipay"><img src="/img/alipay-btn.png" /></span>
+        </label>
+    </div>
+</div>
+          
+
+          
+            
+
+          
+
+          
+            
+<div id="gitalk-container"></div>
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+<script>
+  var gitalk = new Gitalk({
+      clientID: 'd05b8f959b3111c6fb63',
+      clientSecret: 'f30ef76ea0050ed731ace76f7fbf684ae5d28fbc',
+      repo: 'imroc.github.io',
+      owner: 'imroc',
+      admin: 'imroc',
+      labels: ['Gitalk'],
+      title: '利用Katacoda免费同步Docker镜像到Docker Hub',
+      createIssueManually: false,
+      id: 'sync-images-to-docker-hub-using-katacoda-zh',
+      distractionFreeMode: true
+  });
+  gitalk.render('gitalk-container');
+</script>
+          
+        </div>
+    </div>
+</div>
+
+    <footer>
+  <div id="copyright">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+          <ul class="list-inline text-center footer-links">
+            
+                <li>
+                  <a href="mailto:roc@imroc.io" title="Email me">
+                    <span class="fa-stack fa-lg">
+                      <i class="fa fa-circle fa-stack-2x"></i>
+                      <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="https://github.com/imroc" title="GitHub">
+                    <span class="fa-stack fa-lg">
+                      <i class="fa fa-circle fa-stack-2x"></i>
+                      <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="https://twitter.com/imrocchan" title="Twitter">
+                    <span class="fa-stack fa-lg">
+                      <i class="fa fa-circle fa-stack-2x"></i>
+                      <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                    </span>
+                  </a>
+                </li>
+            
+            <li>
+              <a href="https://imroc.io/index.xml" title="RSS">
+                <span class="fa-stack fa-lg">
+                  <i class="fa fa-circle fa-stack-2x"></i>
+                  <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                </span>
+              </a>
+            </li>
+            
+          </ul>
+          <p class="credits copyright text-muted">
+          &copy;2017-2019
+            
+              
+                <a href="/about">roc</a>
+              
+            
+            &nbsp;&bull;&nbsp;
+            December 15,2019
+            updated
+          </p>
+          <p class="credits theme-by text-muted">
+            由 <a href="http://gohugo.io">Hugo v0.62.0</a> 强力驱动 &nbsp;&bull;&nbsp; 主题 <a href="https://github.com/imroc/xhugo">xhugo</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src='/js/bundle.min.21f7d58c95d27f6c2ca78a820bd04dd19724828061fc1cd5fd72c409096ef914.js' integrity='sha256-IffVjJXSf2wsp4qCC9BN0ZckgoBh/BzV/XLECQlu&#43;RQ='></script>
+
+
+
+
+
+
+  </body>
+</html>
+

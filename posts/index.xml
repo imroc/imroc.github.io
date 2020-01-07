@@ -5,7 +5,7 @@
     <link>https://imroc.io/posts/</link>
     <description>Recent content in Posts on roc</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>zh-cn</language>
+    <language>zh</language>
     <managingEditor>roc@imroc.io (roc)</managingEditor>
     <webMaster>roc@imroc.io (roc)</webMaster>
     <lastBuildDate>Sun, 15 Dec 2019 12:03:00 +0800</lastBuildDate>
@@ -15,731 +15,254 @@
     
     <item>
       <title>Kubernetes 疑难杂症排查分享: 诡异的 No route to host</title>
-      <link>https://imroc.io/posts/kubernetes/no-route-to-host/</link>
+      <link>https://imroc.io/posts/kubernetes-no-route-to-host/</link>
       <pubDate>Sun, 15 Dec 2019 12:03:00 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/kubernetes/no-route-to-host/</guid>
+      <guid>https://imroc.io/posts/kubernetes-no-route-to-host/</guid>
       <description>大家好，我是 roc，来自腾讯云容器服务(TKE)团队，之前发过一篇干货满满的爆火文章 Kubernetes 网络疑难杂症排查分享，包含多个疑难杂症的排查案例分享，</description>
     </item>
     
     <item>
       <title>k8s v1.17 新特性预告: 拓扑感知服务路由</title>
-      <link>https://imroc.io/posts/kubernetes/service-topology/</link>
+      <link>https://imroc.io/posts/service-topology/</link>
       <pubDate>Tue, 26 Nov 2019 16:49:00 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/kubernetes/service-topology/</guid>
+      <guid>https://imroc.io/posts/service-topology/</guid>
       <description>大家好，我是 roc，来自腾讯云容器服务(TKE)团队，今天给大家介绍下我参与开发的一个 k8s v1.17 新特性: 拓扑感知服务路由。 名词解释 拓扑域: 表示在集</description>
     </item>
     
     <item>
       <title>Kubernetes 网络疑难杂症排查分享</title>
-      <link>https://imroc.io/posts/kubernetes/troubleshooting-with-kubernetes-network/</link>
+      <link>https://imroc.io/posts/troubleshooting-with-kubernetes-network/</link>
       <pubDate>Mon, 12 Aug 2019 16:59:00 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/kubernetes/troubleshooting-with-kubernetes-network/</guid>
+      <guid>https://imroc.io/posts/troubleshooting-with-kubernetes-network/</guid>
       <description>大家好，我是 roc，来自腾讯云容器服务(TKE)团队，经常帮助用户解决各种 K8S 的疑难杂症，积累了比较丰富的经验，本文分享几个比较复杂的网络方面</description>
     </item>
     
     <item>
       <title>Kubernetes 踩坑分享：开启tcp_tw_recycle内核参数在NAT环境会丢包</title>
-      <link>https://imroc.io/posts/kubernetes/lost-packets-once-enable-tcp-tw-recycle/</link>
+      <link>https://imroc.io/posts/lost-packets-once-enable-tcp-tw-recycle/</link>
       <pubDate>Sun, 09 Jun 2019 22:00:00 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/kubernetes/lost-packets-once-enable-tcp-tw-recycle/</guid>
+      <guid>https://imroc.io/posts/lost-packets-once-enable-tcp-tw-recycle/</guid>
       <description>原因 tcp_tw_recycle参数。它用来快速回收TIME_WAIT连接，不过如果在NAT环境下会引发问题。 RFC1323中有如下一段描述</description>
     </item>
     
     <item>
       <title>Kubernetes 最佳实践：处理内存碎片化</title>
-      <link>https://imroc.io/posts/kubernetes/handle-memory-fragmentation/</link>
+      <link>https://imroc.io/posts/handle-memory-fragmentation/</link>
       <pubDate>Sat, 08 Jun 2019 13:59:00 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/kubernetes/handle-memory-fragmentation/</guid>
+      <guid>https://imroc.io/posts/handle-memory-fragmentation/</guid>
       <description>内存碎片化造成的危害 节点的内存碎片化严重，导致docker运行容器时，无法分到大的内存块，导致start docker失败。最终导致服务更新时</description>
     </item>
     
     <item>
-      <title>Kubernetes 最佳实践：处理容器数据磁盘被写满</title>
-      <link>https://imroc.io/posts/kubernetes/kubernetes-best-practice-handle-disk-full/</link>
-      <pubDate>Fri, 07 Jun 2019 19:54:00 +0800</pubDate>
-      <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/kubernetes/kubernetes-best-practice-handle-disk-full/</guid>
-      <description>容器数据磁盘被写满造成的危害: 不能创建 Pod (一直 ContainerCreating) 不能删除 Pod (一直 Terminating) 无法 exec 到容器 判断是否被写满: 容器数据目录大多会单独挂数据盘，路径一般是 /v</description>
-    </item>
-    
-    <item>
       <title>Kubernetes 最佳实践：解决长连接服务扩容失效</title>
-      <link>https://imroc.io/posts/kubernetes/scale-keepalive-service/</link>
+      <link>https://imroc.io/posts/kubernetes-scale-keepalive-service/</link>
       <pubDate>Thu, 06 Jun 2019 17:06:00 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/kubernetes/scale-keepalive-service/</guid>
+      <guid>https://imroc.io/posts/kubernetes-scale-keepalive-service/</guid>
       <description>在现网运营中，有很多场景为了提高效率，一般都采用建立长连接的方式来请求。我们发现在客户端以长连接请求服务端的场景下，K8S的自动扩容会失效。</description>
     </item>
     
     <item>
       <title>Kubernetes 问题定位技巧：容器内抓包</title>
-      <link>https://imroc.io/posts/kubernetes/capture-packets-in-container/</link>
+      <link>https://imroc.io/posts/capture-packets-in-container/</link>
       <pubDate>Sun, 19 May 2019 11:24:00 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/kubernetes/capture-packets-in-container/</guid>
+      <guid>https://imroc.io/posts/capture-packets-in-container/</guid>
       <description>在使用 kubernetes 跑应用的时候，可能会遇到一些网络问题，比较常见的是服务端无响应(超时)或回包内容不正常，如果没找出各种配置上有问题，这时我们需要确认</description>
     </item>
     
     <item>
-      <title>kubernetes 最佳实践：优雅热更新</title>
-      <link>https://imroc.io/posts/kubernetes/kubernetes-best-practice-grace-update/</link>
-      <pubDate>Wed, 08 May 2019 19:54:00 +0800</pubDate>
-      <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/kubernetes/kubernetes-best-practice-grace-update/</guid>
-      <description>当kubernetes对服务滚动更新的期间，默认配置的情况下可能会让部分连接异常（比如连接被拒绝），我们来分析下原因并给出最佳实践 滚动更新场</description>
-    </item>
-    
-    <item>
       <title>Istio 学习笔记：Istio CNI 插件</title>
-      <link>https://imroc.io/posts/istio/istio-cni/</link>
+      <link>https://imroc.io/posts/istio-cni/</link>
       <pubDate>Sun, 07 Apr 2019 11:54:00 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/istio/istio-cni/</guid>
+      <guid>https://imroc.io/posts/istio-cni/</guid>
       <description>设计目标 当前实现将用户 pod 流量转发到 proxy 的默认方式是使用 privileged 权限的 istio-init 这个 init container 来做的（运行脚本写入 iptables），Istio CNI 插件的主要设计目标</description>
     </item>
     
     <item>
       <title>kubectl 高效技巧</title>
-      <link>https://imroc.io/posts/kubernetes/efficient-kubectl/</link>
+      <link>https://imroc.io/posts/efficient-kubectl/</link>
       <pubDate>Sun, 10 Mar 2019 14:05:00 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/kubernetes/efficient-kubectl/</guid>
+      <guid>https://imroc.io/posts/efficient-kubectl/</guid>
       <description>是否有过因为使用 kubectl 经常需要重复输入命名空间而苦恼？是否觉得应该要有个记住命名空间的功能，自动记住上次使用的命名空间，不需要每次都输入？可惜没</description>
     </item>
     
     <item>
       <title>Kubernetes 泛域名动态 Service 转发解决方案</title>
-      <link>https://imroc.io/posts/kubernetes/wildcard-domain-forward/</link>
+      <link>https://imroc.io/posts/kubernetes-wildcard-domain-forward/</link>
       <pubDate>Sat, 22 Dec 2018 01:09:00 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/kubernetes/wildcard-domain-forward/</guid>
+      <guid>https://imroc.io/posts/kubernetes-wildcard-domain-forward/</guid>
       <description>需求 集群对外暴露了一个公网IP作为流量入口(可以是 Ingress 或 Service)，DNS 解析配置了一个泛域名指向该IP（比如 *.test.imroc.</description>
     </item>
     
     <item>
       <title>Kubernetes 问题定位技巧：分析 ExitCode</title>
-      <link>https://imroc.io/posts/kubernetes/analysis-exitcode/</link>
+      <link>https://imroc.io/posts/kubernetes-analysis-exitcode/</link>
       <pubDate>Fri, 21 Dec 2018 16:10:00 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/kubernetes/analysis-exitcode/</guid>
+      <guid>https://imroc.io/posts/kubernetes-analysis-exitcode/</guid>
       <description>使用 kubectl describe pod 查看异常的 pod 的状态，在容器列表里看 State 字段，其中 ExitCode 即程序退出时的状态码，正常退出时为0。如果不为0，表示异常退出，我们可以分析下原因</description>
     </item>
     
     <item>
       <title>Git技巧：修改历史</title>
-      <link>https://imroc.io/posts/geek/git-trick-modify-history/</link>
+      <link>https://imroc.io/posts/git-trick-modify-history/</link>
       <pubDate>Fri, 07 Dec 2018 18:05:00 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/geek/git-trick-modify-history/</guid>
+      <guid>https://imroc.io/posts/git-trick-modify-history/</guid>
       <description>修改历史 修改最新一条历史 如果内容需要改就直接改，然后 git add 进去，然后执行 git commit --amend 会弹出 git commit message 的编辑窗口，会填充之前 commit 时写的 message 内容，如果需要改就直</description>
     </item>
     
     <item>
-      <title>宇宙最强编辑器: vscode</title>
-      <link>https://imroc.io/posts/geek/vscode-1/</link>
-      <pubDate>Sun, 04 Nov 2018 00:30:00 +0800</pubDate>
-      <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/geek/vscode-1/</guid>
-      <description>宇宙最强编辑器: vscode 为什么选择 vscode 程序圈经常会引发关于编辑器的圣战，争论哪一个才是世界上最好的编辑器，有人说：世界上只有三种编辑器，一种叫 vim</description>
-    </item>
-    
-    <item>
       <title>教你如何全键盘操作 Chrome 浏览器</title>
-      <link>https://imroc.io/posts/geek/chrome/</link>
+      <link>https://imroc.io/posts/chrome/</link>
       <pubDate>Sun, 21 Oct 2018 23:00:00 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/geek/chrome/</guid>
+      <guid>https://imroc.io/posts/chrome/</guid>
       <description>推荐两款插件， SurfingKeys 和 Steward，让你全键盘高效操作浏览器。老规矩，附视频教学。 SurfingKeys 模拟 vim 的快捷键有两款 Chrome 插件，分别是 Vimium 和 Surfingkey</description>
     </item>
     
     <item>
       <title>极客工具之 Alfred 与 Dash</title>
-      <link>https://imroc.io/posts/geek/alfred-and-dash/</link>
+      <link>https://imroc.io/posts/alfred-and-dash/</link>
       <pubDate>Sun, 21 Oct 2018 07:00:00 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/geek/alfred-and-dash/</guid>
+      <guid>https://imroc.io/posts/alfred-and-dash/</guid>
       <description>Alfred 使用 Alfred 可以让你在 macOS 程序间自由切换、快速查找或打开文件、调起浏览器进行网页搜索、 还可以做计算器。 另外，还有许多其它搜索功能以及付费的工作流特</description>
     </item>
     
     <item>
       <title>极客工具之 oh-my-zsh</title>
-      <link>https://imroc.io/posts/geek/oh-my-zsh/</link>
+      <link>https://imroc.io/posts/oh-my-zsh/</link>
       <pubDate>Sat, 20 Oct 2018 01:35:00 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/geek/oh-my-zsh/</guid>
+      <guid>https://imroc.io/posts/oh-my-zsh/</guid>
       <description>shell 有多种，大多数人接触比较多的是 bash， 不管是 mac 还是各个 linux 发行版，默认的 shell 基本都是 bash，虽然 bash 功能已经丰富了，但对于极客们来说，界面不</description>
     </item>
     
     <item>
       <title>通俗理解Kubernetes中Service、Ingress与Ingress Controller的作用与关系</title>
-      <link>https://imroc.io/posts/kubernetes/understand-service-ingress-and-ingress-controller/</link>
+      <link>https://imroc.io/posts/understand-service-ingress-and-ingress-controller/</link>
       <pubDate>Tue, 24 Jul 2018 22:19:37 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/kubernetes/understand-service-ingress-and-ingress-controller/</guid>
+      <guid>https://imroc.io/posts/understand-service-ingress-and-ingress-controller/</guid>
       <description>通俗的讲: Service 是后端真实服务的抽象，一个 Service 可以代表多个相同的后端服务 Ingress 是反向代理规则，用来规定 HTTP/S 请求应该被转发到哪个 Service 上，比如根据请求中不同的</description>
     </item>
     
     <item>
       <title>利用Helm一键部署Kubernetes Dashboard并启用免费HTTPS</title>
-      <link>https://imroc.io/posts/kubernetes/deploy-kubernetes-dashboard-and-enable-free-https/</link>
+      <link>https://imroc.io/posts/deploy-kubernetes-dashboard-and-enable-free-https/</link>
       <pubDate>Mon, 23 Jul 2018 21:49:54 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/kubernetes/deploy-kubernetes-dashboard-and-enable-free-https/</guid>
+      <guid>https://imroc.io/posts/deploy-kubernetes-dashboard-and-enable-free-https/</guid>
       <description>概述 Kubernetes Dashboard 是一个可以可视化查看和操作 Kubernetes 集群的一个插件 本文利用 Helm 部署它，所以请确保 Helm 已安装，安装方法参考：https://imroc.io/po</description>
     </item>
     
     <item>
       <title>利用cert-manager让Ingress启用免费的HTTPS证书</title>
-      <link>https://imroc.io/posts/kubernetes/let-ingress-enable-free-https-with-cert-manager/</link>
+      <link>https://imroc.io/posts/let-ingress-enable-free-https-with-cert-manager/</link>
       <pubDate>Mon, 23 Jul 2018 20:08:01 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/kubernetes/let-ingress-enable-free-https-with-cert-manager/</guid>
+      <guid>https://imroc.io/posts/let-ingress-enable-free-https-with-cert-manager/</guid>
       <description>概述 cert-manager 是替代 kube-lego 的一个开源项目，用于在 Kubernetes 集群中自动提供 HTTPS 证书，支持 Let’s Encrypt, HashiCorp Vault 这些免费证书的签发。 本文使用 Helm 安装，所以请确保 Helm 已安装，安装</description>
     </item>
     
     <item>
       <title>使用Nginx Ingress Controller导入外部流量到Kubernetes集群内部</title>
-      <link>https://imroc.io/posts/kubernetes/use-nginx-ingress-controller-to-expose-service/</link>
+      <link>https://imroc.io/posts/use-nginx-ingress-controller-to-expose-service/</link>
       <pubDate>Mon, 23 Jul 2018 14:29:37 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/kubernetes/use-nginx-ingress-controller-to-expose-service/</guid>
+      <guid>https://imroc.io/posts/use-nginx-ingress-controller-to-expose-service/</guid>
       <description>概述 Nginx Ingress Controller 是 Kubernetes Ingress Controller 的一种实现，作为反向代理将外部流量导入集群内部，实现将 Kubernetes 内部的 Service 暴露给外部，这样我们就能通过公网或内网直接访问集群内部的服</description>
     </item>
     
     <item>
-      <title>快速安装 Helm</title>
-      <link>https://imroc.io/posts/kubernetes/install-helm/</link>
-      <pubDate>Mon, 23 Jul 2018 12:49:00 +0800</pubDate>
-      <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/kubernetes/install-helm/</guid>
-      <description>概述 Helm 是 Kubernetes 的包管理器，可以帮我们简化 kubernetes 的操作，一键部署应用。假如你的机器上已经安装了 kubectl 并且能够操作集群，那么你就可以安装 Helm 了。 安装 执行脚本安</description>
-    </item>
-    
-    <item>
       <title>利用Gitlab和Jenkins做CI(持续集成)</title>
-      <link>https://imroc.io/posts/other/ci-with-gitlab-and-jenkins/</link>
+      <link>https://imroc.io/posts/ci-with-gitlab-and-jenkins/</link>
       <pubDate>Fri, 13 Apr 2018 22:23:22 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/other/ci-with-gitlab-and-jenkins/</guid>
+      <guid>https://imroc.io/posts/ci-with-gitlab-and-jenkins/</guid>
       <description>利用Gitlab和Jenkins做CI(持续集成) 最近用到持续集成顺便总结在这里，都是用的最新版。搭建过程中还有一个demo，提交代码到 gitlab 自</description>
     </item>
     
     <item>
       <title>对比Kubernetes的Nodeport、Loadbalancer和Ingress，什么时候该用哪种</title>
-      <link>https://imroc.io/posts/kubernetes/kubernetes-nodeport-vs-loadbalancer-vs-ingress-when-should-i-use-what/</link>
+      <link>https://imroc.io/posts/kubernetes-nodeport-vs-loadbalancer-vs-ingress-when-should-i-use-what/</link>
       <pubDate>Tue, 13 Mar 2018 22:45:26 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/kubernetes/kubernetes-nodeport-vs-loadbalancer-vs-ingress-when-should-i-use-what/</guid>
+      <guid>https://imroc.io/posts/kubernetes-nodeport-vs-loadbalancer-vs-ingress-when-should-i-use-what/</guid>
       <description>本文翻译自：https://medium.com/google-cloud/kubernetes-nodeport-vs-loadbalan</description>
     </item>
     
     <item>
       <title>kubernetes源码阅读笔记：理清 kube-apiserver 的源码主线</title>
-      <link>https://imroc.io/posts/kubernetes/kubernetes-source-code-reading-notes-kube-apiserver-code-main-line/</link>
+      <link>https://imroc.io/posts/kubernetes-source-code-reading-notes-kube-apiserver-code-main-line/</link>
       <pubDate>Mon, 12 Mar 2018 11:47:19 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/kubernetes/kubernetes-source-code-reading-notes-kube-apiserver-code-main-line/</guid>
+      <guid>https://imroc.io/posts/kubernetes-source-code-reading-notes-kube-apiserver-code-main-line/</guid>
       <description>前言 我最近开始研究 kubernetes 源码，希望将阅读笔记记录下来，分享阅读思路和心得，更好的理解 kubernetes，这是第一篇，从 kube-apiserver 开始。 开始 k8s各组件</description>
     </item>
     
     <item>
       <title>利用Katacoda免费同步Docker镜像到Docker Hub</title>
-      <link>https://imroc.io/posts/kubernetes/sync-images-to-docker-hub-using-katacoda/</link>
+      <link>https://imroc.io/posts/sync-images-to-docker-hub-using-katacoda/</link>
       <pubDate>Fri, 09 Mar 2018 10:39:17 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/kubernetes/sync-images-to-docker-hub-using-katacoda/</guid>
+      <guid>https://imroc.io/posts/sync-images-to-docker-hub-using-katacoda/</guid>
       <description>为什么要同步 安装kubernetes的时候，我们需要用到 gcr.io/google_containers 下面的一些镜像，在国内是不能直接下载的。如果用 Self Host 方式安装，master 上的组件除</description>
     </item>
     
     <item>
-      <title>国内使用Kubeadm在CentOS 7上安装Kubernetes 1.9</title>
-      <link>https://imroc.io/posts/kubernetes/install-kubernetes-1.9-on-centos7-with-kubeadm/</link>
-      <pubDate>Wed, 07 Mar 2018 23:35:11 +0800</pubDate>
-      <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/kubernetes/install-kubernetes-1.9-on-centos7-with-kubeadm/</guid>
-      <description>准备 修改系统配置 开启路由转发（保证 proxy 正常运行，Service 需要） sysctl -w net.ipv4.ip_forward=1 默认情况下，由于安全原因，linux是关闭了路由转发的，即同台机器不</description>
-    </item>
-    
-    <item>
       <title>利用Hugo和Github Pages免费创建并永久托管网站</title>
-      <link>https://imroc.io/posts/hugo/building-website-for-free-using-hugo-and-github-pages/</link>
+      <link>https://imroc.io/posts/building-website-for-free-using-hugo-and-github-pages/</link>
       <pubDate>Tue, 16 Jan 2018 20:35:06 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/hugo/building-website-for-free-using-hugo-and-github-pages/</guid>
+      <guid>https://imroc.io/posts/building-website-for-free-using-hugo-and-github-pages/</guid>
       <description>概述 Hugo可以让你轻松生成静态网站，比如个人博客、API文档、公司主页等，你只需要提供markdown格式的文本，它就能帮你渲染成各种你想</description>
     </item>
     
     <item>
-      <title>Kubernetes程序二进制下载集合</title>
-      <link>https://imroc.io/posts/kubernetes/kubernetes-binaries/</link>
-      <pubDate>Fri, 05 Jan 2018 13:43:15 +0800</pubDate>
-      <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/kubernetes/kubernetes-binaries/</guid>
-      <description>前言 由于国内网络的特殊性，安装Kubernetes很多时候会采用二进制方式部署，我将涉及到的二进制利用脚本传到百度云，方便大家下载，脚本开源</description>
-    </item>
-    
-    <item>
-      <title>filebeat源码阅读笔记</title>
-      <link>https://imroc.io/posts/other/note-for-filebeat/</link>
-      <pubDate>Wed, 03 Jan 2018 15:48:33 +0800</pubDate>
-      <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/other/note-for-filebeat/</guid>
-      <description>前言 最近在阅读filebeat源码，将所学到的记录总结在本文，正在进行中，还不够完善，内容可能随时更新调整。 程序大致逻辑 加载配置 Filebeat.Run() fileb</description>
-    </item>
-    
-    <item>
-      <title>Docker快速入门（五）docker-compose安装与基础用法</title>
-      <link>https://imroc.io/posts/docker/quick-start-for-docker-5/</link>
-      <pubDate>Wed, 20 Dec 2017 13:12:35 +0800</pubDate>
-      <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/docker/quick-start-for-docker-5/</guid>
-      <description>简介 docker-compose 可以用来定义和运行复杂应用的Docker工具，比如你的web应用需要用到好几个容器，mysql、redis和你自己的应用容器，它们之间</description>
-    </item>
-    
-    <item>
-      <title>Docker快速入门（四）常用命令与技巧</title>
-      <link>https://imroc.io/posts/docker/quick-start-for-docker-4/</link>
-      <pubDate>Wed, 20 Dec 2017 09:05:17 +0800</pubDate>
-      <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/docker/quick-start-for-docker-4/</guid>
-      <description>列出机器上的镜像 docker images 拉取镜像 docker pull openjdk # 等同于 docker pull openjdk:latest docker pull openjdk:jre-slim # 指定了tag docker pull hub.imroc.io:5000/imroc/myapp:1.2 # 拉取私有仓库的镜像 上传镜像 docker push imroc/myapp:1atest # 上传到Docker Hub公有仓</description>
-    </item>
-    
-    <item>
-      <title>Docker快速入门（三）在国内如何快速安装Docker与镜像加速器配置</title>
-      <link>https://imroc.io/posts/docker/quick-start-for-docker-3/</link>
-      <pubDate>Tue, 19 Dec 2017 16:27:07 +0800</pubDate>
-      <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/docker/quick-start-for-docker-3/</guid>
-      <description>前言 使用docker最常用的系统莫过于ubuntu和centos了，一般有两种方式，一种是直接用系统自带的源安装，另一种是官方的源安装。前者</description>
-    </item>
-    
-    <item>
-      <title>Docker快速入门（二）容器、镜像与镜像仓库</title>
-      <link>https://imroc.io/posts/docker/quick-start-for-docker-2/</link>
-      <pubDate>Tue, 19 Dec 2017 11:00:42 +0800</pubDate>
-      <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/docker/quick-start-for-docker-2/</guid>
-      <description>镜像与容器的关系 镜像就是把你程序以及依赖的运行时打包在一起的一个东东，运行一个镜像就成了容器。镜像与容器的关系有点类似程序与进程的关系，比如</description>
-    </item>
-    
-    <item>
-      <title>Docker快速入门（一）认识Docker</title>
-      <link>https://imroc.io/posts/docker/quick-start-for-docker-1/</link>
-      <pubDate>Mon, 18 Dec 2017 15:36:35 +0800</pubDate>
-      <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/docker/quick-start-for-docker-1/</guid>
-      <description>前言 Docker现在可以说是火的一塌糊涂，做技术的几乎都听过这个名词，只是有些小伙伴还没理解Docker到底是个什么东西，能够用来做些什么，</description>
-    </item>
-    
-    <item>
-      <title>Docker中CMD与ENTRYPOINT的简明理解</title>
-      <link>https://imroc.io/posts/docker/understand-docker-cmd-entrypoint/</link>
-      <pubDate>Wed, 06 Sep 2017 16:35:18 +0800</pubDate>
-      <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/docker/understand-docker-cmd-entrypoint/</guid>
-      <description>CMD提供容器启动的默认行为，运行不指定运行的命令及参数，会默认执行CMD中的。 例如hello镜像的Dockerfile中有 CMD [&amp;quot;echo&amp;quot;,&amp;quot;&#39;hello world&#39;&amp;quot;] 执行 docker run h</description>
-    </item>
-    
-    <item>
-      <title>Docker容器间通信</title>
-      <link>https://imroc.io/posts/docker/docker-network-communication/</link>
-      <pubDate>Wed, 06 Sep 2017 16:35:18 +0800</pubDate>
-      <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/docker/docker-network-communication/</guid>
-      <description>容器每次启动时会分配个一个IP地址，这个IP地址只在宿主主机内部有用，其它主机上的程序无法访问此IP 一台机器上的docker容器之间默认是可</description>
-    </item>
-    
-    <item>
-      <title>单体应用缺陷与微服务特点</title>
-      <link>https://imroc.io/posts/arch/%E5%8D%95%E4%BD%93%E5%BA%94%E7%94%A8%E7%BC%BA%E9%99%B7%E4%B8%8E%E5%BE%AE%E6%9C%8D%E5%8A%A1%E7%89%B9%E7%82%B9/</link>
-      <pubDate>Wed, 06 Sep 2017 15:52:18 +0800</pubDate>
-      <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/arch/%E5%8D%95%E4%BD%93%E5%BA%94%E7%94%A8%E7%BC%BA%E9%99%B7%E4%B8%8E%E5%BE%AE%E6%9C%8D%E5%8A%A1%E7%89%B9%E7%82%B9/</guid>
-      <description>单体应用（All in one) 程序缺陷 先天性缺陷：难以分布式部署和扩容 系统性风险：一个组件的缺陷导致真个进程崩溃 运维风险：系统升级、Bug修复、故障排</description>
-    </item>
-    
-    <item>
       <title>golang中append函数返回值必须有变量接收的原因探究</title>
-      <link>https://imroc.io/posts/golang/golang-append/</link>
+      <link>https://imroc.io/posts/golang-append/</link>
       <pubDate>Wed, 06 Sep 2017 15:35:18 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/golang/golang-append/</guid>
+      <guid>https://imroc.io/posts/golang-append/</guid>
       <description>append函数返回更新后的slice（长度和容量可能会变），必须重新用slice的变量接收，不然无法编译通过 为了弄明白为什么，首先我们需要</description>
     </item>
     
     <item>
       <title>Go语言(golang)包设计哲学-原则与项目结构组织最佳实践</title>
-      <link>https://imroc.io/posts/golang/golang-package/</link>
+      <link>https://imroc.io/posts/golang-package/</link>
       <pubDate>Wed, 06 Sep 2017 15:35:18 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/golang/golang-package/</guid>
+      <guid>https://imroc.io/posts/golang-package/</guid>
       <description>总结下Go的package设计哲学 明确目的 在准备设计一个包之前，我们需要明确它的目的。 包的命名就必须明确体现其目的，而不仅仅是为了存放代码。</description>
     </item>
     
     <item>
       <title>Go语言技巧-使用for range time.Tick()固定间隔时间执行</title>
-      <link>https://imroc.io/posts/golang/golang-for-range-time-tick/</link>
+      <link>https://imroc.io/posts/golang-for-range-time-tick/</link>
       <pubDate>Wed, 06 Sep 2017 15:35:18 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/golang/golang-for-range-time-tick/</guid>
+      <guid>https://imroc.io/posts/golang-for-range-time-tick/</guid>
       <description>直接上代码: for range time.Tick(30 * time.Millisecond) { doSomthing() } 因为time.Tick()返回的是一个channel,每隔指定的时间会有数据从channel中出来，for ran</description>
     </item>
     
     <item>
       <title>Go语言技巧-使用select{}阻塞main函数</title>
-      <link>https://imroc.io/posts/golang/golang-select/</link>
+      <link>https://imroc.io/posts/golang-select/</link>
       <pubDate>Wed, 06 Sep 2017 15:35:18 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/golang/golang-select/</guid>
+      <guid>https://imroc.io/posts/golang-select/</guid>
       <description>很多时候我们需要让main函数不退出，让它在后台一直执行，例如： func main() { for i := 0; i &amp;lt; 20; i++ { //启动20个协程处理消息队列中的消息 c := consumer.New() go c.Start() } select</description>
-    </item>
-    
-    <item>
-      <title>golang动态规划求解最大连续子数组和</title>
-      <link>https://imroc.io/posts/algorithm/golang%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92%E6%B1%82%E8%A7%A3%E6%9C%80%E5%A4%A7%E8%BF%9E%E7%BB%AD%E5%AD%90%E6%95%B0%E7%BB%84%E5%92%8C/</link>
-      <pubDate>Tue, 05 Sep 2017 15:35:18 +0800</pubDate>
-      <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/algorithm/golang%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92%E6%B1%82%E8%A7%A3%E6%9C%80%E5%A4%A7%E8%BF%9E%E7%BB%AD%E5%AD%90%E6%95%B0%E7%BB%84%E5%92%8C/</guid>
-      <description>// 求最大连续子数组和 func MaxSubArray(arr []int) int { currSum := 0 maxSum := arr[0] for _, v := range arr { if currSum &amp;gt; 0 { currSum += v } else { currSum = v } if maxSum &amp;lt; currSum { maxSum = currSum } } return maxSum }</description>
-    </item>
-    
-    <item>
-      <title>golang实现二叉查找树</title>
-      <link>https://imroc.io/posts/algorithm/golang%E5%AE%9E%E7%8E%B0%E4%BA%8C%E5%8F%89%E6%9F%A5%E6%89%BE%E6%A0%91/</link>
-      <pubDate>Tue, 05 Sep 2017 15:35:18 +0800</pubDate>
-      <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/algorithm/golang%E5%AE%9E%E7%8E%B0%E4%BA%8C%E5%8F%89%E6%9F%A5%E6%89%BE%E6%A0%91/</guid>
-      <description>为简单起见，键值均为整型。 定义接口(tree.go)： type Tree interface { Put(k, v int) //新增或修改 Get(k int) int //查询 Delete(k int) //删除 Size() int //树的大小 Min() int //最小键 DeleteMin()</description>
-    </item>
-    
-    <item>
-      <title>Union-Find(C&#43;&#43;实现实现)</title>
-      <link>https://imroc.io/posts/algorithm/union-findc&#43;&#43;%E5%AE%9E%E7%8E%B0%E5%AE%9E%E7%8E%B0/</link>
-      <pubDate>Tue, 05 Sep 2017 15:35:18 +0800</pubDate>
-      <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/algorithm/union-findc&#43;&#43;%E5%AE%9E%E7%8E%B0%E5%AE%9E%E7%8E%B0/</guid>
-      <description>quick-find、quick-union、加权quick-union(附带路径压缩优化) 本算法主要解决动态连通性一类问题，这里尽量用精炼</description>
-    </item>
-    
-    <item>
-      <title>Union-Find(golang实现)</title>
-      <link>https://imroc.io/posts/algorithm/union-findgolang%E5%AE%9E%E7%8E%B0/</link>
-      <pubDate>Tue, 05 Sep 2017 15:35:18 +0800</pubDate>
-      <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/algorithm/union-findgolang%E5%AE%9E%E7%8E%B0/</guid>
-      <description>quick-find、quick-union、加权quick-union(附带路径压缩优化) 本算法主要解决动态连通性一类问题，这里尽量用精炼</description>
-    </item>
-    
-    <item>
-      <title>Union-Find(Java实现)</title>
-      <link>https://imroc.io/posts/algorithm/union-findjava%E5%AE%9E%E7%8E%B0/</link>
-      <pubDate>Tue, 05 Sep 2017 15:35:18 +0800</pubDate>
-      <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/algorithm/union-findjava%E5%AE%9E%E7%8E%B0/</guid>
-      <description>quick-find、quick-union、加权quick-union(附带路径压缩优化) 本算法主要解决动态连通性一类问题，这里尽量用精炼</description>
-    </item>
-    
-    <item>
-      <title>三向切分快速排序(C-C&#43;&#43;实现)</title>
-      <link>https://imroc.io/posts/algorithm/%E4%B8%89%E5%90%91%E5%88%87%E5%88%86%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8Fc-c&#43;&#43;%E5%AE%9E%E7%8E%B0/</link>
-      <pubDate>Tue, 05 Sep 2017 15:35:18 +0800</pubDate>
-      <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/algorithm/%E4%B8%89%E5%90%91%E5%88%87%E5%88%86%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8Fc-c&#43;&#43;%E5%AE%9E%E7%8E%B0/</guid>
-      <description>封装成函数： //交换数组元素 void swap(int *a,int i,int j) { int t = a[i]; a[i] = a[j]; a[j] = t; } //在lt之前的(lo~lt-1)都小于中间值 //在gt之前的(gt+1~hi</description>
-    </item>
-    
-    <item>
-      <title>三向切分快速排序(golang实现)</title>
-      <link>https://imroc.io/posts/algorithm/%E4%B8%89%E5%90%91%E5%88%87%E5%88%86%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8Fgolang%E5%AE%9E%E7%8E%B0/</link>
-      <pubDate>Tue, 05 Sep 2017 15:35:18 +0800</pubDate>
-      <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/algorithm/%E4%B8%89%E5%90%91%E5%88%87%E5%88%86%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8Fgolang%E5%AE%9E%E7%8E%B0/</guid>
-      <description>封装成函数： //三向切分快速排序 func ThreeWayQuickSort(s []int) { sort3way(s, 0, len(s)-1) } //在lt之前的(lo~lt-1)都小于中间值 //在gt之前的(gt+1~hi)都大于中间值</description>
-    </item>
-    
-    <item>
-      <title>三向切分快速排序(Java实现)</title>
-      <link>https://imroc.io/posts/algorithm/%E4%B8%89%E5%90%91%E5%88%87%E5%88%86%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8Fjava%E5%AE%9E%E7%8E%B0/</link>
-      <pubDate>Tue, 05 Sep 2017 15:35:18 +0800</pubDate>
-      <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/algorithm/%E4%B8%89%E5%90%91%E5%88%87%E5%88%86%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8Fjava%E5%AE%9E%E7%8E%B0/</guid>
-      <description>封装成类： package com.roc.algorithms.sort; /** * 三向切分快速排序 * 适合有较多重复元素的排序算法 * * @author imroc */ public class ThreeWayQuickSort { public static void sort(int[] a) { sort(a, 0, a.length - 1); } //在lt之前的(lo~lt-1)</description>
-    </item>
-    
-    <item>
-      <title>二分法查找(C-C&#43;&#43;实现)</title>
-      <link>https://imroc.io/posts/algorithm/%E4%BA%8C%E5%88%86%E6%B3%95%E6%9F%A5%E6%89%BEc-c&#43;&#43;%E5%AE%9E%E7%8E%B0/</link>
-      <pubDate>Tue, 05 Sep 2017 15:35:18 +0800</pubDate>
-      <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/algorithm/%E4%BA%8C%E5%88%86%E6%B3%95%E6%9F%A5%E6%89%BEc-c&#43;&#43;%E5%AE%9E%E7%8E%B0/</guid>
-      <description>封装成函数： //二分法查找 //数组a是升序的，len为数组长度 //k为待查找的整数 //如果查到有就返回对应角标, //没有就返回-1 int search(int *a,int len, int</description>
-    </item>
-    
-    <item>
-      <title>二分法查找(golang实现)</title>
-      <link>https://imroc.io/posts/algorithm/%E4%BA%8C%E5%88%86%E6%B3%95%E6%9F%A5%E6%89%BEgolang%E5%AE%9E%E7%8E%B0/</link>
-      <pubDate>Tue, 05 Sep 2017 15:35:18 +0800</pubDate>
-      <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/algorithm/%E4%BA%8C%E5%88%86%E6%B3%95%E6%9F%A5%E6%89%BEgolang%E5%AE%9E%E7%8E%B0/</guid>
-      <description>封装成函数： //二分法查找 //切片s是升序的 //k为待查找的整数 //如果查到有就返回对应角标, //没有就返回-1 func BinarySearch(s []int, k int) int { lo, hi := 0, len(s)-1 for lo</description>
-    </item>
-    
-    <item>
-      <title>二分法查找(Java实现)</title>
-      <link>https://imroc.io/posts/algorithm/%E4%BA%8C%E5%88%86%E6%B3%95%E6%9F%A5%E6%89%BEjava%E5%AE%9E%E7%8E%B0/</link>
-      <pubDate>Tue, 05 Sep 2017 15:35:18 +0800</pubDate>
-      <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/algorithm/%E4%BA%8C%E5%88%86%E6%B3%95%E6%9F%A5%E6%89%BEjava%E5%AE%9E%E7%8E%B0/</guid>
-      <description>封装成类： package com.roc.algorithms.search; /** * 二分法查找 * * @author imroc */ public class BinarySearch { /** * @param a 升序排列的数组 * @param k 待查找的整数 * @return 如果查到有就返回对应角标，没有就返回-1 */ public static int search(int[]</description>
-    </item>
-    
-    <item>
-      <title>冒泡排序(C-C&#43;&#43;-实现)</title>
-      <link>https://imroc.io/posts/algorithm/%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8Fc-c&#43;&#43;-%E5%AE%9E%E7%8E%B0/</link>
-      <pubDate>Tue, 05 Sep 2017 15:35:18 +0800</pubDate>
-      <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/algorithm/%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8Fc-c&#43;&#43;-%E5%AE%9E%E7%8E%B0/</guid>
-      <description>两种类似的方式： //交换数组元素 void swap(int *a,int i,int j){ int t = a[i]; a[i] = a[j]; a[j] = t; } //第一种冒泡排序 void bubble_sort1(int *a,int len){ int max = len-1; int i,j; for(i=0;i&amp;lt;max;i++){ for(j=0;j&amp;lt;max-i;j++){ if(a[j+1]&amp;lt;a[j]){ swap(a,j,j+1); } } } } //第二种冒泡排序 void bubble_sort2(int</description>
-    </item>
-    
-    <item>
-      <title>冒泡排序(golang实现)</title>
-      <link>https://imroc.io/posts/algorithm/%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8Fgolang%E5%AE%9E%E7%8E%B0/</link>
-      <pubDate>Tue, 05 Sep 2017 15:35:18 +0800</pubDate>
-      <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/algorithm/%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8Fgolang%E5%AE%9E%E7%8E%B0/</guid>
-      <description>有两种相似的方式： func swap(slice []int, i int, j int) { slice[i], slice[j] = slice[j], slice[i] } //第一种冒泡排序 func BubbleSort1(slice []int) { length := len(slice) max := length - 1 for i := 0; i &amp;lt; max; i++ { for j := 0; j &amp;lt; max-i; j++ { if slice[j+1] &amp;lt; slice[j] { swap(slice, j, j+1)</description>
-    </item>
-    
-    <item>
-      <title>冒泡排序(Java实现)</title>
-      <link>https://imroc.io/posts/algorithm/%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8Fjava%E5%AE%9E%E7%8E%B0/</link>
-      <pubDate>Tue, 05 Sep 2017 15:35:18 +0800</pubDate>
-      <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/algorithm/%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8Fjava%E5%AE%9E%E7%8E%B0/</guid>
-      <description>两种类似的方式： /** * 冒泡排序 * @author roc */ public class BubbleSort { //交换数组元素 private static void swap(int[] a,int i,int j){ int t = a[i]; a[i] = a[j]; a[j] = t; } //第一种冒泡排序 public static void sort1(int[] a){ int max = a.length-1; int i,j; for(i=0;i&amp;lt;max;i++){ for(j=0;j&amp;lt;max-i;j++){</description>
-    </item>
-    
-    <item>
-      <title>堆排序(C-C&#43;&#43;实现)</title>
-      <link>https://imroc.io/posts/algorithm/%E5%A0%86%E6%8E%92%E5%BA%8Fc-c&#43;&#43;%E5%AE%9E%E7%8E%B0/</link>
-      <pubDate>Tue, 05 Sep 2017 15:35:18 +0800</pubDate>
-      <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/algorithm/%E5%A0%86%E6%8E%92%E5%BA%8Fc-c&#43;&#43;%E5%AE%9E%E7%8E%B0/</guid>
-      <description>封装成函数： //交换数组元素 void swap(int *a,int i,int j) { int t = a[i]; a[i] = a[j]; a[j] = t; } //下沉（由上至下的堆有序化） void sink(int *a,int k,int N) { while (1) { int i = 2 * k; if (i &amp;gt; N) //保证该</description>
-    </item>
-    
-    <item>
-      <title>堆排序(golang实现)</title>
-      <link>https://imroc.io/posts/algorithm/%E5%A0%86%E6%8E%92%E5%BA%8Fgolang%E5%AE%9E%E7%8E%B0/</link>
-      <pubDate>Tue, 05 Sep 2017 15:35:18 +0800</pubDate>
-      <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/algorithm/%E5%A0%86%E6%8E%92%E5%BA%8Fgolang%E5%AE%9E%E7%8E%B0/</guid>
-      <description>封装成函数： //堆排序 //s[0]不用，实际元素从角标1开始 //父节点元素大于子节点元素 //左子节点角标为2*k //右子节点角标为2*k+1</description>
-    </item>
-    
-    <item>
-      <title>堆排序(Java实现)</title>
-      <link>https://imroc.io/posts/algorithm/%E5%A0%86%E6%8E%92%E5%BA%8Fjava%E5%AE%9E%E7%8E%B0/</link>
-      <pubDate>Tue, 05 Sep 2017 15:35:18 +0800</pubDate>
-      <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/algorithm/%E5%A0%86%E6%8E%92%E5%BA%8Fjava%E5%AE%9E%E7%8E%B0/</guid>
-      <description>封装成类： package com.roc.algorithms.sort; /** * 堆排序 * a[0]不用，实际元素从角标1开始 * 父节点元素大于子节点元素 * 左子节点角标为2*k * 右子节点角标为2*k+1 * 父节</description>
-    </item>
-    
-    <item>
-      <title>希尔排序(C-C&#43;&#43;实现)</title>
-      <link>https://imroc.io/posts/algorithm/%E5%B8%8C%E5%B0%94%E6%8E%92%E5%BA%8Fc-c&#43;&#43;%E5%AE%9E%E7%8E%B0/</link>
-      <pubDate>Tue, 05 Sep 2017 15:35:18 +0800</pubDate>
-      <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/algorithm/%E5%B8%8C%E5%B0%94%E6%8E%92%E5%BA%8Fc-c&#43;&#43;%E5%AE%9E%E7%8E%B0/</guid>
-      <description>封装成函数： //交换数组元素 void swap(int *a,int i,int j) { int t = a[i]; a[i] = a[j]; a[j] = t; } //希尔排序 void shell_sort(int *a,int len) { int h=1,i,j; while(h&amp;lt;len/3) //寻找合适的间隔h { h = 3*h+1; } while(h&amp;gt;=1) { //将数组变为间</description>
-    </item>
-    
-    <item>
-      <title>希尔排序(golang实现)</title>
-      <link>https://imroc.io/posts/algorithm/%E5%B8%8C%E5%B0%94%E6%8E%92%E5%BA%8Fgolang%E5%AE%9E%E7%8E%B0/</link>
-      <pubDate>Tue, 05 Sep 2017 15:35:18 +0800</pubDate>
-      <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/algorithm/%E5%B8%8C%E5%B0%94%E6%8E%92%E5%BA%8Fgolang%E5%AE%9E%E7%8E%B0/</guid>
-      <description>封装成函数： func ShellSort(a []int) { n := len(a) h := 1 for h &amp;lt; n/3 { //寻找合适的间隔h h = 3*h + 1 } for h &amp;gt;= 1 { //将数组变为间隔h个元素有序 for i := h; i &amp;lt; n; i++ { //间隔</description>
-    </item>
-    
-    <item>
-      <title>希尔排序(Java实现)</title>
-      <link>https://imroc.io/posts/algorithm/%E5%B8%8C%E5%B0%94%E6%8E%92%E5%BA%8Fjava%E5%AE%9E%E7%8E%B0/</link>
-      <pubDate>Tue, 05 Sep 2017 15:35:18 +0800</pubDate>
-      <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/algorithm/%E5%B8%8C%E5%B0%94%E6%8E%92%E5%BA%8Fjava%E5%AE%9E%E7%8E%B0/</guid>
-      <description>封装成类： package com.roc.algorithms.sort; /** * 希尔排序 * * @author imroc */ public class ShellSort { //交换数组元素 private static void swap(int[] a, int i, int j) { int t = a[i]; a[i] = a[j]; a[j] = t; } public static void sort(int[] a) { int h = 1; while (h &amp;lt; a.length / 3) {//</description>
-    </item>
-    
-    <item>
-      <title>归并排序,自顶向下与自底向上两种方式(C-C&#43;&#43;实现)</title>
-      <link>https://imroc.io/posts/algorithm/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F%E8%87%AA%E9%A1%B6%E5%90%91%E4%B8%8B%E4%B8%8E%E8%87%AA%E5%BA%95%E5%90%91%E4%B8%8A%E4%B8%A4%E7%A7%8D%E6%96%B9%E5%BC%8Fc-c&#43;&#43;%E5%AE%9E%E7%8E%B0/</link>
-      <pubDate>Tue, 05 Sep 2017 15:35:18 +0800</pubDate>
-      <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/algorithm/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F%E8%87%AA%E9%A1%B6%E5%90%91%E4%B8%8B%E4%B8%8E%E8%87%AA%E5%BA%95%E5%90%91%E4%B8%8A%E4%B8%A4%E7%A7%8D%E6%96%B9%E5%BC%8Fc-c&#43;&#43;%E5%AE%9E%E7%8E%B0/</guid>
-      <description>封装成函数merge_sort_up_to_down（自顶向下方式）和merge_sort_down_to_up（自底向上方式）： #include &amp;lt;malloc.h&amp;gt; //归</description>
-    </item>
-    
-    <item>
-      <title>归并排序,自顶向下与自底向上两种方式(golang实现)</title>
-      <link>https://imroc.io/posts/algorithm/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F%E8%87%AA%E9%A1%B6%E5%90%91%E4%B8%8B%E4%B8%8E%E8%87%AA%E5%BA%95%E5%90%91%E4%B8%8A%E4%B8%A4%E7%A7%8D%E6%96%B9%E5%BC%8Fgolang%E5%AE%9E%E7%8E%B0/</link>
-      <pubDate>Tue, 05 Sep 2017 15:35:18 +0800</pubDate>
-      <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/algorithm/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F%E8%87%AA%E9%A1%B6%E5%90%91%E4%B8%8B%E4%B8%8E%E8%87%AA%E5%BA%95%E5%90%91%E4%B8%8A%E4%B8%A4%E7%A7%8D%E6%96%B9%E5%BC%8Fgolang%E5%AE%9E%E7%8E%B0/</guid>
-      <description>封装成函数： //自顶向下归并排序 func MergeSortUpToDown(s []int) { aux := make([]int, len(s)) //辅助切片 mergeSortUpToDown(s, aux, 0, len(s)-1) } //自底向上归并排序 func MergeSortDownToUp(s []int) { aux := make([]int, len(s)) //辅助切片 n := len(s) for sz := 1; sz &amp;lt; n; sz</description>
-    </item>
-    
-    <item>
-      <title>归并排序,自顶向下与自底向上两种方式(Java实现)</title>
-      <link>https://imroc.io/posts/algorithm/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F%E8%87%AA%E9%A1%B6%E5%90%91%E4%B8%8B%E4%B8%8E%E8%87%AA%E5%BA%95%E5%90%91%E4%B8%8A%E4%B8%A4%E7%A7%8D%E6%96%B9%E5%BC%8Fjava%E5%AE%9E%E7%8E%B0/</link>
-      <pubDate>Tue, 05 Sep 2017 15:35:18 +0800</pubDate>
-      <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/algorithm/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F%E8%87%AA%E9%A1%B6%E5%90%91%E4%B8%8B%E4%B8%8E%E8%87%AA%E5%BA%95%E5%90%91%E4%B8%8A%E4%B8%A4%E7%A7%8D%E6%96%B9%E5%BC%8Fjava%E5%AE%9E%E7%8E%B0/</guid>
-      <description>封装成类： package com.roc.algorithms.sort; /** * 归并排序 * * @author imroc */ public class MergeSort { //自顶向下方式 public static void sortUpToDown(int[] a) { int[] aux = new int[a.length]; sort(a, aux, 0, a.length - 1); } //自底向上方式 public static void sortDownToUp(int[] a) { int[] aux = new int[a.length]; for (int sz</description>
-    </item>
-    
-    <item>
-      <title>快速排序(C-C&#43;&#43;实现)</title>
-      <link>https://imroc.io/posts/algorithm/%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8Fc-c&#43;&#43;%E5%AE%9E%E7%8E%B0/</link>
-      <pubDate>Tue, 05 Sep 2017 15:35:18 +0800</pubDate>
-      <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/algorithm/%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8Fc-c&#43;&#43;%E5%AE%9E%E7%8E%B0/</guid>
-      <description>封装成函数： //快速排序 void quick_sort(int *a,int len) { sort(a,0,len-1); } void sort(int *a,int lo,int hi) { int i,j,k; if(lo&amp;gt;=hi) { return; } k = partition(a,lo,hi); sort(a,lo,k); sort(a,k+1,hi); } //交换数组元素 void swap(int *a,int i,int j) { int t = a[i]; a[i] = a[j]; a[j] = t; } int partition(int *a,int lo,int hi) { int i,j;</description>
-    </item>
-    
-    <item>
-      <title>快速排序(golang实现)</title>
-      <link>https://imroc.io/posts/algorithm/%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8Fgolang%E5%AE%9E%E7%8E%B0/</link>
-      <pubDate>Tue, 05 Sep 2017 15:35:18 +0800</pubDate>
-      <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/algorithm/%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8Fgolang%E5%AE%9E%E7%8E%B0/</guid>
-      <description>封装成函数： //快速排序 func QuickSort(s []int) { sort(s, 0, len(s)-1) } func sort(s []int, lo, hi int) { if lo &amp;gt;= hi { return } k := partition(s, lo, hi) sort(s, lo, k) sort(s, k+1, hi) } func partition(s []int, lo, hi int) int { i, j := lo, hi+1 //将lo作为中间值 for</description>
-    </item>
-    
-    <item>
-      <title>快速排序(Java实现)</title>
-      <link>https://imroc.io/posts/algorithm/%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8Fjava%E5%AE%9E%E7%8E%B0/</link>
-      <pubDate>Tue, 05 Sep 2017 15:35:18 +0800</pubDate>
-      <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/algorithm/%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8Fjava%E5%AE%9E%E7%8E%B0/</guid>
-      <description>封装成类： package com.roc.algorithms.sort; /** * 快速排序 * * @author imroc */ public class QuickSort { public static void sort(int[] a) { sort(a, 0, a.length - 1); } private static void sort(int[] a, int lo, int hi) { if (lo &amp;gt;= hi) { return; } int k = partition(a, lo, hi); sort(a, lo, k); sort(a, k + 1, hi); } private static int partition(int[]</description>
-    </item>
-    
-    <item>
-      <title>插入排序(C-C&#43;&#43;实现)</title>
-      <link>https://imroc.io/posts/algorithm/%E6%8F%92%E5%85%A5%E6%8E%92%E5%BA%8Fc-c&#43;&#43;%E5%AE%9E%E7%8E%B0/</link>
-      <pubDate>Tue, 05 Sep 2017 15:35:18 +0800</pubDate>
-      <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/algorithm/%E6%8F%92%E5%85%A5%E6%8E%92%E5%BA%8Fc-c&#43;&#43;%E5%AE%9E%E7%8E%B0/</guid>
-      <description>封装成函数： //交换数组元素 void swap(int *a,int i,int j) { int t = a[i]; a[i] = a[j]; a[j] = t; } //插入排序 void insertion_sort(int *a,int len) { int i,j; if (len &amp;lt; 2) { return; } for (i = 1; i &amp;lt; len; i++) { for (j = i; j &amp;gt; 0 &amp;amp;&amp;amp; a[j] &amp;lt;</description>
-    </item>
-    
-    <item>
-      <title>插入排序(golang实现)</title>
-      <link>https://imroc.io/posts/algorithm/%E6%8F%92%E5%85%A5%E6%8E%92%E5%BA%8Fgolang%E5%AE%9E%E7%8E%B0/</link>
-      <pubDate>Tue, 05 Sep 2017 15:35:18 +0800</pubDate>
-      <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/algorithm/%E6%8F%92%E5%85%A5%E6%8E%92%E5%BA%8Fgolang%E5%AE%9E%E7%8E%B0/</guid>
-      <description>封装成函数： //插入排序 func InsertionSort(s []int) { n := len(s) if n &amp;lt; 2 { return } for i := 1; i &amp;lt; n; i++ { for j := i; j &amp;gt; 0 &amp;amp;&amp;amp; s[j] &amp;lt; s[j - 1]; j-- { swap(s, j, j - 1) } } } func swap(slice []int, i int, j int) { slice[i], slice[j] = slice[j],</description>
-    </item>
-    
-    <item>
-      <title>插入排序(Java实现)</title>
-      <link>https://imroc.io/posts/algorithm/%E6%8F%92%E5%85%A5%E6%8E%92%E5%BA%8Fjava%E5%AE%9E%E7%8E%B0/</link>
-      <pubDate>Tue, 05 Sep 2017 15:35:18 +0800</pubDate>
-      <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/algorithm/%E6%8F%92%E5%85%A5%E6%8E%92%E5%BA%8Fjava%E5%AE%9E%E7%8E%B0/</guid>
-      <description>封装成类： package com.roc.algorithms.sort; /** * 插入排序 * * @author roc */ public class InsertionSort { //交换数组元素 private static void swap(int[] a, int i, int j) { int t = a[i]; a[i] = a[j]; a[j] = t; } public static void sort(int[] a) { if (a.length &amp;lt; 2) { return; } for (int i = 1; i</description>
-    </item>
-    
-    <item>
-      <title>求n次方的高效算法</title>
-      <link>https://imroc.io/posts/algorithm/%E6%B1%82n%E6%AC%A1%E6%96%B9%E7%9A%84%E9%AB%98%E6%95%88%E7%AE%97%E6%B3%95/</link>
-      <pubDate>Tue, 05 Sep 2017 15:35:18 +0800</pubDate>
-      <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/algorithm/%E6%B1%82n%E6%AC%A1%E6%96%B9%E7%9A%84%E9%AB%98%E6%95%88%E7%AE%97%E6%B3%95/</guid>
-      <description>**注：**次幂n为整数，底数可以是整数、小数、矩阵等(只要能进行乘法运算的 举个求整数的n次方的例子(Go语言版)： func pow(x, n int) int { ret := 1 // 结果</description>
-    </item>
-    
-    <item>
-      <title>求两圆交点算法代码(golang实现)</title>
-      <link>https://imroc.io/posts/algorithm/%E6%B1%82%E4%B8%A4%E5%9C%86%E4%BA%A4%E7%82%B9%E7%AE%97%E6%B3%95%E4%BB%A3%E7%A0%81golang%E5%AE%9E%E7%8E%B0/</link>
-      <pubDate>Tue, 05 Sep 2017 15:35:18 +0800</pubDate>
-      <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/algorithm/%E6%B1%82%E4%B8%A4%E5%9C%86%E4%BA%A4%E7%82%B9%E7%AE%97%E6%B3%95%E4%BB%A3%E7%A0%81golang%E5%AE%9E%E7%8E%B0/</guid>
-      <description>实现代码： package main import ( &amp;#34;math&amp;#34; ) //代表一个点，包含横纵坐标 type Point struct { X, Y float64 } //代表一个圆，包含横纵坐标及半径 type Circle struct { Point R float64 } //创建圆对象 func NewCircle(x, y, r float64)</description>
-    </item>
-    
-    <item>
-      <title>求两圆相交的交点的方法</title>
-      <link>https://imroc.io/posts/algorithm/%E6%B1%82%E4%B8%A4%E5%9C%86%E7%9B%B8%E4%BA%A4%E7%9A%84%E4%BA%A4%E7%82%B9%E7%9A%84%E6%96%B9%E6%B3%95/</link>
-      <pubDate>Tue, 05 Sep 2017 15:35:18 +0800</pubDate>
-      <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/algorithm/%E6%B1%82%E4%B8%A4%E5%9C%86%E7%9B%B8%E4%BA%A4%E7%9A%84%E4%BA%A4%E7%82%B9%E7%9A%84%E6%96%B9%E6%B3%95/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>线性复杂度选出第k小元素、中位数、最小的k个元素(C-C&#43;&#43;实现)</title>
-      <link>https://imroc.io/posts/algorithm/%E7%BA%BF%E6%80%A7%E5%A4%8D%E6%9D%82%E5%BA%A6%E9%80%89%E5%87%BA%E7%AC%ACk%E5%B0%8F%E5%85%83%E7%B4%A0%E4%B8%AD%E4%BD%8D%E6%95%B0%E6%9C%80%E5%B0%8F%E7%9A%84k%E4%B8%AA%E5%85%83%E7%B4%A0c-c&#43;&#43;%E5%AE%9E%E7%8E%B0/</link>
-      <pubDate>Tue, 05 Sep 2017 15:35:18 +0800</pubDate>
-      <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/algorithm/%E7%BA%BF%E6%80%A7%E5%A4%8D%E6%9D%82%E5%BA%A6%E9%80%89%E5%87%BA%E7%AC%ACk%E5%B0%8F%E5%85%83%E7%B4%A0%E4%B8%AD%E4%BD%8D%E6%95%B0%E6%9C%80%E5%B0%8F%E7%9A%84k%E4%B8%AA%E5%85%83%E7%B4%A0c-c&#43;&#43;%E5%AE%9E%E7%8E%B0/</guid>
-      <description>封装成函数： #include &amp;lt;malloc.h&amp;gt; void swap(int *a,int i,int j) { int t = a[i]; a[i] = a[j]; a[j] = t; } int partition(int *a,int lo,int hi) { int i,j; i=lo; j=hi+1; while(1) { while(a[++i]&amp;lt;=a[lo]) { if(i==hi) { break; } } while(a[--j]&amp;gt;a[lo]) { if(j==lo) { break; } } if(i&amp;gt;=j) { break; } swap(a,i,j); } swap(a,lo,j); return j; } int* copy_of(int *a,int len) { int *ret = (int*)malloc(sizeof(int)*len);</description>
-    </item>
-    
-    <item>
-      <title>线性复杂度选出第k小元素、中位数、最小的k个元素(golang实现)</title>
-      <link>https://imroc.io/posts/algorithm/%E7%BA%BF%E6%80%A7%E5%A4%8D%E6%9D%82%E5%BA%A6%E9%80%89%E5%87%BA%E7%AC%ACk%E5%B0%8F%E5%85%83%E7%B4%A0%E4%B8%AD%E4%BD%8D%E6%95%B0%E6%9C%80%E5%B0%8F%E7%9A%84k%E4%B8%AA%E5%85%83%E7%B4%A0golang%E5%AE%9E%E7%8E%B0/</link>
-      <pubDate>Tue, 05 Sep 2017 15:35:18 +0800</pubDate>
-      <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/algorithm/%E7%BA%BF%E6%80%A7%E5%A4%8D%E6%9D%82%E5%BA%A6%E9%80%89%E5%87%BA%E7%AC%ACk%E5%B0%8F%E5%85%83%E7%B4%A0%E4%B8%AD%E4%BD%8D%E6%95%B0%E6%9C%80%E5%B0%8F%E7%9A%84k%E4%B8%AA%E5%85%83%E7%B4%A0golang%E5%AE%9E%E7%8E%B0/</guid>
-      <description>封装成函数： //选出第k小元素，k为1~len(s) func SelectKthMin(s []int, k int) int { k-- lo, hi := 0, len(s)-1 for { j := partition(s, lo, hi) if j &amp;lt; k { lo = j + 1 } else if j &amp;gt; k { hi = j - 1 } else</description>
-    </item>
-    
-    <item>
-      <title>线性复杂度选出第k小元素、中位数、最小的k个元素(Java实现)</title>
-      <link>https://imroc.io/posts/algorithm/%E7%BA%BF%E6%80%A7%E5%A4%8D%E6%9D%82%E5%BA%A6%E9%80%89%E5%87%BA%E7%AC%ACk%E5%B0%8F%E5%85%83%E7%B4%A0%E4%B8%AD%E4%BD%8D%E6%95%B0%E6%9C%80%E5%B0%8F%E7%9A%84k%E4%B8%AA%E5%85%83%E7%B4%A0java%E5%AE%9E%E7%8E%B0/</link>
-      <pubDate>Tue, 05 Sep 2017 15:35:18 +0800</pubDate>
-      <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/algorithm/%E7%BA%BF%E6%80%A7%E5%A4%8D%E6%9D%82%E5%BA%A6%E9%80%89%E5%87%BA%E7%AC%ACk%E5%B0%8F%E5%85%83%E7%B4%A0%E4%B8%AD%E4%BD%8D%E6%95%B0%E6%9C%80%E5%B0%8F%E7%9A%84k%E4%B8%AA%E5%85%83%E7%B4%A0java%E5%AE%9E%E7%8E%B0/</guid>
-      <description>封装成类： package com.roc.algorithms.common; import java.util.Arrays; /** * 选出第k小元素、中位数、最小的k个元素(线性复杂度) * * @author imroc */ public class Select { //选出第k小元素，k为1~a.length public static</description>
-    </item>
-    
-    <item>
-      <title>选择排序(C-C&#43;&#43;-实现)</title>
-      <link>https://imroc.io/posts/algorithm/%E9%80%89%E6%8B%A9%E6%8E%92%E5%BA%8Fc-c&#43;&#43;-%E5%AE%9E%E7%8E%B0/</link>
-      <pubDate>Tue, 05 Sep 2017 15:35:18 +0800</pubDate>
-      <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/algorithm/%E9%80%89%E6%8B%A9%E6%8E%92%E5%BA%8Fc-c&#43;&#43;-%E5%AE%9E%E7%8E%B0/</guid>
-      <description>封装成函数： //交换数组元素 void swap(int *a,int i,int j) { int t = a[i]; a[i] = a[j]; a[j] = t; } //选择排序 void selection_sort(int *a,int len) { int m = len-1; //以免每次循环判断都运算 int i,j,k; for (i=0; i&amp;lt;m; i++) { k=i; for (j=i+1; j&amp;lt;len;</description>
-    </item>
-    
-    <item>
-      <title>选择排序(golang实现)</title>
-      <link>https://imroc.io/posts/algorithm/%E9%80%89%E6%8B%A9%E6%8E%92%E5%BA%8Fgolang%E5%AE%9E%E7%8E%B0/</link>
-      <pubDate>Tue, 05 Sep 2017 15:35:18 +0800</pubDate>
-      <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/algorithm/%E9%80%89%E6%8B%A9%E6%8E%92%E5%BA%8Fgolang%E5%AE%9E%E7%8E%B0/</guid>
-      <description>封装成函数： //交换数组元素 func swap(slice []int, i int, j int) { slice[i], slice[j] = slice[j], slice[i] } //选择排序 func SelectionSort(s []int) { l := len(s) //以免每次循环判断都运算 m := len(s)-1 for i:=0;i&amp;lt;m;i++ { k:=i for j:=i+1;j&amp;lt;l;j++ { if s[j]&amp;lt;s[k] { k = j</description>
-    </item>
-    
-    <item>
-      <title>选择排序(Java实现)</title>
-      <link>https://imroc.io/posts/algorithm/%E9%80%89%E6%8B%A9%E6%8E%92%E5%BA%8Fjava%E5%AE%9E%E7%8E%B0/</link>
-      <pubDate>Tue, 05 Sep 2017 15:35:18 +0800</pubDate>
-      <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/algorithm/%E9%80%89%E6%8B%A9%E6%8E%92%E5%BA%8Fjava%E5%AE%9E%E7%8E%B0/</guid>
-      <description>封装成类： /** * 选择排序 * * @author imroc */ public class SelectionSort { //交换数组元素 private static void swap(int[] a, int i, int j) { int t = a[i]; a[i] = a[j]; a[j] = t; } //选择排序 public static void sort(int[] a) { int m = a.length - 1; //以</description>
     </item>
     
   </channel>

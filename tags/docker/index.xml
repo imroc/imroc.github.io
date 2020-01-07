@@ -5,7 +5,7 @@
     <link>https://imroc.io/tags/docker/</link>
     <description>Recent content in docker on roc</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>zh-cn</language>
+    <language>zh</language>
     <managingEditor>roc@imroc.io (roc)</managingEditor>
     <webMaster>roc@imroc.io (roc)</webMaster>
     <lastBuildDate>Fri, 09 Mar 2018 10:39:17 +0800</lastBuildDate>
@@ -15,92 +15,11 @@
     
     <item>
       <title>利用Katacoda免费同步Docker镜像到Docker Hub</title>
-      <link>https://imroc.io/posts/kubernetes/sync-images-to-docker-hub-using-katacoda/</link>
+      <link>https://imroc.io/posts/sync-images-to-docker-hub-using-katacoda/</link>
       <pubDate>Fri, 09 Mar 2018 10:39:17 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/kubernetes/sync-images-to-docker-hub-using-katacoda/</guid>
+      <guid>https://imroc.io/posts/sync-images-to-docker-hub-using-katacoda/</guid>
       <description>为什么要同步 安装kubernetes的时候，我们需要用到 gcr.io/google_containers 下面的一些镜像，在国内是不能直接下载的。如果用 Self Host 方式安装，master 上的组件除</description>
-    </item>
-    
-    <item>
-      <title>国内使用Kubeadm在CentOS 7上安装Kubernetes 1.9</title>
-      <link>https://imroc.io/posts/kubernetes/install-kubernetes-1.9-on-centos7-with-kubeadm/</link>
-      <pubDate>Wed, 07 Mar 2018 23:35:11 +0800</pubDate>
-      <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/kubernetes/install-kubernetes-1.9-on-centos7-with-kubeadm/</guid>
-      <description>准备 修改系统配置 开启路由转发（保证 proxy 正常运行，Service 需要） sysctl -w net.ipv4.ip_forward=1 默认情况下，由于安全原因，linux是关闭了路由转发的，即同台机器不</description>
-    </item>
-    
-    <item>
-      <title>Kubernetes程序二进制下载集合</title>
-      <link>https://imroc.io/posts/kubernetes/kubernetes-binaries/</link>
-      <pubDate>Fri, 05 Jan 2018 13:43:15 +0800</pubDate>
-      <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/kubernetes/kubernetes-binaries/</guid>
-      <description>前言 由于国内网络的特殊性，安装Kubernetes很多时候会采用二进制方式部署，我将涉及到的二进制利用脚本传到百度云，方便大家下载，脚本开源</description>
-    </item>
-    
-    <item>
-      <title>Docker快速入门（五）docker-compose安装与基础用法</title>
-      <link>https://imroc.io/posts/docker/quick-start-for-docker-5/</link>
-      <pubDate>Wed, 20 Dec 2017 13:12:35 +0800</pubDate>
-      <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/docker/quick-start-for-docker-5/</guid>
-      <description>简介 docker-compose 可以用来定义和运行复杂应用的Docker工具，比如你的web应用需要用到好几个容器，mysql、redis和你自己的应用容器，它们之间</description>
-    </item>
-    
-    <item>
-      <title>Docker快速入门（四）常用命令与技巧</title>
-      <link>https://imroc.io/posts/docker/quick-start-for-docker-4/</link>
-      <pubDate>Wed, 20 Dec 2017 09:05:17 +0800</pubDate>
-      <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/docker/quick-start-for-docker-4/</guid>
-      <description>列出机器上的镜像 docker images 拉取镜像 docker pull openjdk # 等同于 docker pull openjdk:latest docker pull openjdk:jre-slim # 指定了tag docker pull hub.imroc.io:5000/imroc/myapp:1.2 # 拉取私有仓库的镜像 上传镜像 docker push imroc/myapp:1atest # 上传到Docker Hub公有仓</description>
-    </item>
-    
-    <item>
-      <title>Docker快速入门（三）在国内如何快速安装Docker与镜像加速器配置</title>
-      <link>https://imroc.io/posts/docker/quick-start-for-docker-3/</link>
-      <pubDate>Tue, 19 Dec 2017 16:27:07 +0800</pubDate>
-      <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/docker/quick-start-for-docker-3/</guid>
-      <description>前言 使用docker最常用的系统莫过于ubuntu和centos了，一般有两种方式，一种是直接用系统自带的源安装，另一种是官方的源安装。前者</description>
-    </item>
-    
-    <item>
-      <title>Docker快速入门（二）容器、镜像与镜像仓库</title>
-      <link>https://imroc.io/posts/docker/quick-start-for-docker-2/</link>
-      <pubDate>Tue, 19 Dec 2017 11:00:42 +0800</pubDate>
-      <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/docker/quick-start-for-docker-2/</guid>
-      <description>镜像与容器的关系 镜像就是把你程序以及依赖的运行时打包在一起的一个东东，运行一个镜像就成了容器。镜像与容器的关系有点类似程序与进程的关系，比如</description>
-    </item>
-    
-    <item>
-      <title>Docker快速入门（一）认识Docker</title>
-      <link>https://imroc.io/posts/docker/quick-start-for-docker-1/</link>
-      <pubDate>Mon, 18 Dec 2017 15:36:35 +0800</pubDate>
-      <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/docker/quick-start-for-docker-1/</guid>
-      <description>前言 Docker现在可以说是火的一塌糊涂，做技术的几乎都听过这个名词，只是有些小伙伴还没理解Docker到底是个什么东西，能够用来做些什么，</description>
-    </item>
-    
-    <item>
-      <title>Docker中CMD与ENTRYPOINT的简明理解</title>
-      <link>https://imroc.io/posts/docker/understand-docker-cmd-entrypoint/</link>
-      <pubDate>Wed, 06 Sep 2017 16:35:18 +0800</pubDate>
-      <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/docker/understand-docker-cmd-entrypoint/</guid>
-      <description>CMD提供容器启动的默认行为，运行不指定运行的命令及参数，会默认执行CMD中的。 例如hello镜像的Dockerfile中有 CMD [&amp;quot;echo&amp;quot;,&amp;quot;&#39;hello world&#39;&amp;quot;] 执行 docker run h</description>
-    </item>
-    
-    <item>
-      <title>Docker容器间通信</title>
-      <link>https://imroc.io/posts/docker/docker-network-communication/</link>
-      <pubDate>Wed, 06 Sep 2017 16:35:18 +0800</pubDate>
-      <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/docker/docker-network-communication/</guid>
-      <description>容器每次启动时会分配个一个IP地址，这个IP地址只在宿主主机内部有用，其它主机上的程序无法访问此IP 一台机器上的docker容器之间默认是可</description>
     </item>
     
   </channel>

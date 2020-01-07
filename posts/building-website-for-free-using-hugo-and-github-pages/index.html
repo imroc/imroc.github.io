@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title> 利用Hugo和Github Pages免费创建并永久托管网站 - imroc.io|roc的博客|Cloud Native|Kubernetes|Go|Golang</title>
+  <meta name="description" content="imroc.io|roc的博客|Cloud Native|Kubernetes|Go|Golang" />
+  <meta property="og:title" content="利用Hugo和Github Pages免费创建并永久托管网站" />
+  <meta name="twitter:title" content="利用Hugo和Github Pages免费创建并永久托管网站" />
+  <meta name="description" content="教你如何免费建立自己的网站">
+  <meta property="og:description" content="教你如何免费建立自己的网站">
+  <meta name="twitter:description" content="教你如何免费建立自己的网站">
+  <meta name="author" content="{Description { .Site.Author.name }}"/>
+  <link href='https://imroc.io/favicon.png' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://res.cloudinary.com/imroc/image/upload/v1521031841/avatar.png" />
+  <meta name="twitter:image" content="https://res.cloudinary.com/imroc/image/upload/v1521031841/avatar.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@imrocchan" />
+  <meta name="twitter:creator" content="@imrocchan" />
+  <meta property="og:url" content="https://imroc.io/posts/building-website-for-free-using-hugo-and-github-pages/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="roc" />
+
+  <meta name="generator" content="Hugo 0.62.0" />
+  <link rel="canonical" href="https://imroc.io/posts/building-website-for-free-using-hugo-and-github-pages/" />
+  <link rel="alternate" href="https://imroc.io/index.xml" type="application/rss+xml" title="roc">
+
+  
+  <link href="https://fonts.googleapis.com/css?family=Lora:400,400i,700%7COpen+Sans:400,700" rel="stylesheet">
+
+  
+
+
+
+<link rel="stylesheet" href='/css/bundle.min.43522e1b6746447005cecd1381cc12a654c0364de88961016cdf5f133529476d.css' integrity='sha256-Q1IuG2dGRHAFzs0TgcwSplTANk3oiWEBbN9fEzUpR20='>
+  --><script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?05e1e8b7484a08c51cd0953664168cd7";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">切换导航</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://imroc.io/">roc</a>
+    </div>
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">分类</a>
+              <div class="navlinks-children">
+                
+                
+                  <a href="https://imroc.io/categories/kubernetes">kubernetes</a>
+                
+                
+                  <a href="https://imroc.io/categories/docker">docker</a>
+                
+                
+                  <a href="https://imroc.io/categories/golang">golang</a>
+                
+                
+                  <a href="https://imroc.io/categories/arch">架构</a>
+                
+                
+                  <a href="https://imroc.io/categories/istio">istio</a>
+                
+                
+                  <a href="https://imroc.io/categories/geek">极客</a>
+                
+              </div>
+            </li>
+          
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">书籍</a>
+              <div class="navlinks-children">
+                
+                
+                  <a href="https://k8s.imroc.io">Kubernetes 实践指南</a>
+                
+              </div>
+            </li>
+          
+        
+
+        
+          
+            <li>
+              
+                
+              
+                
+                  <a href="/en" lang="en">English</a>
+                
+              
+            </li>
+          
+        
+
+        
+        <li>
+          <a href="#modalSearch" data-toggle="modal" data-target="#modalSearch" style="outline: none;">
+            <span id="searchGlyph" class="glyphicon glyphicon-search"></span>
+          </a>
+        </li>
+        
+      </ul>
+    </div>
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="roc" href="https://imroc.io/">
+            <img class="avatar-img" src="https://res.cloudinary.com/imroc/image/upload/v1521031841/avatar.png" alt="roc" />
+          </a>
+        
+      </div>
+    </div>
+  </div>
+</nav>
+
+
+  <div id="modalSearch" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">搜索</h4>
+        </div>
+        <div class="modal-body">
+            
+<div class="aa-input-container" id="aa-input-container">
+    <input type="search" id="aa-search-input" class="aa-input-search" placeholder="Search for titles or URIs..."
+        name="search" autocomplete="off" />
+    <svg class="aa-input-icon" viewBox="654 -372 1664 1664">
+        <path
+            d="M1806,332c0-123.3-43.8-228.8-131.5-316.5C1586.8-72.2,1481.3-116,1358-116s-228.8,43.8-316.5,131.5  C953.8,103.2,910,208.7,910,332s43.8,228.8,131.5,316.5C1129.2,736.2,1234.7,780,1358,780s228.8-43.8,316.5-131.5  C1762.2,560.8,1806,455.3,1806,332z M2318,1164c0,34.7-12.7,64.7-38,90s-55.3,38-90,38c-36,0-66-12.7-90-38l-343-342  c-119.3,82.7-252.3,124-399,124c-95.3,0-186.5-18.5-273.5-55.5s-162-87-225-150s-113-138-150-225S654,427.3,654,332  s18.5-186.5,55.5-273.5s87-162,150-225s138-113,225-150S1262.7-372,1358-372s186.5,18.5,273.5,55.5s162,87,225,150s113,138,150,225  S2062,236.7,2062,332c0,146.7-41.3,279.7-124,399l343,343C2305.7,1098.7,2318,1128.7,2318,1164z" />
+    </svg>
+</div>
+
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/algoliasearch.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/autocomplete.min.js"></script>
+<script>
+    var client = algoliasearch("B6Q6PSGUV5", "d04f855d3a39eed8ad8d9365ba7c86af");
+    var index = client.initIndex("imroc-blog");
+    
+    autocomplete('#aa-search-input', {
+        hint: false
+    }, {
+        source: autocomplete.sources.hits(index, {
+            hitsPerPage: 5
+        }),
+        
+        displayKey: 'name',
+        
+        templates: {
+            
+            suggestion: function (suggestion) {
+                return '<span>' + '<a href="/' + suggestion.uri + '">' + suggestion._highlightResult.title.value +
+                        '</a></span>';
+            }
+        }
+    });
+</script>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    
+  
+  
+  
+
+
+
+
+  
+    <div id="header-big-imgs" data-num-img=1 data-img-src-1="https://imroc.io/static/blog/hugo/hugo-github.png" data-img-desc-1="Hugo &#43; Github Pages"></div>
+  
+
+  <header class="header-section has-img">
+    
+      <div class="intro-header big-img">
+        
+        
+        <div class="container">
+          <div class="row">
+              <div class="col-lg-12 col-md-12 col-md-offset-0">
+                
+                <div class="post-heading">
+                
+                  
+                     <h1>利用Hugo和Github Pages免费创建并永久托管网站</h1>
+                     
+                    <span class="post-meta">
+  
+  发表于 January 16, 2018
+  
+  
+</span>
+
+
+                    
+                  
+                  
+              </div>
+            </div>
+          </div>
+        </div>
+        <span class="img-desc" style="display: inline;"></span>
+      </div>
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12 col-md-12 col-md-offset-0">
+            <div class="posts-heading">
+                <h1 align="center">利用Hugo和Github Pages免费创建并永久托管网站</h1>
+                
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main" itemscope itemtype="http://schema.org/Article">
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+            <article role="main" class="blog-post" itemprop="articleBody" id="content">
+                
+<aside class="toc">
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#heading">概述</a></li>
+    <li><a href="#hugo">安装hugo</a></li>
+    <li><a href="#heading-1">创建网站</a></li>
+    <li><a href="#heading-2">效果预览</a></li>
+    <li><a href="#heading-3">生成静态页面</a></li>
+    <li><a href="#github-pages">Github Pages</a></li>
+    <li><a href="#-github-pages">设置 Github Pages</a>
+      <ul>
+        <li><a href="#heading-4">源文件与编译结果在同一仓库</a></li>
+        <li><a href="#heading-5">源文件与编译结果在不同仓库</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading-6">自定义域名</a>
+      <ul>
+        <li><a href="#heading-7">绑定根域名</a></li>
+        <li><a href="#heading-8">绑定二级域名</a></li>
+      </ul>
+    </li>
+    <li><a href="#https">自定义域名开启https</a></li>
+  </ul>
+</nav>
+</aside>
+
+
+                <h2 id="heading">概述</h2>
+<p>Hugo可以让你轻松生成静态网站，比如个人博客、API文档、公司主页等，你只需要提供markdown格式的文本，它就能帮你渲染成各种你想要的样式，只需要安装想要的主题，写好对应的markdown内容，就能快速编译出一个静态网站。</p>
+<h2 id="hugo">安装hugo</h2>
+<p>参考官方：http://gohugo.io/getting-started/installing/</p>
+<h2 id="heading-1">创建网站</h2>
+<p>首先初始化你的网站，假如 mysite 是存放网站相关文件的目录：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">hugo new site mysite
+</code></pre></div><p>这会在当前路径创建一个 mysite 目录，进入该路径：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">cd mysite
+</code></pre></div><p>目录如下：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"> ▸ archetypes/
+ ▸ content/
+ ▸ layouts/
+ ▸ static/
+ ▸ themes/
+   config.toml
+</code></pre></div><p><code>config.toml</code> 是网站的配置文件，包含一些基本配置和主题特有的配置。<br>
+这几个文件夹的作用分别是：</p>
+<ul>
+<li>archetypes：包括内容类型，在创建新内容时自动生成内容的配置</li>
+<li>content：包括网站内容，全部使用markdown格式</li>
+<li>layouts：包括了网站的模版，决定内容如何呈现</li>
+<li>static：包括了css, js, fonts, media等，决定网站的外观</li>
+<li>themes：用于存放主题</li>
+</ul>
+<p>在创建页面之前需要安装想要的主题，官方有收集一些：<a href="https://themes.gohugo.io/">https://themes.gohugo.io/</a></p>
+<p>在这里我用我博客的主题<code>xhugo</code>作示例，下载到themes目录：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git clone https://github.com/imroc/xhugo.git themes/xhugo
+</code></pre></div><p>在配置文件<code>config.toml</code>里加一行，配置本网站的主题：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-toml" data-lang="toml"><span style="color:#a6e22e">theme</span> = <span style="color:#e6db74">&#34;xhugo&#34;</span>
+</code></pre></div><p><strong>注：</strong> <code>config.toml</code> 中配置的主题名字应和主题目录名称一致</p>
+<p>新建页面：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">hugo new posts/hello.md
+</code></pre></div><p>此时会在 <code>content</code> 路径下创建文件，由于参数中还带有 posts 路径，所以最终创建的文件路径是 <code>content/posts/hello.md</code>， 每次创建的文件都根据 <code>archetypes/default.md</code> 生成的，包含一些页面的特定配置，比如标题、分类等，不同的主题还有自己支持的一些配置，需要看主题的说明。</p>
+<h2 id="heading-2">效果预览</h2>
+<p>写好 mardown 之后可以本地预览：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">hugo server
+</code></pre></div><p>在浏览器打开 <a href="http://localhost:1313">http://localhost:1313</a> 就能看到效果，并且改内容页面也能实时自动更新。<br>
+<strong>注：</strong> markdown 用什么编写就取决于你自己了，我自己有时用vim，有时用 vscode（装 markdown 的插件）</p>
+<h2 id="heading-3">生成静态页面</h2>
+<p>在生成之前先确定你想将此网站发布在哪儿，在 <code>config.toml</code> 里面配置 <code>baseURL</code> 为访问此网站的基本URL路径：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-toml" data-lang="toml"><span style="color:#a6e22e">baseURL</span> = <span style="color:#e6db74">&#34;https://imroc.io/&#34;</span>
+</code></pre></div><p>然后</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">hugo
+</code></pre></div><p>对，你没看错，直接执行 <code>hugo</code> 就可以了，它编译并生成网站所需的静态页面和文件，输出到当前目录的 <code>public</code> 目录下，当然你也可以改变输出目的地，如：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">hugo -d docs
+</code></pre></div><p>你可以将生成的目录放到 nginx 或 tomcat 等服务器下对外提供服务，不过这需要自己有服务器，接下来我教大家如何利用 Github Pages 来做到永久免费。</p>
+<h2 id="github-pages">Github Pages</h2>
+<p>Github Pages 是 Github 推出的一项功能，可以免费托管静态网站，将你的静态文件放在仓库里，然后在仓库的 <code>Settings</code> 里面，翻到下面的 <code>GitHub Pages</code> 部分，可以将此仓库设置为你的静态网站文件的存放仓库。</p>
+<p>其实 <code>Github Pages</code> 仓库分为两种。</p>
+<ul>
+<li>一种是主仓库，它里面存放的文件可以直接映射到你网站的根路径，而且只能有一个仓库名固定为：<code>&lt;github账号名&gt;.github.io</code>，比如我的 github 账号为 <code>imroc</code>,那么我的 <code>Github Pages</code> 主仓库就为 <code>imroc.github.io</code>，这个仓库的名字其实也就是访问你网站的域名。</li>
+<li>其它的仓库只能映射到网站的子路径，子路径名称和仓库名一致，比如我新建一个 <code>static</code> 仓库并设置为 <code>Github Pages</code> 仓库，那么我可以通过 <code>imroc.github.io/static/</code> 访问到里面的页面和文件</li>
+</ul>
+<h2 id="-github-pages">设置 Github Pages</h2>
+<p>静态文件存放位置有三种：</p>
+<ul>
+<li>master 分支</li>
+<li>master 分支下 docs 目录</li>
+<li>gh-pages 分支(前提是这个分支存在才会显示)</li>
+</ul>
+<p><strong>注：</strong> <code>Github Pages</code> 主仓库除外，必须是 master 分支。</p>
+<p>一般都会先新建第一种 <code>Github Pages</code> 主仓库作为网站主要托管，根据你的账号名创建仓库，如: <code>imroc.github.io</code>， 提交静态文件后在仓库的 <code>Settings</code> 里面，翻到下面的 <code>Github Pages</code> 部分，根据自己需要设置 <code>Github Pages</code> 文件存放位置：
+<img src="https://imroc.io/static/blog/hugo/github-pages-setting.png" alt="github pages 设置"></p>
+<h3 id="heading-4">源文件与编译结果在同一仓库</h3>
+<p>如果你想要将你网站的 <code>hugo</code> 源文件和编译后的静态文件目录放在一个仓库，那可以选择 <code>master</code> 下的 <code>docs</code> 目录作为 <code>Github Pages</code> 目录，编译的时候执行：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">hugo -d docs
+</code></pre></div><p>建议写个脚本，每次更新内容执行下脚本网站就可以更新，如(<code>deploy.sh</code>)：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e">#! /bin/bash
+</span><span style="color:#75715e"></span>
+set -eux 
+
+echo -e <span style="color:#e6db74">&#34;\033[0;32mDeploying updates to GitHub...\033[0m&#34;</span>
+
+msg<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;rebuilding site `date`&#34;</span>
+
+<span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> $# -eq <span style="color:#ae81ff">1</span>  <span style="color:#f92672">]</span>
+    <span style="color:#66d9ef">then</span> msg<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span>$1<span style="color:#e6db74">&#34;</span>
+<span style="color:#66d9ef">fi</span>
+
+<span style="color:#75715e"># Build the project.</span> 
+hugo -d docs
+
+<span style="color:#75715e"># Add changes to git.</span>
+git add .
+
+<span style="color:#75715e"># Commit changes.</span>
+
+git commit -m <span style="color:#e6db74">&#34;</span>$msg<span style="color:#e6db74">&#34;</span>
+
+<span style="color:#75715e"># Push source and build repos.</span>
+git push origin master
+</code></pre></div><p>这样，每次运行：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">./deploy.sh
+</code></pre></div><p>或</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">./deploy.sh <span style="color:#e6db74">&#34;本次更新描述&#34;</span>
+</code></pre></div><p>就可以更新网站了。</p>
+<p>另外，别忘了给脚本可执行权限哦</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">chmod +x deploy.sh
+</code></pre></div><h3 id="heading-5">源文件与编译结果在不同仓库</h3>
+<p>新建一个仓库存放源文件（此仓库不需要设置 <code>Github Pages</code>)，如 <code>blog</code> 仓库，编译结果放在主仓库里，如 <code>imroc.github.io</code> 仓库。</p>
+<p>进入hugo创建的网站目录并设置 git 的远程地址：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">cd mysite
+git remote add origin https://github.com/imroc/blog.git
+</code></pre></div><p>将 <code>Github Pages</code> 的仓库下载到当前目录并命名 <code>public</code>：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git clone https://github.com/imroc/imroc.github.io.git
+mv imroc.github.io public
+</code></pre></div><p>新增脚本 (<code>deploy.sh</code>):</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e">#! /bin/bash
+</span><span style="color:#75715e"></span>
+set -eux 
+
+echo -e <span style="color:#e6db74">&#34;\033[0;32mDeploying updates to GitHub...\033[0m&#34;</span>
+
+msg<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;rebuilding site `date`&#34;</span>
+<span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> $# -eq <span style="color:#ae81ff">1</span>  <span style="color:#f92672">]</span>
+    <span style="color:#66d9ef">then</span> msg<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span>$1<span style="color:#e6db74">&#34;</span>
+<span style="color:#66d9ef">fi</span>
+
+<span style="color:#75715e"># Build the project.</span> 
+hugo <span style="color:#75715e"># if using a theme, replace by `hugo -t &lt;yourtheme&gt;`</span>
+
+<span style="color:#75715e"># Go To Public folder</span>
+cd public
+
+<span style="color:#75715e"># Add changes to git.</span>
+git add .
+
+<span style="color:#75715e"># Commit changes.</span>
+git commit -m <span style="color:#e6db74">&#34;</span>$msg<span style="color:#e6db74">&#34;</span>
+
+<span style="color:#75715e"># Push source and build repos.</span>
+git push origin master
+
+<span style="color:#75715e"># Come Back</span>
+cd ..
+
+git add .
+git commit -m <span style="color:#e6db74">&#34;</span>$msg<span style="color:#e6db74">&#34;</span>
+git push origin master
+</code></pre></div><p>这样执行脚本也可以更新网站，只不过分成了两个仓库，我也是用的这种做法，因为 <code>Github Pages</code> 主仓库只允许 master 分支作为网站内容，所以源文件就存在了另一个仓库 <code>blog</code></p>
+<h2 id="heading-6">自定义域名</h2>
+<p>github 给我们提供了免费域名，但是我们还可以绑定自己的域名。</p>
+<p>很简单，在仓库的 <code>Settings</code> 里的 <code>Github Pages</code> 部分，有个 <code>Custom domain</code> 的设置，将其设置为你需要绑定的域名（它会新建一个 commit，就是创建一个 <code>CNAME</code> 文件，内容是你填的域名），你也可以自己手动创建一个 CNAME 文件，效果是一样的。</p>
+<p><strong>注：</strong> 由于自定义域名需要仓库里面有个 <code>CNAME</code> 文件，用上面的第二种方式（源文件与编译结果在不同仓库）管理的话，每次编译会覆盖 <code>public</code> 目录下除 <code>.git</code> 目录的文件，<code>CNAME</code> 文件可能就不在了，没关系，在源文件的 <code>static</code> 目录下放入 <code>CNAME</code> 文件即可保证每次编译的结果里面都会有 <code>CNAME</code> 文件。</p>
+<p>下一步就是登录你的域名提供商的后台管理，设置DNS解析：</p>
+<h3 id="heading-7">绑定根域名</h3>
+<p>如果你想要绑定自己域名的根域名（如：<a href="imroc.io">imroc.io</a>），新建两个A记录，分别指向下面两个IP：</p>
+<blockquote>
+<p>192.30.252.153<br>
+192.30.252.154</p>
+</blockquote>
+<h3 id="heading-8">绑定二级域名</h3>
+<p>如果你想要绑定自己域名的二级域名（如：<a href="blog.imroc.io">blog.imroc.io</a>），新建一个 <code>CNAME</code> 记录，值为你的 github 域名，如： <code>imroc.github.io</code></p>
+<h2 id="https">自定义域名开启https</h2>
+<p>如果绑定了自定义域名，github pages 原则上是不能启用https的，但是可以借助 cloudflare</p>
+<ul>
+<li>在<a href="https://www.cloudflare.com/">cloudflare</a>上注册并获得 <code>nameserver</code></li>
+<li>在域名注册机构的后台管理页面将  <code>nameservers</code> 设置为 <code>cloudflare</code> 上的（即让 <code>cloudflare</code> 来管理 dns）</li>
+<li>确保 <code>Crypto</code>-<code>SSL</code> 为 <code>Full</code></li>
+</ul>
+<p><!-- raw HTML omitted --></p>
+<ul>
+<li>配置 Page Rules：加入一条规则，举例： <code>http://imroc.io/*</code> 设置为 <code>Always Use HTTPS</code></li>
+</ul>
+<p><!-- raw HTML omitted --></p>
+<blockquote>
+<p>最后等待一段时间生效</p>
+</blockquote>
+
+            </article>
+
+            <ul class="pager blog-pager">
+
+                
+                <li class="previous">
+                    <a href="https://imroc.io/posts/golang-append/" data-toggle="tooltip" data-placement="top" title="golang中append函数返回值必须有变量接收的原因探究">&larr; 前一篇</a>
+                </li>
+                 
+                <li class="next">
+                    <a href="https://imroc.io/posts/sync-images-to-docker-hub-using-katacoda/" data-toggle="tooltip" data-placement="top" title="利用Katacoda免费同步Docker镜像到Docker Hub">后一篇 &rarr;</a>
+                </li>
+                
+            </ul>
+
+          
+            <div class="entry-shang text-center">
+    <p>「真诚赞赏，手留余香」</p>
+    <button class="zs show-zs btn btn-bred">赞赏</button>
+</div>
+<div class="zs-modal-bg"></div>
+<div class="zs-modal-box">
+    <div class="zs-modal-head">
+        <button type="button" class="close">×</button>
+        <span class="author"><img src="/favicon.png"/>roc</span>
+        <p class="tip"><i></i><span>请我喝杯咖啡？</span></p>
+    </div>
+    <div class="zs-modal-body">
+        <div class="zs-modal-btns">
+            <button class="btn btn-blink" data-num="2">2元</button>
+            <button class="btn btn-blink" data-num="5">5元</button>
+            <button class="btn btn-blink" data-num="10">10元</button>
+            <button class="btn btn-blink" data-num="50">50元</button>
+            <button class="btn btn-blink" data-num="100">100元</button>
+            <button class="btn btn-blink" data-num="1">任意金额</button>
+        </div>
+        <div class="zs-modal-pay">
+            <button class="btn btn-bred" id="pay-text">2元</button>
+            <p>使用<span id="pay-type">微信</span>扫描二维码完成支付</p>
+            <img src="/img/wechat-2.png" id="pay-image"/>
+        </div>
+    </div>
+    <div class="zs-modal-footer">
+        <label>
+            <input type="radio" name="zs-type" value="wechat" class="zs-type" checked="checked">
+            <span class="zs-wechat"><img src="/img/wechat-btn.png" /></span>
+        </label>
+        <label>
+            <input type="radio" name="zs-type" value="alipay" class="zs-type">
+            <span class="zs-alipay"><img src="/img/alipay-btn.png" /></span>
+        </label>
+    </div>
+</div>
+          
+
+          
+            
+
+          
+
+          
+            
+<div id="gitalk-container"></div>
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+<script>
+  var gitalk = new Gitalk({
+      clientID: 'd05b8f959b3111c6fb63',
+      clientSecret: 'f30ef76ea0050ed731ace76f7fbf684ae5d28fbc',
+      repo: 'imroc.github.io',
+      owner: 'imroc',
+      admin: 'imroc',
+      labels: ['Gitalk'],
+      title: '利用Hugo和Github Pages免费创建并永久托管网站',
+      createIssueManually: false,
+      id: 'building-website-for-free-using-hugo-and-github-pages-zh',
+      distractionFreeMode: true
+  });
+  gitalk.render('gitalk-container');
+</script>
+          
+        </div>
+    </div>
+</div>
+
+    <footer>
+  <div id="copyright">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+          <ul class="list-inline text-center footer-links">
+            
+                <li>
+                  <a href="mailto:roc@imroc.io" title="Email me">
+                    <span class="fa-stack fa-lg">
+                      <i class="fa fa-circle fa-stack-2x"></i>
+                      <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="https://github.com/imroc" title="GitHub">
+                    <span class="fa-stack fa-lg">
+                      <i class="fa fa-circle fa-stack-2x"></i>
+                      <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="https://twitter.com/imrocchan" title="Twitter">
+                    <span class="fa-stack fa-lg">
+                      <i class="fa fa-circle fa-stack-2x"></i>
+                      <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                    </span>
+                  </a>
+                </li>
+            
+            <li>
+              <a href="https://imroc.io/index.xml" title="RSS">
+                <span class="fa-stack fa-lg">
+                  <i class="fa fa-circle fa-stack-2x"></i>
+                  <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                </span>
+              </a>
+            </li>
+            
+          </ul>
+          <p class="credits copyright text-muted">
+          &copy;2017-2019
+            
+              
+                <a href="/about">roc</a>
+              
+            
+            &nbsp;&bull;&nbsp;
+            December 15,2019
+            updated
+          </p>
+          <p class="credits theme-by text-muted">
+            由 <a href="http://gohugo.io">Hugo v0.62.0</a> 强力驱动 &nbsp;&bull;&nbsp; 主题 <a href="https://github.com/imroc/xhugo">xhugo</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src='/js/bundle.min.21f7d58c95d27f6c2ca78a820bd04dd19724828061fc1cd5fd72c409096ef914.js' integrity='sha256-IffVjJXSf2wsp4qCC9BN0ZckgoBh/BzV/XLECQlu&#43;RQ='></script>
+
+
+
+
+
+
+  </body>
+</html>
+

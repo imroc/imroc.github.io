@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title> 利用Gitlab和Jenkins做CI(持续集成) - imroc.io|roc的博客|Cloud Native|Kubernetes|Go|Golang</title>
+  <meta name="description" content="imroc.io|roc的博客|Cloud Native|Kubernetes|Go|Golang" />
+  <meta property="og:title" content="利用Gitlab和Jenkins做CI(持续集成)" />
+  <meta name="twitter:title" content="利用Gitlab和Jenkins做CI(持续集成)" />
+  <meta name="description" content="利用Gitlab和Jenkins做CI(持续集成) 最近用到持续集成顺便总结在这里，都是用的最新版。搭建过程中还有一个demo，提交代码到 gitlab 自">
+  <meta property="og:description" content="利用Gitlab和Jenkins做CI(持续集成) 最近用到持续集成顺便总结在这里，都是用的最新版。搭建过程中还有一个demo，提交代码到 gitlab 自">
+  <meta name="twitter:description" content="利用Gitlab和Jenkins做CI(持续集成) 最近用到持续集成顺便总结在这里，都是用的最新版。搭建过程中还有一个demo，提交代码到 gitlab 自">
+  <meta name="author" content="{Description { .Site.Author.name }}"/>
+  <link href='https://imroc.io/favicon.png' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://res.cloudinary.com/imroc/image/upload/v1521031841/avatar.png" />
+  <meta name="twitter:image" content="https://res.cloudinary.com/imroc/image/upload/v1521031841/avatar.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@imrocchan" />
+  <meta name="twitter:creator" content="@imrocchan" />
+  <meta property="og:url" content="https://imroc.io/posts/ci-with-gitlab-and-jenkins/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="roc" />
+
+  <meta name="generator" content="Hugo 0.62.0" />
+  <link rel="canonical" href="https://imroc.io/posts/ci-with-gitlab-and-jenkins/" />
+  <link rel="alternate" href="https://imroc.io/index.xml" type="application/rss+xml" title="roc">
+
+  
+  <link href="https://fonts.googleapis.com/css?family=Lora:400,400i,700%7COpen+Sans:400,700" rel="stylesheet">
+
+  
+
+
+
+<link rel="stylesheet" href='/css/bundle.min.43522e1b6746447005cecd1381cc12a654c0364de88961016cdf5f133529476d.css' integrity='sha256-Q1IuG2dGRHAFzs0TgcwSplTANk3oiWEBbN9fEzUpR20='>
+  --><script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?05e1e8b7484a08c51cd0953664168cd7";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">切换导航</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://imroc.io/">roc</a>
+    </div>
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">分类</a>
+              <div class="navlinks-children">
+                
+                
+                  <a href="https://imroc.io/categories/kubernetes">kubernetes</a>
+                
+                
+                  <a href="https://imroc.io/categories/docker">docker</a>
+                
+                
+                  <a href="https://imroc.io/categories/golang">golang</a>
+                
+                
+                  <a href="https://imroc.io/categories/arch">架构</a>
+                
+                
+                  <a href="https://imroc.io/categories/istio">istio</a>
+                
+                
+                  <a href="https://imroc.io/categories/geek">极客</a>
+                
+              </div>
+            </li>
+          
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">书籍</a>
+              <div class="navlinks-children">
+                
+                
+                  <a href="https://k8s.imroc.io">Kubernetes 实践指南</a>
+                
+              </div>
+            </li>
+          
+        
+
+        
+          
+            <li>
+              
+                
+              
+                
+                  <a href="/en" lang="en">English</a>
+                
+              
+            </li>
+          
+        
+
+        
+        <li>
+          <a href="#modalSearch" data-toggle="modal" data-target="#modalSearch" style="outline: none;">
+            <span id="searchGlyph" class="glyphicon glyphicon-search"></span>
+          </a>
+        </li>
+        
+      </ul>
+    </div>
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="roc" href="https://imroc.io/">
+            <img class="avatar-img" src="https://res.cloudinary.com/imroc/image/upload/v1521031841/avatar.png" alt="roc" />
+          </a>
+        
+      </div>
+    </div>
+  </div>
+</nav>
+
+
+  <div id="modalSearch" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">搜索</h4>
+        </div>
+        <div class="modal-body">
+            
+<div class="aa-input-container" id="aa-input-container">
+    <input type="search" id="aa-search-input" class="aa-input-search" placeholder="Search for titles or URIs..."
+        name="search" autocomplete="off" />
+    <svg class="aa-input-icon" viewBox="654 -372 1664 1664">
+        <path
+            d="M1806,332c0-123.3-43.8-228.8-131.5-316.5C1586.8-72.2,1481.3-116,1358-116s-228.8,43.8-316.5,131.5  C953.8,103.2,910,208.7,910,332s43.8,228.8,131.5,316.5C1129.2,736.2,1234.7,780,1358,780s228.8-43.8,316.5-131.5  C1762.2,560.8,1806,455.3,1806,332z M2318,1164c0,34.7-12.7,64.7-38,90s-55.3,38-90,38c-36,0-66-12.7-90-38l-343-342  c-119.3,82.7-252.3,124-399,124c-95.3,0-186.5-18.5-273.5-55.5s-162-87-225-150s-113-138-150-225S654,427.3,654,332  s18.5-186.5,55.5-273.5s87-162,150-225s138-113,225-150S1262.7-372,1358-372s186.5,18.5,273.5,55.5s162,87,225,150s113,138,150,225  S2062,236.7,2062,332c0,146.7-41.3,279.7-124,399l343,343C2305.7,1098.7,2318,1128.7,2318,1164z" />
+    </svg>
+</div>
+
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/algoliasearch.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/autocomplete.min.js"></script>
+<script>
+    var client = algoliasearch("B6Q6PSGUV5", "d04f855d3a39eed8ad8d9365ba7c86af");
+    var index = client.initIndex("imroc-blog");
+    
+    autocomplete('#aa-search-input', {
+        hint: false
+    }, {
+        source: autocomplete.sources.hits(index, {
+            hitsPerPage: 5
+        }),
+        
+        displayKey: 'name',
+        
+        templates: {
+            
+            suggestion: function (suggestion) {
+                return '<span>' + '<a href="/' + suggestion.uri + '">' + suggestion._highlightResult.title.value +
+                        '</a></span>';
+            }
+        }
+    });
+</script>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    
+  
+  
+  
+
+
+
+
+  
+    <div id="header-big-imgs" data-num-img=1 data-img-src-1="https://res.cloudinary.com/imroc/image/upload/v1523629988/blog/ci/jenkins-banner.png" data-img-desc-1="jenkins"></div>
+  
+
+  <header class="header-section has-img">
+    
+      <div class="intro-header big-img">
+        
+        
+        <div class="container">
+          <div class="row">
+              <div class="col-lg-12 col-md-12 col-md-offset-0">
+                
+                <div class="post-heading">
+                
+                  
+                     <h1>利用Gitlab和Jenkins做CI(持续集成)</h1>
+                     
+                    <span class="post-meta">
+  
+  发表于 April 13, 2018
+  
+  
+</span>
+
+
+                    
+                  
+                  
+              </div>
+            </div>
+          </div>
+        </div>
+        <span class="img-desc" style="display: inline;"></span>
+      </div>
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12 col-md-12 col-md-offset-0">
+            <div class="posts-heading">
+                <h1 align="center">利用Gitlab和Jenkins做CI(持续集成)</h1>
+                
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main" itemscope itemtype="http://schema.org/Article">
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+            <article role="main" class="blog-post" itemprop="articleBody" id="content">
+                
+<aside class="toc">
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#-gitlab">安装运行 Gitlab</a></li>
+    <li><a href="#-jenkins">安装运行 Jenkins</a></li>
+    <li><a href="#jenkins-">Jenkins 安装需要的插件</a></li>
+    <li><a href="#gitlab--repo">Gitlab 创建 repo</a></li>
+    <li><a href="#-jenkins-1">配置 Jenkins</a></li>
+    <li><a href="#-gitlab-webhook">配置 Gitlab Webhook</a></li>
+    <li><a href="#heading">测试</a></li>
+    <li><a href="#heading-1">附录</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+</aside>
+
+
+                <h1 id="gitlabjenkinsci">利用Gitlab和Jenkins做CI(持续集成)</h1>
+<p>最近用到持续集成顺便总结在这里，都是用的最新版。搭建过程中还有一个demo，提交代码到 gitlab 自动触发 jenkins 任务，自动编译代码和 docker 镜像并上传。</p>
+<h2 id="-gitlab">安装运行 Gitlab</h2>
+<blockquote>
+<p>gitlab 国内安装很麻烦，用官方的源装不了，因为在国外，太慢，链接会断掉。国内清华有 gitlab 的 apt 和 yum 源，但是我试过安装 CentOS 7 的 gitlab ，到最后都会一直卡住结束不了。直接下载清华 gitlab 的 rpm mirror 安装也是一样，所以我还是选择用 docker 启动 gitlab（提前配好 docker hub 加速器）</p>
+</blockquote>
+<p>准备镜像</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">docker pull gitlab/gitlab-ee:latest
+</code></pre></div><p>准备 gitlab 所需目录</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">mkdir gitlab
+cd gitlab
+mkdir config logs data
+</code></pre></div><p>准备启动脚本 （替换想要的启动端口，ip 地址替换为访问你的 gitlab 的地址，也可以替换想要的挂载目录）</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">vi run
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e">#! /bin/bash
+</span><span style="color:#75715e"></span>
+sudo docker run -d --rm <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -p 8088:8088 <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    --name gitlab <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    --env GITLAB_OMNIBUS_CONFIG<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;external_url &#39;http://118.24.64.246:8088/&#39;; gitlab_rails[&#39;lfs_enabled&#39;] = true;&#34;</span> <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -v $PWD/config:/etc/gitlab <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -v $PWD/logs:/var/log/gitlab <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -v $PWD/data:/var/opt/gitlab <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    gitlab/gitlab-ee:latest
+EOF
+</code></pre></div><p>赋予执行权限</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">chmod +x run
+</code></pre></div><p>启动 gitlab</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">./run
+</code></pre></div><p>查看 gitlab 控制台输出</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">docker logs -f gitlab
+</code></pre></div><p>访问 gitlab，打开脚本中配置的 external_url 地址，设置管理员密码和注册 gitlab 账号，登录并添加自己的 SSH key 。创建 repo ，git clone 到本地，后面我们提交代码到这个 repo ，触发 jenkins 的持续集成。</p>
+<h2 id="-jenkins">安装运行 Jenkins</h2>
+<p>jenkins 建议直接安装在宿主机，不用 docker 方式，因为持续集成需要安装各种我们用到的工具，这些工具可能后面根据需要才安装，重启不能让这些工具丢失。比如编译 java 源码需要装 jdk 环境，编译和上传 docker 镜像需要安装 docker 环境，并且还需要提前 docker login 好，不然上传不了。</p>
+<p>因为 jenkins 用 java 写的，所以确保机器上装有 jdk 或 openjdk 环境，准备一个 jenkins 用的目录，下载 war 包</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">mkdir jenkins 
+wget http://mirrors.jenkins.io/war-stable/latest/jenkins.war
+</code></pre></div><p>运行</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">nohup java -jar jenkins.war --httpPort<span style="color:#f92672">=</span><span style="color:#ae81ff">8080</span> &amp;&gt; jenkins.log &amp;
+</code></pre></div><p>查看 jenkins 输出</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">tail -f jenkins.log
+</code></pre></div><p>第一次打开 jenkins web 界面，要求输出管理员初始密码，生成在服务器上，界面上提示有路径</p>
+<!-- raw HTML omitted -->
+<p>查看密码</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">cat /root/.jenkins/secrets/initialAdminPassword
+</code></pre></div><p>粘贴密码并继续，安装推荐的插件，等待安装完成</p>
+<!-- raw HTML omitted -->
+<p>创建管理员，保存并完成</p>
+<!-- raw HTML omitted -->
+<p>至此，jenkins 安装完成</p>
+<h2 id="jenkins-">Jenkins 安装需要的插件</h2>
+<p>打开 Jenkins-系统设置-管理插件</p>
+<!-- raw HTML omitted -->
+<p>在可选插件里选择并安装需要的插件：Git 、 GitLab 、Build Authentication Token Root （Git插件在默认推荐插件里已安装，在可选插件列表里可能没有）</p>
+<!-- raw HTML omitted -->
+<p>点击 “直接安装”，勾选 “安装完成后重启Jenkins(空闲时)“，等待安装完成自动重启 jenkins</p>
+<!-- raw HTML omitted -->
+<p>由于后面 Jenkins 的机器上需要用到 docker，所以保证 jenkins 所在机器安装好 docker 并 配好 docker hub 的加速器，并且 <code>docker login</code> 登录镜像要上传的仓库。</p>
+<h2 id="gitlab--repo">Gitlab 创建 repo</h2>
+<p>我们这里就以一个简单的 golang 程序做实例，实现提交代码自动编译代码，然后 docker 编译镜像并上传至 CCR （腾讯云的 docker 镜像仓库)</p>
+<p>在 gitlab 上创建空 repo，clone 到本地，添加三个文件</p>
+<ul>
+<li>
+<p>main.go （源码）</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">package main
+
+func main<span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+  println<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;hello world&#34;</span><span style="color:#f92672">)</span>
+<span style="color:#f92672">}</span>
+</code></pre></div></li>
+<li>
+<p>Dockerfile （编译镜像用的 Dockerfile）</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">FROM alpine:latest
+
+MAINTAINER roc&lt;rockerchen@tencent.com&gt;
+
+COPY bd-ci-test /bin/bd-ci-test
+
+CMD <span style="color:#f92672">[</span><span style="color:#e6db74">&#34;bd-ci-test&#34;</span><span style="color:#f92672">]</span>
+</code></pre></div></li>
+<li>
+<p>build （编译源码、镜像和上传镜像的脚本，替换 IMAGE 地址为要上传的地址）</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e">#! /bin/bash
+</span><span style="color:#75715e"></span>
+<span style="color:#75715e"># 编译代码</span>
+docker run --rm <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>  -v $PWD:/go/src/bd-ci-test <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>  -w /go/src/bd-ci-test <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>  golang:alpine go build
+
+IMAGE<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;imroc/bd-ci-test:latest&#34;</span>
+
+<span style="color:#75715e"># 编译镜像</span>
+docker build -t $IMAGE .
+
+<span style="color:#75715e"># 上传镜像 (请提前登录好,docker login 只需登录一次)</span>
+docker push $IMAGE
+
+<span style="color:#75715e"># 清理</span>
+docker rmi $IMAGE
+rm bd-ci-test
+</code></pre></div></li>
+</ul>
+<p>给 build 脚本执行权限</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">chmod +x build
+</code></pre></div><p>至此，我们的代码准备好了，先不忙提交，接下来配置 jenkins  来做持续集成</p>
+<h2 id="-jenkins-1">配置 Jenkins</h2>
+<p>新建 jenkins 项目，选择 “构建一个自由风格的软件项目”</p>
+<!-- raw HTML omitted -->
+<p>源代码管理选 Git，Repository URL 填写你 gitlab 上源码 repo 的地址，Credentials 是拉取代码时需要用到的身份认证（如果你的repo不是公有的，没有身份认证就会报错）</p>
+<!-- raw HTML omitted -->
+<p>点击 Add 添加一个， Kind 选择 “Username with password&rdquo;，输入 gitlab 账号密码</p>
+<!-- raw HTML omitted -->
+<p>然后 Credentials 选择我们刚刚添加的（检测到账号密码正确就不会报错了），我们准备对 master 分支的代码做持续集成，所以 &ldquo;Branches to build&rdquo; 填 &ldquo;*/master&rdquo;</p>
+<!-- raw HTML omitted -->
+<p>构建触发器选择 “Build when a change is pushed to GitLab” （后面的  URL 是我们需要在 gitlab 上配的 webhook 地址），按照下面勾选</p>
+<!-- raw HTML omitted -->
+<p>点开高级，“Allowd branches&rdquo; 勾选 &ldquo;Filter branches by regex&rdquo;，填写 &ldquo;master&rdquo;。点 &ldquo;Generate&rdquo; 生成 token，这个 token 用于填写到 gitlab 的 webhook 里，gitlab 检测到代码提交，会通知 webhook 里填写的 Jenkins 生成的回掉 URL，并带上这个 token，防止其它人触发 jenkins 的持续集成</p>
+<!-- raw HTML omitted -->
+<blockquote>
+<p><strong>注:</strong> 复制出 URL 和 token，我们后面配置 gitlab 的 webhook 会用到</p>
+</blockquote>
+<p>增加构建步骤 “execute shell&rdquo;</p>
+<!-- raw HTML omitted -->
+<p>由于我们把持续集成的操作都写到 build 脚本了，所以直接填写执行 ./build 就可以了</p>
+<!-- raw HTML omitted -->
+<p>最后点击保存，至此，jenkins 的持续集成配置好了，还需要配置 gitlab 的 webhook，用于代码提交通知 jenkins。</p>
+<h2 id="-gitlab-webhook">配置 Gitlab Webhook</h2>
+<p>打开 gitlab 的 repo 的 Settings-Integrations</p>
+<!-- raw HTML omitted -->
+<p>URL 和 Secret Token 填写 jenkins 项目中构建触发器部分生成的，点击 &ldquo;Add webhook&rdquo;，搞定！</p>
+<h2 id="heading">测试</h2>
+<p>现在我们可以提交代码测试一下</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git add .
+git commit -m <span style="color:#e6db74">&#34;test&#34;</span>
+git push
+</code></pre></div><p>我们可以看 jenkins 的输出来看是否触发任务，由于我使用了一些 docker hub 的镜像来编译代码和镜像，如果没有提前 pull 下来，第一次运行任务可能会比较久，等待运行结束，刷新 jenkins 主页</p>
+<p>如果运行成功，从 “上次成功” 下拉选择 “控制台输出”</p>
+<!-- raw HTML omitted -->
+<p>可以看到运行任务过程的输出</p>
+<!-- raw HTML omitted -->
+<p>如果都没问题，你可以看看你的镜像仓库，镜像已经成功上传，至此，这个简单的持续集成搭建完毕。</p>
+<h2 id="heading-1">附录</h2>
+<h4 id="git-submodule">Git Submodule</h4>
+<p>如果你的项目里面还引用了其它项目，也就是 git 的 submodules，怎么办？甚至 submodule 里面还要指定分支呢？</p>
+<p>在创建 jenkins 项目的时候，在 源码管理-Git-Additional Behaviours-Add 选择 Advanced sub-modules behaviours</p>
+<!-- raw HTML omitted -->
+<p>勾选下面两个选项</p>
+<!-- raw HTML omitted -->
+<p>submodules 的分支靠 git 本来支持的 <code>.gitmodules</code> 文件来控制，用法举例：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git submodule add -b v1 https://github.com/imroc/req.git ref/req
+</code></pre></div><p>查看 <code>.gitmodules</code> 文件格式：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ cat .gitmodules
+<span style="color:#f92672">[</span>submodule <span style="color:#e6db74">&#34;ref/req&#34;</span><span style="color:#f92672">]</span>
+	path <span style="color:#f92672">=</span> ref/req
+	url <span style="color:#f92672">=</span> https://github.com/imroc/req.git
+	branch <span style="color:#f92672">=</span> v1
+</code></pre></div><p>可以自己手动编辑或用 <code>git submodule add</code> 命令生成</p>
+<p>我的博客即将搬运同步至腾讯云+社区，邀请大家一同入驻：https://cloud.tencent.com/developer/support-plan?invite_code=2yygiminmy2ok</p>
+
+            </article>
+
+            <ul class="pager blog-pager">
+
+                
+                <li class="previous">
+                    <a href="https://imroc.io/posts/kubernetes-nodeport-vs-loadbalancer-vs-ingress-when-should-i-use-what/" data-toggle="tooltip" data-placement="top" title="对比Kubernetes的Nodeport、Loadbalancer和Ingress，什么时候该用哪种">&larr; 前一篇</a>
+                </li>
+                 
+                <li class="next">
+                    <a href="https://imroc.io/posts/use-nginx-ingress-controller-to-expose-service/" data-toggle="tooltip" data-placement="top" title="使用Nginx Ingress Controller导入外部流量到Kubernetes集群内部">后一篇 &rarr;</a>
+                </li>
+                
+            </ul>
+
+          
+            <div class="entry-shang text-center">
+    <p>「真诚赞赏，手留余香」</p>
+    <button class="zs show-zs btn btn-bred">赞赏</button>
+</div>
+<div class="zs-modal-bg"></div>
+<div class="zs-modal-box">
+    <div class="zs-modal-head">
+        <button type="button" class="close">×</button>
+        <span class="author"><img src="/favicon.png"/>roc</span>
+        <p class="tip"><i></i><span>请我喝杯咖啡？</span></p>
+    </div>
+    <div class="zs-modal-body">
+        <div class="zs-modal-btns">
+            <button class="btn btn-blink" data-num="2">2元</button>
+            <button class="btn btn-blink" data-num="5">5元</button>
+            <button class="btn btn-blink" data-num="10">10元</button>
+            <button class="btn btn-blink" data-num="50">50元</button>
+            <button class="btn btn-blink" data-num="100">100元</button>
+            <button class="btn btn-blink" data-num="1">任意金额</button>
+        </div>
+        <div class="zs-modal-pay">
+            <button class="btn btn-bred" id="pay-text">2元</button>
+            <p>使用<span id="pay-type">微信</span>扫描二维码完成支付</p>
+            <img src="/img/wechat-2.png" id="pay-image"/>
+        </div>
+    </div>
+    <div class="zs-modal-footer">
+        <label>
+            <input type="radio" name="zs-type" value="wechat" class="zs-type" checked="checked">
+            <span class="zs-wechat"><img src="/img/wechat-btn.png" /></span>
+        </label>
+        <label>
+            <input type="radio" name="zs-type" value="alipay" class="zs-type">
+            <span class="zs-alipay"><img src="/img/alipay-btn.png" /></span>
+        </label>
+    </div>
+</div>
+          
+
+          
+            
+
+          
+
+          
+            
+<div id="gitalk-container"></div>
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+<script>
+  var gitalk = new Gitalk({
+      clientID: 'd05b8f959b3111c6fb63',
+      clientSecret: 'f30ef76ea0050ed731ace76f7fbf684ae5d28fbc',
+      repo: 'imroc.github.io',
+      owner: 'imroc',
+      admin: 'imroc',
+      labels: ['Gitalk'],
+      title: '利用Gitlab和Jenkins做CI(持续集成)',
+      createIssueManually: false,
+      id: 'ci-with-gitlab-and-jenkins-zh',
+      distractionFreeMode: true
+  });
+  gitalk.render('gitalk-container');
+</script>
+          
+        </div>
+    </div>
+</div>
+
+    <footer>
+  <div id="copyright">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+          <ul class="list-inline text-center footer-links">
+            
+                <li>
+                  <a href="mailto:roc@imroc.io" title="Email me">
+                    <span class="fa-stack fa-lg">
+                      <i class="fa fa-circle fa-stack-2x"></i>
+                      <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="https://github.com/imroc" title="GitHub">
+                    <span class="fa-stack fa-lg">
+                      <i class="fa fa-circle fa-stack-2x"></i>
+                      <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="https://twitter.com/imrocchan" title="Twitter">
+                    <span class="fa-stack fa-lg">
+                      <i class="fa fa-circle fa-stack-2x"></i>
+                      <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                    </span>
+                  </a>
+                </li>
+            
+            <li>
+              <a href="https://imroc.io/index.xml" title="RSS">
+                <span class="fa-stack fa-lg">
+                  <i class="fa fa-circle fa-stack-2x"></i>
+                  <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                </span>
+              </a>
+            </li>
+            
+          </ul>
+          <p class="credits copyright text-muted">
+          &copy;2017-2019
+            
+              
+                <a href="/about">roc</a>
+              
+            
+            &nbsp;&bull;&nbsp;
+            December 15,2019
+            updated
+          </p>
+          <p class="credits theme-by text-muted">
+            由 <a href="http://gohugo.io">Hugo v0.62.0</a> 强力驱动 &nbsp;&bull;&nbsp; 主题 <a href="https://github.com/imroc/xhugo">xhugo</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src='/js/bundle.min.21f7d58c95d27f6c2ca78a820bd04dd19724828061fc1cd5fd72c409096ef914.js' integrity='sha256-IffVjJXSf2wsp4qCC9BN0ZckgoBh/BzV/XLECQlu&#43;RQ='></script>
+
+
+
+
+
+
+  </body>
+</html>
+

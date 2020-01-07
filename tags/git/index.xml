@@ -5,7 +5,7 @@
     <link>https://imroc.io/tags/git/</link>
     <description>Recent content in git on roc</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>zh-cn</language>
+    <language>zh</language>
     <managingEditor>roc@imroc.io (roc)</managingEditor>
     <webMaster>roc@imroc.io (roc)</webMaster>
     <lastBuildDate>Fri, 07 Dec 2018 18:05:00 +0800</lastBuildDate>
@@ -15,10 +15,10 @@
     
     <item>
       <title>Git技巧：修改历史</title>
-      <link>https://imroc.io/posts/geek/git-trick-modify-history/</link>
+      <link>https://imroc.io/posts/git-trick-modify-history/</link>
       <pubDate>Fri, 07 Dec 2018 18:05:00 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/geek/git-trick-modify-history/</guid>
+      <guid>https://imroc.io/posts/git-trick-modify-history/</guid>
       <description>修改历史 修改最新一条历史 如果内容需要改就直接改，然后 git add 进去，然后执行 git commit --amend 会弹出 git commit message 的编辑窗口，会填充之前 commit 时写的 message 内容，如果需要改就直</description>
     </item>
     

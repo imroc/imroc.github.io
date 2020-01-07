@@ -5,7 +5,7 @@
     <link>https://imroc.io/categories/kubernetes/</link>
     <description>Recent content in kubernetes on roc</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>zh-cn</language>
+    <language>zh</language>
     <managingEditor>roc@imroc.io (roc)</managingEditor>
     <webMaster>roc@imroc.io (roc)</webMaster>
     <lastBuildDate>Sun, 15 Dec 2019 12:03:00 +0800</lastBuildDate>
@@ -15,200 +15,155 @@
     
     <item>
       <title>Kubernetes 疑难杂症排查分享: 诡异的 No route to host</title>
-      <link>https://imroc.io/posts/kubernetes/no-route-to-host/</link>
+      <link>https://imroc.io/posts/kubernetes-no-route-to-host/</link>
       <pubDate>Sun, 15 Dec 2019 12:03:00 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/kubernetes/no-route-to-host/</guid>
+      <guid>https://imroc.io/posts/kubernetes-no-route-to-host/</guid>
       <description>大家好，我是 roc，来自腾讯云容器服务(TKE)团队，之前发过一篇干货满满的爆火文章 Kubernetes 网络疑难杂症排查分享，包含多个疑难杂症的排查案例分享，</description>
     </item>
     
     <item>
       <title>k8s v1.17 新特性预告: 拓扑感知服务路由</title>
-      <link>https://imroc.io/posts/kubernetes/service-topology/</link>
+      <link>https://imroc.io/posts/service-topology/</link>
       <pubDate>Tue, 26 Nov 2019 16:49:00 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/kubernetes/service-topology/</guid>
+      <guid>https://imroc.io/posts/service-topology/</guid>
       <description>大家好，我是 roc，来自腾讯云容器服务(TKE)团队，今天给大家介绍下我参与开发的一个 k8s v1.17 新特性: 拓扑感知服务路由。 名词解释 拓扑域: 表示在集</description>
     </item>
     
     <item>
       <title>Kubernetes 网络疑难杂症排查分享</title>
-      <link>https://imroc.io/posts/kubernetes/troubleshooting-with-kubernetes-network/</link>
+      <link>https://imroc.io/posts/troubleshooting-with-kubernetes-network/</link>
       <pubDate>Mon, 12 Aug 2019 16:59:00 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/kubernetes/troubleshooting-with-kubernetes-network/</guid>
+      <guid>https://imroc.io/posts/troubleshooting-with-kubernetes-network/</guid>
       <description>大家好，我是 roc，来自腾讯云容器服务(TKE)团队，经常帮助用户解决各种 K8S 的疑难杂症，积累了比较丰富的经验，本文分享几个比较复杂的网络方面</description>
     </item>
     
     <item>
       <title>Kubernetes 踩坑分享：开启tcp_tw_recycle内核参数在NAT环境会丢包</title>
-      <link>https://imroc.io/posts/kubernetes/lost-packets-once-enable-tcp-tw-recycle/</link>
+      <link>https://imroc.io/posts/lost-packets-once-enable-tcp-tw-recycle/</link>
       <pubDate>Sun, 09 Jun 2019 22:00:00 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/kubernetes/lost-packets-once-enable-tcp-tw-recycle/</guid>
+      <guid>https://imroc.io/posts/lost-packets-once-enable-tcp-tw-recycle/</guid>
       <description>原因 tcp_tw_recycle参数。它用来快速回收TIME_WAIT连接，不过如果在NAT环境下会引发问题。 RFC1323中有如下一段描述</description>
     </item>
     
     <item>
       <title>Kubernetes 最佳实践：处理内存碎片化</title>
-      <link>https://imroc.io/posts/kubernetes/handle-memory-fragmentation/</link>
+      <link>https://imroc.io/posts/handle-memory-fragmentation/</link>
       <pubDate>Sat, 08 Jun 2019 13:59:00 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/kubernetes/handle-memory-fragmentation/</guid>
+      <guid>https://imroc.io/posts/handle-memory-fragmentation/</guid>
       <description>内存碎片化造成的危害 节点的内存碎片化严重，导致docker运行容器时，无法分到大的内存块，导致start docker失败。最终导致服务更新时</description>
     </item>
     
     <item>
-      <title>Kubernetes 最佳实践：处理容器数据磁盘被写满</title>
-      <link>https://imroc.io/posts/kubernetes/kubernetes-best-practice-handle-disk-full/</link>
-      <pubDate>Fri, 07 Jun 2019 19:54:00 +0800</pubDate>
-      <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/kubernetes/kubernetes-best-practice-handle-disk-full/</guid>
-      <description>容器数据磁盘被写满造成的危害: 不能创建 Pod (一直 ContainerCreating) 不能删除 Pod (一直 Terminating) 无法 exec 到容器 判断是否被写满: 容器数据目录大多会单独挂数据盘，路径一般是 /v</description>
-    </item>
-    
-    <item>
       <title>Kubernetes 最佳实践：解决长连接服务扩容失效</title>
-      <link>https://imroc.io/posts/kubernetes/scale-keepalive-service/</link>
+      <link>https://imroc.io/posts/kubernetes-scale-keepalive-service/</link>
       <pubDate>Thu, 06 Jun 2019 17:06:00 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/kubernetes/scale-keepalive-service/</guid>
+      <guid>https://imroc.io/posts/kubernetes-scale-keepalive-service/</guid>
       <description>在现网运营中，有很多场景为了提高效率，一般都采用建立长连接的方式来请求。我们发现在客户端以长连接请求服务端的场景下，K8S的自动扩容会失效。</description>
     </item>
     
     <item>
       <title>Kubernetes 问题定位技巧：容器内抓包</title>
-      <link>https://imroc.io/posts/kubernetes/capture-packets-in-container/</link>
+      <link>https://imroc.io/posts/capture-packets-in-container/</link>
       <pubDate>Sun, 19 May 2019 11:24:00 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/kubernetes/capture-packets-in-container/</guid>
+      <guid>https://imroc.io/posts/capture-packets-in-container/</guid>
       <description>在使用 kubernetes 跑应用的时候，可能会遇到一些网络问题，比较常见的是服务端无响应(超时)或回包内容不正常，如果没找出各种配置上有问题，这时我们需要确认</description>
     </item>
     
     <item>
-      <title>kubernetes 最佳实践：优雅热更新</title>
-      <link>https://imroc.io/posts/kubernetes/kubernetes-best-practice-grace-update/</link>
-      <pubDate>Wed, 08 May 2019 19:54:00 +0800</pubDate>
-      <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/kubernetes/kubernetes-best-practice-grace-update/</guid>
-      <description>当kubernetes对服务滚动更新的期间，默认配置的情况下可能会让部分连接异常（比如连接被拒绝），我们来分析下原因并给出最佳实践 滚动更新场</description>
-    </item>
-    
-    <item>
       <title>kubectl 高效技巧</title>
-      <link>https://imroc.io/posts/kubernetes/efficient-kubectl/</link>
+      <link>https://imroc.io/posts/efficient-kubectl/</link>
       <pubDate>Sun, 10 Mar 2019 14:05:00 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/kubernetes/efficient-kubectl/</guid>
+      <guid>https://imroc.io/posts/efficient-kubectl/</guid>
       <description>是否有过因为使用 kubectl 经常需要重复输入命名空间而苦恼？是否觉得应该要有个记住命名空间的功能，自动记住上次使用的命名空间，不需要每次都输入？可惜没</description>
     </item>
     
     <item>
       <title>Kubernetes 泛域名动态 Service 转发解决方案</title>
-      <link>https://imroc.io/posts/kubernetes/wildcard-domain-forward/</link>
+      <link>https://imroc.io/posts/kubernetes-wildcard-domain-forward/</link>
       <pubDate>Sat, 22 Dec 2018 01:09:00 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/kubernetes/wildcard-domain-forward/</guid>
+      <guid>https://imroc.io/posts/kubernetes-wildcard-domain-forward/</guid>
       <description>需求 集群对外暴露了一个公网IP作为流量入口(可以是 Ingress 或 Service)，DNS 解析配置了一个泛域名指向该IP（比如 *.test.imroc.</description>
     </item>
     
     <item>
       <title>Kubernetes 问题定位技巧：分析 ExitCode</title>
-      <link>https://imroc.io/posts/kubernetes/analysis-exitcode/</link>
+      <link>https://imroc.io/posts/kubernetes-analysis-exitcode/</link>
       <pubDate>Fri, 21 Dec 2018 16:10:00 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/kubernetes/analysis-exitcode/</guid>
+      <guid>https://imroc.io/posts/kubernetes-analysis-exitcode/</guid>
       <description>使用 kubectl describe pod 查看异常的 pod 的状态，在容器列表里看 State 字段，其中 ExitCode 即程序退出时的状态码，正常退出时为0。如果不为0，表示异常退出，我们可以分析下原因</description>
     </item>
     
     <item>
       <title>通俗理解Kubernetes中Service、Ingress与Ingress Controller的作用与关系</title>
-      <link>https://imroc.io/posts/kubernetes/understand-service-ingress-and-ingress-controller/</link>
+      <link>https://imroc.io/posts/understand-service-ingress-and-ingress-controller/</link>
       <pubDate>Tue, 24 Jul 2018 22:19:37 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/kubernetes/understand-service-ingress-and-ingress-controller/</guid>
+      <guid>https://imroc.io/posts/understand-service-ingress-and-ingress-controller/</guid>
       <description>通俗的讲: Service 是后端真实服务的抽象，一个 Service 可以代表多个相同的后端服务 Ingress 是反向代理规则，用来规定 HTTP/S 请求应该被转发到哪个 Service 上，比如根据请求中不同的</description>
     </item>
     
     <item>
       <title>利用Helm一键部署Kubernetes Dashboard并启用免费HTTPS</title>
-      <link>https://imroc.io/posts/kubernetes/deploy-kubernetes-dashboard-and-enable-free-https/</link>
+      <link>https://imroc.io/posts/deploy-kubernetes-dashboard-and-enable-free-https/</link>
       <pubDate>Mon, 23 Jul 2018 21:49:54 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/kubernetes/deploy-kubernetes-dashboard-and-enable-free-https/</guid>
+      <guid>https://imroc.io/posts/deploy-kubernetes-dashboard-and-enable-free-https/</guid>
       <description>概述 Kubernetes Dashboard 是一个可以可视化查看和操作 Kubernetes 集群的一个插件 本文利用 Helm 部署它，所以请确保 Helm 已安装，安装方法参考：https://imroc.io/po</description>
     </item>
     
     <item>
       <title>利用cert-manager让Ingress启用免费的HTTPS证书</title>
-      <link>https://imroc.io/posts/kubernetes/let-ingress-enable-free-https-with-cert-manager/</link>
+      <link>https://imroc.io/posts/let-ingress-enable-free-https-with-cert-manager/</link>
       <pubDate>Mon, 23 Jul 2018 20:08:01 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/kubernetes/let-ingress-enable-free-https-with-cert-manager/</guid>
+      <guid>https://imroc.io/posts/let-ingress-enable-free-https-with-cert-manager/</guid>
       <description>概述 cert-manager 是替代 kube-lego 的一个开源项目，用于在 Kubernetes 集群中自动提供 HTTPS 证书，支持 Let’s Encrypt, HashiCorp Vault 这些免费证书的签发。 本文使用 Helm 安装，所以请确保 Helm 已安装，安装</description>
     </item>
     
     <item>
       <title>使用Nginx Ingress Controller导入外部流量到Kubernetes集群内部</title>
-      <link>https://imroc.io/posts/kubernetes/use-nginx-ingress-controller-to-expose-service/</link>
+      <link>https://imroc.io/posts/use-nginx-ingress-controller-to-expose-service/</link>
       <pubDate>Mon, 23 Jul 2018 14:29:37 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/kubernetes/use-nginx-ingress-controller-to-expose-service/</guid>
+      <guid>https://imroc.io/posts/use-nginx-ingress-controller-to-expose-service/</guid>
       <description>概述 Nginx Ingress Controller 是 Kubernetes Ingress Controller 的一种实现，作为反向代理将外部流量导入集群内部，实现将 Kubernetes 内部的 Service 暴露给外部，这样我们就能通过公网或内网直接访问集群内部的服</description>
     </item>
     
     <item>
-      <title>快速安装 Helm</title>
-      <link>https://imroc.io/posts/kubernetes/install-helm/</link>
-      <pubDate>Mon, 23 Jul 2018 12:49:00 +0800</pubDate>
-      <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/kubernetes/install-helm/</guid>
-      <description>概述 Helm 是 Kubernetes 的包管理器，可以帮我们简化 kubernetes 的操作，一键部署应用。假如你的机器上已经安装了 kubectl 并且能够操作集群，那么你就可以安装 Helm 了。 安装 执行脚本安</description>
-    </item>
-    
-    <item>
       <title>对比Kubernetes的Nodeport、Loadbalancer和Ingress，什么时候该用哪种</title>
-      <link>https://imroc.io/posts/kubernetes/kubernetes-nodeport-vs-loadbalancer-vs-ingress-when-should-i-use-what/</link>
+      <link>https://imroc.io/posts/kubernetes-nodeport-vs-loadbalancer-vs-ingress-when-should-i-use-what/</link>
       <pubDate>Tue, 13 Mar 2018 22:45:26 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/kubernetes/kubernetes-nodeport-vs-loadbalancer-vs-ingress-when-should-i-use-what/</guid>
+      <guid>https://imroc.io/posts/kubernetes-nodeport-vs-loadbalancer-vs-ingress-when-should-i-use-what/</guid>
       <description>本文翻译自：https://medium.com/google-cloud/kubernetes-nodeport-vs-loadbalan</description>
     </item>
     
     <item>
       <title>kubernetes源码阅读笔记：理清 kube-apiserver 的源码主线</title>
-      <link>https://imroc.io/posts/kubernetes/kubernetes-source-code-reading-notes-kube-apiserver-code-main-line/</link>
+      <link>https://imroc.io/posts/kubernetes-source-code-reading-notes-kube-apiserver-code-main-line/</link>
       <pubDate>Mon, 12 Mar 2018 11:47:19 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/kubernetes/kubernetes-source-code-reading-notes-kube-apiserver-code-main-line/</guid>
+      <guid>https://imroc.io/posts/kubernetes-source-code-reading-notes-kube-apiserver-code-main-line/</guid>
       <description>前言 我最近开始研究 kubernetes 源码，希望将阅读笔记记录下来，分享阅读思路和心得，更好的理解 kubernetes，这是第一篇，从 kube-apiserver 开始。 开始 k8s各组件</description>
     </item>
     
     <item>
       <title>利用Katacoda免费同步Docker镜像到Docker Hub</title>
-      <link>https://imroc.io/posts/kubernetes/sync-images-to-docker-hub-using-katacoda/</link>
+      <link>https://imroc.io/posts/sync-images-to-docker-hub-using-katacoda/</link>
       <pubDate>Fri, 09 Mar 2018 10:39:17 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/kubernetes/sync-images-to-docker-hub-using-katacoda/</guid>
+      <guid>https://imroc.io/posts/sync-images-to-docker-hub-using-katacoda/</guid>
       <description>为什么要同步 安装kubernetes的时候，我们需要用到 gcr.io/google_containers 下面的一些镜像，在国内是不能直接下载的。如果用 Self Host 方式安装，master 上的组件除</description>
-    </item>
-    
-    <item>
-      <title>国内使用Kubeadm在CentOS 7上安装Kubernetes 1.9</title>
-      <link>https://imroc.io/posts/kubernetes/install-kubernetes-1.9-on-centos7-with-kubeadm/</link>
-      <pubDate>Wed, 07 Mar 2018 23:35:11 +0800</pubDate>
-      <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/kubernetes/install-kubernetes-1.9-on-centos7-with-kubeadm/</guid>
-      <description>准备 修改系统配置 开启路由转发（保证 proxy 正常运行，Service 需要） sysctl -w net.ipv4.ip_forward=1 默认情况下，由于安全原因，linux是关闭了路由转发的，即同台机器不</description>
-    </item>
-    
-    <item>
-      <title>Kubernetes程序二进制下载集合</title>
-      <link>https://imroc.io/posts/kubernetes/kubernetes-binaries/</link>
-      <pubDate>Fri, 05 Jan 2018 13:43:15 +0800</pubDate>
-      <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/kubernetes/kubernetes-binaries/</guid>
-      <description>前言 由于国内网络的特殊性，安装Kubernetes很多时候会采用二进制方式部署，我将涉及到的二进制利用脚本传到百度云，方便大家下载，脚本开源</description>
     </item>
     
   </channel>

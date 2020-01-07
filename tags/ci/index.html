@@ -172,8 +172,8 @@ var _hmt = _hmt || [];
         templates: {
             
             suggestion: function (suggestion) {
-                return '<span>' + '<a href="/posts/' + suggestion.slug + '">' +
-                    suggestion._highlightResult.title.value + '</a></span>';
+                return '<span>' + '<a href="/' + suggestion.uri + '">' + suggestion._highlightResult.title.value +
+                        '</a></span>';
             }
         }
     });
@@ -210,7 +210,7 @@ var _hmt = _hmt || [];
         <div class="posts-list">
           
             <article class="post-preview">
-              <a href="https://imroc.io/posts/other/ci-with-gitlab-and-jenkins/">
+              <a href="https://imroc.io/posts/ci-with-gitlab-and-jenkins/">
                 <h2 class="post-title">利用Gitlab和Jenkins做CI(持续集成)</h2>
 
                 
@@ -222,7 +222,7 @@ var _hmt = _hmt || [];
               <div class="post-entry">
                 
                   利用Gitlab和Jenkins做CI(持续集成) 最近用到持续集成顺便总结在这里，都是用的最新版。搭建过程中还有一个demo，提交代码到 gitlab 自
-                  <a href="https://imroc.io/posts/other/ci-with-gitlab-and-jenkins/" class="post-read-more">[阅读全文]</a>
+                  <a href="https://imroc.io/posts/ci-with-gitlab-and-jenkins/" class="post-read-more">[阅读全文]</a>
                 
               </div>
 

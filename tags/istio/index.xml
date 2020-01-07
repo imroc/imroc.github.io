@@ -5,7 +5,7 @@
     <link>https://imroc.io/tags/istio/</link>
     <description>Recent content in istio on roc</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>zh-cn</language>
+    <language>zh</language>
     <managingEditor>roc@imroc.io (roc)</managingEditor>
     <webMaster>roc@imroc.io (roc)</webMaster>
     <lastBuildDate>Sun, 07 Apr 2019 11:54:00 +0800</lastBuildDate>
@@ -15,10 +15,10 @@
     
     <item>
       <title>Istio 学习笔记：Istio CNI 插件</title>
-      <link>https://imroc.io/posts/istio/istio-cni/</link>
+      <link>https://imroc.io/posts/istio-cni/</link>
       <pubDate>Sun, 07 Apr 2019 11:54:00 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/istio/istio-cni/</guid>
+      <guid>https://imroc.io/posts/istio-cni/</guid>
       <description>设计目标 当前实现将用户 pod 流量转发到 proxy 的默认方式是使用 privileged 权限的 istio-init 这个 init container 来做的（运行脚本写入 iptables），Istio CNI 插件的主要设计目标</description>
     </item>
     
