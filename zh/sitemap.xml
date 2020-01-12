@@ -4,7 +4,7 @@
   
   <url>
     <loc>https://imroc.io/categories/</loc>
-    <lastmod>2019-12-15T12:03:00+08:00</lastmod>
+    <lastmod>2020-01-12T19:20:00+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
@@ -19,7 +19,7 @@
   
   <url>
     <loc>https://imroc.io/tags/kubernetes/</loc>
-    <lastmod>2019-12-15T12:03:00+08:00</lastmod>
+    <lastmod>2020-01-12T19:20:00+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
@@ -34,7 +34,7 @@
   
   <url>
     <loc>https://imroc.io/categories/kubernetes/</loc>
-    <lastmod>2019-12-15T12:03:00+08:00</lastmod>
+    <lastmod>2020-01-12T19:20:00+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
@@ -48,13 +48,13 @@
   </url>
   
   <url>
-    <loc>https://imroc.io/posts/kubernetes-no-route-to-host/</loc>
-    <lastmod>2019-12-15T12:03:00+08:00</lastmod>
+    <loc>https://imroc.io/posts/kubernetes-overflow-and-drop/</loc>
+    <lastmod>2020-01-12T19:20:00+08:00</lastmod>
   </url>
   
   <url>
     <loc>https://imroc.io/posts/</loc>
-    <lastmod>2019-12-15T12:03:00+08:00</lastmod>
+    <lastmod>2020-01-12T19:20:00+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
@@ -69,7 +69,7 @@
   
   <url>
     <loc>https://imroc.io/</loc>
-    <lastmod>2019-12-15T12:03:00+08:00</lastmod>
+    <lastmod>2020-01-12T19:20:00+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
@@ -84,7 +84,7 @@
   
   <url>
     <loc>https://imroc.io/tags/</loc>
-    <lastmod>2019-12-15T12:03:00+08:00</lastmod>
+    <lastmod>2020-01-12T19:20:00+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
@@ -95,6 +95,11 @@
                 hreflang="zh"
                 href="https://imroc.io/tags/"
                 />
+  </url>
+  
+  <url>
+    <loc>https://imroc.io/posts/kubernetes-no-route-to-host/</loc>
+    <lastmod>2019-12-15T12:03:00+08:00</lastmod>
   </url>
   
   <url>
@@ -138,12 +143,12 @@
   </url>
   
   <url>
-    <loc>https://imroc.io/tags/istio/</loc>
+    <loc>https://imroc.io/categories/istio/</loc>
     <lastmod>2019-04-07T11:54:00+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://imroc.io/categories/istio/</loc>
+    <loc>https://imroc.io/tags/istio/</loc>
     <lastmod>2019-04-07T11:54:00+08:00</lastmod>
   </url>
   
@@ -265,11 +270,6 @@
   <url>
     <loc>https://imroc.io/posts/building-website-for-free-using-hugo-and-github-pages/</loc>
     <lastmod>2018-01-16T20:35:06+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/posts/kubernetes-overflow-and-drop/</loc>
-    <lastmod>2018-01-13T12:03:00+08:00</lastmod>
   </url>
   
   <url>

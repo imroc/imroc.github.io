@@ -8,10 +8,19 @@
     <language>zh</language>
     <managingEditor>roc@imroc.io (roc)</managingEditor>
     <webMaster>roc@imroc.io (roc)</webMaster>
-    <lastBuildDate>Sun, 15 Dec 2019 12:03:00 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 12 Jan 2020 19:20:00 +0800</lastBuildDate>
     
 	<atom:link href="https://imroc.io/tags/kubernetes/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Kubernetres 疑难杂症排查分享：神秘的溢出与丢包</title>
+      <link>https://imroc.io/posts/kubernetes-overflow-and-drop/</link>
+      <pubDate>Sun, 12 Jan 2020 19:20:00 +0800</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/posts/kubernetes-overflow-and-drop/</guid>
+      <description>上一篇 Kubernetes 疑难杂症排查分享: 诡异的 No route to host 不小心又爆火，这次继续带来干货，看之前请提前泡好茶，避免口干。 问题描述 有用户反馈大量图片加载不出来。</description>
+    </item>
     
     <item>
       <title>Kubernetes 疑难杂症排查分享: 诡异的 No route to host</title>
@@ -221,15 +230,6 @@
       <author>roc@imroc.io (roc)</author>
       <guid>https://imroc.io/posts/sync-images-to-docker-hub-using-katacoda/</guid>
       <description>为什么要同步 安装kubernetes的时候，我们需要用到 gcr.io/google_containers 下面的一些镜像，在国内是不能直接下载的。如果用 Self Host 方式安装，master 上的组件除</description>
-    </item>
-    
-    <item>
-      <title>Kubernetres 疑难杂症排查分享：神秘的溢出与丢包</title>
-      <link>https://imroc.io/posts/kubernetes-overflow-and-drop/</link>
-      <pubDate>Sat, 13 Jan 2018 12:03:00 +0800</pubDate>
-      <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/kubernetes-overflow-and-drop/</guid>
-      <description>上一篇 Kubernetes 疑难杂症排查分享: 诡异的 No route to host 不小心又爆火，这次继续带来干货，看之前请提前泡好茶，避免口干。 问题描述 有用户反馈大量图片加载不出来。</description>
     </item>
     
   </channel>
