@@ -14,7 +14,7 @@
     
     
     <item>
-      <title>Kubernetres 疑难杂症排查分享：神秘的溢出与丢包</title>
+      <title>Kubernetes 疑难杂症排查分享：神秘的溢出与丢包</title>
       <link>https://imroc.io/posts/kubernetes-overflow-and-drop/</link>
       <pubDate>Sun, 12 Jan 2020 19:20:00 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
