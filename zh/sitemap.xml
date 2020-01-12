@@ -168,12 +168,12 @@
   </url>
   
   <url>
-    <loc>https://imroc.io/categories/geek/</loc>
+    <loc>https://imroc.io/tags/geek/</loc>
     <lastmod>2018-12-07T18:05:00+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://imroc.io/tags/geek/</loc>
+    <loc>https://imroc.io/categories/geek/</loc>
     <lastmod>2018-12-07T18:05:00+08:00</lastmod>
   </url>
   
@@ -268,12 +268,17 @@
   </url>
   
   <url>
-    <loc>https://imroc.io/categories/golang/</loc>
-    <lastmod>2017-09-06T15:35:18+08:00</lastmod>
+    <loc>https://imroc.io/posts/kubernetes-overflow-and-drop/</loc>
+    <lastmod>2018-01-13T12:03:00+08:00</lastmod>
   </url>
   
   <url>
     <loc>https://imroc.io/tags/golang/</loc>
+    <lastmod>2017-09-06T15:35:18+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://imroc.io/categories/golang/</loc>
     <lastmod>2017-09-06T15:35:18+08:00</lastmod>
   </url>
   
