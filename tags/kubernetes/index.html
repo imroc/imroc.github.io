@@ -225,7 +225,56 @@ var _hmt = _hmt || [];
               </p>
               <div class="post-entry">
                 
-                  上一篇 Kubernetes 疑难杂症排查分享: 诡异的 No route to host 不小心又爆火，这次继续带来干货，看之前请提前泡好茶，避免口干。 问题描述 有用户反馈大量图片加载不出来。
+                  <blockquote>
+<p>上一篇 <a href="https://imroc.io/posts/kubernetes/kubernetes-no-route-to-host/">Kubernetes 疑难杂症排查分享: 诡异的 No route to host</a> 不小心又爆火，这次继续带来干货，看之前请提前泡好茶，避免口干。</p>
+</blockquote>
+<h2 id="heading">问题描述</h2>
+<p>有用户反馈大量图片加载不出来。</p>
+<p>图片下载走的 k8s ingress，这个 ingress 路径对应后端 service 是一个代理静态图片文件的 nginx deployment，这个 deployment 只有一个副本，静态文件存储在 nfs 上，nginx 通过挂载 nfs 来读取静态文件来提供图片下载服务，所以调用链是：client &ndash;&gt; k8s ingress &ndash;&gt; nginx &ndash;&gt; nfs。</p>
+<h2 id="heading-1">猜测</h2>
+<p>猜测: ingress 图片下载路径对应的后端服务出问题了。</p>
+<p>验证：在 k8s 集群直接 curl nginx 的 pod ip，发现不通，果然是后端服务的问题！</p>
+<h2 id="heading-2">抓包</h2>
+<p>继续抓包测试观察，登上 nginx pod 所在节点，进入容器的 netns 中：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># 拿到 pod 中 nginx 的容器 id</span>
+$ kubectl describe pod tcpbench-6484d4b457-847gl | grep -A10 <span style="color:#e6db74">&#34;^Containers:&#34;</span> | grep -Eo <span style="color:#e6db74">&#39;docker://.*$&#39;</span> | head -n <span style="color:#ae81ff">1</span> | sed <span style="color:#e6db74">&#39;s/docker:\/\/\(.*\)$/\1/&#39;</span>
+49b4135534dae77ce5151c6c7db4d528f05b69b0c6f8b9dd037ec4e7043c113e
+
+<span style="color:#75715e"># 通过容器 id 拿到 nginx 进程 pid</span>
+$ docker inspect -f <span style="color:#f92672">{</span><span style="color:#f92672">{</span>.State.Pid<span style="color:#f92672">}</span><span style="color:#f92672">}</span> 49b4135534dae77ce5151c6c7db4d528f05b69b0c6f8b9dd037ec4e7043c113e
+<span style="color:#ae81ff">3985</span>
+
+<span style="color:#75715e"># 进入 nginx 进程所在的 netns</span>
+$ nsenter -n -t <span style="color:#ae81ff">3985</span>
+
+<span style="color:#75715e"># 查看容器 netns 中的网卡信息，确认下</span>
+$ ip a
+1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu <span style="color:#ae81ff">65536</span> qdisc noqueue state UNKNOWN group default qlen <span style="color:#ae81ff">1000</span>
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+3: eth0@if11: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu <span style="color:#ae81ff">1500</span> qdisc noqueue state UP group default
+    link/ether 56:04:c7:28:b0:3c brd ff:ff:ff:ff:ff:ff link-netnsid <span style="color:#ae81ff">0</span>
+    inet 172.26.0.8/26 scope global eth0
+       valid_lft forever preferred_lft forever
+</code></pre></div><p>使用 tcpdump 指定端口 24568 抓容器 netns 中 eth0 网卡的包:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">tcpdump -i eth0 -nnnn -ttt port <span style="color:#ae81ff">24568</span>
+</code></pre></div><p>在其它节点准备使用 nc 指定源端口为 24568 向容器发包：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">nc -u <span style="color:#ae81ff">24568</span> 172.16.1.21 <span style="color:#ae81ff">80</span>
+</code></pre></div><p>观察抓包结果：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">00:00:00.000000 IP 10.0.0.3.24568 &gt; 172.16.1.21.80: Flags <span style="color:#f92672">[</span>S<span style="color:#f92672">]</span>, seq 416500297, win 29200, options <span style="color:#f92672">[</span>mss 1424,sackOK,TS val <span style="color:#ae81ff">3000206334</span> ecr 0,nop,wscale 9<span style="color:#f92672">]</span>, length <span style="color:#ae81ff">0</span>
+00:00:01.032218 IP 10.0.0.3.24568 &gt; 172.16.1.21.80: Flags <span style="color:#f92672">[</span>S<span style="color:#f92672">]</span>, seq 416500297, win 29200, options <span style="color:#f92672">[</span>mss 1424,sackOK,TS val <span style="color:#ae81ff">3000207366</span> ecr 0,nop,wscale 9<span style="color:#f92672">]</span>, length <span style="color:#ae81ff">0</span>
+00:00:02.011962 IP 10.0.0.3.24568 &gt; 172.16.1.21.80: Flags <span style="color:#f92672">[</span>S<span style="color:#f92672">]</span>, seq 416500297, win 29200, options <span style="color:#f92672">[</span>mss 1424,sackOK,TS val <span style="color:#ae81ff">3000209378</span> ecr 0,nop,wscale 9<span style="color:#f92672">]</span>, length <span style="color:#ae81ff">0</span>
+00:00:04.127943 IP 10.0.0.3.24568 &gt; 172.16.1.21.80: Flags <span style="color:#f92672">[</span>S<span style="color:#f92672">]</span>, seq 416500297, win 29200, options <span style="color:#f92672">[</span>mss 1424,sackOK,TS val <span style="color:#ae81ff">3000213506</span> ecr 0,nop,wscale 9<span style="color:#f92672">]</span>, length <span style="color:#ae81ff">0</span>
+00:00:08.192056 IP 10.0.0.3.24568 &gt; 172.16.1.21.80: Flags <span style="color:#f92672">[</span>S<span style="color:#f92672">]</span>, seq 416500297, win 29200, options <span style="color:#f92672">[</span>mss 1424,sackOK,TS val <span style="color:#ae81ff">3000221698</span> ecr 0,nop,wscale 9<span style="color:#f92672">]</span>, length <span style="color:#ae81ff">0</span>
+00:00:16.127983 IP 10.0.0.3.24568 &gt; 172.16.1.21.80: Flags <span style="color:#f92672">[</span>S<span style="color:#f92672">]</span>, seq 416500297, win 29200, options <span style="color:#f92672">[</span>mss 1424,sackOK,TS val <span style="color:#ae81ff">3000237826</span> ecr 0,nop,wscale 9<span style="color:#f92672">]</span>, length <span style="color:#ae81ff">0</span>
+00:00:33.791988 IP 10.0.0.3.24568 &gt; 172.16.1.21.80: Flags <span style="color:#f92672">[</span>S<span style="color:#f92672">]</span>, seq 416500297, win 29200, options <span style="color:#f92672">[</span>mss 1424,sackOK,TS val <span style="color:#ae81ff">3000271618</span> ecr 0,nop,wscale 9<span style="color:#f92672">]</span>, length <span style="color:#ae81ff">0</span>
+</code></pre></div><p>SYN 包到容器内网卡了，但容器没回 ACK，像是报文到达容器内的网卡后就被丢了。看样子跟防火墙应该也没什么关系，也检查了容器 netns 内的 iptables 规则，是空的，没问题。</p>
+<p>排除是 iptables 规则问题，在容器 netns 中使用 <code>netstat -s</code> 检查下是否有丢包统计:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ netstat -s | grep -E <span style="color:#e6db74">&#39;overflow|drop&#39;</span>
+    <span style="color:#ae81ff">12178939</span> times the listen queue of a socket overflowed
+    <span style="color:#ae81ff">12247395</span> SYNs to LISTEN sockets dropped
+</code></pre></div><p>果然有丢包，为了理解这里的丢包统计，我深入研究了一下，下面插播一些相关知识。</p>
                   <a href="https://imroc.io/posts/kubernetes-overflow-and-drop/" class="post-read-more">[阅读全文]</a>
                 
               </div>

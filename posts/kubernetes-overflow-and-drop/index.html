@@ -9,9 +9,112 @@
   <meta name="description" content="roc的博客|Cloud Native|Kubernetes|Go|Golang|Service Mesh" />
   <meta property="og:title" content="Kubernetes 疑难杂症排查分享：神秘的溢出与丢包" />
   <meta name="twitter:title" content="Kubernetes 疑难杂症排查分享：神秘的溢出与丢包" />
-  <meta name="description" content="上一篇 Kubernetes 疑难杂症排查分享: 诡异的 No route to host 不小心又爆火，这次继续带来干货，看之前请提前泡好茶，避免口干。 问题描述 有用户反馈大量图片加载不出来。">
-  <meta property="og:description" content="上一篇 Kubernetes 疑难杂症排查分享: 诡异的 No route to host 不小心又爆火，这次继续带来干货，看之前请提前泡好茶，避免口干。 问题描述 有用户反馈大量图片加载不出来。">
-  <meta name="twitter:description" content="上一篇 Kubernetes 疑难杂症排查分享: 诡异的 No route to host 不小心又爆火，这次继续带来干货，看之前请提前泡好茶，避免口干。 问题描述 有用户反馈大量图片加载不出来。">
+  <meta name="description" content="
+上一篇 Kubernetes 疑难杂症排查分享: 诡异的 No route to host 不小心又爆火，这次继续带来干货，看之前请提前泡好茶，避免口干。
+
+问题描述
+有用户反馈大量图片加载不出来。
+图片下载走的 k8s ingress，这个 ingress 路径对应后端 service 是一个代理静态图片文件的 nginx deployment，这个 deployment 只有一个副本，静态文件存储在 nfs 上，nginx 通过挂载 nfs 来读取静态文件来提供图片下载服务，所以调用链是：client &ndash;&gt; k8s ingress &ndash;&gt; nginx &ndash;&gt; nfs。
+猜测
+猜测: ingress 图片下载路径对应的后端服务出问题了。
+验证：在 k8s 集群直接 curl nginx 的 pod ip，发现不通，果然是后端服务的问题！
+抓包
+继续抓包测试观察，登上 nginx pod 所在节点，进入容器的 netns 中：
+# 拿到 pod 中 nginx 的容器 id
+$ kubectl describe pod tcpbench-6484d4b457-847gl | grep -A10 &#34;^Containers:&#34; | grep -Eo &#39;docker://.*$&#39; | head -n 1 | sed &#39;s/docker:\/\/\(.*\)$/\1/&#39;
+49b4135534dae77ce5151c6c7db4d528f05b69b0c6f8b9dd037ec4e7043c113e
+
+# 通过容器 id 拿到 nginx 进程 pid
+$ docker inspect -f {{.State.Pid}} 49b4135534dae77ce5151c6c7db4d528f05b69b0c6f8b9dd037ec4e7043c113e
+3985
+
+# 进入 nginx 进程所在的 netns
+$ nsenter -n -t 3985
+
+# 查看容器 netns 中的网卡信息，确认下
+$ ip a
+1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+3: eth0@if11: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc noqueue state UP group default
+    link/ether 56:04:c7:28:b0:3c brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet 172.26.0.8/26 scope global eth0
+       valid_lft forever preferred_lft forever
+使用 tcpdump 指定端口 24568 抓容器 netns 中 eth0 网卡的包:
+tcpdump -i eth0 -nnnn -ttt port 24568
+在其它节点准备使用 nc 指定源端口为 24568 向容器发包：
+nc -u 24568 172.16.1.21 80
+观察抓包结果：
+00:00:00.000000 IP 10.0.0.3.24568 &gt; 172.16.1.21.80: Flags [S], seq 416500297, win 29200, options [mss 1424,sackOK,TS val 3000206334 ecr 0,nop,wscale 9], length 0
+00:00:01.032218 IP 10.0.0.3.24568 &gt; 172.16.1.21.80: Flags [S], seq 416500297, win 29200, options [mss 1424,sackOK,TS val 3000207366 ecr 0,nop,wscale 9], length 0
+00:00:02.011962 IP 10.0.0.3.24568 &gt; 172.16.1.21.80: Flags [S], seq 416500297, win 29200, options [mss 1424,sackOK,TS val 3000209378 ecr 0,nop,wscale 9], length 0
+00:00:04.127943 IP 10.0.0.3.24568 &gt; 172.16.1.21.80: Flags [S], seq 416500297, win 29200, options [mss 1424,sackOK,TS val 3000213506 ecr 0,nop,wscale 9], length 0
+00:00:08.192056 IP 10.0.0.3.24568 &gt; 172.16.1.21.80: Flags [S], seq 416500297, win 29200, options [mss 1424,sackOK,TS val 3000221698 ecr 0,nop,wscale 9], length 0
+00:00:16.127983 IP 10.0.0.3.24568 &gt; 172.16.1.21.80: Flags [S], seq 416500297, win 29200, options [mss 1424,sackOK,TS val 3000237826 ecr 0,nop,wscale 9], length 0
+00:00:33.791988 IP 10.0.0.3.24568 &gt; 172.16.1.21.80: Flags [S], seq 416500297, win 29200, options [mss 1424,sackOK,TS val 3000271618 ecr 0,nop,wscale 9], length 0
+SYN 包到容器内网卡了，但容器没回 ACK，像是报文到达容器内的网卡后就被丢了。看样子跟防火墙应该也没什么关系，也检查了容器 netns 内的 iptables 规则，是空的，没问题。
+排除是 iptables 规则问题，在容器 netns 中使用 netstat -s 检查下是否有丢包统计:
+$ netstat -s | grep -E &#39;overflow|drop&#39;
+    12178939 times the listen queue of a socket overflowed
+    12247395 SYNs to LISTEN sockets dropped
+果然有丢包，为了理解这里的丢包统计，我深入研究了一下，下面插播一些相关知识。">
+  <meta property="og:description" content="
+上一篇 Kubernetes 疑难杂症排查分享: 诡异的 No route to host 不小心又爆火，这次继续带来干货，看之前请提前泡好茶，避免口干。
+
+问题描述
+有用户反馈大量图片加载不出来。
+图片下载走的 k8s ingress，这个 ingress 路径对应后端 service 是一个代理静态图片文件的 nginx deployment，这个 deployment 只有一个副本，静态文件存储在 nfs 上，nginx 通过挂载 nfs 来读取静态文件来提供图片下载服务，所以调用链是：client &ndash;&gt; k8s ingress &ndash;&gt; nginx &ndash;&gt; nfs。
+猜测
+猜测: ingress 图片下载路径对应的后端服务出问题了。
+验证：在 k8s 集群直接 curl nginx 的 pod ip，发现不通，果然是后端服务的问题！
+抓包
+继续抓包测试观察，登上 nginx pod 所在节点，进入容器的 netns 中：
+# 拿到 pod 中 nginx 的容器 id
+$ kubectl describe pod tcpbench-6484d4b457-847gl | grep -A10 &#34;^Containers:&#34; | grep -Eo &#39;docker://.*$&#39; | head -n 1 | sed &#39;s/docker:\/\/\(.*\)$/\1/&#39;
+49b4135534dae77ce5151c6c7db4d528f05b69b0c6f8b9dd037ec4e7043c113e
+
+# 通过容器 id 拿到 nginx 进程 pid
+$ docker inspect -f {{.State.Pid}} 49b4135534dae77ce5151c6c7db4d528f05b69b0c6f8b9dd037ec4e7043c113e
+3985
+
+# 进入 nginx 进程所在的 netns
+$ nsenter -n -t 3985
+
+# 查看容器 netns 中的网卡信息，确认下
+$ ip a
+1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+3: eth0@if11: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc noqueue state UP group default
+    link/ether 56:04:c7:28:b0:3c brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet 172.26.0.8/26 scope global eth0
+       valid_lft forever preferred_lft forever
+使用 tcpdump 指定端口 24568 抓容器 netns 中 eth0 网卡的包:
+tcpdump -i eth0 -nnnn -ttt port 24568
+在其它节点准备使用 nc 指定源端口为 24568 向容器发包：
+nc -u 24568 172.16.1.21 80
+观察抓包结果：
+00:00:00.000000 IP 10.0.0.3.24568 &gt; 172.16.1.21.80: Flags [S], seq 416500297, win 29200, options [mss 1424,sackOK,TS val 3000206334 ecr 0,nop,wscale 9], length 0
+00:00:01.032218 IP 10.0.0.3.24568 &gt; 172.16.1.21.80: Flags [S], seq 416500297, win 29200, options [mss 1424,sackOK,TS val 3000207366 ecr 0,nop,wscale 9], length 0
+00:00:02.011962 IP 10.0.0.3.24568 &gt; 172.16.1.21.80: Flags [S], seq 416500297, win 29200, options [mss 1424,sackOK,TS val 3000209378 ecr 0,nop,wscale 9], length 0
+00:00:04.127943 IP 10.0.0.3.24568 &gt; 172.16.1.21.80: Flags [S], seq 416500297, win 29200, options [mss 1424,sackOK,TS val 3000213506 ecr 0,nop,wscale 9], length 0
+00:00:08.192056 IP 10.0.0.3.24568 &gt; 172.16.1.21.80: Flags [S], seq 416500297, win 29200, options [mss 1424,sackOK,TS val 3000221698 ecr 0,nop,wscale 9], length 0
+00:00:16.127983 IP 10.0.0.3.24568 &gt; 172.16.1.21.80: Flags [S], seq 416500297, win 29200, options [mss 1424,sackOK,TS val 3000237826 ecr 0,nop,wscale 9], length 0
+00:00:33.791988 IP 10.0.0.3.24568 &gt; 172.16.1.21.80: Flags [S], seq 416500297, win 29200, options [mss 1424,sackOK,TS val 3000271618 ecr 0,nop,wscale 9], length 0
+SYN 包到容器内网卡了，但容器没回 ACK，像是报文到达容器内的网卡后就被丢了。看样子跟防火墙应该也没什么关系，也检查了容器 netns 内的 iptables 规则，是空的，没问题。
+排除是 iptables 规则问题，在容器 netns 中使用 netstat -s 检查下是否有丢包统计:
+$ netstat -s | grep -E &#39;overflow|drop&#39;
+    12178939 times the listen queue of a socket overflowed
+    12247395 SYNs to LISTEN sockets dropped
+果然有丢包，为了理解这里的丢包统计，我深入研究了一下，下面插播一些相关知识。">
+  <meta name="twitter:description" content="
+上一篇 Kubernetes 疑难杂症排查分享: 诡异的 No route to host 不小心又爆火，这次继续带来干货，看之前请提前泡好茶，避免口干。
+
+问题描述
+有用户反馈大量图片加载不出来。
+图片下载走的 k8s ingress，这个 ingress 路径对应后端 service 是一个代理静态图片文件的 nginx deployment，这个 deployment 只有一个副本，静态文 …">
   <meta name="author" content="{Description { .Site.Author.name }}"/>
   <link href='https://imroc.io/favicon.png' rel='icon' type='image/x-icon'/>
   <meta property="og:image" content="https://res.cloudinary.com/imroc/image/upload/v1521031841/avatar.png" />
@@ -550,7 +653,6 @@ LISTEN     <span style="color:#ae81ff">512</span>    <span style="color:#ae81ff"
 <li>Using sysctls in a Kubernetes Cluster: <a href="https://kubernetes-io-vnext-staging.netlify.com/docs/tasks/administer-cluster/sysctl-cluster/">https://kubernetes-io-vnext-staging.netlify.com/docs/tasks/administer-cluster/sysctl-cluster/</a></li>
 <li>SYN packet handling in the wild: <a href="https://blog.cloudflare.com/syn-packet-handling-in-the-wild/">https://blog.cloudflare.com/syn-packet-handling-in-the-wild/</a></li>
 </ul>
-
             </article>
 
             <ul class="pager blog-pager">
