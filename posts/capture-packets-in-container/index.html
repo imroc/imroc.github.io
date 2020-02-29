@@ -23,7 +23,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="roc" />
 
-  <meta name="generator" content="Hugo 0.62.0" />
+  <meta name="generator" content="Hugo 0.65.3" />
   <link rel="canonical" href="https://imroc.io/posts/capture-packets-in-container/" />
   <link rel="alternate" href="https://imroc.io/index.xml" type="application/rss+xml" title="roc"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css"
     integrity="sha384-9eLZqc9ds8eNjO3TmqPeYcDj8n+Qfa4nuSiGYa6DjLNcv9BtN69ZIulL9+8CqC9Y" crossorigin="anonymous">
@@ -164,7 +164,7 @@ var _hmt = _hmt || [];
 <script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/algoliasearch.min.js"></script>
 <script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/autocomplete.min.js"></script>
 <script>
-    var client = algoliasearch("B6Q6PSGUV5", "d04f855d3a39eed8ad8d9365ba7c86af");
+    var client = algoliasearch("B6Q6PSGUV5", "5b4678e9995fe4211c4fa43ad2ffdab5");
     var index = client.initIndex("imroc-blog");
     
     autocomplete('#aa-search-input', {
@@ -276,9 +276,9 @@ var _hmt = _hmt || [];
 <aside class="toc">
   <nav id="TableOfContents">
   <ul>
-    <li><a href="#-pod-netns-">使用脚本一键进入 pod netns 抓包</a>
+    <li><a href="#使用脚本一键进入-pod-netns-抓包">使用脚本一键进入 pod netns 抓包</a>
       <ul>
-        <li><a href="#heading">脚本原理</a></li>
+        <li><a href="#脚本原理">脚本原理</a></li>
       </ul>
     </li>
   </ul>
@@ -287,7 +287,7 @@ var _hmt = _hmt || [];
 
 
                 <p>在使用 kubernetes 跑应用的时候，可能会遇到一些网络问题，比较常见的是服务端无响应(超时)或回包内容不正常，如果没找出各种配置上有问题，这时我们需要确认数据包到底有没有最终被路由到容器里，或者报文到达容器的内容和出容器的内容符不符合预期，通过分析报文可以进一步缩小问题范围。那么如何在容器内抓包呢？本文提供实用的脚本一键进入容器网络命名空间(netns)，使用宿主机上的tcpdump进行抓包。</p>
-<h2 id="-pod-netns-">使用脚本一键进入 pod netns 抓包</h2>
+<h2 id="使用脚本一键进入-pod-netns-抓包">使用脚本一键进入 pod netns 抓包</h2>
 <ul>
 <li>
 <p>发现某个服务不通，最好将其副本数调为1，并找到这个副本 pod 所在节点和 pod 名称</p>
@@ -295,13 +295,13 @@ var _hmt = _hmt || [];
 </code></pre></div></li>
 <li>
 <p>登录 pod 所在节点，将如下脚本粘贴到 shell (注册函数到当前登录的 shell，我们后面用)</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">  <span style="color:#66d9ef">function</span> e<span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">  <span style="color:#66d9ef">function</span> e<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
       set -eu
       ns<span style="color:#f92672">=</span><span style="color:#e6db74">${</span>2-<span style="color:#e6db74">&#34;default&#34;</span><span style="color:#e6db74">}</span>
       pod<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>kubectl -n $ns describe pod $1 | grep -A10 <span style="color:#e6db74">&#34;^Containers:&#34;</span> | grep -Eo <span style="color:#e6db74">&#39;docker://.*$&#39;</span> | head -n <span style="color:#ae81ff">1</span> | sed <span style="color:#e6db74">&#39;s/docker:\/\/\(.*\)$/\1/&#39;</span><span style="color:#e6db74">`</span>
-      pid<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>docker inspect -f <span style="color:#f92672">{</span><span style="color:#f92672">{</span>.State.Pid<span style="color:#f92672">}</span><span style="color:#f92672">}</span> $pod<span style="color:#e6db74">`</span>
-      echo <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">entering pod netns for </span>$ns<span style="color:#e6db74">/</span>$1<span style="color:#e6db74">&#34;</span>
-      cmd<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">nsenter -n --target </span>$pid<span style="color:#e6db74">&#34;</span>
+      pid<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>docker inspect -f <span style="color:#f92672">{{</span>.State.Pid<span style="color:#f92672">}}</span> $pod<span style="color:#e6db74">`</span>
+      echo <span style="color:#e6db74">&#34;entering pod netns for </span>$ns<span style="color:#e6db74">/</span>$1<span style="color:#e6db74">&#34;</span>
+      cmd<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;nsenter -n --target </span>$pid<span style="color:#e6db74">&#34;</span>
       echo $cmd
       $cmd
   <span style="color:#f92672">}</span>
@@ -322,10 +322,10 @@ e proxy-5546768954-9rxg6 <span style="color:#75715e"># 省略 NAMESPACE 默认�
 tcp contains <span style="color:#e6db74">&#34;lbtest&#34;</span>
 <span style="color:#75715e"># 如果容器提供的是http服务，可以使用 curl 发送一些测试路径的请求，</span>
 <span style="color:#75715e"># 通过下面语句过滤 uri 看报文有没有都容器</span>
-http.request.uri<span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;/mytest&#34;</span>
+http.request.uri<span style="color:#f92672">==</span><span style="color:#e6db74">&#34;/mytest&#34;</span>
 </code></pre></div></li>
 </ul>
-<h3 id="heading">脚本原理</h3>
+<h3 id="脚本原理">脚本原理</h3>
 <p>我们解释下步骤二中用到的脚本的原理</p>
 <ul>
 <li>
@@ -334,7 +334,7 @@ http.request.uri<span style="color:#f92672">=</span><span style="color:#f92672">
 </code></pre></div></li>
 <li>
 <p>获得容器进程的 pid</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">docker inspect -f <span style="color:#f92672">{</span><span style="color:#f92672">{</span>.State.Pid<span style="color:#f92672">}</span><span style="color:#f92672">}</span> &lt;container&gt;
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">docker inspect -f <span style="color:#f92672">{{</span>.State.Pid<span style="color:#f92672">}}</span> &lt;container&gt;
 </code></pre></div></li>
 <li>
 <p>进入该容器的 network namespace</p>
@@ -510,7 +510,7 @@ http.request.uri<span style="color:#f92672">=</span><span style="color:#f92672">
             更新
           </p>
           <p class="credits theme-by text-muted">
-            由 <a href="http://gohugo.io">Hugo v0.62.0</a> 强力驱动 &nbsp;&bull;&nbsp; 主题 <a href="https://github.com/imroc/xhugo">xhugo</a>
+            由 <a href="http://gohugo.io">Hugo v0.65.3</a> 强力驱动 &nbsp;&bull;&nbsp; 主题 <a href="https://github.com/imroc/xhugo">xhugo</a>
           </p>
         </div>
       </div>

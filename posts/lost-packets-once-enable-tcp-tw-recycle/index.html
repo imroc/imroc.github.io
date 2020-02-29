@@ -23,7 +23,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="roc" />
 
-  <meta name="generator" content="Hugo 0.62.0" />
+  <meta name="generator" content="Hugo 0.65.3" />
   <link rel="canonical" href="https://imroc.io/posts/lost-packets-once-enable-tcp-tw-recycle/" />
   <link rel="alternate" href="https://imroc.io/index.xml" type="application/rss+xml" title="roc"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css"
     integrity="sha384-9eLZqc9ds8eNjO3TmqPeYcDj8n+Qfa4nuSiGYa6DjLNcv9BtN69ZIulL9+8CqC9Y" crossorigin="anonymous">
@@ -164,7 +164,7 @@ var _hmt = _hmt || [];
 <script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/algoliasearch.min.js"></script>
 <script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/autocomplete.min.js"></script>
 <script>
-    var client = algoliasearch("B6Q6PSGUV5", "d04f855d3a39eed8ad8d9365ba7c86af");
+    var client = algoliasearch("B6Q6PSGUV5", "5b4678e9995fe4211c4fa43ad2ffdab5");
     var index = client.initIndex("imroc-blog");
     
     autocomplete('#aa-search-input', {
@@ -276,14 +276,14 @@ var _hmt = _hmt || [];
 <aside class="toc">
   <nav id="TableOfContents">
   <ul>
-    <li><a href="#heading">原因</a></li>
-    <li><a href="#tke--nat-">TKE中 使用 NAT 的场景</a></li>
+    <li><a href="#原因">原因</a></li>
+    <li><a href="#tke中-使用-nat-的场景">TKE中 使用 NAT 的场景</a></li>
   </ul>
 </nav>
 </aside>
 
 
-                <h2 id="heading">原因</h2>
+                <h2 id="原因">原因</h2>
 <p>tcp_tw_recycle参数。它用来快速回收TIME_WAIT连接，不过如果在NAT环境下会引发问题。
 RFC1323中有如下一段描述：</p>
 <p><code>An additional mechanism could be added to the TCP, a per-host cache of the last timestamp received from any connection. This value could then be used in the PAWS mechanism to reject old duplicate segments from earlier incarnations of the connection, if the timestamp clock can be guaranteed to have ticked at least once since the old connection was open. This would require that the TIME-WAIT delay plus the RTT together must be at least one tick of the sender’s timestamp clock. Such an extension is not part of the proposal of this RFC.</code></p>
@@ -301,7 +301,7 @@ RFC1323中有如下一段描述：</p>
 <p>在4.12之后的内核已移除tcp_tw_recycle内核参数: <a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=4396e46187ca5070219b81773c4e65088dac50cc">https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=4396e46187ca5070219b81773c4e65088dac50cc</a> <a href="https://github.com/torvalds/linux/commit/4396e46187ca5070219b81773c4e65088dac50cc">https://github.com/torvalds/linux/commit/4396e46187ca5070219b81773c4e65088dac50cc</a></p>
 </li>
 </ul>
-<h2 id="tke--nat-">TKE中 使用 NAT 的场景</h2>
+<h2 id="tke中-使用-nat-的场景">TKE中 使用 NAT 的场景</h2>
 <ul>
 <li>跨 VPC 访问(通过对等连接、云联网、专线等方式打通)，会做 SNAT</li>
 </ul>
@@ -473,7 +473,7 @@ RFC1323中有如下一段描述：</p>
             更新
           </p>
           <p class="credits theme-by text-muted">
-            由 <a href="http://gohugo.io">Hugo v0.62.0</a> 强力驱动 &nbsp;&bull;&nbsp; 主题 <a href="https://github.com/imroc/xhugo">xhugo</a>
+            由 <a href="http://gohugo.io">Hugo v0.65.3</a> 强力驱动 &nbsp;&bull;&nbsp; 主题 <a href="https://github.com/imroc/xhugo">xhugo</a>
           </p>
         </div>
       </div>

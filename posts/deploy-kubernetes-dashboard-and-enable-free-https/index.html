@@ -23,7 +23,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="roc" />
 
-  <meta name="generator" content="Hugo 0.62.0" />
+  <meta name="generator" content="Hugo 0.65.3" />
   <link rel="canonical" href="https://imroc.io/posts/deploy-kubernetes-dashboard-and-enable-free-https/" />
   <link rel="alternate" href="https://imroc.io/index.xml" type="application/rss+xml" title="roc"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css"
     integrity="sha384-9eLZqc9ds8eNjO3TmqPeYcDj8n+Qfa4nuSiGYa6DjLNcv9BtN69ZIulL9+8CqC9Y" crossorigin="anonymous">
@@ -164,7 +164,7 @@ var _hmt = _hmt || [];
 <script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/algoliasearch.min.js"></script>
 <script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/autocomplete.min.js"></script>
 <script>
-    var client = algoliasearch("B6Q6PSGUV5", "d04f855d3a39eed8ad8d9365ba7c86af");
+    var client = algoliasearch("B6Q6PSGUV5", "5b4678e9995fe4211c4fa43ad2ffdab5");
     var index = client.initIndex("imroc-blog");
     
     autocomplete('#aa-search-input', {
@@ -276,14 +276,14 @@ var _hmt = _hmt || [];
 <aside class="toc">
   <nav id="TableOfContents">
   <ul>
-    <li><a href="#heading">概述</a></li>
-    <li><a href="#heading-1">安装</a></li>
+    <li><a href="#概述">概述</a></li>
+    <li><a href="#安装">安装</a></li>
   </ul>
 </nav>
 </aside>
 
 
-                <h2 id="heading">概述</h2>
+                <h2 id="概述">概述</h2>
 <p>Kubernetes Dashboard 是一个可以可视化查看和操作 Kubernetes 集群的一个插件</p>
 <ul>
 <li>本文利用 Helm 部署它，所以请确保 Helm 已安装，安装方法参考：https://imroc.io/posts/kubernetes/install-helm</li>
@@ -291,7 +291,7 @@ var _hmt = _hmt || [];
 <li>有域名，并且配置 DNS，IP 指向 Ingress Controller 对外暴露的地址</li>
 <li>本文使用 cert-manager 生成免费证书，安装和使用参考：https://imroc.io/posts/kubernetes/let-ingress-enable-free-https-with-cert-manager</li>
 </ul>
-<h2 id="heading-1">安装</h2>
+<h2 id="安装">安装</h2>
 <p>先自定义 helm 的 chart 配置:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">vi values.yaml
 </code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#75715e">#Default values for kubernetes-dashboard</span>
@@ -299,16 +299,16 @@ var _hmt = _hmt || [];
 <span style="color:#75715e"># Declare name/value pairs to be passed into your templates.</span>
 <span style="color:#75715e"># name: value</span>
 
-image:
-  repository: k8s.gcr.io/kubernetes-dashboard-amd64
-  tag: v1<span style="color:#ae81ff">.8</span><span style="color:#ae81ff">.3</span>
-  pullPolicy: IfNotPresent
+<span style="color:#66d9ef">image</span>:
+  <span style="color:#66d9ef">repository</span>: k8s.gcr.io/kubernetes-dashboard-amd64
+  <span style="color:#66d9ef">tag</span>: v1<span style="color:#ae81ff">.8.3</span>
+  <span style="color:#66d9ef">pullPolicy</span>: IfNotPresent
 
-replicaCount: <span style="color:#ae81ff">1</span>
+<span style="color:#66d9ef">replicaCount</span>: <span style="color:#ae81ff">1</span>
 
 <span style="color:#75715e">## Here labels can be added to the kubernetes dashboard deployment</span>
 <span style="color:#75715e">##</span>
-labels: {}
+<span style="color:#66d9ef">labels</span>: {}
 <span style="color:#75715e"># kubernetes.io/cluster-service: &#34;true&#34;</span>
 <span style="color:#75715e"># kubernetes.io/name: &#34;Kubernetes Dashboard&#34;</span>
 
@@ -324,18 +324,18 @@ labels: {}
 <span style="color:#75715e">## Node labels for pod assignment</span>
 <span style="color:#75715e">## Ref: https://kubernetes.io/docs/user-guide/node-selection/</span>
 <span style="color:#75715e">##</span>
-nodeSelector: {}
+<span style="color:#66d9ef">nodeSelector</span>: {}
 
 <span style="color:#75715e">## List of node taints to tolerate (requires Kubernetes &gt;= 1.6)</span>
-tolerations: []
+<span style="color:#66d9ef">tolerations</span>: []
 <span style="color:#75715e">#  - key: &#34;key&#34;</span>
 <span style="color:#75715e">#    operator: &#34;Equal|Exists&#34;</span>
 <span style="color:#75715e">#    value: &#34;value&#34;</span>
 <span style="color:#75715e">#    effect: &#34;NoSchedule|PreferNoSchedule|NoExecute&#34;</span>
 
-service:
-  type: ClusterIP
-  externalPort: <span style="color:#ae81ff">443</span>
+<span style="color:#66d9ef">service</span>:
+  <span style="color:#66d9ef">type</span>: ClusterIP
+  <span style="color:#66d9ef">externalPort</span>: <span style="color:#ae81ff">443</span>
 
   <span style="color:#75715e">## This allows an override of the heapster service name</span>
   <span style="color:#75715e">## Default: {{ .Chart.Name }}</span>
@@ -344,68 +344,68 @@ service:
 
   <span style="color:#75715e">## Kubernetes Dashboard Service annotations</span>
   <span style="color:#75715e">##</span>
-  annotations: {}
+  <span style="color:#66d9ef">annotations</span>: {}
   <span style="color:#75715e"># foo.io/bar: &#34;true&#34;</span>
 
   <span style="color:#75715e">## Here labels can be added to the Kubernetes Dashboard service</span>
   <span style="color:#75715e">##</span>
-  labels: {}
+  <span style="color:#66d9ef">labels</span>: {}
   <span style="color:#75715e"># kubernetes.io/name: &#34;Kubernetes Dashboard&#34;</span>
 
-resources:
-  limits:
-    cpu: 100m
-    memory: 50Mi
-  requests:
-    cpu: 100m
-    memory: 50Mi
+<span style="color:#66d9ef">resources</span>:
+  <span style="color:#66d9ef">limits</span>:
+    <span style="color:#66d9ef">cpu</span>: 100m
+    <span style="color:#66d9ef">memory</span>: 50Mi
+  <span style="color:#66d9ef">requests</span>:
+    <span style="color:#66d9ef">cpu</span>: 100m
+    <span style="color:#66d9ef">memory</span>: 50Mi
 
-ingress:
+<span style="color:#66d9ef">ingress</span>:
   <span style="color:#75715e">## If true, Kubernetes Dashboard Ingress will be created.</span>
   <span style="color:#75715e">##</span>
-  enabled: <span style="color:#66d9ef">true</span>
+  <span style="color:#66d9ef">enabled</span>: <span style="color:#66d9ef">true</span>
 
   <span style="color:#75715e">## Kubernetes Dashboard Ingress annotations</span>
   <span style="color:#75715e">##</span>
-  annotations:
-    kubernetes.io/ingress.class: nginx
-    nginx.ingress.kubernetes.io/secure-backends: <span style="color:#e6db74">&#34;true&#34;</span>
+  <span style="color:#66d9ef">annotations</span>:
+    <span style="color:#66d9ef">kubernetes.io/ingress.class</span>: nginx
+    <span style="color:#66d9ef">nginx.ingress.kubernetes.io/secure-backends</span>: <span style="color:#e6db74">&#34;true&#34;</span>
     <span style="color:#75715e">#nginx.ingress.kubernetes.io/configuration-snippet: |</span>
     <span style="color:#75715e">#  proxy_set_header &#34;Host: 127.0.0.1&#34;;</span>
     <span style="color:#75715e">#kubernetes.io/tls-acme: &#39;true&#39;</span>
 
   <span style="color:#75715e">## Kubernetes Dashboard Ingress path</span>
   <span style="color:#75715e">##</span>
-  path: /
+  <span style="color:#66d9ef">path</span>: /
 
   <span style="color:#75715e">## Kubernetes Dashboard Ingress hostnames</span>
   <span style="color:#75715e">## Must be provided if Ingress is enabled</span>
   <span style="color:#75715e">##</span>
-  hosts:
+  <span style="color:#66d9ef">hosts</span>:
     - dashboard.imroc.io
 
   <span style="color:#75715e">## Kubernetes Dashboard Ingress TLS configuration</span>
   <span style="color:#75715e">## Secrets must be manually created in the namespace</span>
   <span style="color:#75715e">##</span>
-  tls:
-   - secretName: dashboard-imroc-io-tls
-     hosts:
+  <span style="color:#66d9ef">tls</span>:
+   - <span style="color:#66d9ef">secretName</span>: dashboard-imroc-io-tls
+     <span style="color:#66d9ef">hosts</span>:
        - dashboard.imroc.io
 
-rbac:
+<span style="color:#66d9ef">rbac</span>:
   <span style="color:#75715e"># Specifies whether RBAC resources should be created</span>
-  create: <span style="color:#66d9ef">true</span>
+  <span style="color:#66d9ef">create</span>: <span style="color:#66d9ef">true</span>
 
   <span style="color:#75715e"># Specifies whether cluster-admin ClusterRole will be used for dashboard</span>
   <span style="color:#75715e"># ServiceAccount (NOT RECOMMENDED).</span>
-  clusterAdminRole: <span style="color:#66d9ef">true</span>
+  <span style="color:#66d9ef">clusterAdminRole</span>: <span style="color:#66d9ef">true</span>
 
-serviceAccount:
+<span style="color:#66d9ef">serviceAccount</span>:
   <span style="color:#75715e"># Specifies whether a service account should be created</span>
-  create: <span style="color:#66d9ef">true</span>
+  <span style="color:#66d9ef">create</span>: <span style="color:#66d9ef">true</span>
   <span style="color:#75715e"># The name of the service account to use.</span>
   <span style="color:#75715e"># If not set and create is true, a name is generated using the fullname template</span>
-  name:
+  <span style="color:#66d9ef">name</span>:
 </code></pre></div><p>相比默认配置，修改了以下配置项：</p>
 <ul>
 <li>ingress.enabled - 置为 true 开启 Ingress，用 Ingress 将 Kubernetes Dashboard 服务暴露出来，以便让我们浏览器能够访问</li>
@@ -581,7 +581,7 @@ serviceAccount:
             更新
           </p>
           <p class="credits theme-by text-muted">
-            由 <a href="http://gohugo.io">Hugo v0.62.0</a> 强力驱动 &nbsp;&bull;&nbsp; 主题 <a href="https://github.com/imroc/xhugo">xhugo</a>
+            由 <a href="http://gohugo.io">Hugo v0.65.3</a> 强力驱动 &nbsp;&bull;&nbsp; 主题 <a href="https://github.com/imroc/xhugo">xhugo</a>
           </p>
         </div>
       </div>

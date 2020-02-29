@@ -23,7 +23,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="roc" />
 
-  <meta name="generator" content="Hugo 0.62.0" />
+  <meta name="generator" content="Hugo 0.65.3" />
   <link rel="canonical" href="https://imroc.io/posts/kubernetes-analysis-exitcode/" />
   <link rel="alternate" href="https://imroc.io/index.xml" type="application/rss+xml" title="roc"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css"
     integrity="sha384-9eLZqc9ds8eNjO3TmqPeYcDj8n+Qfa4nuSiGYa6DjLNcv9BtN69ZIulL9+8CqC9Y" crossorigin="anonymous">
@@ -164,7 +164,7 @@ var _hmt = _hmt || [];
 <script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/algoliasearch.min.js"></script>
 <script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/autocomplete.min.js"></script>
 <script>
-    var client = algoliasearch("B6Q6PSGUV5", "d04f855d3a39eed8ad8d9365ba7c86af");
+    var client = algoliasearch("B6Q6PSGUV5", "5b4678e9995fe4211c4fa43ad2ffdab5");
     var index = client.initIndex("imroc-blog");
     
     autocomplete('#aa-search-input', {
@@ -278,11 +278,11 @@ var _hmt = _hmt || [];
   <ul>
     <li>
       <ul>
-        <li><a href="#heading">退出状态码的区间</a></li>
-        <li><a href="#heading-1">常见异常状态码</a></li>
-        <li><a href="#heading-2">状态码参考</a></li>
-        <li><a href="#linux-">Linux 标准中断信号</a></li>
-        <li><a href="#cc-">C/C++ 退出状态码</a></li>
+        <li><a href="#退出状态码的区间">退出状态码的区间</a></li>
+        <li><a href="#常见异常状态码">常见异常状态码</a></li>
+        <li><a href="#状态码参考">状态码参考</a></li>
+        <li><a href="#linux-标准中断信号">Linux 标准中断信号</a></li>
+        <li><a href="#cc-退出状态码">C/C++ 退出状态码</a></li>
       </ul>
     </li>
   </ul>
@@ -292,7 +292,7 @@ var _hmt = _hmt || [];
 
                 <p>使用 <code>kubectl describe pod</code> 查看异常的 pod 的状态，在容器列表里看 <code>State</code> 字段，其中 <code>ExitCode</code> 即程序退出时的状态码，正常退出时为0。如果不为0，表示异常退出，我们可以分析下原因。</p>
 <p><img src="https://res.cloudinary.com/imroc/image/upload/v1545380096/blog/k8s/exitcode-pod.png" alt="exitcode-pod"></p>
-<h3 id="heading">退出状态码的区间</h3>
+<h3 id="退出状态码的区间">退出状态码的区间</h3>
 <ul>
 <li>必须在 0-255 之间</li>
 <li>0 表示正常退出</li>
@@ -308,7 +308,7 @@ var _hmt = _hmt || [];
 <li>当指定的退出时状态码为正数，那么转换公式如下:</li>
 </ul>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">code % 256
-</code></pre></div><h3 id="heading-1">常见异常状态码</h3>
+</code></pre></div><h3 id="常见异常状态码">常见异常状态码</h3>
 <ul>
 <li>
 <p>137</p>
@@ -334,9 +334,9 @@ var _hmt = _hmt || [];
 </ul>
 </li>
 </ul>
-<h3 id="heading-2">状态码参考</h3>
+<h3 id="状态码参考">状态码参考</h3>
 <p>这里罗列了一些状态码的含义：<a href="http://tldp.org/LDP/abs/html/exitcodes.html">Appendix E. Exit Codes With Special Meanings</a></p>
-<h3 id="linux-">Linux 标准中断信号</h3>
+<h3 id="linux-标准中断信号">Linux 标准中断信号</h3>
 <p>Linux 程序被外界中断时会发送中断信号，程序退出时的状态码就是中断信号值加上 128 得到的，比如 <code>SIGKILL</code> 的中断信号值为 9，那么程序退出状态码就为 9+128=137。以下是标准信号值参考：</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">Signal     Value     Action   Comment
 ──────────────────────────────────────────────────────────────────────
@@ -361,7 +361,7 @@ SIGSTOP   17,19,23    Stop    Stop process
 SIGTSTP   18,20,24    Stop    Stop typed at terminal
 SIGTTIN   21,21,26    Stop    Terminal input for background process
 SIGTTOU   22,22,27    Stop    Terminal output for background process
-</code></pre></div><h3 id="cc-">C/C++ 退出状态码</h3>
+</code></pre></div><h3 id="cc-退出状态码">C/C++ 退出状态码</h3>
 <p><code>/usr/include/sysexits.h</code> 试图将退出状态码标准化(仅限 C/C++):</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-fallback" data-lang="fallback">#define EX_OK           0       /* successful termination */
 
@@ -546,7 +546,7 @@ SIGTTOU   22,22,27    Stop    Terminal output for background process
             更新
           </p>
           <p class="credits theme-by text-muted">
-            由 <a href="http://gohugo.io">Hugo v0.62.0</a> 强力驱动 &nbsp;&bull;&nbsp; 主题 <a href="https://github.com/imroc/xhugo">xhugo</a>
+            由 <a href="http://gohugo.io">Hugo v0.65.3</a> 强力驱动 &nbsp;&bull;&nbsp; 主题 <a href="https://github.com/imroc/xhugo">xhugo</a>
           </p>
         </div>
       </div>

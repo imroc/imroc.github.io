@@ -23,7 +23,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="roc" />
 
-  <meta name="generator" content="Hugo 0.62.0" />
+  <meta name="generator" content="Hugo 0.65.3" />
   <link rel="canonical" href="https://imroc.io/posts/handle-memory-fragmentation/" />
   <link rel="alternate" href="https://imroc.io/index.xml" type="application/rss+xml" title="roc"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css"
     integrity="sha384-9eLZqc9ds8eNjO3TmqPeYcDj8n+Qfa4nuSiGYa6DjLNcv9BtN69ZIulL9+8CqC9Y" crossorigin="anonymous">
@@ -164,7 +164,7 @@ var _hmt = _hmt || [];
 <script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/algoliasearch.min.js"></script>
 <script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/autocomplete.min.js"></script>
 <script>
-    var client = algoliasearch("B6Q6PSGUV5", "d04f855d3a39eed8ad8d9365ba7c86af");
+    var client = algoliasearch("B6Q6PSGUV5", "5b4678e9995fe4211c4fa43ad2ffdab5");
     var index = client.initIndex("imroc-blog");
     
     autocomplete('#aa-search-input', {
@@ -274,9 +274,9 @@ var _hmt = _hmt || [];
             <article role="main" class="blog-post" itemprop="articleBody" id="content">
                 
 
-                <h2 id="heading">内存碎片化造成的危害</h2>
+                <h2 id="内存碎片化造成的危害">内存碎片化造成的危害</h2>
 <p>节点的内存碎片化严重，导致docker运行容器时，无法分到大的内存块，导致start docker失败。最终导致服务更新时，状态一直都是启动中</p>
-<h2 id="heading-1">判断是否内存碎片化严重</h2>
+<h2 id="判断是否内存碎片化严重">判断是否内存碎片化严重</h2>
 <p>内核日志显示：</p>
 <p><img src="https://imroc.io/assets/blog/handle-memory-fragmentation-1.png" alt=""></p>
 <p><img src="https://imroc.io/assets/blog/handle-memory-fragmentation-2.png" alt=""></p>
@@ -284,7 +284,7 @@ var _hmt = _hmt || [];
 <p><img src="https://imroc.io/assets/blog/handle-memory-fragmentation-3.png" alt=""></p>
 <p>查看slab (后面的0多表示伙伴系统没有大块内存了)：</p>
 <p><img src="https://imroc.io/assets/blog/handle-memory-fragmentation-4.png" alt=""></p>
-<h2 id="heading-2">解决方法</h2>
+<h2 id="解决方法">解决方法</h2>
 <ul>
 <li>周期性地或者在发现大块内存不足时，先进行drop_cache操作:</li>
 </ul>
@@ -293,7 +293,7 @@ var _hmt = _hmt || [];
 <li>必要时候进行内存整理，开销会比较大，会造成业务卡住一段时间(慎用):</li>
 </ul>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">echo <span style="color:#ae81ff">1</span> &gt; /proc/sys/vm/compact_memory
-</code></pre></div><h2 id="heading-3">附录</h2>
+</code></pre></div><h2 id="附录">附录</h2>
 <p>相关链接：</p>
 <ul>
 <li><a href="https://www.lijiaocn.com/%E9%97%AE%E9%A2%98/2017/11/13/problem-unable-create-nf-conn.html">https://www.lijiaocn.com/%E9%97%AE%E9%A2%98/2017/11/13/problem-unable-create-nf-conn.html</a></li>
@@ -468,7 +468,7 @@ var _hmt = _hmt || [];
             更新
           </p>
           <p class="credits theme-by text-muted">
-            由 <a href="http://gohugo.io">Hugo v0.62.0</a> 强力驱动 &nbsp;&bull;&nbsp; 主题 <a href="https://github.com/imroc/xhugo">xhugo</a>
+            由 <a href="http://gohugo.io">Hugo v0.65.3</a> 强力驱动 &nbsp;&bull;&nbsp; 主题 <a href="https://github.com/imroc/xhugo">xhugo</a>
           </p>
         </div>
       </div>

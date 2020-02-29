@@ -23,7 +23,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="roc" />
 
-  <meta name="generator" content="Hugo 0.62.0" />
+  <meta name="generator" content="Hugo 0.65.3" />
   <link rel="canonical" href="https://imroc.io/posts/git-trick-modify-history/" />
   <link rel="alternate" href="https://imroc.io/index.xml" type="application/rss+xml" title="roc"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css"
     integrity="sha384-9eLZqc9ds8eNjO3TmqPeYcDj8n+Qfa4nuSiGYa6DjLNcv9BtN69ZIulL9+8CqC9Y" crossorigin="anonymous">
@@ -164,7 +164,7 @@ var _hmt = _hmt || [];
 <script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/algoliasearch.min.js"></script>
 <script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/autocomplete.min.js"></script>
 <script>
-    var client = algoliasearch("B6Q6PSGUV5", "d04f855d3a39eed8ad8d9365ba7c86af");
+    var client = algoliasearch("B6Q6PSGUV5", "5b4678e9995fe4211c4fa43ad2ffdab5");
     var index = client.initIndex("imroc-blog");
     
     autocomplete('#aa-search-input', {
@@ -278,12 +278,12 @@ var _hmt = _hmt || [];
             <article role="main" class="blog-post" itemprop="articleBody" id="content">
                 
 
-                <h2 id="heading">修改历史</h2>
-<h4 id="heading-1">修改最新一条历史</h4>
+                <h2 id="修改历史">修改历史</h2>
+<h4 id="修改最新一条历史">修改最新一条历史</h4>
 <p>如果内容需要改就直接改，然后 <code>git add</code> 进去，然后执行</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git commit --amend
 </code></pre></div><p>会弹出 <code>git commit message</code> 的编辑窗口，会填充之前 commit 时写的 message 内容，如果需要改就直接编辑，不需要改就不动，最后保存退出 (<code>:wq</code>)</p>
-<h4 id="heading-2">修改指定某条历史</h4>
+<h4 id="修改指定某条历史">修改指定某条历史</h4>
 <p>不小心暴露敏感信息到历史？使用如下操作修改历史：</p>
 <ul>
 <li>找到需要修改的历史更前面的一条 commit 的 id 并复制，记为 <code>&lt;commit id&gt;</code></li>
@@ -294,7 +294,7 @@ var _hmt = _hmt || [];
 <li>提交：<code>git commit --amend</code></li>
 <li>完成: <code>git rebase --continue</code></li>
 </ul>
-<h4 id="heading-3">同步代码</h4>
+<h4 id="同步代码">同步代码</h4>
 <p>强制 push 到远程：</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git push -f origin &lt;local-branch&gt;:&lt;remote-branch&gt;
 </code></pre></div><p>其它伙伴同步到自己机器：</p>
@@ -454,7 +454,7 @@ git reset --hard origin/&lt;remote-branch&gt;
             更新
           </p>
           <p class="credits theme-by text-muted">
-            由 <a href="http://gohugo.io">Hugo v0.62.0</a> 强力驱动 &nbsp;&bull;&nbsp; 主题 <a href="https://github.com/imroc/xhugo">xhugo</a>
+            由 <a href="http://gohugo.io">Hugo v0.65.3</a> 强力驱动 &nbsp;&bull;&nbsp; 主题 <a href="https://github.com/imroc/xhugo">xhugo</a>
           </p>
         </div>
       </div>

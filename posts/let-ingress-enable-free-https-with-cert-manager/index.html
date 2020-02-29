@@ -23,7 +23,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="roc" />
 
-  <meta name="generator" content="Hugo 0.62.0" />
+  <meta name="generator" content="Hugo 0.65.3" />
   <link rel="canonical" href="https://imroc.io/posts/let-ingress-enable-free-https-with-cert-manager/" />
   <link rel="alternate" href="https://imroc.io/index.xml" type="application/rss+xml" title="roc"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css"
     integrity="sha384-9eLZqc9ds8eNjO3TmqPeYcDj8n+Qfa4nuSiGYa6DjLNcv9BtN69ZIulL9+8CqC9Y" crossorigin="anonymous">
@@ -164,7 +164,7 @@ var _hmt = _hmt || [];
 <script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/algoliasearch.min.js"></script>
 <script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/autocomplete.min.js"></script>
 <script>
-    var client = algoliasearch("B6Q6PSGUV5", "d04f855d3a39eed8ad8d9365ba7c86af");
+    var client = algoliasearch("B6Q6PSGUV5", "5b4678e9995fe4211c4fa43ad2ffdab5");
     var index = client.initIndex("imroc-blog");
     
     autocomplete('#aa-search-input', {
@@ -276,15 +276,15 @@ var _hmt = _hmt || [];
 <aside class="toc">
   <nav id="TableOfContents">
   <ul>
-    <li><a href="#heading">概述</a></li>
-    <li><a href="#-cert-manager">安装 cert-manager</a></li>
-    <li><a href="#heading-1">生成免费证书</a></li>
+    <li><a href="#概述">概述</a></li>
+    <li><a href="#安装-cert-manager">安装 cert-manager</a></li>
+    <li><a href="#生成免费证书">生成免费证书</a></li>
   </ul>
 </nav>
 </aside>
 
 
-                <h2 id="heading">概述</h2>
+                <h2 id="概述">概述</h2>
 <p>cert-manager 是替代 kube-lego 的一个开源项目，用于在 Kubernetes 集群中自动提供 HTTPS 证书，支持 <a href="https://letsencrypt.org/">Let’s Encrypt</a>, <a href="https://www.vaultproject.io/">HashiCorp Vault</a> 这些免费证书的签发。</p>
 <ul>
 <li>本文使用 Helm 安装，所以请确保 Helm 已安装，安装方法参考：https://imroc.io/posts/kubernetes/install-helm</li>
@@ -293,26 +293,26 @@ var _hmt = _hmt || [];
 <li>开源地址：https://github.com/jetstack/cert-manager</li>
 <li>文档地址：https://cert-manager.readthedocs.io</li>
 </ul>
-<h2 id="-cert-manager">安装 cert-manager</h2>
+<h2 id="安装-cert-manager">安装 cert-manager</h2>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">helm install <span style="color:#ae81ff">\
 </span><span style="color:#ae81ff"></span>    --name cert-manager <span style="color:#ae81ff">\
 </span><span style="color:#ae81ff"></span>    --namespace kube-system <span style="color:#ae81ff">\
 </span><span style="color:#ae81ff"></span>    stable/cert-manager
 </code></pre></div><p>一键安装，非常简单。</p>
-<h2 id="heading-1">生成免费证书</h2>
+<h2 id="生成免费证书">生成免费证书</h2>
 <p>我们需要先创建一个签发机构，cert-manager 给我们提供了 Issuer 和 ClusterIssuer 这两种用于创建签发机构的自定义资源对象，Issuer 只能用来签发自己所在 namespace 下的证书，ClusterIssuer 可以签发任意 namespace 下的证书，这里以 ClusterIssuer 为例创建一个签发机构：</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">vi issuer.yaml
-</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">apiVersion: certmanager.k8s.io/v1alpha1
-kind: ClusterIssuer
-metadata:
-  name: letsencrypt-prod
-spec:
-  acme:
-    server: https://acme-v02.api.letsencrypt.org/directory
-    email: roc@imroc.io
-    privateKeySecretRef:
-      name: letsencrypt-prod
-    http01: {}
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#66d9ef">apiVersion</span>: certmanager.k8s.io/v1alpha1
+<span style="color:#66d9ef">kind</span>: ClusterIssuer
+<span style="color:#66d9ef">metadata</span>:
+  <span style="color:#66d9ef">name</span>: letsencrypt-prod
+<span style="color:#66d9ef">spec</span>:
+  <span style="color:#66d9ef">acme</span>:
+    <span style="color:#66d9ef">server</span>: https://acme-v02.api.letsencrypt.org/directory
+    <span style="color:#66d9ef">email</span>: roc@imroc.io
+    <span style="color:#66d9ef">privateKeySecretRef</span>:
+      <span style="color:#66d9ef">name</span>: letsencrypt-prod
+    <span style="color:#66d9ef">http01</span>: {}
 </code></pre></div><ul>
 <li>metadata.name 是我们创建的签发机构的名称，后面我们创建证书的时候会引用它</li>
 <li>spec.acme.email 是你自己的邮箱，证书快过期的时候会有邮件提醒，不过 cert-manager 会利用 acme 协议自动给我们重新颁发证书来续期</li>
@@ -324,23 +324,23 @@ spec:
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl apply -f issuer.yaml
 </code></pre></div><p>有了签发机构，接下来我们就可以生成免费证书了，cert-manager 给我们提供了 Certificate 这个用于生成证书的自定义资源对象，它必须局限在某一个 namespace 下，证书最终会在这个 namespace 下以 Secret 的资源对象存储，假如我想在 <code>dashboard</code> 这个 namespace 下生成免费证书（这个 namespace 已存在)，创建一个 Certificate 对象：</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">vi cert.yaml
-</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">apiVersion: certmanager.k8s.io/v1alpha1
-kind: Certificate
-metadata:
-  name: dashboard-imroc-io
-  namespace: dashboard
-spec:
-  secretName: dashboard-imroc-io-tls
-  issuerRef:
-    name: letsencrypt-prod
-    kind: ClusterIssuer
-  dnsNames:
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#66d9ef">apiVersion</span>: certmanager.k8s.io/v1alpha1
+<span style="color:#66d9ef">kind</span>: Certificate
+<span style="color:#66d9ef">metadata</span>:
+  <span style="color:#66d9ef">name</span>: dashboard-imroc-io
+  <span style="color:#66d9ef">namespace</span>: dashboard
+<span style="color:#66d9ef">spec</span>:
+  <span style="color:#66d9ef">secretName</span>: dashboard-imroc-io-tls
+  <span style="color:#66d9ef">issuerRef</span>:
+    <span style="color:#66d9ef">name</span>: letsencrypt-prod
+    <span style="color:#66d9ef">kind</span>: ClusterIssuer
+  <span style="color:#66d9ef">dnsNames</span>:
   - dashboard.imroc.io
-  acme:
-    config:
-    - http01:
-        ingressClass: nginx
-      domains:
+  <span style="color:#66d9ef">acme</span>:
+    <span style="color:#66d9ef">config</span>:
+    - <span style="color:#66d9ef">http01</span>:
+        <span style="color:#66d9ef">ingressClass</span>: nginx
+      <span style="color:#66d9ef">domains</span>:
       - dashboard.imroc.io
 </code></pre></div><ul>
 <li>spec.secretName 指示证书最终存到哪个 Secret 中</li>
@@ -361,7 +361,7 @@ $ kubectl describe -n dashboard certificate/dashboard-imroc-io
 Name:         dashboard-imroc-io
 Namespace:    dashboard
 Labels:       &lt;none&gt;
-Annotations:  kubectl.kubernetes.io/last-applied-configuration<span style="color:#f92672">=</span><span style="color:#f92672">{</span><span style="color:#e6db74">&#34;apiVersion&#34;</span>:<span style="color:#e6db74">&#34;certmanager.k8s.io/v1alpha1&#34;</span>,<span style="color:#e6db74">&#34;kind&#34;</span>:<span style="color:#e6db74">&#34;Certificate&#34;</span>,<span style="color:#e6db74">&#34;metadata&#34;</span>:<span style="color:#f92672">{</span><span style="color:#e6db74">&#34;annotations&#34;</span>:<span style="color:#f92672">{</span><span style="color:#f92672">}</span>,<span style="color:#e6db74">&#34;name&#34;</span>:<span style="color:#e6db74">&#34;dashboard-imroc-io&#34;</span>,<span style="color:#e6db74">&#34;namespace&#34;</span>:<span style="color:#e6db74">&#34;dashboard&#34;</span><span style="color:#f92672">}</span>,<span style="color:#e6db74">&#34;</span><span style="color:#e6db74">spe...
+Annotations:  kubectl.kubernetes.io/last-applied-configuration<span style="color:#f92672">={</span><span style="color:#e6db74">&#34;apiVersion&#34;</span>:<span style="color:#e6db74">&#34;certmanager.k8s.io/v1alpha1&#34;</span>,<span style="color:#e6db74">&#34;kind&#34;</span>:<span style="color:#e6db74">&#34;Certificate&#34;</span>,<span style="color:#e6db74">&#34;metadata&#34;</span>:<span style="color:#f92672">{</span><span style="color:#e6db74">&#34;annotations&#34;</span>:<span style="color:#f92672">{}</span>,<span style="color:#e6db74">&#34;name&#34;</span>:<span style="color:#e6db74">&#34;dashboard-imroc-io&#34;</span>,<span style="color:#e6db74">&#34;namespace&#34;</span>:<span style="color:#e6db74">&#34;dashboard&#34;</span><span style="color:#f92672">}</span>,<span style="color:#e6db74">&#34;spe...
 </span><span style="color:#e6db74">API Version:  certmanager.k8s.io/v1alpha1
 </span><span style="color:#e6db74">Kind:         Certificate
 </span><span style="color:#e6db74">Metadata:
@@ -412,7 +412,7 @@ Annotations:  kubectl.kubernetes.io/last-applied-configuration<span style="color
 </span><span style="color:#e6db74">Name:         letsencrypt-prod
 </span><span style="color:#e6db74">Namespace:
 </span><span style="color:#e6db74">Labels:       &lt;none&gt;
-</span><span style="color:#e6db74">Annotations:  kubectl.kubernetes.io/last-applied-configuration={</span><span style="color:#e6db74">&#34;</span>apiVersion<span style="color:#e6db74">&#34;:&#34;</span>certmanager.k8s.io/v1alpha1<span style="color:#e6db74">&#34;,&#34;</span>kind<span style="color:#e6db74">&#34;:&#34;</span>ClusterIssuer<span style="color:#e6db74">&#34;,&#34;</span>metadata<span style="color:#e6db74">&#34;:{&#34;</span>annotations<span style="color:#e6db74">&#34;:{},&#34;</span>name<span style="color:#e6db74">&#34;:&#34;</span>letsencrypt-prod<span style="color:#e6db74">&#34;,&#34;</span>namespace<span style="color:#e6db74">&#34;:&#34;</span><span style="color:#e6db74">&#34;},&#34;</span>spec<span style="color:#e6db74">&#34;:{&#34;</span>acme...
+</span><span style="color:#e6db74">Annotations:  kubectl.kubernetes.io/last-applied-configuration={&#34;</span>apiVersion<span style="color:#e6db74">&#34;:&#34;</span>certmanager.k8s.io/v1alpha1<span style="color:#e6db74">&#34;,&#34;</span>kind<span style="color:#e6db74">&#34;:&#34;</span>ClusterIssuer<span style="color:#e6db74">&#34;,&#34;</span>metadata<span style="color:#e6db74">&#34;:{&#34;</span>annotations<span style="color:#e6db74">&#34;:{},&#34;</span>name<span style="color:#e6db74">&#34;:&#34;</span>letsencrypt-prod<span style="color:#e6db74">&#34;,&#34;</span>namespace<span style="color:#e6db74">&#34;:&#34;&#34;},&#34;</span>spec<span style="color:#e6db74">&#34;:{&#34;</span>acme...
 API Version:  certmanager.k8s.io/v1alpha1
 Kind:         ClusterIssuer
 Metadata:
@@ -447,55 +447,55 @@ NAME                                         TYPE                               
 dashboard-imroc-io-tls                       kubernetes.io/tls                     <span style="color:#ae81ff">2</span>         9h
 </code></pre></div><p>这个 Secret 可以被我们创建的 Ingress 使用来启用免费 HTTPS，来测试一下吧：</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">vi my-nginx.yaml
-</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">apiVersion: extensions/v1beta1
-kind: Deployment
-metadata:
-  name: my-nginx
-spec:
-  replicas: <span style="color:#ae81ff">1</span>
-  template:
-    metadata:
-      labels:
-        run: my-nginx
-    spec:
-      containers:
-      - name: my-nginx
-        image: nginx
-        ports:
-        - containerPort: <span style="color:#ae81ff">443</span>
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#66d9ef">apiVersion</span>: extensions/v1beta1
+<span style="color:#66d9ef">kind</span>: Deployment
+<span style="color:#66d9ef">metadata</span>:
+  <span style="color:#66d9ef">name</span>: my-nginx
+<span style="color:#66d9ef">spec</span>:
+  <span style="color:#66d9ef">replicas</span>: <span style="color:#ae81ff">1</span>
+  <span style="color:#66d9ef">template</span>:
+    <span style="color:#66d9ef">metadata</span>:
+      <span style="color:#66d9ef">labels</span>:
+        <span style="color:#66d9ef">run</span>: my-nginx
+    <span style="color:#66d9ef">spec</span>:
+      <span style="color:#66d9ef">containers</span>:
+      - <span style="color:#66d9ef">name</span>: my-nginx
+        <span style="color:#66d9ef">image</span>: nginx
+        <span style="color:#66d9ef">ports</span>:
+        - <span style="color:#66d9ef">containerPort</span>: <span style="color:#ae81ff">443</span>
 ---
-apiVersion: v1
-kind: Service
-metadata:
-  name: my-nginx
-  labels:
-    app: my-nginx
-spec:
-  ports:
-  - port: <span style="color:#ae81ff">443</span>
-    protocol: TCP
-    name: https
-  selector:
-    run: my-nginx
+<span style="color:#66d9ef">apiVersion</span>: v1
+<span style="color:#66d9ef">kind</span>: Service
+<span style="color:#66d9ef">metadata</span>:
+  <span style="color:#66d9ef">name</span>: my-nginx
+  <span style="color:#66d9ef">labels</span>:
+    <span style="color:#66d9ef">app</span>: my-nginx
+<span style="color:#66d9ef">spec</span>:
+  <span style="color:#66d9ef">ports</span>:
+  - <span style="color:#66d9ef">port</span>: <span style="color:#ae81ff">443</span>
+    <span style="color:#66d9ef">protocol</span>: TCP
+    <span style="color:#66d9ef">name</span>: https
+  <span style="color:#66d9ef">selector</span>:
+    <span style="color:#66d9ef">run</span>: my-nginx
 ---
-apiVersion: extensions/v1beta1
-kind: Ingress
-metadata:
-  name: my-nginx
-  annotations:
-    kubernetes.io/ingress.class: <span style="color:#e6db74">&#34;nginx&#34;</span>
-spec:
-  rules:
-  - host: dashboard.imroc.io
-    http:
-      paths:
-      - backend:
-          serviceName: my-nginx
-          servicePort: <span style="color:#ae81ff">443</span>
-        path: /
-  tls:
-   - secretName: dashboard-imroc-io-tls
-     hosts:
+<span style="color:#66d9ef">apiVersion</span>: extensions/v1beta1
+<span style="color:#66d9ef">kind</span>: Ingress
+<span style="color:#66d9ef">metadata</span>:
+  <span style="color:#66d9ef">name</span>: my-nginx
+  <span style="color:#66d9ef">annotations</span>:
+    <span style="color:#66d9ef">kubernetes.io/ingress.class</span>: <span style="color:#e6db74">&#34;nginx&#34;</span>
+<span style="color:#66d9ef">spec</span>:
+  <span style="color:#66d9ef">rules</span>:
+  - <span style="color:#66d9ef">host</span>: dashboard.imroc.io
+    <span style="color:#66d9ef">http</span>:
+      <span style="color:#66d9ef">paths</span>:
+      - <span style="color:#66d9ef">backend</span>:
+          <span style="color:#66d9ef">serviceName</span>: my-nginx
+          <span style="color:#66d9ef">servicePort</span>: <span style="color:#ae81ff">443</span>
+        <span style="color:#66d9ef">path</span>: /
+  <span style="color:#66d9ef">tls</span>:
+   - <span style="color:#66d9ef">secretName</span>: dashboard-imroc-io-tls
+     <span style="color:#66d9ef">hosts</span>:
        - dashboard.imroc.io
 </code></pre></div><ul>
 <li>在 Ingress 定义的 spec.tls.secretName 引用生成的证书所在的 Secret 名称即可实现使用免费证书</li>
@@ -660,7 +660,7 @@ spec:
             更新
           </p>
           <p class="credits theme-by text-muted">
-            由 <a href="http://gohugo.io">Hugo v0.62.0</a> 强力驱动 &nbsp;&bull;&nbsp; 主题 <a href="https://github.com/imroc/xhugo">xhugo</a>
+            由 <a href="http://gohugo.io">Hugo v0.65.3</a> 强力驱动 &nbsp;&bull;&nbsp; 主题 <a href="https://github.com/imroc/xhugo">xhugo</a>
           </p>
         </div>
       </div>

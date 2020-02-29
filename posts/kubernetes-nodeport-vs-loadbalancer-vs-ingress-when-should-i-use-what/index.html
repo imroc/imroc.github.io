@@ -23,7 +23,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="roc" />
 
-  <meta name="generator" content="Hugo 0.62.0" />
+  <meta name="generator" content="Hugo 0.65.3" />
   <link rel="canonical" href="https://imroc.io/posts/kubernetes-nodeport-vs-loadbalancer-vs-ingress-when-should-i-use-what/" />
   <link rel="alternate" href="https://imroc.io/index.xml" type="application/rss+xml" title="roc"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css"
     integrity="sha384-9eLZqc9ds8eNjO3TmqPeYcDj8n+Qfa4nuSiGYa6DjLNcv9BtN69ZIulL9+8CqC9Y" crossorigin="anonymous">
@@ -164,7 +164,7 @@ var _hmt = _hmt || [];
 <script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/algoliasearch.min.js"></script>
 <script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/autocomplete.min.js"></script>
 <script>
-    var client = algoliasearch("B6Q6PSGUV5", "d04f855d3a39eed8ad8d9365ba7c86af");
+    var client = algoliasearch("B6Q6PSGUV5", "5b4678e9995fe4211c4fa43ad2ffdab5");
     var index = client.initIndex("imroc-blog");
     
     autocomplete('#aa-search-input', {
@@ -278,22 +278,22 @@ var _hmt = _hmt || [];
   <ul>
     <li><a href="#clusterip">ClusterIP</a>
       <ul>
-        <li><a href="#heading">什么时候用？</a></li>
+        <li><a href="#什么时候用">什么时候用？</a></li>
       </ul>
     </li>
     <li><a href="#nodeport">NodePort</a>
       <ul>
-        <li><a href="#heading-1">什么时候用？</a></li>
+        <li><a href="#什么时候用-1">什么时候用？</a></li>
       </ul>
     </li>
     <li><a href="#loadbalancer">LoadBalancer</a>
       <ul>
-        <li><a href="#heading-2">什么时候用？</a></li>
+        <li><a href="#什么时候用-2">什么时候用？</a></li>
       </ul>
     </li>
     <li><a href="#ingress">Ingress</a>
       <ul>
-        <li><a href="#heading-3">什么时候用？</a></li>
+        <li><a href="#什么时候用-3">什么时候用？</a></li>
       </ul>
     </li>
   </ul>
@@ -309,19 +309,19 @@ var _hmt = _hmt || [];
 <h2 id="clusterip">ClusterIP</h2>
 <p>ClusterIP 服务是默认的 Kubernetes 服务。 它为您提供集群内部其他应用程序可以访问的服务， 外部无法访问。</p>
 <p>ClusterIP 服务的 YAML 类似这样：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">apiVersion: v1
-kind: Service
-metadata:  
-  name: my-internal-service
-selector:    
-  app: my-app
-spec:
-  type: ClusterIP
-  ports:  
-  - name: http
-    port: <span style="color:#ae81ff">80</span>
-    targetPort: <span style="color:#ae81ff">80</span>
-    protocol: TCP
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#66d9ef">apiVersion</span>: v1
+<span style="color:#66d9ef">kind</span>: Service
+<span style="color:#66d9ef">metadata</span>:  
+  <span style="color:#66d9ef">name</span>: my-internal-service
+<span style="color:#66d9ef">selector</span>:    
+  <span style="color:#66d9ef">app</span>: my-app
+<span style="color:#66d9ef">spec</span>:
+  <span style="color:#66d9ef">type</span>: ClusterIP
+  <span style="color:#66d9ef">ports</span>:  
+  - <span style="color:#66d9ef">name</span>: http
+    <span style="color:#66d9ef">port</span>: <span style="color:#ae81ff">80</span>
+    <span style="color:#66d9ef">targetPort</span>: <span style="color:#ae81ff">80</span>
+    <span style="color:#66d9ef">protocol</span>: TCP
 </code></pre></div><p>如果你不能从集群外部上访问一个 ClusterIP 服务，我为什么要谈论它？ 因为你可以使用 Kubernetes Proxy 来访问它！
 <!-- raw HTML omitted -->
 启动 Kubernetes Proxy:</p>
@@ -330,7 +330,7 @@ spec:
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">http://localhost:8080/api/v1/proxy/namespaces/&lt;NAMESPACE&gt;/services/&lt;SERVICE-NAME&gt;:&lt;PORT-NAME&gt;/
 </code></pre></div><p>所以，如果要访问我们刚刚定义的服务，可以使用下面的地址：</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">http://localhost:8080/api/v1/proxy/namespaces/default/services/my-internal-service:http/
-</code></pre></div><h3 id="heading">什么时候用？</h3>
+</code></pre></div><h3 id="什么时候用">什么时候用？</h3>
 <p>有几种情况可以使用 Kubernetes Proxy 来访问您的服务：</p>
 <ul>
 <li>调试您的服务，或由于某种原因直接从你笔记本电脑连接到它们</li>
@@ -341,22 +341,22 @@ spec:
 <p>NodePort 服务是暴露服务的最原始方式。 顾名思义，NodePort 会在所有节点（VM）上打开一个特定的端口，并且发送到此端口的任何流量都将转发到该服务。
 <!-- raw HTML omitted -->
 NodePort 服务的 YAML 类似这样：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">apiVersion: v1
-kind: Service
-metadata:  
-  name: my-nodeport-service
-selector:    
-  app: my-app
-spec:
-  type: NodePort
-  ports:  
-  - name: http
-    port: <span style="color:#ae81ff">80</span>
-    targetPort: <span style="color:#ae81ff">80</span>
-    nodePort: <span style="color:#ae81ff">30036</span>
-    protocol: TCP
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#66d9ef">apiVersion</span>: v1
+<span style="color:#66d9ef">kind</span>: Service
+<span style="color:#66d9ef">metadata</span>:  
+  <span style="color:#66d9ef">name</span>: my-nodeport-service
+<span style="color:#66d9ef">selector</span>:    
+  <span style="color:#66d9ef">app</span>: my-app
+<span style="color:#66d9ef">spec</span>:
+  <span style="color:#66d9ef">type</span>: NodePort
+  <span style="color:#66d9ef">ports</span>:  
+  - <span style="color:#66d9ef">name</span>: http
+    <span style="color:#66d9ef">port</span>: <span style="color:#ae81ff">80</span>
+    <span style="color:#66d9ef">targetPort</span>: <span style="color:#ae81ff">80</span>
+    <span style="color:#66d9ef">nodePort</span>: <span style="color:#ae81ff">30036</span>
+    <span style="color:#66d9ef">protocol</span>: TCP
 </code></pre></div><p>基本上，NodePort 服务与普通的 “ClusterIP” 服务 YAML 定义有两点区别。 首先，type 是 “NodePort”。还有一个称为 nodePort 的附加端口，指定在节点上打开哪个端口。 如果你不指定这个端口，它会选择一个随机端口。</p>
-<h3 id="heading-1">什么时候用？</h3>
+<h3 id="什么时候用-1">什么时候用？</h3>
 <p>这种方法有许多缺点：</p>
 <ul>
 <li>每个端口只能有一个服务</li>
@@ -367,7 +367,7 @@ spec:
 <h2 id="loadbalancer">LoadBalancer</h2>
 <p>LoadBalancer 服务暴露服务的标准方式。 在 GKE 上，这将启动一个<a href="https://cloud.google.com/compute/docs/load-balancing/network/">网络负载平衡器</a>，它将为您提供一个将所有流量转发到您的服务的IP地址。
 <!-- raw HTML omitted --></p>
-<h3 id="heading-2">什么时候用？</h3>
+<h3 id="什么时候用-2">什么时候用？</h3>
 <p>如果你想直接暴露一个服务，这是默认的方法(GKE上)。 您指定的端口上的所有流量都将被转发到该服务， 没有过滤、路由等。这意味着您可以发送几乎任何类型的流量，如 HTTP，TCP，UDP，Websockets，gRPC 或其他。</p>
 <p>最大的缺点是，您使用 LoadBalancer 公开的每项服务都将获得自己的 IP 地址，并且您必须为每个暴露的服务使用一个 LoadBalancer，这可能会付出比较大的代价！</p>
 <h2 id="ingress">Ingress</h2>
@@ -376,29 +376,29 @@ spec:
 <p>GKE 默认的 Ingress 控制器将为您启动一个 <a href="https://cloud.google.com/compute/docs/load-balancing/http/">HTTP（S）负载均衡器</a>。 这将使您可以执行基于路径和基于子域名的路由到后端服务。 例如，您可以将 foo.yourdomain.com 上的所有内容发送到 foo 服务，并将 yourdomain.com/bar/ 路径下所有内容发送到 bar 服务的。
 <!-- raw HTML omitted -->
 在 GKE 上的 <a href="https://cloud.google.com/compute/docs/load-balancing/http/">七层 HTTP 负载均衡器</a> 的 Ingress 对象 YAML 定义类似这样：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">apiVersion: extensions/v1beta1
-kind: Ingress
-metadata:
-  name: my-ingress
-spec:
-  backend:
-    serviceName: other
-    servicePort: <span style="color:#ae81ff">8080</span>
-  rules:
-  - host: foo.mydomain.com
-    http:
-      paths:
-      - backend:
-          serviceName: foo
-          servicePort: <span style="color:#ae81ff">8080</span>
-  - host: mydomain.com
-    http:
-      paths:
-      - path: /bar/*
-        backend:
-          serviceName: bar
-          servicePort: <span style="color:#ae81ff">8080</span>
-</code></pre></div><h3 id="heading-3">什么时候用？</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#66d9ef">apiVersion</span>: extensions/v1beta1
+<span style="color:#66d9ef">kind</span>: Ingress
+<span style="color:#66d9ef">metadata</span>:
+  <span style="color:#66d9ef">name</span>: my-ingress
+<span style="color:#66d9ef">spec</span>:
+  <span style="color:#66d9ef">backend</span>:
+    <span style="color:#66d9ef">serviceName</span>: other
+    <span style="color:#66d9ef">servicePort</span>: <span style="color:#ae81ff">8080</span>
+  <span style="color:#66d9ef">rules</span>:
+  - <span style="color:#66d9ef">host</span>: foo.mydomain.com
+    <span style="color:#66d9ef">http</span>:
+      <span style="color:#66d9ef">paths</span>:
+      - <span style="color:#66d9ef">backend</span>:
+          <span style="color:#66d9ef">serviceName</span>: foo
+          <span style="color:#66d9ef">servicePort</span>: <span style="color:#ae81ff">8080</span>
+  - <span style="color:#66d9ef">host</span>: mydomain.com
+    <span style="color:#66d9ef">http</span>:
+      <span style="color:#66d9ef">paths</span>:
+      - <span style="color:#66d9ef">path</span>: /bar/*
+        <span style="color:#66d9ef">backend</span>:
+          <span style="color:#66d9ef">serviceName</span>: bar
+          <span style="color:#66d9ef">servicePort</span>: <span style="color:#ae81ff">8080</span>
+</code></pre></div><h3 id="什么时候用-3">什么时候用？</h3>
 <p>Ingress 可能是暴露服务最强大的方式了，但也可能是最复杂的。 来自 <a href="https://cloud.google.com/kubernetes-engine/docs/tutorials/http-balancer">Google Cloud Load Balancer</a>, <a href="https://github.com/kubernetes/ingress-nginx">Nginx</a>, <a href="https://github.com/heptio/contour">Contour</a>, <a href="https://istio.io/docs/tasks/traffic-management/ingress.html">Istio</a> 等的 Ingress 控制器类型很多。 还有用于 Ingress 控制器的插件，如 <a href="https://github.com/jetstack/cert-manager">cert-manager</a>，可以为您的服务自动提供 SSL 证书。</p>
 <p>如果您希望在相同的 IP 地址下暴露多个服务，并且这些服务都使用相同的L7协议（通常是HTTP），则 Ingress 是最有用的。 如果您使用原生 GCP 集成，您只需支付一个负载平衡器，由于 Ingress 很“智能”，您可以获得许多开箱即用的功能（如 SSL，Auth，路由等）</p>
 
@@ -555,7 +555,7 @@ spec:
             更新
           </p>
           <p class="credits theme-by text-muted">
-            由 <a href="http://gohugo.io">Hugo v0.62.0</a> 强力驱动 &nbsp;&bull;&nbsp; 主题 <a href="https://github.com/imroc/xhugo">xhugo</a>
+            由 <a href="http://gohugo.io">Hugo v0.65.3</a> 强力驱动 &nbsp;&bull;&nbsp; 主题 <a href="https://github.com/imroc/xhugo">xhugo</a>
           </p>
         </div>
       </div>

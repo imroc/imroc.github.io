@@ -23,7 +23,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="roc" />
 
-  <meta name="generator" content="Hugo 0.62.0" />
+  <meta name="generator" content="Hugo 0.65.3" />
   <link rel="canonical" href="https://imroc.io/posts/kubernetes-wildcard-domain-forward/" />
   <link rel="alternate" href="https://imroc.io/index.xml" type="application/rss+xml" title="roc"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css"
     integrity="sha384-9eLZqc9ds8eNjO3TmqPeYcDj8n+Qfa4nuSiGYa6DjLNcv9BtN69ZIulL9+8CqC9Y" crossorigin="anonymous">
@@ -164,7 +164,7 @@ var _hmt = _hmt || [];
 <script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/algoliasearch.min.js"></script>
 <script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/autocomplete.min.js"></script>
 <script>
-    var client = algoliasearch("B6Q6PSGUV5", "d04f855d3a39eed8ad8d9365ba7c86af");
+    var client = algoliasearch("B6Q6PSGUV5", "5b4678e9995fe4211c4fa43ad2ffdab5");
     var index = client.initIndex("imroc-blog");
     
     autocomplete('#aa-search-input', {
@@ -278,9 +278,9 @@ var _hmt = _hmt || [];
   <ul>
     <li>
       <ul>
-        <li><a href="#heading">需求</a></li>
-        <li><a href="#heading-1">简单做法</a></li>
-        <li><a href="#heading-2">正确姿势</a></li>
+        <li><a href="#需求">需求</a></li>
+        <li><a href="#简单做法">简单做法</a></li>
+        <li><a href="#正确姿势">正确姿势</a></li>
       </ul>
     </li>
   </ul>
@@ -288,37 +288,37 @@ var _hmt = _hmt || [];
 </aside>
 
 
-                <h3 id="heading">需求</h3>
+                <h3 id="需求">需求</h3>
 <p>集群对外暴露了一个公网IP作为流量入口(可以是 Ingress 或 Service)，DNS 解析配置了一个泛域名指向该IP（比如 <code>*.test.imroc.io</code>），现希望根据请求中不同 Host 转发到不同的后端 Service。比如 <code>a.test.imroc.io</code> 的请求被转发到 <code>my-svc-a</code>，<code>b.test.imroc.io</code> 的请求转发到 <code>my-svc-b</code></p>
-<h3 id="heading-1">简单做法</h3>
+<h3 id="简单做法">简单做法</h3>
 <p>先说一种简单的方法，这也是大多数人的第一反应：<strong>配置 Ingress 规则</strong></p>
 <p>假如泛域名有两个不同 Host 分别转发到不同 Service，Ingress 类似这样写:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">apiVersion: extensions/v1beta1
-kind: Ingress
-metadata:
-  name: my-ingress
-spec:
-  rules:
-  - host: a.test.imroc.io
-    http:
-      paths:
-      - backend:
-          serviceName: my-svc-a
-          servicePort: <span style="color:#ae81ff">80</span>
-        path: /
-  - host: b.test.imroc.io
-    http:
-      paths:
-      - backend:
-          serviceName: my-svc-b
-          servicePort: <span style="color:#ae81ff">80</span>
-        path: /
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#66d9ef">apiVersion</span>: extensions/v1beta1
+<span style="color:#66d9ef">kind</span>: Ingress
+<span style="color:#66d9ef">metadata</span>:
+  <span style="color:#66d9ef">name</span>: my-ingress
+<span style="color:#66d9ef">spec</span>:
+  <span style="color:#66d9ef">rules</span>:
+  - <span style="color:#66d9ef">host</span>: a.test.imroc.io
+    <span style="color:#66d9ef">http</span>:
+      <span style="color:#66d9ef">paths</span>:
+      - <span style="color:#66d9ef">backend</span>:
+          <span style="color:#66d9ef">serviceName</span>: my-svc-a
+          <span style="color:#66d9ef">servicePort</span>: <span style="color:#ae81ff">80</span>
+        <span style="color:#66d9ef">path</span>: /
+  - <span style="color:#66d9ef">host</span>: b.test.imroc.io
+    <span style="color:#66d9ef">http</span>:
+      <span style="color:#66d9ef">paths</span>:
+      - <span style="color:#66d9ef">backend</span>:
+          <span style="color:#66d9ef">serviceName</span>: my-svc-b
+          <span style="color:#66d9ef">servicePort</span>: <span style="color:#ae81ff">80</span>
+        <span style="color:#66d9ef">path</span>: /
 </code></pre></div><p>但是！如果 Host 非常多会怎样？（比如200+）</p>
 <ul>
 <li>每次新增 Host 都要改 Ingress 规则，太麻烦</li>
 <li>单个 Ingress 上面的规则越来越多，更改规则对 LB 的压力变大，可能会导致偶尔访问不了</li>
 </ul>
-<h3 id="heading-2">正确姿势</h3>
+<h3 id="正确姿势">正确姿势</h3>
 <p>我们可以约定请求中泛域名 Host 通配符的 <code>*</code> 号匹配到的字符跟 Service 的名字相关联（可以是相等，或者 Service 统一在前面加个前缀，比如 <code>a.test.imroc.io</code> 转发到 <code>my-svc-a</code> 这个 Service)，集群内起一个反向代理服务，匹配泛域名的请求全部转发到这个代理服务上，这个代理服务只做一件简单的事，解析 Host，正则匹配抓取泛域名中 <code>*</code> 号这部分，把它转换为 Service 名字，然后在集群里转发（集群 DNS 解析)</p>
 <p>这个反向代理服务可以是 Nginx+Lua脚本 来实现，或者自己写个简单程序来做反向代理，这里我用 <a href="https://openresty.org">OpenResty</a> 来实现，它可以看成是 Nginx 的发行版，自带 lua 支持。</p>
 <p>有几点需要说明下：</p>
@@ -331,58 +331,58 @@ spec:
 <p><img src="https://imroc.io/assets/blog/nginx-wilcard-conf.png" alt="nginx.conf"></p>
 <p>下面给出完整的 yaml 示例</p>
 <p><code>proxy.yaml</code>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">apiVersion: apps/v1beta1
-kind: Deployment
-metadata:
-  labels:
-    component: nginx
-  name: proxy
-spec:
-  replicas: <span style="color:#ae81ff">1</span>
-  selector:
-    matchLabels:
-      component: nginx
-  template:
-    metadata:
-      labels:
-        component: nginx
-    spec:
-      containers:
-      - name: nginx
-        image: <span style="color:#e6db74">&#34;openresty/openresty:centos&#34;</span>
-        ports:
-        - name: http
-          containerPort: <span style="color:#ae81ff">80</span>
-          protocol: TCP
-        volumeMounts:
-        - mountPath: /usr/local/openresty/nginx/conf/nginx.conf
-          name: config
-          subPath: nginx.conf
-      - name: dnsmasq
-        image: <span style="color:#e6db74">&#34;janeczku/go-dnsmasq:release-1.0.7&#34;</span>
-        args:
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#66d9ef">apiVersion</span>: apps/v1beta1
+<span style="color:#66d9ef">kind</span>: Deployment
+<span style="color:#66d9ef">metadata</span>:
+  <span style="color:#66d9ef">labels</span>:
+    <span style="color:#66d9ef">component</span>: nginx
+  <span style="color:#66d9ef">name</span>: proxy
+<span style="color:#66d9ef">spec</span>:
+  <span style="color:#66d9ef">replicas</span>: <span style="color:#ae81ff">1</span>
+  <span style="color:#66d9ef">selector</span>:
+    <span style="color:#66d9ef">matchLabels</span>:
+      <span style="color:#66d9ef">component</span>: nginx
+  <span style="color:#66d9ef">template</span>:
+    <span style="color:#66d9ef">metadata</span>:
+      <span style="color:#66d9ef">labels</span>:
+        <span style="color:#66d9ef">component</span>: nginx
+    <span style="color:#66d9ef">spec</span>:
+      <span style="color:#66d9ef">containers</span>:
+      - <span style="color:#66d9ef">name</span>: nginx
+        <span style="color:#66d9ef">image</span>: <span style="color:#e6db74">&#34;openresty/openresty:centos&#34;</span>
+        <span style="color:#66d9ef">ports</span>:
+        - <span style="color:#66d9ef">name</span>: http
+          <span style="color:#66d9ef">containerPort</span>: <span style="color:#ae81ff">80</span>
+          <span style="color:#66d9ef">protocol</span>: TCP
+        <span style="color:#66d9ef">volumeMounts</span>:
+        - <span style="color:#66d9ef">mountPath</span>: /usr/local/openresty/nginx/conf/nginx.conf
+          <span style="color:#66d9ef">name</span>: config
+          <span style="color:#66d9ef">subPath</span>: nginx.conf
+      - <span style="color:#66d9ef">name</span>: dnsmasq
+        <span style="color:#66d9ef">image</span>: <span style="color:#e6db74">&#34;janeczku/go-dnsmasq:release-1.0.7&#34;</span>
+        <span style="color:#66d9ef">args</span>:
           - --listen
           - <span style="color:#e6db74">&#34;127.0.0.1:53&#34;</span>
           - --default-resolver
           - --append-search-domains
           - --hostsfile=/etc/hosts
           - --verbose
-      volumes:
-      - name: config
-        configMap:
-          name: configmap-nginx
+      <span style="color:#66d9ef">volumes</span>:
+      - <span style="color:#66d9ef">name</span>: config
+        <span style="color:#66d9ef">configMap</span>:
+          <span style="color:#66d9ef">name</span>: configmap-nginx
 
---<span style="color:#e6db74">-
-</span><span style="color:#e6db74"></span><span style="color:#e6db74">
-</span><span style="color:#e6db74"></span><span style="color:#e6db74">apiVersion: v1</span>
-kind: ConfigMap
-metadata:
-  labels:
-    component: nginx
-  name: configmap-nginx
-data:
-  nginx.conf: |<span style="color:#e6db74">-
-</span><span style="color:#e6db74">   </span><span style="color:#e6db74"> </span><span style="color:#e6db74">worker_processes  1;</span>
+---
+
+<span style="color:#66d9ef">apiVersion</span>: v1
+<span style="color:#66d9ef">kind</span>: ConfigMap
+<span style="color:#66d9ef">metadata</span>:
+  <span style="color:#66d9ef">labels</span>:
+    <span style="color:#66d9ef">component</span>: nginx
+  <span style="color:#66d9ef">name</span>: configmap-nginx
+<span style="color:#66d9ef">data</span>:
+  <span style="color:#66d9ef">nginx.conf</span>: |<span style="color:#e6db74">-
+</span><span style="color:#e6db74">    worker_processes  1;</span>
 
     error_log  /error.log;
 
@@ -458,7 +458,7 @@ data:
         add_header X-Cache $upstream_cache_status;
         autoindex off;
 
-        resolver      <span style="color:#ae81ff">127.0</span><span style="color:#ae81ff">.0</span><span style="color:#ae81ff">.1</span>:<span style="color:#ae81ff">53</span> ipv6=off;
+        resolver      <span style="color:#ae81ff">127.0.0.1</span>:<span style="color:#ae81ff">53</span> ipv6=off;
   
         server {
             listen <span style="color:#ae81ff">80</span>;
@@ -478,34 +478,34 @@ data:
     }
 </code></pre></div><p>让该代理服务暴露公网访问可以用 Service 或 Ingress</p>
 <p>用 Service 的示例 (<code>service.yaml</code>):</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">apiVersion: v1
-kind: Service
-metadata:
-  labels:
-    component: nginx
-  name: service-nginx
-spec:
-  type: LoadBalancer
-  ports:
-  - name: http
-    port: <span style="color:#ae81ff">80</span>
-    targetPort: http
-  selector:
-    component: nginx
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#66d9ef">apiVersion</span>: v1
+<span style="color:#66d9ef">kind</span>: Service
+<span style="color:#66d9ef">metadata</span>:
+  <span style="color:#66d9ef">labels</span>:
+    <span style="color:#66d9ef">component</span>: nginx
+  <span style="color:#66d9ef">name</span>: service-nginx
+<span style="color:#66d9ef">spec</span>:
+  <span style="color:#66d9ef">type</span>: LoadBalancer
+  <span style="color:#66d9ef">ports</span>:
+  - <span style="color:#66d9ef">name</span>: http
+    <span style="color:#66d9ef">port</span>: <span style="color:#ae81ff">80</span>
+    <span style="color:#66d9ef">targetPort</span>: http
+  <span style="color:#66d9ef">selector</span>:
+    <span style="color:#66d9ef">component</span>: nginx
 </code></pre></div><p>用 Ingress 的示例 (<code>ingress.yaml</code>):</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">apiVersion: extensions/v1beta1
-kind: Ingress
-metadata:
-  name: ingress-nginx
-spec:
-  rules:
-  - host: <span style="color:#e6db74">&#34;*.test.imroc.io&#34;</span>
-    http:
-      paths:
-      - backend:
-          serviceName: service-nginx
-          servicePort: <span style="color:#ae81ff">80</span>
-        path: /
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#66d9ef">apiVersion</span>: extensions/v1beta1
+<span style="color:#66d9ef">kind</span>: Ingress
+<span style="color:#66d9ef">metadata</span>:
+  <span style="color:#66d9ef">name</span>: ingress-nginx
+<span style="color:#66d9ef">spec</span>:
+  <span style="color:#66d9ef">rules</span>:
+  - <span style="color:#66d9ef">host</span>: <span style="color:#e6db74">&#34;*.test.imroc.io&#34;</span>
+    <span style="color:#66d9ef">http</span>:
+      <span style="color:#66d9ef">paths</span>:
+      - <span style="color:#66d9ef">backend</span>:
+          <span style="color:#66d9ef">serviceName</span>: service-nginx
+          <span style="color:#66d9ef">servicePort</span>: <span style="color:#ae81ff">80</span>
+        <span style="color:#66d9ef">path</span>: /
 </code></pre></div>
             </article>
 
@@ -670,7 +670,7 @@ spec:
             更新
           </p>
           <p class="credits theme-by text-muted">
-            由 <a href="http://gohugo.io">Hugo v0.62.0</a> 强力驱动 &nbsp;&bull;&nbsp; 主题 <a href="https://github.com/imroc/xhugo">xhugo</a>
+            由 <a href="http://gohugo.io">Hugo v0.65.3</a> 强力驱动 &nbsp;&bull;&nbsp; 主题 <a href="https://github.com/imroc/xhugo">xhugo</a>
           </p>
         </div>
       </div>

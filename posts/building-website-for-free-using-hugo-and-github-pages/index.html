@@ -23,7 +23,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="roc" />
 
-  <meta name="generator" content="Hugo 0.62.0" />
+  <meta name="generator" content="Hugo 0.65.3" />
   <link rel="canonical" href="https://imroc.io/posts/building-website-for-free-using-hugo-and-github-pages/" />
   <link rel="alternate" href="https://imroc.io/index.xml" type="application/rss+xml" title="roc"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css"
     integrity="sha384-9eLZqc9ds8eNjO3TmqPeYcDj8n+Qfa4nuSiGYa6DjLNcv9BtN69ZIulL9+8CqC9Y" crossorigin="anonymous">
@@ -164,7 +164,7 @@ var _hmt = _hmt || [];
 <script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/algoliasearch.min.js"></script>
 <script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/autocomplete.min.js"></script>
 <script>
-    var client = algoliasearch("B6Q6PSGUV5", "d04f855d3a39eed8ad8d9365ba7c86af");
+    var client = algoliasearch("B6Q6PSGUV5", "5b4678e9995fe4211c4fa43ad2ffdab5");
     var index = client.initIndex("imroc-blog");
     
     autocomplete('#aa-search-input', {
@@ -276,35 +276,35 @@ var _hmt = _hmt || [];
 <aside class="toc">
   <nav id="TableOfContents">
   <ul>
-    <li><a href="#heading">概述</a></li>
-    <li><a href="#hugo">安装hugo</a></li>
-    <li><a href="#heading-1">创建网站</a></li>
-    <li><a href="#heading-2">效果预览</a></li>
-    <li><a href="#heading-3">生成静态页面</a></li>
+    <li><a href="#概述">概述</a></li>
+    <li><a href="#安装hugo">安装hugo</a></li>
+    <li><a href="#创建网站">创建网站</a></li>
+    <li><a href="#效果预览">效果预览</a></li>
+    <li><a href="#生成静态页面">生成静态页面</a></li>
     <li><a href="#github-pages">Github Pages</a></li>
-    <li><a href="#-github-pages">设置 Github Pages</a>
+    <li><a href="#设置-github-pages">设置 Github Pages</a>
       <ul>
-        <li><a href="#heading-4">源文件与编译结果在同一仓库</a></li>
-        <li><a href="#heading-5">源文件与编译结果在不同仓库</a></li>
+        <li><a href="#源文件与编译结果在同一仓库">源文件与编译结果在同一仓库</a></li>
+        <li><a href="#源文件与编译结果在不同仓库">源文件与编译结果在不同仓库</a></li>
       </ul>
     </li>
-    <li><a href="#heading-6">自定义域名</a>
+    <li><a href="#自定义域名">自定义域名</a>
       <ul>
-        <li><a href="#heading-7">绑定根域名</a></li>
-        <li><a href="#heading-8">绑定二级域名</a></li>
+        <li><a href="#绑定根域名">绑定根域名</a></li>
+        <li><a href="#绑定二级域名">绑定二级域名</a></li>
       </ul>
     </li>
-    <li><a href="#https">自定义域名开启https</a></li>
+    <li><a href="#自定义域名开启https">自定义域名开启https</a></li>
   </ul>
 </nav>
 </aside>
 
 
-                <h2 id="heading">概述</h2>
+                <h2 id="概述">概述</h2>
 <p>Hugo可以让你轻松生成静态网站，比如个人博客、API文档、公司主页等，你只需要提供markdown格式的文本，它就能帮你渲染成各种你想要的样式，只需要安装想要的主题，写好对应的markdown内容，就能快速编译出一个静态网站。</p>
-<h2 id="hugo">安装hugo</h2>
+<h2 id="安装hugo">安装hugo</h2>
 <p>参考官方：http://gohugo.io/getting-started/installing/</p>
-<h2 id="heading-1">创建网站</h2>
+<h2 id="创建网站">创建网站</h2>
 <p>首先初始化你的网站，假如 mysite 是存放网站相关文件的目录：</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">hugo new site mysite
 </code></pre></div><p>这会在当前路径创建一个 mysite 目录，进入该路径：</p>
@@ -334,12 +334,12 @@ var _hmt = _hmt || [];
 <p>新建页面：</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">hugo new posts/hello.md
 </code></pre></div><p>此时会在 <code>content</code> 路径下创建文件，由于参数中还带有 posts 路径，所以最终创建的文件路径是 <code>content/posts/hello.md</code>， 每次创建的文件都根据 <code>archetypes/default.md</code> 生成的，包含一些页面的特定配置，比如标题、分类等，不同的主题还有自己支持的一些配置，需要看主题的说明。</p>
-<h2 id="heading-2">效果预览</h2>
+<h2 id="效果预览">效果预览</h2>
 <p>写好 mardown 之后可以本地预览：</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">hugo server
 </code></pre></div><p>在浏览器打开 <a href="http://localhost:1313">http://localhost:1313</a> 就能看到效果，并且改内容页面也能实时自动更新。<br>
 <strong>注：</strong> markdown 用什么编写就取决于你自己了，我自己有时用vim，有时用 vscode（装 markdown 的插件）</p>
-<h2 id="heading-3">生成静态页面</h2>
+<h2 id="生成静态页面">生成静态页面</h2>
 <p>在生成之前先确定你想将此网站发布在哪儿，在 <code>config.toml</code> 里面配置 <code>baseURL</code> 为访问此网站的基本URL路径：</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-toml" data-lang="toml"><span style="color:#a6e22e">baseURL</span> = <span style="color:#e6db74">&#34;https://imroc.io/&#34;</span>
 </code></pre></div><p>然后</p>
@@ -354,7 +354,7 @@ var _hmt = _hmt || [];
 <li>一种是主仓库，它里面存放的文件可以直接映射到你网站的根路径，而且只能有一个仓库名固定为：<code>&lt;github账号名&gt;.github.io</code>，比如我的 github 账号为 <code>imroc</code>,那么我的 <code>Github Pages</code> 主仓库就为 <code>imroc.github.io</code>，这个仓库的名字其实也就是访问你网站的域名。</li>
 <li>其它的仓库只能映射到网站的子路径，子路径名称和仓库名一致，比如我新建一个 <code>static</code> 仓库并设置为 <code>Github Pages</code> 仓库，那么我可以通过 <code>imroc.github.io/static/</code> 访问到里面的页面和文件</li>
 </ul>
-<h2 id="-github-pages">设置 Github Pages</h2>
+<h2 id="设置-github-pages">设置 Github Pages</h2>
 <p>静态文件存放位置有三种：</p>
 <ul>
 <li>master 分支</li>
@@ -364,7 +364,7 @@ var _hmt = _hmt || [];
 <p><strong>注：</strong> <code>Github Pages</code> 主仓库除外，必须是 master 分支。</p>
 <p>一般都会先新建第一种 <code>Github Pages</code> 主仓库作为网站主要托管，根据你的账号名创建仓库，如: <code>imroc.github.io</code>， 提交静态文件后在仓库的 <code>Settings</code> 里面，翻到下面的 <code>Github Pages</code> 部分，根据自己需要设置 <code>Github Pages</code> 文件存放位置：
 <img src="https://imroc.io/static/blog/hugo/github-pages-setting.png" alt="github pages 设置"></p>
-<h3 id="heading-4">源文件与编译结果在同一仓库</h3>
+<h3 id="源文件与编译结果在同一仓库">源文件与编译结果在同一仓库</h3>
 <p>如果你想要将你网站的 <code>hugo</code> 源文件和编译后的静态文件目录放在一个仓库，那可以选择 <code>master</code> 下的 <code>docs</code> 目录作为 <code>Github Pages</code> 目录，编译的时候执行：</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">hugo -d docs
 </code></pre></div><p>建议写个脚本，每次更新内容执行下脚本网站就可以更新，如(<code>deploy.sh</code>)：</p>
@@ -399,7 +399,7 @@ git push origin master
 </code></pre></div><p>就可以更新网站了。</p>
 <p>另外，别忘了给脚本可执行权限哦</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">chmod +x deploy.sh
-</code></pre></div><h3 id="heading-5">源文件与编译结果在不同仓库</h3>
+</code></pre></div><h3 id="源文件与编译结果在不同仓库">源文件与编译结果在不同仓库</h3>
 <p>新建一个仓库存放源文件（此仓库不需要设置 <code>Github Pages</code>)，如 <code>blog</code> 仓库，编译结果放在主仓库里，如 <code>imroc.github.io</code> 仓库。</p>
 <p>进入hugo创建的网站目录并设置 git 的远程地址：</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">cd mysite
@@ -441,20 +441,20 @@ git add .
 git commit -m <span style="color:#e6db74">&#34;</span>$msg<span style="color:#e6db74">&#34;</span>
 git push origin master
 </code></pre></div><p>这样执行脚本也可以更新网站，只不过分成了两个仓库，我也是用的这种做法，因为 <code>Github Pages</code> 主仓库只允许 master 分支作为网站内容，所以源文件就存在了另一个仓库 <code>blog</code></p>
-<h2 id="heading-6">自定义域名</h2>
+<h2 id="自定义域名">自定义域名</h2>
 <p>github 给我们提供了免费域名，但是我们还可以绑定自己的域名。</p>
 <p>很简单，在仓库的 <code>Settings</code> 里的 <code>Github Pages</code> 部分，有个 <code>Custom domain</code> 的设置，将其设置为你需要绑定的域名（它会新建一个 commit，就是创建一个 <code>CNAME</code> 文件，内容是你填的域名），你也可以自己手动创建一个 CNAME 文件，效果是一样的。</p>
 <p><strong>注：</strong> 由于自定义域名需要仓库里面有个 <code>CNAME</code> 文件，用上面的第二种方式（源文件与编译结果在不同仓库）管理的话，每次编译会覆盖 <code>public</code> 目录下除 <code>.git</code> 目录的文件，<code>CNAME</code> 文件可能就不在了，没关系，在源文件的 <code>static</code> 目录下放入 <code>CNAME</code> 文件即可保证每次编译的结果里面都会有 <code>CNAME</code> 文件。</p>
 <p>下一步就是登录你的域名提供商的后台管理，设置DNS解析：</p>
-<h3 id="heading-7">绑定根域名</h3>
+<h3 id="绑定根域名">绑定根域名</h3>
 <p>如果你想要绑定自己域名的根域名（如：<a href="imroc.io">imroc.io</a>），新建两个A记录，分别指向下面两个IP：</p>
 <blockquote>
 <p>192.30.252.153<br>
 192.30.252.154</p>
 </blockquote>
-<h3 id="heading-8">绑定二级域名</h3>
+<h3 id="绑定二级域名">绑定二级域名</h3>
 <p>如果你想要绑定自己域名的二级域名（如：<a href="blog.imroc.io">blog.imroc.io</a>），新建一个 <code>CNAME</code> 记录，值为你的 github 域名，如： <code>imroc.github.io</code></p>
-<h2 id="https">自定义域名开启https</h2>
+<h2 id="自定义域名开启https">自定义域名开启https</h2>
 <p>如果绑定了自定义域名，github pages 原则上是不能启用https的，但是可以借助 cloudflare</p>
 <ul>
 <li>在<a href="https://www.cloudflare.com/">cloudflare</a>上注册并获得 <code>nameserver</code></li>
@@ -614,7 +614,7 @@ git push origin master
             更新
           </p>
           <p class="credits theme-by text-muted">
-            由 <a href="http://gohugo.io">Hugo v0.62.0</a> 强力驱动 &nbsp;&bull;&nbsp; 主题 <a href="https://github.com/imroc/xhugo">xhugo</a>
+            由 <a href="http://gohugo.io">Hugo v0.65.3</a> 强力驱动 &nbsp;&bull;&nbsp; 主题 <a href="https://github.com/imroc/xhugo">xhugo</a>
           </p>
         </div>
       </div>

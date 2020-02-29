@@ -23,7 +23,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="roc" />
 
-  <meta name="generator" content="Hugo 0.62.0" />
+  <meta name="generator" content="Hugo 0.65.3" />
   <link rel="canonical" href="https://imroc.io/posts/efficient-kubectl/" />
   <link rel="alternate" href="https://imroc.io/index.xml" type="application/rss+xml" title="roc"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css"
     integrity="sha384-9eLZqc9ds8eNjO3TmqPeYcDj8n+Qfa4nuSiGYa6DjLNcv9BtN69ZIulL9+8CqC9Y" crossorigin="anonymous">
@@ -164,7 +164,7 @@ var _hmt = _hmt || [];
 <script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/algoliasearch.min.js"></script>
 <script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/autocomplete.min.js"></script>
 <script>
-    var client = algoliasearch("B6Q6PSGUV5", "d04f855d3a39eed8ad8d9365ba7c86af");
+    var client = algoliasearch("B6Q6PSGUV5", "5b4678e9995fe4211c4fa43ad2ffdab5");
     var index = client.initIndex("imroc-blog");
     
     autocomplete('#aa-search-input', {
@@ -289,30 +289,30 @@ var _hmt = _hmt || [];
 <aside class="toc">
   <nav id="TableOfContents">
   <ul>
-    <li><a href="#k-">k 命令</a></li>
+    <li><a href="#k-命令">k 命令</a></li>
   </ul>
 </nav>
 </aside>
 
 
                 <p>是否有过因为使用 kubectl 经常需要重复输入命名空间而苦恼？是否觉得应该要有个记住命名空间的功能，自动记住上次使用的命名空间，不需要每次都输入？可惜没有这种功能，但是，本文会教你一个非常巧妙的方法完美帮你解决这个痛点。</p>
-<h2 id="k-">k 命令</h2>
+<h2 id="k-命令">k 命令</h2>
 <p>将如下脚本粘贴到当前shell(注册k命令到当前终端session):</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#66d9ef">function</span> k<span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#66d9ef">function</span> k<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
     cmdline<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>HISTTIMEFORMAT<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;&#34;</span> history | awk <span style="color:#e6db74">&#39;$2 == &#34;kubectl&#34; &amp;&amp; (/-n/ || /--namespace/) {for(i=2;i&lt;=NF;i++)printf(&#34;%s &#34;,$i);print &#34;&#34;}&#39;</span> | tail -n 1<span style="color:#e6db74">`</span>
-    regs<span style="color:#f92672">=</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#39;\-n [\w\-\d]+&#39;</span> <span style="color:#e6db74">&#39;\-n=[\w\-\d]+&#39;</span> <span style="color:#e6db74">&#39;\-\-namespace [\w\-\d]+&#39;</span> <span style="color:#e6db74">&#39;\-\-namespace=[\w\-\d]+&#39;</span><span style="color:#f92672">)</span>
+    regs<span style="color:#f92672">=(</span><span style="color:#e6db74">&#39;\-n [\w\-\d]+&#39;</span> <span style="color:#e6db74">&#39;\-n=[\w\-\d]+&#39;</span> <span style="color:#e6db74">&#39;\-\-namespace [\w\-\d]+&#39;</span> <span style="color:#e6db74">&#39;\-\-namespace=[\w\-\d]+&#39;</span><span style="color:#f92672">)</span>
     <span style="color:#66d9ef">for</span> i in <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>!regs[@]<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>; <span style="color:#66d9ef">do</span>
         reg<span style="color:#f92672">=</span><span style="color:#e6db74">${</span>regs[i]<span style="color:#e6db74">}</span>
         nsarg<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>echo $cmdline | grep -o -P <span style="color:#e6db74">&#34;</span>$reg<span style="color:#e6db74">&#34;</span><span style="color:#e6db74">`</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span><span style="color:#f92672">[</span> <span style="color:#e6db74">&#34;</span>$nsarg<span style="color:#e6db74">&#34;</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;&#34;</span> <span style="color:#f92672">]</span><span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">[[</span> <span style="color:#e6db74">&#34;</span>$nsarg<span style="color:#e6db74">&#34;</span> <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;&#34;</span> <span style="color:#f92672">]]</span>; <span style="color:#66d9ef">then</span>
             <span style="color:#66d9ef">continue</span>
         <span style="color:#66d9ef">fi</span>
-        cmd<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">kubectl </span>$nsarg<span style="color:#e6db74"> </span>$@<span style="color:#e6db74">&#34;</span>
+        cmd<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;kubectl </span>$nsarg<span style="color:#e6db74"> </span>$@<span style="color:#e6db74">&#34;</span>
         echo <span style="color:#e6db74">&#34;</span>$cmd<span style="color:#e6db74">&#34;</span>
         $cmd
         <span style="color:#66d9ef">return</span>
     <span style="color:#66d9ef">done</span>
-    cmd<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">kubectl </span>$@<span style="color:#e6db74">&#34;</span>
+    cmd<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;kubectl </span>$@<span style="color:#e6db74">&#34;</span>
     echo <span style="color:#e6db74">&#34;</span>$cmd<span style="color:#e6db74">&#34;</span>
     $cmd
 <span style="color:#f92672">}</span>
@@ -494,7 +494,7 @@ var _hmt = _hmt || [];
             更新
           </p>
           <p class="credits theme-by text-muted">
-            由 <a href="http://gohugo.io">Hugo v0.62.0</a> 强力驱动 &nbsp;&bull;&nbsp; 主题 <a href="https://github.com/imroc/xhugo">xhugo</a>
+            由 <a href="http://gohugo.io">Hugo v0.65.3</a> 强力驱动 &nbsp;&bull;&nbsp; 主题 <a href="https://github.com/imroc/xhugo">xhugo</a>
           </p>
         </div>
       </div>

@@ -9,7 +9,7 @@
   <meta name="description" content="roc的博客|Cloud Native|Kubernetes|Go|Golang|Service Mesh" />
   <meta property="og:title" content="Kubernetes v1.17 new feature preview: topology-aware service routing" />
   <meta name="twitter:title" content="Kubernetes v1.17 new feature preview: topology-aware service routing" />
-  <meta name="description" content="Hello everyone, I&#39;m roc, from the Tencent Kubernetes Engine (TKE) team. Today I will introduce a new feature of kubernetes in v1.17 that I am involved in: topology-aware service routing.
+  <meta name="description" content="Hello everyone, I&rsquo;m roc, from the Tencent Kubernetes Engine (TKE) team. Today I will introduce a new feature of kubernetes in v1.17 that I am involved in: topology-aware service routing.
 
 This article is translated from my Chinese blog post, which received a great response in China and was reposted by many well-known Chinese container technology media accounts.
 
@@ -22,7 +22,7 @@ service: kubernetes service resource, associated with a set of endpoints, traffi
 Background
 Topology-aware service routing, simply called Service Topology. This feature was originally proposed and designed by Jun Du (@m1093782566). Why design this feature? Imagine that the kubernetes cluster nodes are distributed in different places and the endpoints corresponding to the service are distributed in different nodes. The traditional forwarding strategy will load balance all endpoints and usually forward them with equal probability. When accessing the service, the traffic may be scattered and hit these different places. Although service forwarding is load-balanced, if the endpoints are far away, the network forwarding will have a high latency, which will affect network performance, and in some cases may even pay additional traffic costs. If the service can forward the endpoints nearby, will it be possible to reduce network latency and improve network performance? Yes! And this is exactly the purpose and significance of this feature.
 Kubernetes Affinity
-The service&#39;s nearest forwarding is actually a kind of network affinity, and it tends to forward to the endpoints closer to itself. Prior to this feature, there have been some other affinity designs and implementations in terms of scheduling and storage:
+The service&rsquo;s nearest forwarding is actually a kind of network affinity, and it tends to forward to the endpoints closer to itself. Prior to this feature, there have been some other affinity designs and implementations in terms of scheduling and storage:
 
 Node Affinity: Allows Pods to be scheduled to Nodes that meet certain expectations, such as limiting scheduling to a certain Availability Zone, or requiring nodes to support GPUs. This is considered scheduling affinity, and the scheduling results depend on node attributes.
 Pod affinity and anti-affinity: Allows pod to be scheduled depends on ther pods. E.g. Let a group of pods to be scheduled to nodes in the same topology domain, or dispersed to nodes in different topology domains. This is also can be considered as scheduling affinity, and the scheduling result depends on other pods.
@@ -31,7 +31,7 @@ Local Persistent Volume: Let Pod use local data volume, such as high-performance
 Topology-Aware Volume Dynamic Provisioning: The Pod is scheduled first, and then the storage is created according to the topology domain of the node that pod been scheduled onto. This can be considered as the affinity between storage and scheduling, and the creation of storage depends on the scheduling result.
 
 However, kubernetes currently does not have an affinity capability on the network side. The new feature of topology-aware service routing can just fill this gap. This feature enables services can be forwarded nearby instead of all endpoints with equal probability forwarding.">
-  <meta property="og:description" content="Hello everyone, I&#39;m roc, from the Tencent Kubernetes Engine (TKE) team. Today I will introduce a new feature of kubernetes in v1.17 that I am involved in: topology-aware service routing.
+  <meta property="og:description" content="Hello everyone, I&rsquo;m roc, from the Tencent Kubernetes Engine (TKE) team. Today I will introduce a new feature of kubernetes in v1.17 that I am involved in: topology-aware service routing.
 
 This article is translated from my Chinese blog post, which received a great response in China and was reposted by many well-known Chinese container technology media accounts.
 
@@ -44,7 +44,7 @@ service: kubernetes service resource, associated with a set of endpoints, traffi
 Background
 Topology-aware service routing, simply called Service Topology. This feature was originally proposed and designed by Jun Du (@m1093782566). Why design this feature? Imagine that the kubernetes cluster nodes are distributed in different places and the endpoints corresponding to the service are distributed in different nodes. The traditional forwarding strategy will load balance all endpoints and usually forward them with equal probability. When accessing the service, the traffic may be scattered and hit these different places. Although service forwarding is load-balanced, if the endpoints are far away, the network forwarding will have a high latency, which will affect network performance, and in some cases may even pay additional traffic costs. If the service can forward the endpoints nearby, will it be possible to reduce network latency and improve network performance? Yes! And this is exactly the purpose and significance of this feature.
 Kubernetes Affinity
-The service&#39;s nearest forwarding is actually a kind of network affinity, and it tends to forward to the endpoints closer to itself. Prior to this feature, there have been some other affinity designs and implementations in terms of scheduling and storage:
+The service&rsquo;s nearest forwarding is actually a kind of network affinity, and it tends to forward to the endpoints closer to itself. Prior to this feature, there have been some other affinity designs and implementations in terms of scheduling and storage:
 
 Node Affinity: Allows Pods to be scheduled to Nodes that meet certain expectations, such as limiting scheduling to a certain Availability Zone, or requiring nodes to support GPUs. This is considered scheduling affinity, and the scheduling results depend on node attributes.
 Pod affinity and anti-affinity: Allows pod to be scheduled depends on ther pods. E.g. Let a group of pods to be scheduled to nodes in the same topology domain, or dispersed to nodes in different topology domains. This is also can be considered as scheduling affinity, and the scheduling result depends on other pods.
@@ -53,9 +53,9 @@ Local Persistent Volume: Let Pod use local data volume, such as high-performance
 Topology-Aware Volume Dynamic Provisioning: The Pod is scheduled first, and then the storage is created according to the topology domain of the node that pod been scheduled onto. This can be considered as the affinity between storage and scheduling, and the creation of storage depends on the scheduling result.
 
 However, kubernetes currently does not have an affinity capability on the network side. The new feature of topology-aware service routing can just fill this gap. This feature enables services can be forwarded nearby instead of all endpoints with equal probability forwarding.">
-  <meta name="twitter:description" content="Hello everyone, I&#39;m roc, from the Tencent Kubernetes Engine (TKE) team. Today I will introduce a new feature of kubernetes in v1.17 that I am involved in: topology-aware service routing.
+  <meta name="twitter:description" content="Hello everyone, I&rsquo;m roc, from the Tencent Kubernetes Engine (TKE) team. Today I will introduce a new feature of kubernetes in v1.17 that I am involved in: topology-aware service routing.
 
-This article …">
+This …">
   <meta name="author" content="{Description { .Site.Author.name }}"/>
   <link href='https://imroc.io/favicon.png' rel='icon' type='image/x-icon'/>
   <meta property="og:image" content="https://res.cloudinary.com/imroc/image/upload/v1521031841/avatar.png" />
@@ -67,7 +67,7 @@ This article …">
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="roc" />
 
-  <meta name="generator" content="Hugo 0.62.0" />
+  <meta name="generator" content="Hugo 0.65.3" />
   <link rel="canonical" href="https://imroc.io/en/posts/kubernetes-service-topology/" />
   <link rel="alternate" href="https://imroc.io/en/index.xml" type="application/rss+xml" title="roc"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css"
     integrity="sha384-9eLZqc9ds8eNjO3TmqPeYcDj8n+Qfa4nuSiGYa6DjLNcv9BtN69ZIulL9+8CqC9Y" crossorigin="anonymous">
@@ -196,7 +196,7 @@ var _hmt = _hmt || [];
 <script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/algoliasearch.min.js"></script>
 <script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/autocomplete.min.js"></script>
 <script>
-    var client = algoliasearch("B6Q6PSGUV5", "d04f855d3a39eed8ad8d9365ba7c86af");
+    var client = algoliasearch("B6Q6PSGUV5", "5b4678e9995fe4211c4fa43ad2ffdab5");
     var index = client.initIndex("imroc-blog-en");
     
     autocomplete('#aa-search-input', {
@@ -326,7 +326,7 @@ var _hmt = _hmt || [];
 </aside>
 
 
-                <p>Hello everyone, I'm roc, from the Tencent Kubernetes Engine (TKE) team. Today I will introduce a new feature of kubernetes in v1.17 that I am involved in: topology-aware service routing.</p>
+                <p>Hello everyone, I&rsquo;m roc, from the Tencent Kubernetes Engine (TKE) team. Today I will introduce a new feature of kubernetes in v1.17 that I am involved in: topology-aware service routing.</p>
 <blockquote>
 <p>This article is translated from my Chinese blog post, which received a great response in China and was reposted by many well-known Chinese container technology media accounts.</p>
 </blockquote>
@@ -339,7 +339,7 @@ var _hmt = _hmt || [];
 <h2 id="background">Background</h2>
 <p>Topology-aware service routing, simply called <code>Service Topology</code>. This feature was originally proposed and designed by Jun Du (<a href="https://github.com/m1093782566">@m1093782566</a>). Why design this feature? Imagine that the kubernetes cluster nodes are distributed in different places and the endpoints corresponding to the service are distributed in different nodes. The traditional forwarding strategy will load balance all endpoints and usually forward them with equal probability. When accessing the service, the traffic may be scattered and hit these different places. Although service forwarding is load-balanced, if the endpoints are far away, the network forwarding will have a high latency, which will affect network performance, and in some cases may even pay additional traffic costs. If the service can forward the endpoints nearby, will it be possible to reduce network latency and improve network performance? Yes! And this is exactly the purpose and significance of this feature.</p>
 <h2 id="kubernetes-affinity">Kubernetes Affinity</h2>
-<p>The service's nearest forwarding is actually a kind of network affinity, and it tends to forward to the endpoints closer to itself. Prior to this feature, there have been some other affinity designs and implementations in terms of scheduling and storage:</p>
+<p>The service&rsquo;s nearest forwarding is actually a kind of network affinity, and it tends to forward to the endpoints closer to itself. Prior to this feature, there have been some other affinity designs and implementations in terms of scheduling and storage:</p>
 <ul>
 <li>Node Affinity: Allows Pods to be scheduled to Nodes that meet certain expectations, such as limiting scheduling to a certain Availability Zone, or requiring nodes to support GPUs. This is considered scheduling affinity, and the scheduling results depend on node attributes.</li>
 <li>Pod affinity and anti-affinity: Allows pod to be scheduled depends on ther pods. E.g. Let a group of pods to be scheduled to nodes in the same topology domain, or dispersed to nodes in different topology domains. This is also can be considered as scheduling affinity, and the scheduling result depends on other pods.</li>
@@ -370,7 +370,7 @@ var _hmt = _hmt || [];
 <p>There is a special topology key &ldquo;<code>*</code>&rdquo;, which can match all endpoints. If <code>topologyKeys</code> contains <code>*</code>, it must be at the end of the list, usually when there is no endpoint matched for any topology key, just fallback to forward to any endpoint (avoid packet loss).</p>
 <p>The current topology key supports the following possible values (more will be added in the future):</p>
 <ul>
-<li><code>kubernetes.io/hostname</code>: Represents the hostname of the node, usually put it first in the list, which means that if the local machine has an endpoint, it will be forwarded directly to the local machine's endpoint.</li>
+<li><code>kubernetes.io/hostname</code>: Represents the hostname of the node, usually put it first in the list, which means that if the local machine has an endpoint, it will be forwarded directly to the local machine&rsquo;s endpoint.</li>
 <li><code>topology.kubernetes.io/zone</code>: Represents the availability zone where the node is located, usually placed after <code>kubernetes.io/hostname</code>, which means that if there is no endpoint in current node, it will be forwarded to the endpoint on other nodes in the current availability zone.</li>
 <li><code>topology.kubernetes.io/region</code>: It indicates the region where it is located, which means that it will be forwarded to the endpoint of the current region. This should be used less, because usually all nodes will only be in the same region. If nodes crosses the region, the latency will be very high between nodes&rsquo; communication.</li>
 <li><code>*</code>: Ignoring the topological domain and matching all endpoints, it is usually used as an guaranteed strategy to avoid packet loss and can only be placed at the end of the list.</li>
@@ -381,20 +381,20 @@ var _hmt = _hmt || [];
 <li>topology key must be in a valid label format and up to 16 keys.</li>
 </ul>
 <p>Here is a simple Service example:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">apiVersion: v1
-kind: Service
-metadata:
-  name: nginx
-spec:
-  type: ClusterIP
-  ports:
-  - name: http
-    port: <span style="color:#ae81ff">80</span>
-    protocol: TCP
-    targetPort: <span style="color:#ae81ff">80</span>
-  selector:
-    app: nginx
-  topologyKeys:
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#66d9ef">apiVersion</span>: v1
+<span style="color:#66d9ef">kind</span>: Service
+<span style="color:#66d9ef">metadata</span>:
+  <span style="color:#66d9ef">name</span>: nginx
+<span style="color:#66d9ef">spec</span>:
+  <span style="color:#66d9ef">type</span>: ClusterIP
+  <span style="color:#66d9ef">ports</span>:
+  - <span style="color:#66d9ef">name</span>: http
+    <span style="color:#66d9ef">port</span>: <span style="color:#ae81ff">80</span>
+    <span style="color:#66d9ef">protocol</span>: TCP
+    <span style="color:#66d9ef">targetPort</span>: <span style="color:#ae81ff">80</span>
+  <span style="color:#66d9ef">selector</span>:
+    <span style="color:#66d9ef">app</span>: nginx
+  <span style="color:#66d9ef">topologyKeys</span>:
   - <span style="color:#e6db74">&#34;kubernetes.io/hostname&#34;</span>
   - <span style="color:#e6db74">&#34;topology.kubernetes.io/zone&#34;</span>
   - <span style="color:#e6db74">&#34;*&#34;</span>
@@ -403,12 +403,12 @@ spec:
 <p>The above picture is an example of one of the situation: when Pod accesses the nginx service, it finds that current node does not have any endpoint, then it search endpoints in the current availability zone, and found one and forward to it. (does not consider forwarding to endpoints in another availability zone)</p>
 <h2 id="story-bebind">Story Bebind</h2>
 <p>There are some differences between the original KEP design and the current implementation. The implementation has changed twice, but it also promotes the development of other features. Let me tell the story.</p>
-<p>The initial design is to let kube-proxy directly watch nodes to get endpoints&rsquo; topology information in alpha. Each node will has a global node cache. Find the corresponding node cache through the endpoint's <code>nodeName</code> field, and then check the label contained by node to get the endpoint's topological domain. In the case of a large number of cluster nodes, kube-proxy will consume a lot of resources, but the advantage is that the implementation is very simple, and it can be used as the alpha phase implementation. In beta, we can switch from watch node to watch A newly designed <code>PodLocator</code> API, as an intermediary for topology information storage, to avoid watching huge node objects.</p>
+<p>The initial design is to let kube-proxy directly watch nodes to get endpoints&rsquo; topology information in alpha. Each node will has a global node cache. Find the corresponding node cache through the endpoint&rsquo;s <code>nodeName</code> field, and then check the label contained by node to get the endpoint&rsquo;s topological domain. In the case of a large number of cluster nodes, kube-proxy will consume a lot of resources, but the advantage is that the implementation is very simple, and it can be used as the alpha phase implementation. In beta, we can switch from watch node to watch A newly designed <code>PodLocator</code> API, as an intermediary for topology information storage, to avoid watching huge node objects.</p>
 <p>In fact, at the beginning, I followed the way of the watch node, and finally implemented this feature after a lot of effort. Later, metadata-only watch is been supported in kubernetes v1.15, see <a href="https://github.com/kubernetes/kubernetes/pull/71548">PR 71548</a>. Using this feature, we can just only watch the metadata of the node, instead of watching the entire node, which can greatly reduce the amount of data transmitted and cached. Then I changed the implementation from watch node to watch node metadata; Even so, metadata is updated frequently, mainly because <code>resourceVersion</code> changes frequently (kubelet reports node status), so although watch node metadata is better than watch node, it may still cause a lot of unnecessary network traffic, but as an alpha implementation is acceptable.</p>
 <p>Unfortunately, this implementation was not merged before the v1.16 code freeze, because there are a few small details that have not been well discussed and accepted. In fact, during the implementation of the watch node, the <code>Endpoint Slice</code> feature was proposed. At the stage of this feature discussion, we thought that we could use it to carry topology information, so that the feature of topology-aware service routing can directly use the <code>Endpoint Slice</code> to get topology information, and PodLocator API can also been replaced. But since it is still in the very early stage and the code has not been merged yet, so the alpha implementation does not consider the watch Endpint Slice. And later, the Endpoint Slice feature was released alpha in v1.16.</p>
 <p>Since topology-aware service routing was not fit into v1.16, after the v1.17 cycle started, there was more time to discuss small details, and the code of <code>Endpoint Slice</code> has been merged, so I changed the implementation again, from watch node metadata to watch <code>Endpoint Slice</code>, which did what I planned to do in the beta phase at the alpha stage. Finally, the implementation code of this feature merged into master.</p>
 <h2 id="at-the-end">At the End</h2>
-<p>Topology-aware service routing can implement service forwarding nearby, reduce network latency, and improve the network performance for kubernetes. This feature will be release alpha in kubernetes v1.17 in early December. Let's look forward to it!</p>
+<p>Topology-aware service routing can implement service forwarding nearby, reduce network latency, and improve the network performance for kubernetes. This feature will be release alpha in kubernetes v1.17 in early December. Let&rsquo;s look forward to it!</p>
 <h2 id="references">References</h2>
 <ul>
 <li>KEP: EndpintSlice - <a href="https://github.com/kubernetes/enhancements/blob/master/keps/sig-network/20190603-EndpointSlice-API.md">https://github.com/kubernetes/enhancements/blob/master/keps/sig-network/20190603-EndpointSlice-API.md</a></li>
@@ -424,6 +424,10 @@ spec:
             </article>
 
             <ul class="pager blog-pager">
+                
+                <li class="previous">
+                    <a href="https://imroc.io/en/posts/troubleshooting-with-kubernetes-network/" data-toggle="tooltip" data-placement="top" title="Troubleshooting Kubernetes Network">&larr; Previous Post</a>
+                </li>
                  
             </ul>
 
@@ -431,6 +435,13 @@ spec:
 
           
             
+
+  <h3>See Also</h3>
+  <ul style="margin-bottom: 25px;">
+      
+      <li><a href="/en/posts/troubleshooting-with-kubernetes-network/">Troubleshooting Kubernetes Network</a></li>
+      
+  </ul>
 
           
 
@@ -517,7 +528,7 @@ spec:
             updated
           </p>
           <p class="credits theme-by text-muted">
-            <a href="http://gohugo.io">Hugo v0.62.0</a> powered &nbsp;&bull;&nbsp; Theme by <a href="https://github.com/imroc/xhugo">xhugo</a>
+            <a href="http://gohugo.io">Hugo v0.65.3</a> powered &nbsp;&bull;&nbsp; Theme by <a href="https://github.com/imroc/xhugo">xhugo</a>
           </p>
         </div>
       </div>

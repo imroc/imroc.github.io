@@ -22,20 +22,20 @@
       <description>&lt;blockquote&gt;
 &lt;p&gt;上一篇 &lt;a href=&#34;https://imroc.io/posts/kubernetes/kubernetes-no-route-to-host/&#34;&gt;Kubernetes 疑难杂症排查分享: 诡异的 No route to host&lt;/a&gt; 不小心又爆火，这次继续带来干货，看之前请提前泡好茶，避免口干。&lt;/p&gt;
 &lt;/blockquote&gt;
-&lt;h2 id=&#34;heading&#34;&gt;问题描述&lt;/h2&gt;
+&lt;h2 id=&#34;问题描述&#34;&gt;问题描述&lt;/h2&gt;
 &lt;p&gt;有用户反馈大量图片加载不出来。&lt;/p&gt;
 &lt;p&gt;图片下载走的 k8s ingress，这个 ingress 路径对应后端 service 是一个代理静态图片文件的 nginx deployment，这个 deployment 只有一个副本，静态文件存储在 nfs 上，nginx 通过挂载 nfs 来读取静态文件来提供图片下载服务，所以调用链是：client &amp;ndash;&amp;gt; k8s ingress &amp;ndash;&amp;gt; nginx &amp;ndash;&amp;gt; nfs。&lt;/p&gt;
-&lt;h2 id=&#34;heading-1&#34;&gt;猜测&lt;/h2&gt;
+&lt;h2 id=&#34;猜测&#34;&gt;猜测&lt;/h2&gt;
 &lt;p&gt;猜测: ingress 图片下载路径对应的后端服务出问题了。&lt;/p&gt;
 &lt;p&gt;验证：在 k8s 集群直接 curl nginx 的 pod ip，发现不通，果然是后端服务的问题！&lt;/p&gt;
-&lt;h2 id=&#34;heading-2&#34;&gt;抓包&lt;/h2&gt;
+&lt;h2 id=&#34;抓包&#34;&gt;抓包&lt;/h2&gt;
 &lt;p&gt;继续抓包测试观察，登上 nginx pod 所在节点，进入容器的 netns 中：&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 拿到 pod 中 nginx 的容器 id&lt;/span&gt;
 $ kubectl describe pod tcpbench-6484d4b457-847gl | grep -A10 &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;^Containers:&amp;#34;&lt;/span&gt; | grep -Eo &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;docker://.*$&amp;#39;&lt;/span&gt; | head -n &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; | sed &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;s/docker:\/\/\(.*\)$/\1/&amp;#39;&lt;/span&gt;
 49b4135534dae77ce5151c6c7db4d528f05b69b0c6f8b9dd037ec4e7043c113e
 
 &lt;span style=&#34;color:#75715e&#34;&gt;# 通过容器 id 拿到 nginx 进程 pid&lt;/span&gt;
-$ docker inspect -f &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;.State.Pid&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt; 49b4135534dae77ce5151c6c7db4d528f05b69b0c6f8b9dd037ec4e7043c113e
+$ docker inspect -f &lt;span style=&#34;color:#f92672&#34;&gt;{{&lt;/span&gt;.State.Pid&lt;span style=&#34;color:#f92672&#34;&gt;}}&lt;/span&gt; 49b4135534dae77ce5151c6c7db4d528f05b69b0c6f8b9dd037ec4e7043c113e
 &lt;span style=&#34;color:#ae81ff&#34;&gt;3985&lt;/span&gt;
 
 &lt;span style=&#34;color:#75715e&#34;&gt;# 进入 nginx 进程所在的 netns&lt;/span&gt;
@@ -78,9 +78,9 @@ $ ip a
       <author>roc@imroc.io (roc)</author>
       <guid>https://imroc.io/posts/kubernetes-no-route-to-host/</guid>
       <description>&lt;p&gt;之前发过一篇干货满满的爆火文章 &lt;a href=&#34;https://imroc.io/posts/kubernetes/troubleshooting-with-kubernetes-network/&#34;&gt;Kubernetes 网络疑难杂症排查分享&lt;/a&gt;，包含多个疑难杂症的排查案例分享，信息量巨大。这次我又带来了续集，只讲一个案例，但信息量也不小，Are you ready ?&lt;/p&gt;
-&lt;h2 id=&#34;heading&#34;&gt;问题反馈&lt;/h2&gt;
+&lt;h2 id=&#34;问题反馈&#34;&gt;问题反馈&lt;/h2&gt;
 &lt;p&gt;有用户反馈 Deployment 滚动更新的时候，业务日志偶尔会报 &amp;ldquo;No route to host&amp;rdquo; 的错误。&lt;/p&gt;
-&lt;h2 id=&#34;heading-1&#34;&gt;分析&lt;/h2&gt;
+&lt;h2 id=&#34;分析&#34;&gt;分析&lt;/h2&gt;
 &lt;p&gt;之前没遇到滚动更新会报 &amp;ldquo;No route to host&amp;rdquo; 的问题，我们先看下滚动更新导致连接异常有哪些常见的报错:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;
@@ -88,23 +88,23 @@ $ ip a
 &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;&lt;code&gt;Connection refused&lt;/code&gt;: 连接被拒绝。通常是连接还没建立，client 正在发 SYN 包请求建立连接，但到了 server 之后发现端口没监听，内核就返回 RST 包，然后应用层就报错连接被拒绝。比如在 server 滚动更新过程中，旧的 Pod 中的进程很快就停止了(网卡还未完全销毁)，但 client 所在节点的 iptables/ipvs 规则还没更新，包就可能会被转发到了这个停止的 Pod (由于 k8s 的 controller 模式，从 Pod 删除到 service 的 endpoint 更新，再到 kube-proxy watch 到更新并更新 节点上的 iptables/ipvs 规则，这个过程是异步的，中间存在一点时间差，所以有可能存在 Pod 中的进程已经没有监听，但 iptables/ipvs 规则还没更新的情况)。针对这种情况，建议给容器加一个 preStop，在真正销毁 Pod 之前等待一段时间，留时间给 kube-proxy 更新转发规则，更新完之后就不会再有新连接往这个旧 Pod 转发了，preStop 示例:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;lifecycle:
-  preStop:
-    exec:
-      command:
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;lifecycle&lt;/span&gt;:
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;preStop&lt;/span&gt;:
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;exec&lt;/span&gt;:
+      &lt;span style=&#34;color:#66d9ef&#34;&gt;command&lt;/span&gt;:
       - /bin/bash
       - -c
       - sleep &lt;span style=&#34;color:#ae81ff&#34;&gt;30&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;另外，还可能是新的 Pod 启动比较慢，虽然状态已经 Ready，但实际上可能端口还没监听，新的请求被转发到这个还没完全启动的 Pod 就会报错连接被拒绝。针对这种情况，建议给容器加就绪检查 (readinessProbe)，让容器真正启动完之后才将其状态置为 Ready，然后 kube-proxy 才会更新转发规则，这样就能保证新的请求只被转发到完全启动的 Pod，readinessProbe 示例:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;readinessProbe:
-  httpGet:
-    path: /healthz
-    port: &lt;span style=&#34;color:#ae81ff&#34;&gt;80&lt;/span&gt;
-    httpHeaders:
-    - name: X-Custom-Header
-      value: Awesome
-  initialDelaySeconds: &lt;span style=&#34;color:#ae81ff&#34;&gt;15&lt;/span&gt;
-  timeoutSeconds: &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;readinessProbe&lt;/span&gt;:
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;httpGet&lt;/span&gt;:
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;path&lt;/span&gt;: /healthz
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;port&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;80&lt;/span&gt;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;httpHeaders&lt;/span&gt;:
+    - &lt;span style=&#34;color:#66d9ef&#34;&gt;name&lt;/span&gt;: X-Custom-Header
+      &lt;span style=&#34;color:#66d9ef&#34;&gt;value&lt;/span&gt;: Awesome
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;initialDelaySeconds&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;15&lt;/span&gt;
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;timeoutSeconds&lt;/span&gt;: &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;&lt;code&gt;Connection timed out&lt;/code&gt;: 连接超时。通常是连接还没建立，client 发 SYN 请求建立连接一直等到超时时间都没有收到 ACK，然后就报错连接超时。这个可能场景跟前面 &lt;code&gt;Connection refused&lt;/code&gt; 可能的场景类似，不同点在于端口有监听，但进程无法正常响应了: 转发规则还没更新，旧 Pod 的进程正在停止过程中，虽然端口有监听，但已经不响应了；或者转发规则更新了，新 Pod 端口也监听了，但还没有真正就绪，还没有能力处理新请求。针对这些情况的建议跟前面一样：加 preStop 和 readinessProbe。&lt;/p&gt;
@@ -123,15 +123,15 @@ $ ip a
       <author>roc@imroc.io (roc)</author>
       <guid>https://imroc.io/posts/kubernetes-service-topology/</guid>
       <description>&lt;p&gt;今天给大家介绍下我参与开发的一个 k8s v1.17 新特性: 拓扑感知服务路由。&lt;/p&gt;
-&lt;h2 id=&#34;heading&#34;&gt;名词解释&lt;/h2&gt;
+&lt;h2 id=&#34;名词解释&#34;&gt;名词解释&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;拓扑域: 表示在集群中的某一类 &amp;ldquo;地方&amp;rdquo;，比如某节点、某机架、某可用区或某地域等，这些都可以作为某种拓扑域。&lt;/li&gt;
 &lt;li&gt;endpoint: k8s 某个服务的某个 ip+port，通常是 pod 的 ip+port。&lt;/li&gt;
 &lt;li&gt;service: k8s 的 service 资源(服务)，关联一组 endpoint ，访问 service 会被转发到关联的某个 endpoint 上。&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h2 id=&#34;heading-1&#34;&gt;背景&lt;/h2&gt;
+&lt;h2 id=&#34;背景&#34;&gt;背景&lt;/h2&gt;
 &lt;p&gt;拓扑感知服务路由，此特性最初由杜军大佬提出并设计。为什么要设计此特性呢？想象一下，k8s 集群节点分布在不同的地方，service 对应的 endpoints 分布在不同节点，传统转发策略会对所有 endpoint 做负载均衡，通常会等概率转发，当访问 service 时，流量就可能被分散打到这些不同的地方。虽然 service 转发做了负载均衡，但如果 endpoint 距离比较远，流量转发过去网络时延就相对比较高，会影响网络性能，在某些情况下甚至还可能会付出额外的流量费用。要是如能实现 service 就近转发 endpoint，是不是就可以实现降低网络时延，提升网络性能了呢？是的！这也正是该特性所提出的目的和意义。&lt;/p&gt;
-&lt;h2 id=&#34;k8s-&#34;&gt;k8s 亲和性&lt;/h2&gt;
+&lt;h2 id=&#34;k8s-亲和性&#34;&gt;k8s 亲和性&lt;/h2&gt;
 &lt;p&gt;service 的就近转发实际就是一种网络的亲和性，倾向于转发到离自己比较近的 endpoint。在此特性之前，已经在调度和存储方面有一些亲和性的设计与实现:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;节点亲和性 (Node Affinity): 让 Pod 被调度到符合一些期望条件的 Node 上，比如限制调度到某一可用区，或者要求节点支持 GPU，这算是调度亲和，调度结果取决于节点属性。&lt;/li&gt;

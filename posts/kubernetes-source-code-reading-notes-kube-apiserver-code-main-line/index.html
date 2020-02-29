@@ -23,7 +23,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="roc" />
 
-  <meta name="generator" content="Hugo 0.62.0" />
+  <meta name="generator" content="Hugo 0.65.3" />
   <link rel="canonical" href="https://imroc.io/posts/kubernetes-source-code-reading-notes-kube-apiserver-code-main-line/" />
   <link rel="alternate" href="https://imroc.io/index.xml" type="application/rss+xml" title="roc"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css"
     integrity="sha384-9eLZqc9ds8eNjO3TmqPeYcDj8n+Qfa4nuSiGYa6DjLNcv9BtN69ZIulL9+8CqC9Y" crossorigin="anonymous">
@@ -164,7 +164,7 @@ var _hmt = _hmt || [];
 <script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/algoliasearch.min.js"></script>
 <script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/autocomplete.min.js"></script>
 <script>
-    var client = algoliasearch("B6Q6PSGUV5", "d04f855d3a39eed8ad8d9365ba7c86af");
+    var client = algoliasearch("B6Q6PSGUV5", "5b4678e9995fe4211c4fa43ad2ffdab5");
     var index = client.initIndex("imroc-blog");
     
     autocomplete('#aa-search-input', {
@@ -276,17 +276,17 @@ var _hmt = _hmt || [];
 <aside class="toc">
   <nav id="TableOfContents">
   <ul>
-    <li><a href="#heading">前言</a></li>
-    <li><a href="#heading-1">开始</a></li>
-    <li><a href="#heading-2">总结</a></li>
+    <li><a href="#前言">前言</a></li>
+    <li><a href="#开始">开始</a></li>
+    <li><a href="#总结">总结</a></li>
   </ul>
 </nav>
 </aside>
 
 
-                <h2 id="heading">前言</h2>
+                <h2 id="前言">前言</h2>
 <p>我最近开始研究 kubernetes 源码，希望将阅读笔记记录下来，分享阅读思路和心得，更好的理解 kubernetes，这是第一篇，从 <code>kube-apiserver</code> 开始。</p>
-<h2 id="heading-1">开始</h2>
+<h2 id="开始">开始</h2>
 <p>k8s各组件main包在cmd目录下，即各个程序的入口处，来看看 <code>kube-apiserver</code> 的源码</p>
 <p><strong>注：</strong> 三点代表省略的代码，只关注主要的代码，让思路更清晰</p>
 <p><code>cmd/kube-apiserver/apiserver.go</code></p>
@@ -336,7 +336,7 @@ var _hmt = _hmt || [];
 }
 </code></pre></div><p>这里面创建了一个 <code>server</code> ，经过 <code>PrepareRun()</code> 返回 <code>preparedGenericAPIServer</code> 并最终调用其方法 <code>Run()</code></p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">// Run spawns the secure http server. It only returns if stopCh is closed
-</span><span style="color:#75715e"></span><span style="color:#75715e">// or the secure port cannot be listened on initially.
+</span><span style="color:#75715e">// or the secure port cannot be listened on initially.
 </span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">s</span> <span style="color:#a6e22e">preparedGenericAPIServer</span>) <span style="color:#a6e22e">Run</span>(<span style="color:#a6e22e">stopCh</span> <span style="color:#f92672">&lt;-</span><span style="color:#66d9ef">chan</span> <span style="color:#66d9ef">struct</span>{}) <span style="color:#66d9ef">error</span> {
 	<span style="color:#f92672">...</span>
 
@@ -355,8 +355,8 @@ var _hmt = _hmt || [];
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#a6e22e">stopCh</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">server</span>.<span style="color:#a6e22e">SetupSignalHandler</span>()
 </code></pre></div><p>很容易看出来这个 channel 跟系统信号量绑定了，即 <code>Ctrl+c</code> 或 <code>kill</code> 通知程序关闭的时候会 close 这个 channel ，然后调用 <code>&lt;-stopCh</code> 的地方就会停止阻塞，做关闭程序需要的一些清理操作实现优雅关闭</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">// SetupSignalHandler registered for SIGTERM and SIGINT. A stop channel is returned
-</span><span style="color:#75715e"></span><span style="color:#75715e">// which is closed on one of these signals. If a second signal is caught, the program
-</span><span style="color:#75715e"></span><span style="color:#75715e">// is terminated with exit code 1.
+</span><span style="color:#75715e">// which is closed on one of these signals. If a second signal is caught, the program
+</span><span style="color:#75715e">// is terminated with exit code 1.
 </span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">SetupSignalHandler</span>() (<span style="color:#a6e22e">stopCh</span> <span style="color:#f92672">&lt;-</span><span style="color:#66d9ef">chan</span> <span style="color:#66d9ef">struct</span>{}) {
 	close(<span style="color:#a6e22e">onlyOneSignalHandler</span>) <span style="color:#75715e">// panics when called twice
 </span><span style="color:#75715e"></span>
@@ -374,7 +374,7 @@ var _hmt = _hmt || [];
 }
 </code></pre></div><p>我们再来看看 <code>NonBlockingRun()</code> 这个函数的实现</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">// NonBlockingRun spawns the secure http server. An error is
-</span><span style="color:#75715e"></span><span style="color:#75715e">// returned if the secure port cannot be listened on.
+</span><span style="color:#75715e">// returned if the secure port cannot be listened on.
 </span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">s</span> <span style="color:#a6e22e">preparedGenericAPIServer</span>) <span style="color:#a6e22e">NonBlockingRun</span>(<span style="color:#a6e22e">stopCh</span> <span style="color:#f92672">&lt;-</span><span style="color:#66d9ef">chan</span> <span style="color:#66d9ef">struct</span>{}) <span style="color:#66d9ef">error</span> {
 	<span style="color:#f92672">...</span>
 
@@ -394,8 +394,8 @@ var _hmt = _hmt || [];
 }
 </code></pre></div><p>可以看到又调用了 <code>s.SecureServingInfo.Serve()</code> 来启动 http 服务器，继续深入进去</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">// serveSecurely runs the secure http server. It fails only if certificates cannot
-</span><span style="color:#75715e"></span><span style="color:#75715e">// be loaded or the initial listen call fails. The actual server loop (stoppable by closing
-</span><span style="color:#75715e"></span><span style="color:#75715e">// stopCh) runs in a go routine, i.e. serveSecurely does not block.
+</span><span style="color:#75715e">// be loaded or the initial listen call fails. The actual server loop (stoppable by closing
+</span><span style="color:#75715e">// stopCh) runs in a go routine, i.e. serveSecurely does not block.
 </span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">s</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">SecureServingInfo</span>) <span style="color:#a6e22e">Serve</span>(<span style="color:#a6e22e">handler</span> <span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">Handler</span>, <span style="color:#a6e22e">shutdownTimeout</span> <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Duration</span>, <span style="color:#a6e22e">stopCh</span> <span style="color:#f92672">&lt;-</span><span style="color:#66d9ef">chan</span> <span style="color:#66d9ef">struct</span>{}) <span style="color:#66d9ef">error</span> {
 	<span style="color:#f92672">...</span>
 
@@ -418,36 +418,36 @@ func RunServer<span style="color:#f92672">(</span>
 	server *http.Server,
 	ln net.Listener,
 	shutDownTimeout time.Duration,
-	stopCh &lt;-chan struct<span style="color:#f92672">{</span><span style="color:#f92672">}</span>,
+	stopCh &lt;-chan struct<span style="color:#f92672">{}</span>,
 <span style="color:#f92672">)</span> error <span style="color:#f92672">{</span>
 	...
 
 	// Shutdown server gracefully.
-	go func<span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+	go func<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
 		&lt;-stopCh
-		ctx, cancel :<span style="color:#f92672">=</span> context.WithTimeout<span style="color:#f92672">(</span>context.Background<span style="color:#f92672">(</span><span style="color:#f92672">)</span>, shutDownTimeout<span style="color:#f92672">)</span>
+		ctx, cancel :<span style="color:#f92672">=</span> context.WithTimeout<span style="color:#f92672">(</span>context.Background<span style="color:#f92672">()</span>, shutDownTimeout<span style="color:#f92672">)</span>
 		server.Shutdown<span style="color:#f92672">(</span>ctx<span style="color:#f92672">)</span>
-		cancel<span style="color:#f92672">(</span><span style="color:#f92672">)</span>
-	<span style="color:#f92672">}</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span>
+		cancel<span style="color:#f92672">()</span>
+	<span style="color:#f92672">}()</span>
 
-	go func<span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+	go func<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
 		...
 
 		err :<span style="color:#f92672">=</span> server.Serve<span style="color:#f92672">(</span>listener<span style="color:#f92672">)</span>
 
-		msg :<span style="color:#f92672">=</span> fmt.Sprintf<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Stopped listening on %s&#34;</span>, ln.Addr<span style="color:#f92672">(</span><span style="color:#f92672">)</span>.String<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span>
+		msg :<span style="color:#f92672">=</span> fmt.Sprintf<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Stopped listening on %s&#34;</span>, ln.Addr<span style="color:#f92672">()</span>.String<span style="color:#f92672">())</span>
 		<span style="color:#66d9ef">select</span> <span style="color:#f92672">{</span>
 		<span style="color:#66d9ef">case</span> &lt;-stopCh:
 			glog.Info<span style="color:#f92672">(</span>msg<span style="color:#f92672">)</span>
 		default:
-			panic<span style="color:#f92672">(</span>fmt.Sprintf<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;%s due to error: %v&#34;</span>, msg, err<span style="color:#f92672">)</span><span style="color:#f92672">)</span>
+			panic<span style="color:#f92672">(</span>fmt.Sprintf<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;%s due to error: %v&#34;</span>, msg, err<span style="color:#f92672">))</span>
 		<span style="color:#f92672">}</span>
-	<span style="color:#f92672">}</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span>
+	<span style="color:#f92672">}()</span>
 
 	<span style="color:#66d9ef">return</span> nil
 <span style="color:#f92672">}</span>
 </code></pre></div><p>最终看到在后面那个新的 goroutine 中，调用了 <code>server.Serve()</code> 来启动 http 服务器，正常启动的情况下会一直阻塞在这里。</p>
-<h2 id="heading-2">总结</h2>
+<h2 id="总结">总结</h2>
 <p>至此，我们初步把 <code>kube-apiserver</code> 源码的主线理清楚了，具体还有很多细节我们后面再继续深入。要理清思路我们就需要尽量先屏蔽细节，寻找我们想知道的逻辑路线。</p>
 
             </article>
@@ -601,7 +601,7 @@ func RunServer<span style="color:#f92672">(</span>
             更新
           </p>
           <p class="credits theme-by text-muted">
-            由 <a href="http://gohugo.io">Hugo v0.62.0</a> 强力驱动 &nbsp;&bull;&nbsp; 主题 <a href="https://github.com/imroc/xhugo">xhugo</a>
+            由 <a href="http://gohugo.io">Hugo v0.65.3</a> 强力驱动 &nbsp;&bull;&nbsp; 主题 <a href="https://github.com/imroc/xhugo">xhugo</a>
           </p>
         </div>
       </div>

@@ -20,7 +20,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="roc" />
 
-  <meta name="generator" content="Hugo 0.62.0" />
+  <meta name="generator" content="Hugo 0.65.3" />
   <link rel="canonical" href="https://imroc.io/en/posts/" />
   <link rel="alternate" href="https://imroc.io/en/index.xml" type="application/rss+xml" title="roc"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css"
     integrity="sha384-9eLZqc9ds8eNjO3TmqPeYcDj8n+Qfa4nuSiGYa6DjLNcv9BtN69ZIulL9+8CqC9Y" crossorigin="anonymous">
@@ -149,7 +149,7 @@ var _hmt = _hmt || [];
 <script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/algoliasearch.min.js"></script>
 <script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/autocomplete.min.js"></script>
 <script>
-    var client = algoliasearch("B6Q6PSGUV5", "d04f855d3a39eed8ad8d9365ba7c86af");
+    var client = algoliasearch("B6Q6PSGUV5", "5b4678e9995fe4211c4fa43ad2ffdab5");
     var index = client.initIndex("imroc-blog-en");
     
     autocomplete('#aa-search-input', {
@@ -213,7 +213,7 @@ var _hmt = _hmt || [];
               </p>
               <div class="post-entry">
                 
-                  <p>Hello everyone, I'm roc, from the Tencent Kubernetes Engine (TKE) team. Today I will introduce a new feature of kubernetes in v1.17 that I am involved in: topology-aware service routing.</p>
+                  <p>Hello everyone, I&rsquo;m roc, from the Tencent Kubernetes Engine (TKE) team. Today I will introduce a new feature of kubernetes in v1.17 that I am involved in: topology-aware service routing.</p>
 <blockquote>
 <p>This article is translated from my Chinese blog post, which received a great response in China and was reposted by many well-known Chinese container technology media accounts.</p>
 </blockquote>
@@ -226,7 +226,7 @@ var _hmt = _hmt || [];
 <h2 id="background">Background</h2>
 <p>Topology-aware service routing, simply called <code>Service Topology</code>. This feature was originally proposed and designed by Jun Du (<a href="https://github.com/m1093782566">@m1093782566</a>). Why design this feature? Imagine that the kubernetes cluster nodes are distributed in different places and the endpoints corresponding to the service are distributed in different nodes. The traditional forwarding strategy will load balance all endpoints and usually forward them with equal probability. When accessing the service, the traffic may be scattered and hit these different places. Although service forwarding is load-balanced, if the endpoints are far away, the network forwarding will have a high latency, which will affect network performance, and in some cases may even pay additional traffic costs. If the service can forward the endpoints nearby, will it be possible to reduce network latency and improve network performance? Yes! And this is exactly the purpose and significance of this feature.</p>
 <h2 id="kubernetes-affinity">Kubernetes Affinity</h2>
-<p>The service's nearest forwarding is actually a kind of network affinity, and it tends to forward to the endpoints closer to itself. Prior to this feature, there have been some other affinity designs and implementations in terms of scheduling and storage:</p>
+<p>The service&rsquo;s nearest forwarding is actually a kind of network affinity, and it tends to forward to the endpoints closer to itself. Prior to this feature, there have been some other affinity designs and implementations in terms of scheduling and storage:</p>
 <ul>
 <li>Node Affinity: Allows Pods to be scheduled to Nodes that meet certain expectations, such as limiting scheduling to a certain Availability Zone, or requiring nodes to support GPUs. This is considered scheduling affinity, and the scheduling results depend on node attributes.</li>
 <li>Pod affinity and anti-affinity: Allows pod to be scheduled depends on ther pods. E.g. Let a group of pods to be scheduled to nodes in the same topology domain, or dispersed to nodes in different topology domains. This is also can be considered as scheduling affinity, and the scheduling result depends on other pods.</li>
@@ -236,6 +236,39 @@ var _hmt = _hmt || [];
 </ul>
 <p>However, kubernetes currently does not have an affinity capability on the network side. The new feature of topology-aware service routing can just fill this gap. This feature enables services can be forwarded nearby instead of all endpoints with equal probability forwarding.</p>
                   <a href="https://imroc.io/en/posts/kubernetes-service-topology/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <span class="post-meta">
+                  
+                    #<a href='https://imroc.io/en/tags/kubernetes/'>kubernetes</a>&nbsp;
+                  
+                </span>
+              
+            </article>
+          
+            <article class="post-preview">
+              <a href="https://imroc.io/en/posts/troubleshooting-with-kubernetes-network/">
+                <h2 class="post-title">Troubleshooting Kubernetes Network</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                Posted on August 12, 2019
+              </p>
+              <div class="post-entry">
+                
+                  <p>Hi, I&rsquo;m roc, from the Tencent Kubernetes Engine (<a href="https://intl.cloud.tencent.com/product/tke">TKE</a>) team. I often help users to solve various problems of kubernetes and have accumulated rich experience. This article will share some thoughts, in-depth analysis of several complicated kubernetes network problem, which contains huge amount of information, you may need read it again and again if lack some relevant expereence.  I recommend collecting this article and reading it again and again, after I fully understand it, I believe that your skills will be more solid and solve the problem. Ability will be greatly improved.</p>
+<blockquote>
+<p>The problems found in this article are encountered when using TKE. The network environments of different manufacturers may be different. The paper will explain the different network environments of the problems.</p>
+</blockquote>
+<p>大家好，我是 roc，来自腾讯云容器服务(TKE)团队，经常帮助用户解决各种 K8S 的疑难杂症，积累了比较丰富的经验，本文分享几个比较复杂的网络方面的问题排查和解决思路，深入分析并展开相关知识，信息量巨大，相关经验不足的同学可能需要细细品味才能消化，我建议收藏本文反复研读，当完全看懂后我相信你的功底会更加扎实，解决问题的能力会大大提升。</p>
+<blockquote>
+<p>本文发现的问题是在使用 TKE 时遇到的，不同厂商的网络环境可能不一样，文中会对不同的问题的网络环境进行说明</p>
+</blockquote>
+                  <a href="https://imroc.io/en/posts/troubleshooting-with-kubernetes-network/" class="post-read-more">[Read More]</a>
                 
               </div>
 
@@ -308,7 +341,7 @@ var _hmt = _hmt || [];
             updated
           </p>
           <p class="credits theme-by text-muted">
-            <a href="http://gohugo.io">Hugo v0.62.0</a> powered &nbsp;&bull;&nbsp; Theme by <a href="https://github.com/imroc/xhugo">xhugo</a>
+            <a href="http://gohugo.io">Hugo v0.65.3</a> powered &nbsp;&bull;&nbsp; Theme by <a href="https://github.com/imroc/xhugo">xhugo</a>
           </p>
         </div>
       </div>
