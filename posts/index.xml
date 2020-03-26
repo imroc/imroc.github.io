@@ -8,10 +8,19 @@
     <language>zh</language>
     <managingEditor>roc@imroc.io (roc)</managingEditor>
     <webMaster>roc@imroc.io (roc)</webMaster>
-    <lastBuildDate>Sun, 12 Jan 2020 19:20:00 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 26 Mar 2020 22:50:00 +0800</lastBuildDate>
     
 	<atom:link href="https://imroc.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>打造云原生大型分布式监控系统(一): 大规模场景下 Prometheus 的优化手段</title>
+      <link>https://imroc.io/posts/build-cloud-native-large-scale-distributed-monitoring-system-1/</link>
+      <pubDate>Thu, 26 Mar 2020 22:50:00 +0800</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/posts/build-cloud-native-large-scale-distributed-monitoring-system-1/</guid>
+      <description>概述 Prometheus 几乎已成为监控领域的事实标准，它自带高效的时序数据库存储，可以让单台 Prometheus 能够高效的处理大量的数据，还有友好并且强大的 PromQL 语法，可以用来灵活</description>
+    </item>
     
     <item>
       <title>Kubernetes 疑难杂症排查分享：神秘的溢出与丢包</title>
@@ -378,15 +387,6 @@ $ ip a
       <author>roc@imroc.io (roc)</author>
       <guid>https://imroc.io/posts/golang-select/</guid>
       <description>很多时候我们需要让main函数不退出，让它在后台一直执行，例如： func main() { for i := 0; i &amp;lt; 20; i++ { //启动20个协程处理消息队列中的消息 c := consumer.New() go c.Start() } select</description>
-    </item>
-    
-    <item>
-      <title>打造云原生大型分布式监控系统(一): 大规模场景下 Prometheus 的优化手段</title>
-      <link>https://imroc.io/posts/build-cloud-native-large-scale-distributed-monitoring-system-1/</link>
-      <pubDate>Fri, 26 Mar 2010 19:20:00 +0800</pubDate>
-      <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/build-cloud-native-large-scale-distributed-monitoring-system-1/</guid>
-      <description>概述 Prometheus 几乎已成为监控领域的事实标准，它自带高效的时序数据库存储，可以让单台 Prometheus 能够高效的处理大量的数据，还有友好并且强大的 PromQL 语法，可以用来灵活</description>
     </item>
     
   </channel>
