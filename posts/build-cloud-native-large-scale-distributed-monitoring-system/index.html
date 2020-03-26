@@ -328,8 +328,9 @@ var _hmt = _hmt || [];
     <span style="color:#66d9ef">kubernetes_sd_configs</span>:
     - <span style="color:#66d9ef">role</span>: node
 
+    <span style="color:#75715e"># 通常不校验 kubelet 的 server 证书，避免报 x509: certificate signed by unknown authority</span>
     <span style="color:#66d9ef">tls_config</span>:
-      <span style="color:#66d9ef">insecure_skip_verify: true # 通常不校验 kubelet 的 server 证书，避免报 x509</span>: certificate signed by unknown authority
+      <span style="color:#66d9ef">insecure_skip_verify</span>: <span style="color:#66d9ef">true</span>
 
     <span style="color:#66d9ef">relabel_configs</span>:
     - <span style="color:#66d9ef">source_labels</span>: [__address__]
