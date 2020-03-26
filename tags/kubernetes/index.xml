@@ -283,10 +283,10 @@ $ ip a
     
     <item>
       <title>打造云原生大型分布式监控系统(一): 大规模场景下 Prometheus 的优化手段</title>
-      <link>https://imroc.io/posts/build-cloud-native-large-scale-distributed-monitoring-system/</link>
+      <link>https://imroc.io/posts/build-cloud-native-large-scale-distributed-monitoring-system-1/</link>
       <pubDate>Fri, 26 Mar 2010 19:20:00 +0800</pubDate>
       <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/posts/build-cloud-native-large-scale-distributed-monitoring-system/</guid>
+      <guid>https://imroc.io/posts/build-cloud-native-large-scale-distributed-monitoring-system-1/</guid>
       <description>概述 Prometheus 几乎已成为监控领域的事实标准，它自带高效的时序数据库存储，可以让单台 Prometheus 能够高效的处理大量的数据，还有友好并且强大的 PromQL 语法，可以用来灵活</description>
     </item>
     
