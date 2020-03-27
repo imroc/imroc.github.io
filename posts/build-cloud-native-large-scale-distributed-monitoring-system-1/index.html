@@ -358,7 +358,8 @@ var _hmt = _hmt || [];
 <p>更多说明和配置示例请参考官方文档: <a href="https://prometheus.io/docs/prometheus/latest/federation/">https://prometheus.io/docs/prometheus/latest/federation/</a></p>
 <h2 id="prometheus-高可用">Prometheus 高可用</h2>
 <p>虽然上面我们通过一些列操作将 Prometheus 进行了分布式改造，但并没有解决 Prometheus 本身的高可用问题，即如果其中一个实例挂了，数据的查询和完整性都将受到影响。</p>
-<p>我们可以将所有 Prometheus 实例都使用两个相同副本，分别挂载数据盘，它们都采集相同的服务，所以它们的数据是一致的，查询它们之中任意一个都可以，所以可以在它们前面再挂一层负载均衡(比如 Nginx 或 HAProxy) ，所有查询都先经过这个负载均衡再到其中一台 Prometheus，如果其中一台挂掉就从负载列表里踢掉不再转发。</p>
+<p>我们可以将所有 Prometheus 实例都使用两个相同副本，分别挂载数据盘，它们都采集相同的服务，所以它们的数据是一致的，查询它们之中任意一个都可以，所以可以在它们前面再挂一层负载均衡，所有查询都经过这个负载均衡分流到其中一台 Prometheus，如果其中一台挂掉就从负载列表里踢掉不再转发。</p>
+<p>这里的负载均衡可以根据实际环境选择合适的方案，可以用 Nginx 或 HAProxy，在 Kubernetes 环境，通常使用 Kubernentes 的 Service，由 kube-proxy 生成的 iptables/ipvs 规则转发，如果使用 Istio，还可以用 VirtualService，由 envoy sidecar 去转发。</p>
 <p><img src="https://imroc.io/assets/blog/prometheus-ha.png" alt=""></p>
 <p>这样就实现了 Prometheus 的高可用，简单起见，上面的图仅展示单个 Prometheus 的高可用，当你可以将其拓展，代入应用到上面其它的优化手段中，实现整体的高可用。</p>
 <h2 id="总结">总结</h2>
