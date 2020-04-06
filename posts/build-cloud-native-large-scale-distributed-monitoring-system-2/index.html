@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title> 打造云原生大型分布式监控系统(二): Thanos 架构详解 - roc的博客|Cloud Native|Kubernetes|Go|Golang|Service Mesh</title>
+  <meta name="description" content="roc的博客|Cloud Native|Kubernetes|Go|Golang|Service Mesh" />
+  <meta property="og:title" content="打造云原生大型分布式监控系统(二): Thanos 架构详解" />
+  <meta name="twitter:title" content="打造云原生大型分布式监控系统(二): Thanos 架构详解" />
+  <meta name="description" content="概述 之前在 大规模场景下 Prometheus 的优化手段 中，我们想尽 &ldquo;千方百计&rdquo; 才好不容易把 Prometheus 优化到适配大规模场景，部署和后期维护麻烦且复">
+  <meta property="og:description" content="概述 之前在 大规模场景下 Prometheus 的优化手段 中，我们想尽 &ldquo;千方百计&rdquo; 才好不容易把 Prometheus 优化到适配大规模场景，部署和后期维护麻烦且复">
+  <meta name="twitter:description" content="概述 之前在 大规模场景下 Prometheus 的优化手段 中，我们想尽 &ldquo;千方百计&rdquo; 才好不容易把 Prometheus 优化到适配大规模场景，部署和后期维护麻烦且复">
+  <meta name="author" content="{Description { .Site.Author.name }}"/>
+  <link href='https://imroc.io/favicon.png' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://res.cloudinary.com/imroc/image/upload/v1521031841/avatar.png" />
+  <meta name="twitter:image" content="https://res.cloudinary.com/imroc/image/upload/v1521031841/avatar.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@imrocchan" />
+  <meta name="twitter:creator" content="@imrocchan" />
+  <meta property="og:url" content="https://imroc.io/posts/build-cloud-native-large-scale-distributed-monitoring-system-2/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="roc" />
+
+  <meta name="generator" content="Hugo 0.65.3" />
+  <link rel="canonical" href="https://imroc.io/posts/build-cloud-native-large-scale-distributed-monitoring-system-2/" />
+  <link rel="alternate" href="https://imroc.io/index.xml" type="application/rss+xml" title="roc"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css"
+    integrity="sha384-9eLZqc9ds8eNjO3TmqPeYcDj8n+Qfa4nuSiGYa6DjLNcv9BtN69ZIulL9+8CqC9Y" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/5.5.0/css/fontawesome.min.css"
+    integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.bootcss.com/twitter-bootstrap/3.3.7/css/bootstrap.min.css"
+    integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" /><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+  
+
+
+
+
+
+
+<link rel="stylesheet" href='/css/bundle.min.8fad4c9e81931afed0cc9eee450df2ae0e60d1129a4cd7ee011629c97c6394e9.css' integrity='sha256-j61MnoGTGv7QzJ7uRQ3yrg5g0RKaTNfuARYpyXxjlOk='><script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?05e1e8b7484a08c51cd0953664168cd7";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">切换导航</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://imroc.io/">roc</a>
+    </div>
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">分类</a>
+              <div class="navlinks-children">
+                
+                
+                  <a href="https://imroc.io/categories/kubernetes">kubernetes</a>
+                
+                
+                  <a href="https://imroc.io/categories/docker">docker</a>
+                
+                
+                  <a href="https://imroc.io/categories/golang">golang</a>
+                
+                
+                  <a href="https://imroc.io/categories/geek">geek</a>
+                
+                
+                  <a href="https://imroc.io/categories/istio">istio</a>
+                
+              </div>
+            </li>
+          
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">书籍</a>
+              <div class="navlinks-children">
+                
+                
+                  <a href="https://k8s.imroc.io">Kubernetes 实践指南</a>
+                
+                
+                  <a href="https://istio.imroc.io">Istio 实践指南</a>
+                
+                
+                  <a href="https://book.kubetencent.io">腾讯云容器服务指南</a>
+                
+              </div>
+            </li>
+          
+        
+
+        
+          
+            <li>
+              
+                
+              
+                
+                  <a href="/en" lang="en">English</a>
+                
+              
+            </li>
+          
+        
+
+        
+        <li>
+          <a href="#modalSearch" data-toggle="modal" data-target="#modalSearch" style="outline: none;">
+            <span id="searchGlyph" class="glyphicon glyphicon-search"></span>
+          </a>
+        </li>
+        
+      </ul>
+    </div>
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="roc" href="https://imroc.io/">
+            <img class="avatar-img" src="https://res.cloudinary.com/imroc/image/upload/v1521031841/avatar.png" alt="roc" />
+          </a>
+        
+      </div>
+    </div>
+  </div>
+</nav>
+
+
+  <div id="modalSearch" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">搜索</h4>
+        </div>
+        <div class="modal-body">
+            
+<div class="aa-input-container" id="aa-input-container">
+    <input type="search" id="aa-search-input" class="aa-input-search" placeholder="Search for titles or URIs..."
+        name="search" autocomplete="off" />
+    <svg class="aa-input-icon" viewBox="654 -372 1664 1664">
+        <path
+            d="M1806,332c0-123.3-43.8-228.8-131.5-316.5C1586.8-72.2,1481.3-116,1358-116s-228.8,43.8-316.5,131.5  C953.8,103.2,910,208.7,910,332s43.8,228.8,131.5,316.5C1129.2,736.2,1234.7,780,1358,780s228.8-43.8,316.5-131.5  C1762.2,560.8,1806,455.3,1806,332z M2318,1164c0,34.7-12.7,64.7-38,90s-55.3,38-90,38c-36,0-66-12.7-90-38l-343-342  c-119.3,82.7-252.3,124-399,124c-95.3,0-186.5-18.5-273.5-55.5s-162-87-225-150s-113-138-150-225S654,427.3,654,332  s18.5-186.5,55.5-273.5s87-162,150-225s138-113,225-150S1262.7-372,1358-372s186.5,18.5,273.5,55.5s162,87,225,150s113,138,150,225  S2062,236.7,2062,332c0,146.7-41.3,279.7-124,399l343,343C2305.7,1098.7,2318,1128.7,2318,1164z" />
+    </svg>
+</div>
+
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/algoliasearch.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/autocomplete.min.js"></script>
+<script>
+    var client = algoliasearch("B6Q6PSGUV5", "5b4678e9995fe4211c4fa43ad2ffdab5");
+    var index = client.initIndex("imroc-blog");
+    
+    autocomplete('#aa-search-input', {
+        hint: false
+    }, {
+        source: autocomplete.sources.hits(index, {
+            hitsPerPage: 5
+        }),
+        
+        displayKey: 'name',
+        
+        templates: {
+            
+            suggestion: function (suggestion) {
+                return '<span>' + '<a href="/' + suggestion.uri + '">' + suggestion._highlightResult.title.value +
+                        '</a></span>';
+            }
+        }
+    });
+</script>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    
+  
+  
+  
+
+
+
+
+  
+    <div id="header-big-imgs" data-num-img=1 data-img-src-1="https://res.cloudinary.com/imroc/image/upload/v1515849754/blog/banner/hacker.jpg" data-img-desc-1="Hacker"></div>
+  
+
+  <header class="header-section has-img">
+    
+      <div class="intro-header big-img">
+        
+        
+        <div class="container">
+          <div class="row">
+              <div class="col-lg-12 col-md-12 col-md-offset-0">
+                
+                <div class="post-heading">
+                
+                  
+                     <h1>打造云原生大型分布式监控系统(二): Thanos 架构详解</h1>
+                     
+                    <span class="post-meta">
+  
+  发表于 2020-04-06
+  
+  
+</span>
+
+
+                    
+                  
+                  
+              </div>
+            </div>
+          </div>
+        </div>
+        <span class="img-desc" style="display: inline;"></span>
+      </div>
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12 col-md-12 col-md-offset-0">
+            <div class="posts-heading">
+                <h1 align="center">打造云原生大型分布式监控系统(二): Thanos 架构详解</h1>
+                
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main" itemscope itemtype="http://schema.org/Article">
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            
+            <div>
+                
+                <h5 id="tags" style="margin-top: 30px;">标签: 
+                  
+                      <a
+                        href='https://imroc.io/tags/kubernetes/'>kubernetes</a>
+                      &nbsp;
+                  
+                </h5>
+            </div>
+            
+              
+            <article role="main" class="blog-post" itemprop="articleBody" id="content">
+                
+<aside class="toc">
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#概述">概述</a></li>
+    <li><a href="#thanos-架构">Thanos 架构</a></li>
+    <li><a href="#架构设计剖析">架构设计剖析</a>
+      <ul>
+        <li><a href="#query-与-sidecar">Query 与 Sidecar</a></li>
+        <li><a href="#store-gateway">Store Gateway</a></li>
+        <li><a href="#ruler">Ruler</a></li>
+        <li><a href="#compact">Compact</a></li>
+        <li><a href="#再看架构图">再看架构图</a></li>
+      </ul>
+    </li>
+    <li><a href="#sidecar-模式与-receiver-模式">Sidecar 模式与 Receiver 模式</a></li>
+    <li><a href="#总结">总结</a></li>
+  </ul>
+</nav>
+</aside>
+
+
+                <h2 id="概述">概述</h2>
+<p>之前在 <a href="../build-cloud-native-large-scale-distributed-monitoring-system-1">大规模场景下 Prometheus 的优化手段</a> 中，我们想尽 &ldquo;千方百计&rdquo; 才好不容易把 Prometheus 优化到适配大规模场景，部署和后期维护麻烦且复杂不说，还有很多不完美的地方，并且还无法满足一些更高级的诉求，比如查看时间久远的监控数据，对于一些时间久远不常用的 &ldquo;冷数据&rdquo;，最理想的方式就是存到廉价的对象存储中，等需要查询的时候能够自动加载出来。</p>
+<p>Thanos (没错，就是灭霸) 可以帮我们简化分布式 Prometheus 的部署与管理，并提供了一些的高级特性：<strong>全局视图</strong>，<strong>长期存储</strong>，<strong>高可用</strong>。下面我们来详细讲解一下。</p>
+<h2 id="thanos-架构">Thanos 架构</h2>
+<p>这是官方给出的架构图：</p>
+<p><img src="https://imroc.io/assets/blog/thanos-arch.jpg" alt=""></p>
+<p>这张图中包含了 Thanos 的几个核心组件，但并不包括所有组件，为了便于理解，我们先不细讲，简单介绍下图中这几个组件的作用：</p>
+<ul>
+<li>Thanos Query: 实现了 Prometheus API，将来自下游组件提供的数据进行聚合最终返回给查询数据的 client (如 grafana)，类似数据库中间件。</li>
+<li>Thanos Sidecar: 连接 Prometheus，将其数据提供给 Thanos Query 查询，并且/或者将其上传到对象存储，以供长期存储。</li>
+<li>Thanos Store Gateway: 将对象存储的数据暴露给 Thanos Query 去查询。</li>
+<li>Thanos Ruler: 对监控数据进行评估和告警，还可以计算出新的监控数据，将这些新数据提供给 Thanos Query 查询并且/或者上传到对象存储，以供长期存储。</li>
+<li>Thanos Compact: 将对象存储中的数据进行压缩和降低采样率，加速大时间区间监控数据查询的速度。</li>
+</ul>
+<h2 id="架构设计剖析">架构设计剖析</h2>
+<p>如何理解 Thanos 的架构设计的？我们可以自己先 YY 一下，要是自己来设计一个分布式 Prometheus 管理应用，会怎么做？</p>
+<h3 id="query-与-sidecar">Query 与 Sidecar</h3>
+<p>首先，监控数据的查询肯定不能直接查 Prometheus 了，因为会存在许多个 Prometheus 实例，每个 Prometheus 实例只能感知它自己所采集的数据。我们可以比较容易联想到数据库中间件，每个数据库都只存了一部分数据，中间件能感知到所有数据库，数据查询都经过数据库中间件来查，这个中间件收到查询请求再去查下游各个数据库中的数据，最后将这些数据聚合汇总返回给查询的客户端，这样就实现了将分布式存储的数据集中查询。</p>
+<p>实际上，Thanos 也是使用了类似的设计思想，Thanos Query 就是这个 &ldquo;中间价&rdquo; 的关键入口。它实现了 Prometheus 的 HTTP API，能够 &ldquo;看懂&rdquo; PromQL。这样，查询 Prometheus 监控数据的 client 就不直接查询 Prometheus 本身了，而是去查询 Thanos Query，Thanos Query 再去下游多个存储了数据的地方查数据，最后将这些数据聚合去重后返回给 client，也就实现了分布式 Prometheus 的数据查询。</p>
+<p>那么 Thanos Query 又如何去查下游分散的数据呢？Thanos 为此抽象了一套叫 Store API 的内部 gRPC 接口，其它一些组件通过这个接口来暴露数据给 Thanos Query，它自身也就可以做到完全无状态部署，实现高可用与动态扩展。</p>
+<p><img src="https://imroc.io/assets/blog/thanos-querier.svg" alt=""></p>
+<p>这些分散的数据可能来自哪些地方呢？首先，Prometheus 会将采集的数据存到本机磁盘上，如果我们直接用这些分散在各个磁盘上的数据，可以给每个 Prometheus 附带部署一个 Sidecar，这个 Sidecar 实现 Thanos Store API，当 Thanos Query 对其发起查询时，Sidecar 就读取跟它绑定部署的 Prometheus 实例上的监控数据返回给 Thanos Query。</p>
+<p><img src="https://imroc.io/assets/blog/thanos-sidecar.png" alt=""></p>
+<p>由于 Thanos Query 可以对数据进行聚合与去重，所以可以很轻松实现高可用：相同的 Prometheus 部署多个副本(都附带 Sidecar)，然后 Thanos Query 去所有 Sidecar 查数据，即便有一个 Prometheus 实例挂掉过一段时间，数据聚合与去重后仍然能得到完整数据。</p>
+<p>这种高可用做法还弥补了我们上篇文章中用负载均衡去实现 Prometheus 高可用方法的缺陷：如果其中一个 Prometheus 实例挂了一段时间然后又恢复了，它的数据就不完整，当负载均衡转发到它上面去查数据时，返回的结果就可能会有部分缺失。</p>
+<p>不过因为磁盘空间有限，所以 Prometheus 存储监控数据的能力也是有限的，通常会给 Prometheus 设置一个数据过期时间 (默认15天) 或者最大数据量大小，不断清理旧数据以保证磁盘不被撑爆。因此，我们无法看到时间比较久远的监控数据，有时候这也给我们的问题排查和数据统计造成一些困难。</p>
+<p>对于需要长期存储的数据，并且使用频率不那么高，最理想的方式是存进对象存储，各大云厂商都有对象存储服务，特点是不限制容量，价格非常便宜。</p>
+<p>Thanos 有几个组件都支持将数据上传到各种对象存储以供长期保存 (Prometheus TSDB 数据格式)，比如我们刚刚说的 Sidecar:</p>
+<p><img src="https://imroc.io/assets/blog/thanos-sidecar-with-objectstore.png" alt=""></p>
+<h3 id="store-gateway">Store Gateway</h3>
+<p>那么这些被上传到了对象存储里的监控数据该如何查询呢？理论上 Thanos Query 也可以直接去对象存储查，但会让 Thanos Query 的逻辑变的很重。我们刚才也看到了，Thanos 抽象出了 Store API，只要实现了该接口的组件都可以作为 Thanos Query 查询的数据源，Thanos Store Gateway 这个组件也实现了 Store API，向 Thanos Query 暴露对象存储的数据。Thanos Store Gateway 内部还做了一些加速数据获取的优化逻辑，一是缓存了 TSDB 索引，二是优化了对象存储的请求 (用尽可能少的请求量拿到所有需要的数据)。</p>
+<p><img src="https://imroc.io/assets/blog/thanos-store-gateway.png" alt=""></p>
+<p>这样就实现了监控数据的长期储存，由于对象存储容量无限，所以理论上我们可以存任意时长的数据，监控历史数据也就变得可追溯查询，便于问题排查与统计分析。</p>
+<h3 id="ruler">Ruler</h3>
+<p>有一个问题，Prometheus 不仅仅只支持将采集的数据进行存储和查询的功能，还可以配置一些 rules:</p>
+<ol>
+<li>根据配置不断计算出新指标数据并存储，后续查询时直接使用计算好的新指标，这样可以减轻查询时的计算压力，加快查询速度。</li>
+<li>不断计算和评估是否达到告警阀值，当达到阀值时就通知 AlertManager 来触发告警。</li>
+</ol>
+<p>由于我们将 Prometheus 进行分布式部署，每个 Prometheus 实例本地并没有完整数据，有些有关联的数据可能存在多个 Prometheus 实例中，单机 Prometheus 看不到数据的全局视图，这种情况我们就不能依赖 Prometheus 来做这些工作，Thanos Ruler 应运而生，它通过查询 Thanos Query 获取全局数据，然后根据 rules 配置计算新指标并存储，同时也通过 Store API 将数据暴露给 Thanos Query，同样还可以将数据上传到对象存储以供长期保存 (这里上传到对象存储中的数据一样也是通过 Thanos Store Gateway 暴露给 Thanos Query)。</p>
+<p><img src="https://imroc.io/assets/blog/thanos-ruler.png" alt=""></p>
+<p>看起来 Thanos Query 跟 Thanos Ruler 之间会相互查询，不过这个不冲突，Thanos Ruler 为 Thanos Query 提供计算出的新指标数据，而 Thanos Query 为 Thanos Ruler 提供计算新指标所需要的全局原始指标数据。</p>
+<p>至此，Thanos 的核心能力基本实现了，完全兼容 Prometheus 的情况下提供数据查询的全局视图，高可用以及数据的长期保存。</p>
+<p>看下还可以怎么进一步做下优化呢？</p>
+<h3 id="compact">Compact</h3>
+<p>由于我们有数据长期存储的能力，也就可以实现查询较大时间范围的监控数据，当时间范围很大时，查询的数据量也会很大，这会导致查询速度非常慢。通常在查看较大时间范围的监控数据时，我们并不需要那么详细的数据，只需要看到大致就行。Thanos Compact 这个组件应运而生，它读取对象存储的数据，对其进行压缩以及降采样再上传到对象存储，这样在查询大时间范围数据时就可以只读取压缩和降采样后的数据，极大地减少了查询的数据量，从而加速查询。</p>
+<p><img src="https://imroc.io/assets/blog/thanos-compact.png" alt=""></p>
+<h3 id="再看架构图">再看架构图</h3>
+<p>上面我们剖析了官方架构图中各个组件的设计，现在再来回味一下这张图:</p>
+<p><img src="https://imroc.io/assets/blog/thanos-arch.jpg" alt=""></p>
+<p>理解是否更加深刻了？</p>
+<p>另外还有 Thanos Bucket 和 Thanos Checker 两个辅助性的工具组件没画出来，它们不是核心组件，这里也就不再赘述。</p>
+<h2 id="sidecar-模式与-receiver-模式">Sidecar 模式与 Receiver 模式</h2>
+<p>前面我们理解了官方的架构图，但其中还缺失一个核心组件 Thanos Receiver，因为它是一个还未完全发布的组件。这是它的设计文档: <a href="https://thanos.io/proposals/201812_thanos-remote-receive.md/">https://thanos.io/proposals/201812_thanos-remote-receive.md/</a></p>
+<p>这个组件可以完全消除 Sidecar，所以 Thanos 实际有两种架构图，只是因为没有完全发布，官方的架构图只给的 Sidecar 模式。</p>
+<p>Receiver 是做什么的呢？为什么需要 Receiver？它跟 Sidecar 有什么区别？</p>
+<p>它们都可以将数据上传到对象存储以供长期保存，区别在于最新数据的存储。</p>
+<p>由于数据上传不可能实时，Sidecar 模式将最新的监控数据存到 Prometheus 本机，Query 通过调所有 Sidecar 的 Store API 来获取最新数据，这就成一个问题：如果 Sidecar 数量非常多或者 Sidecar 跟 Query 离的比较远，每次查询 Query 都调所有 Sidecar 会消耗很多资源，并且速度很慢，而我们查看监控大多数情况都是看的最新数据。</p>
+<p>为了解决这个问题，Thanos Receiver 组件被提出，它适配了 Prometheus 的 remote write API，也就是所有 Prometheus 实例可以实时将数据 push 到 Thanos Receiver，最新数据也得以集中起来，然后 Thanos Query 也不用去所有 Sidecar 查最新数据了，直接查 Thanos Receiver 即可。另外，Thanos Receiver 也将数据上传到对象存储以供长期保存，当然，对象存储中的数据同样由 Thanos Store Gateway 暴露给 Thanos Query。</p>
+<p><img src="https://imroc.io/assets/blog/thanos-receiver.png" alt=""></p>
+<p>有同学可能会问：如果规模很大，Receiver 压力会不会很大，成为性能瓶颈？当然设计这个组件时肯定会考虑这个问题，Receiver 实现了一致性哈希，支持集群部署，所以即使规模很大也不会成为性能瓶颈。</p>
+<h2 id="总结">总结</h2>
+<p>本文详细讲解了 Thanos 的架构设计，各个组件的作用以及为什么要这么设计。如果仔细看完，我相信你已经 get 到了 Thanos 的精髓，不过我们还没开始讲如何部署与实践，实际上在腾讯云容器服务的多个产品的内部监控已经在使用 Thanos 了，比如 <a href="https://cloud.tencent.com/product/tke">TKE</a> (公有云 k8s)、<a href="https://github.com/tkestack/tke">TKEStack</a> (私有云 k8s)、<a href="https://console.cloud.tencent.com/tke2/ecluster">EKS</a> (Serverless k8s)。 下一篇我们将介绍 Thanos 的部署与最佳实践，敬请期待。</p>
+
+            </article>
+
+            <ul class="pager blog-pager">
+                
+                <li class="previous">
+                    <a href="https://imroc.io/posts/build-cloud-native-large-scale-distributed-monitoring-system-1/" data-toggle="tooltip" data-placement="top" title="打造云原生大型分布式监控系统(一): 大规模场景下 Prometheus 的优化手段">&larr; 前一篇</a>
+                </li>
+                 
+            </ul>
+
+          
+            <div class="entry-shang text-center">
+    <p>「真诚赞赏，手留余香」</p>
+    <button class="zs show-zs btn btn-bred">赞赏</button>
+</div>
+<div class="zs-modal-bg"></div>
+<div class="zs-modal-box">
+    <div class="zs-modal-head">
+        <button type="button" class="close">×</button>
+        <span class="author"><img src="/favicon.png"/>roc</span>
+        <p class="tip"><i></i><span>请我喝杯咖啡？</span></p>
+    </div>
+    <div class="zs-modal-body">
+        <div class="zs-modal-btns">
+            <button class="btn btn-blink" data-num="2">2元</button>
+            <button class="btn btn-blink" data-num="5">5元</button>
+            <button class="btn btn-blink" data-num="10">10元</button>
+            <button class="btn btn-blink" data-num="50">50元</button>
+            <button class="btn btn-blink" data-num="100">100元</button>
+            <button class="btn btn-blink" data-num="1">任意金额</button>
+        </div>
+        <div class="zs-modal-pay">
+            <button class="btn btn-bred" id="pay-text">2元</button>
+            <p>使用<span id="pay-type">微信</span>扫描二维码完成支付</p>
+            <img src="/img/wechat-2.png" id="pay-image"/>
+        </div>
+    </div>
+    <div class="zs-modal-footer">
+        <label>
+            <input type="radio" name="zs-type" value="wechat" class="zs-type" checked="checked">
+            <span class="zs-wechat"><img src="/img/wechat-btn.png" /></span>
+        </label>
+        <label>
+            <input type="radio" name="zs-type" value="alipay" class="zs-type">
+            <span class="zs-alipay"><img src="/img/alipay-btn.png" /></span>
+        </label>
+    </div>
+</div>
+          
+
+          
+            
+
+  <h3>See Also</h3>
+  <ul style="margin-bottom: 25px;">
+      
+      <li><a href="/posts/build-cloud-native-large-scale-distributed-monitoring-system-1/">打造云原生大型分布式监控系统(一): 大规模场景下 Prometheus 的优化手段</a></li>
+      
+      <li><a href="/posts/kubernetes-overflow-and-drop/">Kubernetes 疑难杂症排查分享：神秘的溢出与丢包</a></li>
+      
+      <li><a href="/posts/kubernetes-no-route-to-host/">Kubernetes 疑难杂症排查分享: 诡异的 No route to host</a></li>
+      
+      <li><a href="/posts/kubernetes-service-topology/">k8s v1.17 新特性预告: 拓扑感知服务路由</a></li>
+      
+      <li><a href="/posts/troubleshooting-with-kubernetes-network/">Kubernetes 网络疑难杂症排查分享</a></li>
+      
+      <li><a href="/posts/lost-packets-once-enable-tcp-tw-recycle/">Kubernetes 踩坑分享：开启tcp_tw_recycle内核参数在NAT环境会丢包</a></li>
+      
+      <li><a href="/posts/handle-memory-fragmentation/">Kubernetes 最佳实践：处理内存碎片化</a></li>
+      
+      <li><a href="/posts/kubernetes-scale-keepalive-service/">Kubernetes 最佳实践：解决长连接服务扩容失效</a></li>
+      
+      <li><a href="/posts/capture-packets-in-container/">Kubernetes 问题定位技巧：容器内抓包</a></li>
+      
+      <li><a href="/posts/efficient-kubectl/">kubectl 高效技巧</a></li>
+      
+  </ul>
+
+          
+
+          
+            
+<div id="gitalk-container"></div>
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+<script>
+  
+  
+    
+  
+  console.log("id:b696fd363b39c3bd2b0291d7c61d5b7d")
+  var gitalk = new Gitalk({
+      clientID: 'd05b8f959b3111c6fb63',
+      clientSecret: 'f30ef76ea0050ed731ace76f7fbf684ae5d28fbc',
+      repo: 'imroc.github.io',
+      owner: 'imroc',
+      admin: 'imroc',
+      labels: ['Gitalk'],
+      title: '打造云原生大型分布式监控系统(二): Thanos 架构详解',
+      createIssueManually: false,
+      id: 'b696fd363b39c3bd2b0291d7c61d5b7d',
+      distractionFreeMode: true
+  });
+  gitalk.render('gitalk-container');
+</script>
+
+          
+        </div>
+    </div>
+</div>
+
+    <footer>
+  <div id="copyright">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+          <ul class="list-inline text-center footer-links">
+            
+                <li>
+                  <a href="mailto:roc@imroc.io" title="Email me">
+                    <span class="fa-stack fa-lg">
+                      <i class="fas fa-circle fa-stack-2x"></i>
+                      <i class="fas fa-envelope fa-stack-1x fa-inverse"></i>
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="https://github.com/imroc" title="GitHub">
+                    <span class="fa-stack fa-lg">
+                      <i class="fas fa-circle fa-stack-2x"></i>
+                      <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="https://twitter.com/imrocchan" title="Twitter">
+                    <span class="fa-stack fa-lg">
+                      <i class="fas fa-circle fa-stack-2x"></i>
+                      <i class="fab fa-twitter fa-stack-1x fa-inverse"></i>
+                    </span>
+                  </a>
+                </li>
+            
+            <li>
+              <a href="https://imroc.io/index.xml" title="RSS">
+                <span class="fa-stack fa-lg">
+                  <i class="fa fa-circle fa-stack-2x"></i>
+                  <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                </span>
+              </a>
+            </li>
+            
+          </ul>
+          <p class="credits copyright text-muted">
+          &copy;2017-2020
+            
+              
+                <a href="/about">roc</a>
+              
+            
+            &nbsp;&bull;&nbsp;
+            2020-04-06
+            更新
+          </p>
+          <p class="credits theme-by text-muted">
+            由 <a href="http://gohugo.io">Hugo v0.65.3</a> 强力驱动 &nbsp;&bull;&nbsp; 主题 <a href="https://github.com/imroc/xhugo">xhugo</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  window.copyText='复制'==''?"Copy":'复制'
+  window.copiedText='已复制!'==''?"Copied":'已复制!'
+</script><script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.js"
+  integrity="sha384-K3vbOmF2BtaVai+Qk37uypf7VrgBubhQreNQe9aGsz9lB63dIFiQVlJbr92dw2Lx" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/contrib/auto-render.min.js"
+  integrity="sha384-kmZOZB5ObwgQnS/DuDg6TScgOiWWBiVt0plIRkZCmE6rDZGrEOQeHM5PcHi+nyqe" crossorigin="anonymous"></script>
+<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"
+  integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://cdn.bootcss.com/twitter-bootstrap/3.3.7/js/bootstrap.min.js"
+  integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+
+
+
+
+<script src='/js/bundle.min.3e2cb25916e0577d6eaf45f0f6125a6156723011439209b222abd8207bb6057f.js' integrity='sha256-PiyyWRbgV31ur0Xw9hJaYVZyMBFDkgmyIqvYIHu2BX8='></script>
+
+
+
+
+
+
+  </body>
+</html>
+

@@ -8,10 +8,19 @@
     <language>zh</language>
     <managingEditor>roc@imroc.io (roc)</managingEditor>
     <webMaster>roc@imroc.io (roc)</webMaster>
-    <lastBuildDate>Thu, 26 Mar 2020 22:50:00 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 06 Apr 2020 13:50:00 +0800</lastBuildDate>
     
 	<atom:link href="https://imroc.io/categories/kubernetes/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>打造云原生大型分布式监控系统(二): Thanos 架构详解</title>
+      <link>https://imroc.io/posts/build-cloud-native-large-scale-distributed-monitoring-system-2/</link>
+      <pubDate>Mon, 06 Apr 2020 13:50:00 +0800</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/posts/build-cloud-native-large-scale-distributed-monitoring-system-2/</guid>
+      <description>概述 之前在 大规模场景下 Prometheus 的优化手段 中，我们想尽 &amp;ldquo;千方百计&amp;rdquo; 才好不容易把 Prometheus 优化到适配大规模场景，部署和后期维护麻烦且复</description>
+    </item>
     
     <item>
       <title>打造云原生大型分布式监控系统(一): 大规模场景下 Prometheus 的优化手段</title>
