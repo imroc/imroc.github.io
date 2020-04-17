@@ -277,7 +277,9 @@ var _hmt = _hmt || [];
 
               <div class="post-entry">
                 
-                  概述 之前在 大规模场景下 Prometheus 的优化手段 中，我们想尽 &ldquo;千方百计&rdquo; 才好不容易把 Prometheus 优化到适配大规模场景，部署和后期维护麻烦且复
+                  <h2 id="概述">概述</h2>
+<p>之前在 <a href="../build-cloud-native-large-scale-distributed-monitoring-system-1">大规模场景下 Prometheus 的优化手段</a> 中，我们想尽 &ldquo;千方百计&rdquo; 才好不容易把 Prometheus 优化到适配大规模场景，部署和后期维护麻烦且复杂不说，还有很多不完美的地方，并且还无法满足一些更高级的诉求，比如查看时间久远的监控数据，对于一些时间久远不常用的 &ldquo;冷数据&rdquo;，最理想的方式就是存到廉价的对象存储中，等需要查询的时候能够自动加载出来。</p>
+<p>Thanos (没错，就是灭霸) 可以帮我们简化分布式 Prometheus 的部署与管理，并提供了一些的高级特性：<strong>全局视图</strong>，<strong>长期存储</strong>，<strong>高可用</strong>。下面我们来详细讲解一下。</p>
                   <a href="https://imroc.io/posts/build-cloud-native-large-scale-distributed-monitoring-system-2/" class="post-read-more">[阅读全文]</a>
                 
               </div>
@@ -308,7 +310,11 @@ var _hmt = _hmt || [];
 
               <div class="post-entry">
                 
-                  概述 Prometheus 几乎已成为监控领域的事实标准，它自带高效的时序数据库存储，可以让单台 Prometheus 能够高效的处理大量的数据，还有友好并且强大的 PromQL 语法，可以用来灵活
+                  <h2 id="概述">概述</h2>
+<p>Prometheus 几乎已成为监控领域的事实标准，它自带高效的时序数据库存储，可以让单台 Prometheus 能够高效的处理大量的数据，还有友好并且强大的 PromQL 语法，可以用来灵活的查询各种监控数据以及配置告警规则，同时它的 pull 模型指标采集方式被广泛采纳，非常多的应用都实现了 Prometheus 的 metrics 接口以暴露自身各项数据指标让 Prometheus 去采集，很多没有适配的应用也会有第三方 exporter 帮它去适配 Prometheus，所以监控系统我们通常首选用 Prometheus，本系列文章也将基于 Prometheus 来打造云原生环境下的大型分布式监控系统。</p>
+<h2 id="大规模场景下-prometheus-的痛点">大规模场景下 Prometheus 的痛点</h2>
+<p>Prometheus 本身只支持单机部署，没有自带支持集群部署，也就不支持高可用以及水平扩容，在大规模场景下，最让人关心的问题是它的存储空间也受限于单机磁盘容量，磁盘容量决定了单个 Prometheus 所能存储的数据量，数据量大小又取决于被采集服务的指标数量、服务数量、采集速率以及数据过期时间。在数据量大的情况下，我们可能就需要做很多取舍，比如丢弃不重要的指标、降低采集速率、设置较短的数据过期时间(默认只保留15天的数据，看不到比较久远的监控数据)。</p>
+<p>这些痛点实际也是可以通过一些优化手段来改善的，下面我们来细讲一下。</p>
                   <a href="https://imroc.io/posts/build-cloud-native-large-scale-distributed-monitoring-system-1/" class="post-read-more">[阅读全文]</a>
                 
               </div>

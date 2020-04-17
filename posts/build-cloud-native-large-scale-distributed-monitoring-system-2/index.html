@@ -9,9 +9,14 @@
   <meta name="description" content="roc的博客|Cloud Native|Kubernetes|Go|Golang|Service Mesh" />
   <meta property="og:title" content="打造云原生大型分布式监控系统(二): Thanos 架构详解" />
   <meta name="twitter:title" content="打造云原生大型分布式监控系统(二): Thanos 架构详解" />
-  <meta name="description" content="概述 之前在 大规模场景下 Prometheus 的优化手段 中，我们想尽 &ldquo;千方百计&rdquo; 才好不容易把 Prometheus 优化到适配大规模场景，部署和后期维护麻烦且复">
-  <meta property="og:description" content="概述 之前在 大规模场景下 Prometheus 的优化手段 中，我们想尽 &ldquo;千方百计&rdquo; 才好不容易把 Prometheus 优化到适配大规模场景，部署和后期维护麻烦且复">
-  <meta name="twitter:description" content="概述 之前在 大规模场景下 Prometheus 的优化手段 中，我们想尽 &ldquo;千方百计&rdquo; 才好不容易把 Prometheus 优化到适配大规模场景，部署和后期维护麻烦且复">
+  <meta name="description" content="概述
+之前在 大规模场景下 Prometheus 的优化手段 中，我们想尽 &ldquo;千方百计&rdquo; 才好不容易把 Prometheus 优化到适配大规模场景，部署和后期维护麻烦且复杂不说，还有很多不完美的地方，并且还无法满足一些更高级的诉求，比如查看时间久远的监控数据，对于一些时间久远不常用的 &ldquo;冷数据&rdquo;，最理想的方式就是存到廉价的对象存储中，等需要查询的时候能够自动加载出来。
+Thanos (没错，就是灭霸) 可以帮我们简化分布式 Prometheus 的部署与管理，并提供了一些的高级特性：全局视图，长期存储，高可用。下面我们来详细讲解一下。">
+  <meta property="og:description" content="概述
+之前在 大规模场景下 Prometheus 的优化手段 中，我们想尽 &ldquo;千方百计&rdquo; 才好不容易把 Prometheus 优化到适配大规模场景，部署和后期维护麻烦且复杂不说，还有很多不完美的地方，并且还无法满足一些更高级的诉求，比如查看时间久远的监控数据，对于一些时间久远不常用的 &ldquo;冷数据&rdquo;，最理想的方式就是存到廉价的对象存储中，等需要查询的时候能够自动加载出来。
+Thanos (没错，就是灭霸) 可以帮我们简化分布式 Prometheus 的部署与管理，并提供了一些的高级特性：全局视图，长期存储，高可用。下面我们来详细讲解一下。">
+  <meta name="twitter:description" content="概述
+之前在 大规模场景下 Prometheus 的优化手段 中，我们想尽 &ldquo;千方百计&rdquo; 才好不容易把 Prometheus 优化到适配大规模场景，部署和后期维护麻烦且复杂不说，还有很多不完美的地方，并且还无法满足一些更高级的诉求，比如查看时间久远的监控数据，对于一些时间久远不常用的 &ldquo;冷数据&rdquo;，最理想的方式就是存到廉价的对象存储中，等需要查询的时候 …">
   <meta name="author" content="{Description { .Site.Author.name }}"/>
   <link href='https://imroc.io/favicon.png' rel='icon' type='image/x-icon'/>
   <meta property="og:image" content="https://res.cloudinary.com/imroc/image/upload/v1521031841/avatar.png" />
@@ -362,7 +367,6 @@ var _hmt = _hmt || [];
 <p>有同学可能会问：如果规模很大，Receiver 压力会不会很大，成为性能瓶颈？当然设计这个组件时肯定会考虑这个问题，Receiver 实现了一致性哈希，支持集群部署，所以即使规模很大也不会成为性能瓶颈。</p>
 <h2 id="总结">总结</h2>
 <p>本文详细讲解了 Thanos 的架构设计，各个组件的作用以及为什么要这么设计。如果仔细看完，我相信你已经 get 到了 Thanos 的精髓，不过我们还没开始讲如何部署与实践，实际上在腾讯云容器服务的多个产品的内部监控已经在使用 Thanos 了，比如 <a href="https://cloud.tencent.com/product/tke">TKE</a> (公有云 k8s)、<a href="https://github.com/tkestack/tke">TKEStack</a> (私有云 k8s)、<a href="https://console.cloud.tencent.com/tke2/ecluster">EKS</a> (Serverless k8s)。 下一篇我们将介绍 Thanos 的部署与最佳实践，敬请期待。</p>
-
             </article>
 
             <ul class="pager blog-pager">
