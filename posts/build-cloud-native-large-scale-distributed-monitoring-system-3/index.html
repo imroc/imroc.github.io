@@ -1,0 +1,1465 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title> 打造云原生大型分布式监控系统(三): Thanos 部署与实践 - roc的博客|Cloud Native|Kubernetes|Go|Golang|Service Mesh</title>
+  <meta name="description" content="roc的博客|Cloud Native|Kubernetes|Go|Golang|Service Mesh" />
+  <meta property="og:title" content="打造云原生大型分布式监控系统(三): Thanos 部署与实践" />
+  <meta name="twitter:title" content="打造云原生大型分布式监控系统(三): Thanos 部署与实践" />
+  <meta name="description" content="概述 上一篇 Thanos 架构详解 我们深入理解了 thanos 的架构设计与实现原理，现在我们来聊聊实战，分享一下如何部署和使用 Thanos。 部署方式 本文聚焦 Thanos 的云原生">
+  <meta property="og:description" content="概述 上一篇 Thanos 架构详解 我们深入理解了 thanos 的架构设计与实现原理，现在我们来聊聊实战，分享一下如何部署和使用 Thanos。 部署方式 本文聚焦 Thanos 的云原生">
+  <meta name="twitter:description" content="概述 上一篇 Thanos 架构详解 我们深入理解了 thanos 的架构设计与实现原理，现在我们来聊聊实战，分享一下如何部署和使用 Thanos。 部署方式 本文聚焦 Thanos 的云原生">
+  <meta name="author" content="{Description { .Site.Author.name }}"/>
+  <link href='https://imroc.io/favicon.png' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://res.cloudinary.com/imroc/image/upload/v1521031841/avatar.png" />
+  <meta name="twitter:image" content="https://res.cloudinary.com/imroc/image/upload/v1521031841/avatar.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@imrocchan" />
+  <meta name="twitter:creator" content="@imrocchan" />
+  <meta property="og:url" content="https://imroc.io/posts/build-cloud-native-large-scale-distributed-monitoring-system-3/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="roc" />
+
+  <meta name="generator" content="Hugo 0.65.3" />
+  <link rel="canonical" href="https://imroc.io/posts/build-cloud-native-large-scale-distributed-monitoring-system-3/" />
+  <link rel="alternate" href="https://imroc.io/index.xml" type="application/rss+xml" title="roc"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css"
+    integrity="sha384-9eLZqc9ds8eNjO3TmqPeYcDj8n+Qfa4nuSiGYa6DjLNcv9BtN69ZIulL9+8CqC9Y" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/5.5.0/css/fontawesome.min.css"
+    integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.bootcss.com/twitter-bootstrap/3.3.7/css/bootstrap.min.css"
+    integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" /><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+  
+
+
+
+
+
+
+<link rel="stylesheet" href='/css/bundle.min.8fad4c9e81931afed0cc9eee450df2ae0e60d1129a4cd7ee011629c97c6394e9.css' integrity='sha256-j61MnoGTGv7QzJ7uRQ3yrg5g0RKaTNfuARYpyXxjlOk='><script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?05e1e8b7484a08c51cd0953664168cd7";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">切换导航</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://imroc.io/">roc</a>
+    </div>
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">分类</a>
+              <div class="navlinks-children">
+                
+                
+                  <a href="https://imroc.io/categories/kubernetes">kubernetes</a>
+                
+                
+                  <a href="https://imroc.io/categories/docker">docker</a>
+                
+                
+                  <a href="https://imroc.io/categories/golang">golang</a>
+                
+                
+                  <a href="https://imroc.io/categories/geek">geek</a>
+                
+                
+                  <a href="https://imroc.io/categories/istio">istio</a>
+                
+              </div>
+            </li>
+          
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">书籍</a>
+              <div class="navlinks-children">
+                
+                
+                  <a href="https://k8s.imroc.io">Kubernetes 实践指南</a>
+                
+                
+                  <a href="https://istio.imroc.io">Istio 实践指南</a>
+                
+                
+                  <a href="https://book.kubetencent.io">腾讯云容器服务指南</a>
+                
+              </div>
+            </li>
+          
+        
+
+        
+          
+            <li>
+              
+                
+              
+                
+                  <a href="/en" lang="en">English</a>
+                
+              
+            </li>
+          
+        
+
+        
+        <li>
+          <a href="#modalSearch" data-toggle="modal" data-target="#modalSearch" style="outline: none;">
+            <span id="searchGlyph" class="glyphicon glyphicon-search"></span>
+          </a>
+        </li>
+        
+      </ul>
+    </div>
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="roc" href="https://imroc.io/">
+            <img class="avatar-img" src="https://res.cloudinary.com/imroc/image/upload/v1521031841/avatar.png" alt="roc" />
+          </a>
+        
+      </div>
+    </div>
+  </div>
+</nav>
+
+
+  <div id="modalSearch" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">搜索</h4>
+        </div>
+        <div class="modal-body">
+            
+<div class="aa-input-container" id="aa-input-container">
+    <input type="search" id="aa-search-input" class="aa-input-search" placeholder="Search for titles or URIs..."
+        name="search" autocomplete="off" />
+    <svg class="aa-input-icon" viewBox="654 -372 1664 1664">
+        <path
+            d="M1806,332c0-123.3-43.8-228.8-131.5-316.5C1586.8-72.2,1481.3-116,1358-116s-228.8,43.8-316.5,131.5  C953.8,103.2,910,208.7,910,332s43.8,228.8,131.5,316.5C1129.2,736.2,1234.7,780,1358,780s228.8-43.8,316.5-131.5  C1762.2,560.8,1806,455.3,1806,332z M2318,1164c0,34.7-12.7,64.7-38,90s-55.3,38-90,38c-36,0-66-12.7-90-38l-343-342  c-119.3,82.7-252.3,124-399,124c-95.3,0-186.5-18.5-273.5-55.5s-162-87-225-150s-113-138-150-225S654,427.3,654,332  s18.5-186.5,55.5-273.5s87-162,150-225s138-113,225-150S1262.7-372,1358-372s186.5,18.5,273.5,55.5s162,87,225,150s113,138,150,225  S2062,236.7,2062,332c0,146.7-41.3,279.7-124,399l343,343C2305.7,1098.7,2318,1128.7,2318,1164z" />
+    </svg>
+</div>
+
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/algoliasearch.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/autocomplete.min.js"></script>
+<script>
+    var client = algoliasearch("B6Q6PSGUV5", "5b4678e9995fe4211c4fa43ad2ffdab5");
+    var index = client.initIndex("imroc-blog");
+    
+    autocomplete('#aa-search-input', {
+        hint: false
+    }, {
+        source: autocomplete.sources.hits(index, {
+            hitsPerPage: 5
+        }),
+        
+        displayKey: 'name',
+        
+        templates: {
+            
+            suggestion: function (suggestion) {
+                return '<span>' + '<a href="/' + suggestion.uri + '">' + suggestion._highlightResult.title.value +
+                        '</a></span>';
+            }
+        }
+    });
+</script>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    
+  
+  
+  
+
+
+
+
+  
+    <div id="header-big-imgs" data-num-img=1 data-img-src-1="https://res.cloudinary.com/imroc/image/upload/v1515849754/blog/banner/hacker.jpg" data-img-desc-1="Hacker"></div>
+  
+
+  <header class="header-section has-img">
+    
+      <div class="intro-header big-img">
+        
+        
+        <div class="container">
+          <div class="row">
+              <div class="col-lg-12 col-md-12 col-md-offset-0">
+                
+                <div class="post-heading">
+                
+                  
+                     <h1>打造云原生大型分布式监控系统(三): Thanos 部署与实践</h1>
+                     
+                    <span class="post-meta">
+  
+  发表于 2020-04-19
+  
+  
+</span>
+
+
+                    
+                  
+                  
+              </div>
+            </div>
+          </div>
+        </div>
+        <span class="img-desc" style="display: inline;"></span>
+      </div>
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12 col-md-12 col-md-offset-0">
+            <div class="posts-heading">
+                <h1 align="center">打造云原生大型分布式监控系统(三): Thanos 部署与实践</h1>
+                
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main" itemscope itemtype="http://schema.org/Article">
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            
+            <div>
+                
+                <h5 id="tags" style="margin-top: 30px;">标签: 
+                  
+                      <a
+                        href='https://imroc.io/tags/kubernetes/'>kubernetes</a>
+                      &nbsp;
+                  
+                </h5>
+            </div>
+            
+              
+            <article role="main" class="blog-post" itemprop="articleBody" id="content">
+                
+<aside class="toc">
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#概述">概述</a></li>
+    <li><a href="#部署方式">部署方式</a></li>
+    <li><a href="#方案选型">方案选型</a>
+      <ul>
+        <li><a href="#sidecar-or-receiver">Sidecar or Receiver</a></li>
+        <li><a href="#评估是否需要-ruler">评估是否需要 Ruler</a></li>
+        <li><a href="#评估是否需要-store-gateway-与-compact">评估是否需要 Store Gateway 与 Compact</a></li>
+      </ul>
+    </li>
+    <li><a href="#部署实践">部署实践</a>
+      <ul>
+        <li><a href="#准备对象存储配置">准备对象存储配置</a></li>
+        <li><a href="#给-prometheus-加上-sidecar">给 Prometheus 加上 Sidecar</a></li>
+        <li><a href="#安装-query">安装 Query</a></li>
+      </ul>
+    </li>
+    <li><a href="#安装-store-gateway">安装 Store Gateway</a>
+      <ul>
+        <li><a href="#安装-ruler">安装 Ruler</a></li>
+        <li><a href="#安装-compact">安装 Compact</a></li>
+        <li><a href="#安装-receiver">安装 Receiver</a></li>
+        <li><a href="#指定-query-为数据源">指定 Query 为数据源</a></li>
+      </ul>
+    </li>
+    <li><a href="#总结">总结</a></li>
+  </ul>
+</nav>
+</aside>
+
+
+                <h2 id="概述">概述</h2>
+<p>上一篇 <a href="../build-cloud-native-large-scale-distributed-monitoring-system-2">Thanos 架构详解</a> 我们深入理解了 thanos 的架构设计与实现原理，现在我们来聊聊实战，分享一下如何部署和使用 Thanos。</p>
+<h2 id="部署方式">部署方式</h2>
+<p>本文聚焦 Thanos 的云原生部署方式，充分利用 Kubernetes 的资源调度与动态扩容能力。从官方 <a href="https://thanos.io/getting-started.md/#community-thanos-kubernetes-applications">这里</a> 可以看到，当前 thanos 在 Kubernetes 上部署有以下三种：</p>
+<ul>
+<li><a href="https://github.com/coreos/prometheus-operator">prometheus-operator</a>: 集群中安装了 prometheus-operator 后，就可以通过创建 CRD 对象来部署 Thanos 了。</li>
+<li><a href="https://hub.helm.sh/charts?q=thanos">社区贡献的一些 helm charts</a>: 很多个版本，目标都是能够使用 helm 来一键部署 thanos。</li>
+<li><a href="https://github.com/thanos-io/kube-thanos">kube-thanos</a>: Thanos 官方的开源项目，包含部署 thanos 到 kubernetes 的 jsonnet 模板与 yaml 示例。</li>
+</ul>
+<p>本文将使用基于 kube-thanos 提供的 yaml 示例 (<code>examples/all/manifests</code>) 来部署，原因是 prometheus-operator 与社区的 helm chart 方式部署多了一层封装，屏蔽了许多细节，并且它们的实现都还不太成熟；直接使用 kubernetes 的 yaml 资源文件部署更直观，也更容易做自定义，而且我相信使用 thanos 的用户通常都是高玩了，也有必要对 thanos 理解透彻，日后才好根据实际场景做架构和配置的调整，直接使用 yaml 部署能够让我们看清细节。</p>
+<h2 id="方案选型">方案选型</h2>
+<h3 id="sidecar-or-receiver">Sidecar or Receiver</h3>
+<p>看了上一篇文章的同学应该知道，目前官方的架构图用的 Sidecar 方案，Receiver 是一个暂时还没有完全发布的组件。通常来说，Sidecar 方案相对成熟一些，最新的数据存储和计算 (比如聚合函数) 比较 &ldquo;分布式&rdquo;，更加高效也更容易扩展。</p>
+<p><img src="https://imroc.io/assets/blog/thanos-sidecar.png" alt=""></p>
+<p>Receiver 方案是让 Prometheus 通过 remote wirte API 将数据 push 到 Receiver 集中存储 (同样会清理过期数据):</p>
+<p><img src="https://imroc.io/assets/blog/thanos-receiver-without-objectstore.png" alt=""></p>
+<p>那么该选哪种方案呢？我的建议是：</p>
+<ol>
+<li>如果你的 Query 跟 Sidecar 离的比较远，比如 Sidecar 分布在多个数据中心，Query 向所有 Sidecar 查数据，速度会很慢，这种情况可以考虑用 Receiver，将数据集中吐到 Receiver，然后 Receiver 与 Query 部署在一起，Query 直接向 Receiver 查最新数据，提升查询性能。</li>
+<li>如果你的使用场景只允许 Prometheus 将数据 push 到远程，可以考虑使用 Receiver。比如 IoT 设备没有持久化存储，只能将数据 push 到远程。</li>
+</ol>
+<p>此外的场景应该都尽量使用 Sidecar 方案。</p>
+<h3 id="评估是否需要-ruler">评估是否需要 Ruler</h3>
+<p>Ruler 是一个可选组件，原则上推荐尽量使用 Prometheus 自带的 rule 功能 (生成新指标+告警)，这个功能需要一些 Prometheus 最新数据，直接使用 Prometheus 本机 rule 功能和数据，性能开销相比 Thanos Ruler 这种分布式方案小得多，并且几乎不会出错，Thanos Ruler 由于是分布式，所以更容易出错一些。</p>
+<p>如果某些有关联的数据分散在多个不同 Prometheus 上，比如对某个大规模服务采集做了分片，每个 Prometheus 仅采集一部分 endpoint 的数据，对于 <code>record</code> 类型的 rule (生成的新指标)，还是可以使用 Prometheus 自带的 rule 功能，在查询时再聚合一下就可以(如果可以接受的话)；对于 <code>alert</code> 类型的 rule，就需要用 Thanos Ruler 来做了，因为有关联的数据分散在多个 Prometheus 上，用单机数据去做 alert 计算是不准确的，就可能会造成误告警或不告警。</p>
+<h3 id="评估是否需要-store-gateway-与-compact">评估是否需要 Store Gateway 与 Compact</h3>
+<p>Store 也是一个可选组件，也是 Thanos 的一大亮点的关键：数据长期保存。</p>
+<p>评估是否需要 Store 组件实际就是评估一下自己是否有数据长期存储的需求，比如查看一两个月前的监控数据。如果有，那么 Thanos 可以将数据上传到对象存储保存。Thanos 支持以下对象存储:</p>
+<ul>
+<li>Google Cloud Storage</li>
+<li>AWS/S3</li>
+<li>Azure Storage Account</li>
+<li>OpenStack Swift</li>
+<li>Tencent COS</li>
+<li>AliYun OSS</li>
+</ul>
+<p>在国内，最方便还是使用腾讯云 COS 或者阿里云 OSS 这样的公有云对象存储服务。如果你的服务没有跑在公有云上，也可以通过跟云服务厂商拉专线的方式来走内网使用对象存储，这样速度通常也是可以满足需求的；如果实在用不了公有云的对象存储服务，也可以自己安装 <a href="https://github.com/minio/minio">minio</a> 来搭建兼容 AWS 的 S3 对象存储服务。</p>
+<p>搞定了对象存储，还需要给 Thanos 多个组件配置对象存储相关的信息，以便能够上传与读取监控数据。除 Query 以外的所有 Thanos 组件 (Sidecar、Receiver、Ruler、Store Gateway、Compact) 都需要配置对象存储信息，使用 <code>--objstore.config</code> 直接配置内容或 <code>--objstore.config-file</code> 引用对象存储配置文件，不同对象存储配置方式不一样，参考官方文档: <a href="https://thanos.io/storage.md">https://thanos.io/storage.md</a></p>
+<p>通常使用了对象存储来长期保存数据不止要安装 Store Gateway，还需要安装 Compact 来对对象存储里的数据进行压缩与降采样，这样可以提升查询大时间范围监控数据的性能。注意：Compact 并不会减少对象存储的使用空间，而是会增加，增加更长采样间隔的监控数据，这样当查询大时间范围的数据时，就自动拉取更长时间间隔采样的数据以减少查询数据的总量，从而加快查询速度 (大时间范围的数据不需要那么精细)，当放大查看时 (选择其中一小段时间)，又自动选择拉取更短采样间隔的数据，从而也能显示出小时间范围的监控细节。</p>
+<h2 id="部署实践">部署实践</h2>
+<p>这里以 Thanos 最新版本为例，选择 Sidecar 方案，介绍各个组件的 k8s yaml 定义方式并解释一些重要细节 (根据自身需求，参考上一节的方案选型，自行评估需要安装哪些组件)。</p>
+<h3 id="准备对象存储配置">准备对象存储配置</h3>
+<p>如果我们要使用对象存储来长期保存数据，那么就要准备下对象存储的配置信息 (<code>thanos-objectstorage-secret.yaml</code>)，比如使用腾讯云 COS 来存储:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#66d9ef">apiVersion</span>: v1
+<span style="color:#66d9ef">kind</span>: Secret
+<span style="color:#66d9ef">metadata</span>:
+  <span style="color:#66d9ef">name</span>: thanos-objectstorage
+  <span style="color:#66d9ef">namespace</span>: thanos
+<span style="color:#66d9ef">type</span>: Opaque
+<span style="color:#66d9ef">stringData</span>:
+  <span style="color:#66d9ef">objectstorage.yaml</span>: <span style="color:#e6db74">|
+</span><span style="color:#e6db74">    type: COS</span>
+    <span style="color:#66d9ef">config</span>:
+      <span style="color:#66d9ef">bucket</span>: <span style="color:#e6db74">&#34;thanos&#34;</span>
+      <span style="color:#66d9ef">region</span>: <span style="color:#e6db74">&#34;ap-singapore&#34;</span>
+      <span style="color:#66d9ef">app_id</span>: <span style="color:#e6db74">&#34;12*******5&#34;</span>
+      <span style="color:#66d9ef">secret_key</span>: <span style="color:#e6db74">&#34;tsY***************************Edm&#34;</span>
+      <span style="color:#66d9ef">secret_id</span>: <span style="color:#e6db74">&#34;AKI******************************gEY&#34;</span>
+</code></pre></div><p>或者使用阿里云 OSS 存储:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#66d9ef">apiVersion</span>: v1
+<span style="color:#66d9ef">kind</span>: Secret
+<span style="color:#66d9ef">metadata</span>:
+  <span style="color:#66d9ef">name</span>: thanos-objectstorage
+  <span style="color:#66d9ef">namespace</span>: thanos
+<span style="color:#66d9ef">type</span>: Opaque
+<span style="color:#66d9ef">stringData</span>:
+  <span style="color:#66d9ef">objectstorage.yaml</span>: <span style="color:#e6db74">|
+</span><span style="color:#e6db74">    type: ALIYUNOSS</span>
+    <span style="color:#66d9ef">config</span>:
+      <span style="color:#66d9ef">endpoint</span>: <span style="color:#e6db74">&#34;oss-cn-hangzhou-internal.aliyuncs.com&#34;</span>
+      <span style="color:#66d9ef">bucket</span>: <span style="color:#e6db74">&#34;thanos&#34;</span>
+      <span style="color:#66d9ef">access_key_id</span>: <span style="color:#e6db74">&#34;LTA******************KBu&#34;</span>
+      <span style="color:#66d9ef">access_key_secret</span>: <span style="color:#e6db74">&#34;oki************************2HQ&#34;</span>
+</code></pre></div><blockquote>
+<p>注: 对敏感信息打码了</p>
+</blockquote>
+<h3 id="给-prometheus-加上-sidecar">给 Prometheus 加上 Sidecar</h3>
+<p>如果选用 Sidecar 方案，就需要给 Prometheus 加上 Thanos Sidecar，准备 <code>prometheus.yaml</code>:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#66d9ef">kind</span>: Service
+<span style="color:#66d9ef">apiVersion</span>: v1
+<span style="color:#66d9ef">metadata</span>:
+  <span style="color:#66d9ef">name</span>: prometheus-headless
+  <span style="color:#66d9ef">namespace</span>: thanos
+  <span style="color:#66d9ef">labels</span>:
+    <span style="color:#66d9ef">app.kubernetes.io/name</span>: prometheus
+<span style="color:#66d9ef">spec</span>:
+  <span style="color:#66d9ef">type</span>: ClusterIP
+  <span style="color:#66d9ef">clusterIP</span>: None
+  <span style="color:#66d9ef">selector</span>:
+    <span style="color:#66d9ef">app.kubernetes.io/name</span>: prometheus
+  <span style="color:#66d9ef">ports</span>:
+  - <span style="color:#66d9ef">name</span>: web
+    <span style="color:#66d9ef">protocol</span>: TCP
+    <span style="color:#66d9ef">port</span>: <span style="color:#ae81ff">9090</span>
+    <span style="color:#66d9ef">targetPort</span>: web
+  - <span style="color:#66d9ef">name</span>: grpc
+    <span style="color:#66d9ef">port</span>: <span style="color:#ae81ff">10901</span>
+    <span style="color:#66d9ef">targetPort</span>: grpc
+---
+
+<span style="color:#66d9ef">apiVersion</span>: v1
+<span style="color:#66d9ef">kind</span>: ServiceAccount
+<span style="color:#66d9ef">metadata</span>:
+  <span style="color:#66d9ef">name</span>: prometheus
+  <span style="color:#66d9ef">namespace</span>: thanos
+
+---
+
+<span style="color:#66d9ef">apiVersion</span>: rbac.authorization.k8s.io/v1beta1
+<span style="color:#66d9ef">kind</span>: ClusterRole
+<span style="color:#66d9ef">metadata</span>:
+  <span style="color:#66d9ef">name</span>: prometheus
+  <span style="color:#66d9ef">namespace</span>: thanos
+<span style="color:#66d9ef">rules</span>:
+- <span style="color:#66d9ef">apiGroups</span>: [<span style="color:#e6db74">&#34;&#34;</span>]
+  <span style="color:#66d9ef">resources</span>:
+  - nodes
+  - nodes/proxy
+  - nodes/metrics
+  - services
+  - endpoints
+  - pods
+  <span style="color:#66d9ef">verbs</span>: [<span style="color:#e6db74">&#34;get&#34;</span>, <span style="color:#e6db74">&#34;list&#34;</span>, <span style="color:#e6db74">&#34;watch&#34;</span>]
+- <span style="color:#66d9ef">apiGroups</span>: [<span style="color:#e6db74">&#34;&#34;</span>]
+  <span style="color:#66d9ef">resources</span>: [<span style="color:#e6db74">&#34;configmaps&#34;</span>]
+  <span style="color:#66d9ef">verbs</span>: [<span style="color:#e6db74">&#34;get&#34;</span>]
+- <span style="color:#66d9ef">nonResourceURLs</span>: [<span style="color:#e6db74">&#34;/metrics&#34;</span>]
+  <span style="color:#66d9ef">verbs</span>: [<span style="color:#e6db74">&#34;get&#34;</span>]
+
+---
+<span style="color:#66d9ef">apiVersion</span>: rbac.authorization.k8s.io/v1beta1
+<span style="color:#66d9ef">kind</span>: ClusterRoleBinding
+<span style="color:#66d9ef">metadata</span>:
+  <span style="color:#66d9ef">name</span>: prometheus
+<span style="color:#66d9ef">subjects</span>:
+  - <span style="color:#66d9ef">kind</span>: ServiceAccount
+    <span style="color:#66d9ef">name</span>: prometheus
+    <span style="color:#66d9ef">namespace</span>: thanos
+<span style="color:#66d9ef">roleRef</span>:
+  <span style="color:#66d9ef">kind</span>: ClusterRole
+  <span style="color:#66d9ef">name</span>: prometheus
+  <span style="color:#66d9ef">apiGroup</span>: rbac.authorization.k8s.io
+---
+
+<span style="color:#66d9ef">apiVersion</span>: apps/v1
+<span style="color:#66d9ef">kind</span>: StatefulSet
+<span style="color:#66d9ef">metadata</span>:
+  <span style="color:#66d9ef">name</span>: prometheus
+  <span style="color:#66d9ef">namespace</span>: thanos
+  <span style="color:#66d9ef">labels</span>:
+    <span style="color:#66d9ef">app.kubernetes.io/name</span>: thanos-query
+<span style="color:#66d9ef">spec</span>:
+  <span style="color:#66d9ef">serviceName</span>: prometheus-headless
+  <span style="color:#66d9ef">podManagementPolicy</span>: Parallel
+  <span style="color:#66d9ef">replicas</span>: <span style="color:#ae81ff">2</span>
+  <span style="color:#66d9ef">selector</span>:
+    <span style="color:#66d9ef">matchLabels</span>:
+      <span style="color:#66d9ef">app.kubernetes.io/name</span>: prometheus
+  <span style="color:#66d9ef">template</span>:
+    <span style="color:#66d9ef">metadata</span>:
+      <span style="color:#66d9ef">labels</span>:
+        <span style="color:#66d9ef">app.kubernetes.io/name</span>: prometheus
+    <span style="color:#66d9ef">spec</span>:
+      <span style="color:#66d9ef">serviceAccountName</span>: prometheus
+      <span style="color:#66d9ef">securityContext</span>:
+        <span style="color:#66d9ef">fsGroup</span>: <span style="color:#ae81ff">2000</span>
+        <span style="color:#66d9ef">runAsNonRoot</span>: <span style="color:#66d9ef">true</span>
+        <span style="color:#66d9ef">runAsUser</span>: <span style="color:#ae81ff">1000</span>
+      <span style="color:#66d9ef">affinity</span>:
+        <span style="color:#66d9ef">podAntiAffinity</span>:
+          <span style="color:#66d9ef">requiredDuringSchedulingIgnoredDuringExecution</span>:
+          - <span style="color:#66d9ef">labelSelector</span>:
+              <span style="color:#66d9ef">matchExpressions</span>:
+              - <span style="color:#66d9ef">key</span>: app.kubernetes.io/name
+                <span style="color:#66d9ef">operator</span>: In
+                <span style="color:#66d9ef">values</span>:
+                - prometheus
+            <span style="color:#66d9ef">topologyKey</span>: kubernetes.io/hostname
+      <span style="color:#66d9ef">containers</span>:
+      - <span style="color:#66d9ef">name</span>: prometheus
+        <span style="color:#66d9ef">image</span>: quay.io/prometheus/prometheus:v2<span style="color:#ae81ff">.15.2</span>
+        <span style="color:#66d9ef">args</span>:
+        - --config.file=/etc/prometheus/config_out/prometheus.yaml
+        - --storage.tsdb.path=/prometheus
+        - --storage.tsdb.retention.time=10d
+        - --web.route-prefix=/
+        - --web.enable-lifecycle
+        - --storage.tsdb.no-lockfile
+        - --storage.tsdb.min-block-duration=2h
+        - --storage.tsdb.max-block-duration=2h
+        - --log.level=debug
+        <span style="color:#66d9ef">ports</span>:
+        - <span style="color:#66d9ef">containerPort</span>: <span style="color:#ae81ff">9090</span>
+          <span style="color:#66d9ef">name</span>: web
+          <span style="color:#66d9ef">protocol</span>: TCP
+        <span style="color:#66d9ef">livenessProbe</span>:
+          <span style="color:#66d9ef">failureThreshold</span>: <span style="color:#ae81ff">6</span>
+          <span style="color:#66d9ef">httpGet</span>:
+            <span style="color:#66d9ef">path</span>: /-/healthy
+            <span style="color:#66d9ef">port</span>: web
+            <span style="color:#66d9ef">scheme</span>: HTTP
+          <span style="color:#66d9ef">periodSeconds</span>: <span style="color:#ae81ff">5</span>
+          <span style="color:#66d9ef">successThreshold</span>: <span style="color:#ae81ff">1</span>
+          <span style="color:#66d9ef">timeoutSeconds</span>: <span style="color:#ae81ff">3</span>
+        <span style="color:#66d9ef">readinessProbe</span>:
+          <span style="color:#66d9ef">failureThreshold</span>: <span style="color:#ae81ff">120</span>
+          <span style="color:#66d9ef">httpGet</span>:
+            <span style="color:#66d9ef">path</span>: /-/ready
+            <span style="color:#66d9ef">port</span>: web
+            <span style="color:#66d9ef">scheme</span>: HTTP
+          <span style="color:#66d9ef">periodSeconds</span>: <span style="color:#ae81ff">5</span>
+          <span style="color:#66d9ef">successThreshold</span>: <span style="color:#ae81ff">1</span>
+          <span style="color:#66d9ef">timeoutSeconds</span>: <span style="color:#ae81ff">3</span>
+        <span style="color:#66d9ef">volumeMounts</span>:
+        - <span style="color:#66d9ef">mountPath</span>: /etc/prometheus/config_out
+          <span style="color:#66d9ef">name</span>: prometheus-config-out
+          <span style="color:#66d9ef">readOnly</span>: <span style="color:#66d9ef">true</span>
+        - <span style="color:#66d9ef">mountPath</span>: /prometheus
+          <span style="color:#66d9ef">name</span>: prometheus-storage
+        - <span style="color:#66d9ef">mountPath</span>: /etc/prometheus/rules
+          <span style="color:#66d9ef">name</span>: prometheus-rules
+      - <span style="color:#66d9ef">name</span>: thanos
+        <span style="color:#66d9ef">image</span>: quay.io/thanos/thanos:v0<span style="color:#ae81ff">.11.0</span>
+        <span style="color:#66d9ef">args</span>:
+        - sidecar
+        - --log.level=debug
+        - --tsdb.path=/prometheus
+        - --prometheus.url=http://<span style="color:#ae81ff">127.0.0.1</span>:<span style="color:#ae81ff">9090</span>
+        - --objstore.config-file=/etc/thanos/objectstorage.yaml
+        - --reloader.config-file=/etc/prometheus/config/prometheus.yaml.tmpl
+        - --reloader.config-envsubst-file=/etc/prometheus/config_out/prometheus.yaml
+        - --reloader.rule-dir=/etc/prometheus/rules/
+        <span style="color:#66d9ef">env</span>:
+        - <span style="color:#66d9ef">name</span>: POD_NAME
+          <span style="color:#66d9ef">valueFrom</span>:
+            <span style="color:#66d9ef">fieldRef</span>:
+              <span style="color:#66d9ef">fieldPath</span>: metadata.name
+        <span style="color:#66d9ef">ports</span>:
+        - <span style="color:#66d9ef">name</span>: http-sidecar
+          <span style="color:#66d9ef">containerPort</span>: <span style="color:#ae81ff">10902</span>
+        - <span style="color:#66d9ef">name</span>: grpc
+          <span style="color:#66d9ef">containerPort</span>: <span style="color:#ae81ff">10901</span>
+        <span style="color:#66d9ef">livenessProbe</span>:
+            <span style="color:#66d9ef">httpGet</span>:
+              <span style="color:#66d9ef">port</span>: <span style="color:#ae81ff">10902</span>
+              <span style="color:#66d9ef">path</span>: /-/healthy
+        <span style="color:#66d9ef">readinessProbe</span>:
+          <span style="color:#66d9ef">httpGet</span>:
+            <span style="color:#66d9ef">port</span>: <span style="color:#ae81ff">10902</span>
+            <span style="color:#66d9ef">path</span>: /-/ready
+        <span style="color:#66d9ef">volumeMounts</span>:
+        - <span style="color:#66d9ef">name</span>: prometheus-config-tmpl
+          <span style="color:#66d9ef">mountPath</span>: /etc/prometheus/config
+        - <span style="color:#66d9ef">name</span>: prometheus-config-out
+          <span style="color:#66d9ef">mountPath</span>: /etc/prometheus/config_out
+        - <span style="color:#66d9ef">name</span>: prometheus-rules
+          <span style="color:#66d9ef">mountPath</span>: /etc/prometheus/rules
+        - <span style="color:#66d9ef">name</span>: prometheus-storage
+          <span style="color:#66d9ef">mountPath</span>: /prometheus
+        - <span style="color:#66d9ef">name</span>: thanos-objectstorage
+          <span style="color:#66d9ef">subPath</span>: objectstorage.yaml
+          <span style="color:#66d9ef">mountPath</span>: /etc/thanos/objectstorage.yaml
+      <span style="color:#66d9ef">volumes</span>:
+      - <span style="color:#66d9ef">name</span>: prometheus-config-tmpl
+        <span style="color:#66d9ef">configMap</span>:
+          <span style="color:#66d9ef">defaultMode</span>: <span style="color:#ae81ff">420</span>
+          <span style="color:#66d9ef">name</span>: prometheus-config-tmpl
+      - <span style="color:#66d9ef">name</span>: prometheus-config-out
+        <span style="color:#66d9ef">emptyDir</span>: {}
+      - <span style="color:#66d9ef">name</span>: prometheus-rules
+        <span style="color:#66d9ef">configMap</span>:
+          <span style="color:#66d9ef">name</span>: prometheus-rules
+      - <span style="color:#66d9ef">name</span>: thanos-objectstorage
+        <span style="color:#66d9ef">secret</span>:
+          <span style="color:#66d9ef">secretName</span>: thanos-objectstorage
+  <span style="color:#66d9ef">volumeClaimTemplates</span>:
+  - <span style="color:#66d9ef">metadata</span>:
+      <span style="color:#66d9ef">name</span>: prometheus-storage
+      <span style="color:#66d9ef">labels</span>:
+        <span style="color:#66d9ef">app.kubernetes.io/name</span>: prometheus
+    <span style="color:#66d9ef">spec</span>:
+      <span style="color:#66d9ef">accessModes</span>:
+      - ReadWriteOnce
+      <span style="color:#66d9ef">resources</span>:
+        <span style="color:#66d9ef">requests</span>:
+          <span style="color:#66d9ef">storage</span>: 200Gi
+      <span style="color:#66d9ef">volumeMode</span>: Filesystem
+</code></pre></div><ul>
+<li>Prometheus 使用 StatefulSet 方式部署，挂载数据盘以便存储最新监控数据。</li>
+<li>由于 Prometheus 副本之间没有启动顺序的依赖，所以 podManagementPolicy 指定为 Parallel，加快启动速度。</li>
+<li>为 Prometheus 绑定足够的 RBAC 权限，以便后续配置使用 k8s 的服务发现 (<code>kubernetes_sd_configs</code>) 时能够正常工作。</li>
+<li>为 Prometheus 创建 headless 类型 service，一方面是 StatefulSet 本身需要指定 headless 的 <code>serviceName</code>，另一方面是为后续 Thanos Query 通过 DNS SRV 记录来动态发现 Sidecar 的 gRPC 端点做准备 (使用 headless service 才能让 DNS SRV 正确返回所有端点)。</li>
+<li>使用两个 Prometheus 副本，用于实现高可用。</li>
+<li>使用硬反亲和，避免 Prometheus 部署在同一节点，既可以分散压力也可以避免单点故障。</li>
+<li>Prometheus 使用 <code>--storage.tsdb.retention.time</code> 指定数据保留时长，默认15天，可以根据数据增长速度和数据盘大小做适当调整(数据增长取决于采集的指标和目标端点的数量和采集频率)。</li>
+<li>Sidecar 使用 <code>--objstore.config-file</code> 引用我们刚刚创建并挂载的对象存储配置文件，用于上传数据到对象存储。</li>
+<li>通常会给 Prometheus 附带一个 quay.io/coreos/prometheus-config-reloader 来监听配置变更并动态加载，但 thanos sidecar 也为我们提供了这个功能，所以可以直接用 thanos sidecar 来实现此功能，也支持配置文件根据模板动态生成：<code>--reloader.config-file</code> 指定 Prometheus 配置文件模板，<code>--reloader.config-envsubst-file</code> 指定生成配置文件的存放路径，假设是 <code>/etc/prometheus/config_out/prometheus.yaml</code> ，那么 <code>/etc/prometheus/config_out</code> 这个路径使用 emptyDir 让 Prometheus 与 Sidecar 实现配置文件共享挂载，Prometheus 再通过 <code>--config.file</code> 指定生成出来的配置文件，当配置有更新时，挂载的配置文件也会同步更新，Sidecar 也会通知 Prometheus 重新加载配置。另外，Sidecar 与 Prometheus 也挂载同一份 rules 配置文件，配置更新后 Sidecar 仅通知 Prometheus 加载配置，不支持模板，因为 rules 配置不需要模板来动态生成。</li>
+</ul>
+<p>然后再给 Prometheus 准备配置 (<code>prometheus-config.yaml</code>):</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#66d9ef">apiVersion</span>: v1
+<span style="color:#66d9ef">kind</span>: ConfigMap
+<span style="color:#66d9ef">metadata</span>:
+  <span style="color:#66d9ef">name</span>: prometheus-config-tmpl
+  <span style="color:#66d9ef">namespace</span>: thanos
+<span style="color:#66d9ef">data</span>:
+  <span style="color:#66d9ef">prometheus.yaml.tmpl</span>: |<span style="color:#e6db74">-
+</span><span style="color:#e6db74">    global:</span>
+      <span style="color:#66d9ef">scrape_interval</span>: 5s
+      <span style="color:#66d9ef">evaluation_interval</span>: 5s
+      <span style="color:#66d9ef">external_labels</span>:
+        <span style="color:#66d9ef">cluster</span>: prometheus-ha
+        <span style="color:#66d9ef">prometheus_replica</span>: $(POD_NAME)
+    <span style="color:#66d9ef">rule_files</span>:
+    - /etc/prometheus/rules/<span style="color:#75715e">*rules.yaml</span>
+    <span style="color:#66d9ef">scrape_configs</span>:
+    - <span style="color:#66d9ef">job_name</span>: cadvisor
+      <span style="color:#66d9ef">metrics_path</span>: /metrics/cadvisor
+      <span style="color:#66d9ef">scrape_interval</span>: 10s
+      <span style="color:#66d9ef">scrape_timeout</span>: 10s
+      <span style="color:#66d9ef">scheme</span>: https
+      <span style="color:#66d9ef">tls_config</span>:
+        <span style="color:#66d9ef">insecure_skip_verify</span>: <span style="color:#66d9ef">true</span>
+      <span style="color:#66d9ef">bearer_token_file</span>: /var/run/secrets/kubernetes.io/serviceaccount/token
+      <span style="color:#66d9ef">kubernetes_sd_configs</span>:
+      - <span style="color:#66d9ef">role</span>: node
+      <span style="color:#66d9ef">relabel_configs</span>:
+      - <span style="color:#66d9ef">action</span>: labelmap
+        <span style="color:#66d9ef">regex</span>: __meta_kubernetes_node_label_(.+)
+---
+
+<span style="color:#66d9ef">apiVersion</span>: v1
+<span style="color:#66d9ef">kind</span>: ConfigMap
+<span style="color:#66d9ef">metadata</span>:
+  <span style="color:#66d9ef">name</span>: prometheus-rules
+  <span style="color:#66d9ef">labels</span>:
+    <span style="color:#66d9ef">name</span>: prometheus-rules
+  <span style="color:#66d9ef">namespace</span>: thanos
+<span style="color:#66d9ef">data</span>:
+  <span style="color:#66d9ef">alert-rules.yaml</span>: |<span style="color:#e6db74">-
+</span><span style="color:#e6db74">    groups:</span>
+    - <span style="color:#66d9ef">name</span>: k8s.rules
+      <span style="color:#66d9ef">rules</span>:
+      - <span style="color:#66d9ef">expr</span>: <span style="color:#e6db74">|
+</span><span style="color:#e6db74">          sum(rate(container_cpu_usage_seconds_total{job=&#34;cadvisor&#34;, image!=&#34;&#34;, container!=&#34;&#34;}[5m])) by (namespace)</span>
+        <span style="color:#66d9ef">record</span>: namespace:container_cpu_usage_seconds_total:sum_rate
+      - <span style="color:#66d9ef">expr</span>: <span style="color:#e6db74">|
+</span><span style="color:#e6db74">          sum(container_memory_usage_bytes{job=&#34;cadvisor&#34;, image!=&#34;&#34;, container!=&#34;&#34;}) by (namespace)</span>
+        <span style="color:#66d9ef">record</span>: namespace:container_memory_usage_bytes:sum
+      - <span style="color:#66d9ef">expr</span>: <span style="color:#e6db74">|
+</span><span style="color:#e6db74">          sum by (namespace, pod, container) (</span>
+            rate(container_cpu_usage_seconds_total{job=<span style="color:#e6db74">&#34;cadvisor&#34;</span>, image!=<span style="color:#e6db74">&#34;&#34;</span>, container!=<span style="color:#e6db74">&#34;&#34;</span>}[5m])
+          )
+        <span style="color:#66d9ef">record</span>: namespace_pod_container:container_cpu_usage_seconds_total:sum_rate
+</code></pre></div><ul>
+<li>本文重点不在 prometheus 的配置文件，所以这里仅以采集 kubelet 所暴露的 cadvisor 容器指标的简单配置为例。</li>
+<li>Prometheus 实例采集的所有指标数据里都会额外加上 <code>external_labels</code> 里指定的 label，通常用 <code>cluster</code> 区分当前 Prometheus 所在集群的名称，我们再加了个 <code>prometheus_replica</code>，用于区分相同 Prometheus 副本（这些副本所采集的数据除了 <code>prometheus_replica</code> 的值不一样，其它几乎一致，这个值会被 Thanos Sidecar 替换成 Pod 副本的名称，用于 Thanos 实现 Prometheus 高可用）</li>
+</ul>
+<h3 id="安装-query">安装 Query</h3>
+<p>准备 <code>thanos-query.yaml</code>:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#66d9ef">apiVersion</span>: v1
+<span style="color:#66d9ef">kind</span>: Service
+<span style="color:#66d9ef">metadata</span>:
+  <span style="color:#66d9ef">name</span>: thanos-query
+  <span style="color:#66d9ef">namespace</span>: thanos
+  <span style="color:#66d9ef">labels</span>:
+    <span style="color:#66d9ef">app.kubernetes.io/name</span>: thanos-query
+<span style="color:#66d9ef">spec</span>:
+  <span style="color:#66d9ef">ports</span>:
+  - <span style="color:#66d9ef">name</span>: grpc
+    <span style="color:#66d9ef">port</span>: <span style="color:#ae81ff">10901</span>
+    <span style="color:#66d9ef">targetPort</span>: grpc
+  - <span style="color:#66d9ef">name</span>: http
+    <span style="color:#66d9ef">port</span>: <span style="color:#ae81ff">9090</span>
+    <span style="color:#66d9ef">targetPort</span>: http
+  <span style="color:#66d9ef">selector</span>:
+    <span style="color:#66d9ef">app.kubernetes.io/name</span>: thanos-query
+---
+
+<span style="color:#66d9ef">apiVersion</span>: apps/v1
+<span style="color:#66d9ef">kind</span>: Deployment
+<span style="color:#66d9ef">metadata</span>:
+  <span style="color:#66d9ef">name</span>: thanos-query
+  <span style="color:#66d9ef">namespace</span>: thanos
+  <span style="color:#66d9ef">labels</span>:
+    <span style="color:#66d9ef">app.kubernetes.io/name</span>: thanos-query
+<span style="color:#66d9ef">spec</span>:
+  <span style="color:#66d9ef">replicas</span>: <span style="color:#ae81ff">3</span>
+  <span style="color:#66d9ef">selector</span>:
+    <span style="color:#66d9ef">matchLabels</span>:
+      <span style="color:#66d9ef">app.kubernetes.io/name</span>: thanos-query
+  <span style="color:#66d9ef">template</span>:
+    <span style="color:#66d9ef">metadata</span>:
+      <span style="color:#66d9ef">labels</span>:
+        <span style="color:#66d9ef">app.kubernetes.io/name</span>: thanos-query
+    <span style="color:#66d9ef">spec</span>:
+      <span style="color:#66d9ef">affinity</span>:
+        <span style="color:#66d9ef">podAntiAffinity</span>:
+          <span style="color:#66d9ef">preferredDuringSchedulingIgnoredDuringExecution</span>:
+          - <span style="color:#66d9ef">podAffinityTerm</span>:
+              <span style="color:#66d9ef">labelSelector</span>:
+                <span style="color:#66d9ef">matchExpressions</span>:
+                - <span style="color:#66d9ef">key</span>: app.kubernetes.io/name
+                  <span style="color:#66d9ef">operator</span>: In
+                  <span style="color:#66d9ef">values</span>:
+                  - thanos-query
+              <span style="color:#66d9ef">topologyKey</span>: kubernetes.io/hostname
+            <span style="color:#66d9ef">weight</span>: <span style="color:#ae81ff">100</span>
+      <span style="color:#66d9ef">containers</span>:
+      - <span style="color:#66d9ef">args</span>:
+        - query
+        - --log.level=debug
+        - --query.auto-downsampling
+        - --grpc-address=<span style="color:#ae81ff">0.0.0.0</span>:<span style="color:#ae81ff">10901</span>
+        - --http-address=<span style="color:#ae81ff">0.0.0.0</span>:<span style="color:#ae81ff">9090</span>
+        - --query.partial-response
+        - --query.replica-label=prometheus_replica
+        - --query.replica-label=rule_replica
+        - --store=dnssrv+_grpc._tcp.prometheus-headless.thanos.svc.cluster.local
+        - --store=dnssrv+_grpc._tcp.thanos-rule.thanos.svc.cluster.local
+        - --store=dnssrv+_grpc._tcp.thanos-store.thanos.svc.cluster.local
+        <span style="color:#66d9ef">image</span>: thanosio/thanos:v0<span style="color:#ae81ff">.11.0</span>
+        <span style="color:#66d9ef">livenessProbe</span>:
+          <span style="color:#66d9ef">failureThreshold</span>: <span style="color:#ae81ff">4</span>
+          <span style="color:#66d9ef">httpGet</span>:
+            <span style="color:#66d9ef">path</span>: /-/healthy
+            <span style="color:#66d9ef">port</span>: <span style="color:#ae81ff">9090</span>
+            <span style="color:#66d9ef">scheme</span>: HTTP
+          <span style="color:#66d9ef">periodSeconds</span>: <span style="color:#ae81ff">30</span>
+        <span style="color:#66d9ef">name</span>: thanos-query
+        <span style="color:#66d9ef">ports</span>:
+        - <span style="color:#66d9ef">containerPort</span>: <span style="color:#ae81ff">10901</span>
+          <span style="color:#66d9ef">name</span>: grpc
+        - <span style="color:#66d9ef">containerPort</span>: <span style="color:#ae81ff">9090</span>
+          <span style="color:#66d9ef">name</span>: http
+        <span style="color:#66d9ef">readinessProbe</span>:
+          <span style="color:#66d9ef">failureThreshold</span>: <span style="color:#ae81ff">20</span>
+          <span style="color:#66d9ef">httpGet</span>:
+            <span style="color:#66d9ef">path</span>: /-/ready
+            <span style="color:#66d9ef">port</span>: <span style="color:#ae81ff">9090</span>
+            <span style="color:#66d9ef">scheme</span>: HTTP
+          <span style="color:#66d9ef">periodSeconds</span>: <span style="color:#ae81ff">5</span>
+        <span style="color:#66d9ef">terminationMessagePolicy</span>: FallbackToLogsOnError
+      <span style="color:#66d9ef">terminationGracePeriodSeconds</span>: <span style="color:#ae81ff">120</span>
+</code></pre></div><ul>
+<li>因为 Query 是无状态的，使用 Deployment 部署，也不需要 headless service，直接创建普通的 service。</li>
+<li>使用软反亲和，尽量不让 Query 调度到同一节点。</li>
+<li>部署多个副本，实现 Query 的高可用。</li>
+<li><code>--query.partial-response</code> 启用 <a href="https://thanos.io/components/query.md/#partial-response">Partial Response</a>，这样可以在部分后端 Store API 返回错误或超时的情况下也能看到正确的监控数据(如果后端 Store API 做了高可用，挂掉一个副本，Query 访问挂掉的副本超时，但由于还有没挂掉的副本，还是能正确返回结果；如果挂掉的某个后端本身就不存在我们需要的数据，挂掉也不影响结果的正确性；总之如果各个组件都做了高可用，想获得错误的结果都难，所以我们有信心启用 Partial Response 这个功能)。</li>
+<li><code>--query.auto-downsampling</code> 查询时自动降采样，提升查询效率。</li>
+<li><code>--query.replica-label</code> 指定我们刚刚给 Prometheus 配置的 <code>prometheus_replica</code> 这个 external label，Query 向 Sidecar 拉取 Prometheus 数据时会识别这个 label 并自动去重，这样即使挂掉一个副本，只要至少有一个副本正常也不会影响查询结果，也就是可以实现 Prometheus 的高可用。同理，再指定一个 <code>rule_replica</code> 用于给 Ruler 做高可用。</li>
+<li><code>--store</code> 指定实现了 Store API 的地址(Sidecar, Ruler, Store Gateway, Receiver)，通常不建议写静态地址，而是使用服务发现机制自动发现 Store API 地址，如果是部署在同一个集群，可以用 DNS SRV 记录来做服务发现，比如 <code>dnssrv+_grpc._tcp.prometheus-headless.thanos.svc.cluster.local</code>，也就是我们刚刚为包含 Sidecar 的 Prometheus 创建的 headless service (使用 headless service 才能正确实现服务发现)，并且指定了名为 grpc 的 tcp 端口，同理，其它组件也可以按照这样加到 <code>--store</code> 参数里；如果是其它有些组件部署在集群外，无法通过集群 dns 解析 DNS SRV 记录，可以使用配置文件来做服务发现，也就是指定 <code>--store.sd-files</code> 参数，将其它 Store API 地址写在配置文件里 (挂载 ConfigMap)，需要增加地址时直接更新 ConfigMap (不需要重启 Query)。</li>
+</ul>
+<h2 id="安装-store-gateway">安装 Store Gateway</h2>
+<p>准备 <code>thanos-store.yaml</code>:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#66d9ef">apiVersion</span>: v1
+<span style="color:#66d9ef">kind</span>: Service
+<span style="color:#66d9ef">metadata</span>:
+  <span style="color:#66d9ef">name</span>: thanos-store
+  <span style="color:#66d9ef">namespace</span>: thanos
+  <span style="color:#66d9ef">labels</span>:
+    <span style="color:#66d9ef">app.kubernetes.io/name</span>: thanos-store
+<span style="color:#66d9ef">spec</span>:
+  <span style="color:#66d9ef">clusterIP</span>: None
+  <span style="color:#66d9ef">ports</span>:
+  - <span style="color:#66d9ef">name</span>: grpc
+    <span style="color:#66d9ef">port</span>: <span style="color:#ae81ff">10901</span>
+    <span style="color:#66d9ef">targetPort</span>: <span style="color:#ae81ff">10901</span>
+  - <span style="color:#66d9ef">name</span>: http
+    <span style="color:#66d9ef">port</span>: <span style="color:#ae81ff">10902</span>
+    <span style="color:#66d9ef">targetPort</span>: <span style="color:#ae81ff">10902</span>
+  <span style="color:#66d9ef">selector</span>:
+    <span style="color:#66d9ef">app.kubernetes.io/name</span>: thanos-store
+---
+
+<span style="color:#66d9ef">apiVersion</span>: apps/v1
+<span style="color:#66d9ef">kind</span>: StatefulSet
+<span style="color:#66d9ef">metadata</span>:
+  <span style="color:#66d9ef">name</span>: thanos-store
+  <span style="color:#66d9ef">namespace</span>: thanos
+  <span style="color:#66d9ef">labels</span>:
+    <span style="color:#66d9ef">app.kubernetes.io/name</span>: thanos-store
+<span style="color:#66d9ef">spec</span>:
+  <span style="color:#66d9ef">replicas</span>: <span style="color:#ae81ff">2</span>
+  <span style="color:#66d9ef">selector</span>:
+    <span style="color:#66d9ef">matchLabels</span>:
+      <span style="color:#66d9ef">app.kubernetes.io/name</span>: thanos-store
+  <span style="color:#66d9ef">serviceName</span>: thanos-store
+  <span style="color:#66d9ef">podManagementPolicy</span>: Parallel
+  <span style="color:#66d9ef">template</span>:
+    <span style="color:#66d9ef">metadata</span>:
+      <span style="color:#66d9ef">labels</span>:
+        <span style="color:#66d9ef">app.kubernetes.io/name</span>: thanos-store
+    <span style="color:#66d9ef">spec</span>:
+      <span style="color:#66d9ef">containers</span>:
+      - <span style="color:#66d9ef">args</span>:
+        - store
+        - --log.level=debug
+        - --data-dir=/var/thanos/store
+        - --grpc-address=<span style="color:#ae81ff">0.0.0.0</span>:<span style="color:#ae81ff">10901</span>
+        - --http-address=<span style="color:#ae81ff">0.0.0.0</span>:<span style="color:#ae81ff">10902</span>
+        - --objstore.config-file=/etc/thanos/objectstorage.yaml
+        - --experimental.enable-index-header
+        <span style="color:#66d9ef">image</span>: thanosio/thanos:v0<span style="color:#ae81ff">.11.0</span>
+        <span style="color:#66d9ef">livenessProbe</span>:
+          <span style="color:#66d9ef">failureThreshold</span>: <span style="color:#ae81ff">8</span>
+          <span style="color:#66d9ef">httpGet</span>:
+            <span style="color:#66d9ef">path</span>: /-/healthy
+            <span style="color:#66d9ef">port</span>: <span style="color:#ae81ff">10902</span>
+            <span style="color:#66d9ef">scheme</span>: HTTP
+          <span style="color:#66d9ef">periodSeconds</span>: <span style="color:#ae81ff">30</span>
+        <span style="color:#66d9ef">name</span>: thanos-store
+        <span style="color:#66d9ef">ports</span>:
+        - <span style="color:#66d9ef">containerPort</span>: <span style="color:#ae81ff">10901</span>
+          <span style="color:#66d9ef">name</span>: grpc
+        - <span style="color:#66d9ef">containerPort</span>: <span style="color:#ae81ff">10902</span>
+          <span style="color:#66d9ef">name</span>: http
+        <span style="color:#66d9ef">readinessProbe</span>:
+          <span style="color:#66d9ef">failureThreshold</span>: <span style="color:#ae81ff">20</span>
+          <span style="color:#66d9ef">httpGet</span>:
+            <span style="color:#66d9ef">path</span>: /-/ready
+            <span style="color:#66d9ef">port</span>: <span style="color:#ae81ff">10902</span>
+            <span style="color:#66d9ef">scheme</span>: HTTP
+          <span style="color:#66d9ef">periodSeconds</span>: <span style="color:#ae81ff">5</span>
+        <span style="color:#66d9ef">terminationMessagePolicy</span>: FallbackToLogsOnError
+        <span style="color:#66d9ef">volumeMounts</span>:
+        - <span style="color:#66d9ef">mountPath</span>: /var/thanos/store
+          <span style="color:#66d9ef">name</span>: data
+          <span style="color:#66d9ef">readOnly</span>: <span style="color:#66d9ef">false</span>
+        - <span style="color:#66d9ef">name</span>: thanos-objectstorage
+          <span style="color:#66d9ef">subPath</span>: objectstorage.yaml
+          <span style="color:#66d9ef">mountPath</span>: /etc/thanos/objectstorage.yaml
+      <span style="color:#66d9ef">terminationGracePeriodSeconds</span>: <span style="color:#ae81ff">120</span>
+      <span style="color:#66d9ef">volumes</span>:
+      - <span style="color:#66d9ef">name</span>: thanos-objectstorage
+        <span style="color:#66d9ef">secret</span>:
+          <span style="color:#66d9ef">secretName</span>: thanos-objectstorage
+  <span style="color:#66d9ef">volumeClaimTemplates</span>:
+  - <span style="color:#66d9ef">metadata</span>:
+      <span style="color:#66d9ef">labels</span>:
+        <span style="color:#66d9ef">app.kubernetes.io/name</span>: thanos-store
+      <span style="color:#66d9ef">name</span>: data
+    <span style="color:#66d9ef">spec</span>:
+      <span style="color:#66d9ef">accessModes</span>:
+      - ReadWriteOnce
+      <span style="color:#66d9ef">resources</span>:
+        <span style="color:#66d9ef">requests</span>:
+          <span style="color:#66d9ef">storage</span>: 10Gi
+</code></pre></div><ul>
+<li>Store Gateway 实际也可以做到一定程度的无状态，它会需要一点磁盘空间来对对象存储做索引以加速查询，但数据不那么重要，是可以删除的，删除后会自动去拉对象存储查数据重新建立索引。这里我们避免每次重启都重新建立索引，所以用 StatefulSet 部署 Store Gateway，挂载一块小容量的磁盘(索引占用不到多大空间)。</li>
+<li>同样创建 headless service，用于 Query 对 Store Gateway 进行服务发现。</li>
+<li>部署两个副本，实现 Store Gateway 的高可用。</li>
+<li>Store Gateway 也需要对象存储的配置，用于读取对象存储的数据，所以要挂载对象存储的配置文件。</li>
+</ul>
+<h3 id="安装-ruler">安装 Ruler</h3>
+<p>准备 Ruler 部署配置 <code>thanos-ruler.yaml</code>:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#66d9ef">apiVersion</span>: v1
+<span style="color:#66d9ef">kind</span>: Service
+<span style="color:#66d9ef">metadata</span>:
+  <span style="color:#66d9ef">labels</span>:
+    <span style="color:#66d9ef">app.kubernetes.io/name</span>: thanos-rule
+  <span style="color:#66d9ef">name</span>: thanos-rule
+  <span style="color:#66d9ef">namespace</span>: thanos
+<span style="color:#66d9ef">spec</span>:
+  <span style="color:#66d9ef">clusterIP</span>: None
+  <span style="color:#66d9ef">ports</span>:
+  - <span style="color:#66d9ef">name</span>: grpc
+    <span style="color:#66d9ef">port</span>: <span style="color:#ae81ff">10901</span>
+    <span style="color:#66d9ef">targetPort</span>: grpc
+  - <span style="color:#66d9ef">name</span>: http
+    <span style="color:#66d9ef">port</span>: <span style="color:#ae81ff">10902</span>
+    <span style="color:#66d9ef">targetPort</span>: http
+  <span style="color:#66d9ef">selector</span>:
+    <span style="color:#66d9ef">app.kubernetes.io/name</span>: thanos-rule
+---
+
+<span style="color:#66d9ef">apiVersion</span>: apps/v1
+<span style="color:#66d9ef">kind</span>: StatefulSet
+<span style="color:#66d9ef">metadata</span>:
+  <span style="color:#66d9ef">labels</span>:
+    <span style="color:#66d9ef">app.kubernetes.io/name</span>: thanos-rule
+  <span style="color:#66d9ef">name</span>: thanos-rule
+  <span style="color:#66d9ef">namespace</span>: thanos
+<span style="color:#66d9ef">spec</span>:
+  <span style="color:#66d9ef">replicas</span>: <span style="color:#ae81ff">2</span>
+  <span style="color:#66d9ef">selector</span>:
+    <span style="color:#66d9ef">matchLabels</span>:
+      <span style="color:#66d9ef">app.kubernetes.io/name</span>: thanos-rule
+  <span style="color:#66d9ef">serviceName</span>: thanos-rule
+  <span style="color:#66d9ef">podManagementPolicy</span>: Parallel
+  <span style="color:#66d9ef">template</span>:
+    <span style="color:#66d9ef">metadata</span>:
+      <span style="color:#66d9ef">labels</span>:
+        <span style="color:#66d9ef">app.kubernetes.io/name</span>: thanos-rule
+    <span style="color:#66d9ef">spec</span>:
+      <span style="color:#66d9ef">containers</span>:
+      - <span style="color:#66d9ef">args</span>:
+        - rule
+        - --grpc-address=<span style="color:#ae81ff">0.0.0.0</span>:<span style="color:#ae81ff">10901</span>
+        - --http-address=<span style="color:#ae81ff">0.0.0.0</span>:<span style="color:#ae81ff">10902</span>
+        - --rule-file=/etc/thanos/rules/<span style="color:#75715e">*rules.yaml</span>
+        - --objstore.config-file=/etc/thanos/objectstorage.yaml
+        - --data-dir=/var/thanos/rule
+        - --label=rule_replica=<span style="color:#e6db74">&#34;$(NAME)&#34;</span>
+        - --alert.label-drop=<span style="color:#e6db74">&#34;rule_replica&#34;</span>
+        - --query=dnssrv+_http._tcp.thanos-query.thanos.svc.cluster.local
+        <span style="color:#66d9ef">env</span>:
+        - <span style="color:#66d9ef">name</span>: NAME
+          <span style="color:#66d9ef">valueFrom</span>:
+            <span style="color:#66d9ef">fieldRef</span>:
+              <span style="color:#66d9ef">fieldPath</span>: metadata.name
+        <span style="color:#66d9ef">image</span>: thanosio/thanos:v0<span style="color:#ae81ff">.11.0</span>
+        <span style="color:#66d9ef">livenessProbe</span>:
+          <span style="color:#66d9ef">failureThreshold</span>: <span style="color:#ae81ff">24</span>
+          <span style="color:#66d9ef">httpGet</span>:
+            <span style="color:#66d9ef">path</span>: /-/healthy
+            <span style="color:#66d9ef">port</span>: <span style="color:#ae81ff">10902</span>
+            <span style="color:#66d9ef">scheme</span>: HTTP
+          <span style="color:#66d9ef">periodSeconds</span>: <span style="color:#ae81ff">5</span>
+        <span style="color:#66d9ef">name</span>: thanos-rule
+        <span style="color:#66d9ef">ports</span>:
+        - <span style="color:#66d9ef">containerPort</span>: <span style="color:#ae81ff">10901</span>
+          <span style="color:#66d9ef">name</span>: grpc
+        - <span style="color:#66d9ef">containerPort</span>: <span style="color:#ae81ff">10902</span>
+          <span style="color:#66d9ef">name</span>: http
+        <span style="color:#66d9ef">readinessProbe</span>:
+          <span style="color:#66d9ef">failureThreshold</span>: <span style="color:#ae81ff">18</span>
+          <span style="color:#66d9ef">httpGet</span>:
+            <span style="color:#66d9ef">path</span>: /-/ready
+            <span style="color:#66d9ef">port</span>: <span style="color:#ae81ff">10902</span>
+            <span style="color:#66d9ef">scheme</span>: HTTP
+          <span style="color:#66d9ef">initialDelaySeconds</span>: <span style="color:#ae81ff">10</span>
+          <span style="color:#66d9ef">periodSeconds</span>: <span style="color:#ae81ff">5</span>
+        <span style="color:#66d9ef">terminationMessagePolicy</span>: FallbackToLogsOnError
+        <span style="color:#66d9ef">volumeMounts</span>:
+        - <span style="color:#66d9ef">mountPath</span>: /var/thanos/rule
+          <span style="color:#66d9ef">name</span>: data
+          <span style="color:#66d9ef">readOnly</span>: <span style="color:#66d9ef">false</span>
+        - <span style="color:#66d9ef">name</span>: thanos-objectstorage
+          <span style="color:#66d9ef">subPath</span>: objectstorage.yaml
+          <span style="color:#66d9ef">mountPath</span>: /etc/thanos/objectstorage.yaml
+        - <span style="color:#66d9ef">name</span>: thanos-rules
+          <span style="color:#66d9ef">mountPath</span>: /etc/thanos/rules
+      <span style="color:#66d9ef">volumes</span>:
+      - <span style="color:#66d9ef">name</span>: thanos-objectstorage
+        <span style="color:#66d9ef">secret</span>:
+          <span style="color:#66d9ef">secretName</span>: thanos-objectstorage
+      - <span style="color:#66d9ef">name</span>: thanos-rules
+        <span style="color:#66d9ef">configMap</span>:
+          <span style="color:#66d9ef">name</span>: thanos-rules
+  <span style="color:#66d9ef">volumeClaimTemplates</span>:
+  - <span style="color:#66d9ef">metadata</span>:
+      <span style="color:#66d9ef">labels</span>:
+        <span style="color:#66d9ef">app.kubernetes.io/name</span>: thanos-rule
+      <span style="color:#66d9ef">name</span>: data
+    <span style="color:#66d9ef">spec</span>:
+      <span style="color:#66d9ef">accessModes</span>:
+      - ReadWriteOnce
+      <span style="color:#66d9ef">resources</span>:
+        <span style="color:#66d9ef">requests</span>:
+          <span style="color:#66d9ef">storage</span>: 100Gi
+</code></pre></div><ul>
+<li>Ruler 是有状态服务，使用 Statefulset 部署，挂载磁盘以便存储根据 rule 配置计算出的新数据。</li>
+<li>同样创建 headless service，用于 Query 对 Ruler 进行服务发现。</li>
+<li>部署两个副本，且使用 <code>--label=rule_replica=</code> 给所有数据添加 <code>rule_replica</code> 的 label (与 Query 配置的 <code>replica_label</code> 相呼应)，用于实现 Ruler 高可用。同时指定 <code>--alert.label-drop</code> 为 <code>rule_replica</code>，在触发告警发送通知给 AlertManager 时，去掉这个 label，以便让 AlertManager 自动去重 (避免重复告警)。</li>
+<li>使用 <code>--query</code> 指定 Query 地址，这里还是用 DNS SRV 来做服务发现，但效果跟配 <code>dns+thanos-query.thanos.svc.cluster.local:9090</code> 是一样的，最终都是通过 Query 的 ClusterIP (VIP) 访问，因为它是无状态的，可以直接由 K8S 来给我们做负载均衡。</li>
+<li>Ruler 也需要对象存储的配置，用于上传计算出的数据到对象存储，所以要挂载对象存储的配置文件。</li>
+<li><code>--rule-file</code> 指定挂载的 rule 配置，Ruler 根据配置来生成数据和触发告警。</li>
+</ul>
+<p>再准备 Ruler 配置文件 <code>thanos-ruler-config.yaml</code>:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#66d9ef">apiVersion</span>: v1
+<span style="color:#66d9ef">kind</span>: ConfigMap
+<span style="color:#66d9ef">metadata</span>:
+  <span style="color:#66d9ef">name</span>: thanos-rules
+  <span style="color:#66d9ef">labels</span>:
+    <span style="color:#66d9ef">name</span>: thanos-rules
+  <span style="color:#66d9ef">namespace</span>: thanos
+<span style="color:#66d9ef">data</span>:
+  <span style="color:#66d9ef">record.rules.yaml</span>: |<span style="color:#e6db74">-
+</span><span style="color:#e6db74">    groups:</span>
+    - <span style="color:#66d9ef">name</span>: k8s.rules
+      <span style="color:#66d9ef">rules</span>:
+      - <span style="color:#66d9ef">expr</span>: <span style="color:#e6db74">|
+</span><span style="color:#e6db74">          sum(rate(container_cpu_usage_seconds_total{job=&#34;cadvisor&#34;, image!=&#34;&#34;, container!=&#34;&#34;}[5m])) by (namespace)</span>
+        <span style="color:#66d9ef">record</span>: namespace:container_cpu_usage_seconds_total:sum_rate
+      - <span style="color:#66d9ef">expr</span>: <span style="color:#e6db74">|
+</span><span style="color:#e6db74">          sum(container_memory_usage_bytes{job=&#34;cadvisor&#34;, image!=&#34;&#34;, container!=&#34;&#34;}) by (namespace)</span>
+        <span style="color:#66d9ef">record</span>: namespace:container_memory_usage_bytes:sum
+      - <span style="color:#66d9ef">expr</span>: <span style="color:#e6db74">|
+</span><span style="color:#e6db74">          sum by (namespace, pod, container) (</span>
+            rate(container_cpu_usage_seconds_total{job=<span style="color:#e6db74">&#34;cadvisor&#34;</span>, image!=<span style="color:#e6db74">&#34;&#34;</span>, container!=<span style="color:#e6db74">&#34;&#34;</span>}[5m])
+          )
+        <span style="color:#66d9ef">record</span>: namespace_pod_container:container_cpu_usage_seconds_total:sum_rate
+</code></pre></div><ul>
+<li>配置内容仅为示例，根据自身情况来配置，格式基本兼容 Prometheus 的 rule 配置格式，参考: <a href="https://thanos.io/components/rule.md/#configuring-rules">https://thanos.io/components/rule.md/#configuring-rules</a></li>
+</ul>
+<h3 id="安装-compact">安装 Compact</h3>
+<p>准备 Compact 部署配置 <code>thanos-compact.yaml</code>:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#66d9ef">apiVersion</span>: v1
+<span style="color:#66d9ef">kind</span>: Service
+<span style="color:#66d9ef">metadata</span>:
+  <span style="color:#66d9ef">labels</span>:
+    <span style="color:#66d9ef">app.kubernetes.io/name</span>: thanos-compact
+  <span style="color:#66d9ef">name</span>: thanos-compact
+  <span style="color:#66d9ef">namespace</span>: thanos
+<span style="color:#66d9ef">spec</span>:
+  <span style="color:#66d9ef">ports</span>:
+  - <span style="color:#66d9ef">name</span>: http
+    <span style="color:#66d9ef">port</span>: <span style="color:#ae81ff">10902</span>
+    <span style="color:#66d9ef">targetPort</span>: http
+  <span style="color:#66d9ef">selector</span>:
+    <span style="color:#66d9ef">app.kubernetes.io/name</span>: thanos-compact
+---
+
+<span style="color:#66d9ef">apiVersion</span>: apps/v1
+<span style="color:#66d9ef">kind</span>: StatefulSet
+<span style="color:#66d9ef">metadata</span>:
+  <span style="color:#66d9ef">labels</span>:
+    <span style="color:#66d9ef">app.kubernetes.io/name</span>: thanos-compact
+  <span style="color:#66d9ef">name</span>: thanos-compact
+  <span style="color:#66d9ef">namespace</span>: thanos
+<span style="color:#66d9ef">spec</span>:
+  <span style="color:#66d9ef">replicas</span>: <span style="color:#ae81ff">1</span>
+  <span style="color:#66d9ef">selector</span>:
+    <span style="color:#66d9ef">matchLabels</span>:
+      <span style="color:#66d9ef">app.kubernetes.io/name</span>: thanos-compact
+  <span style="color:#66d9ef">serviceName</span>: thanos-compact
+  <span style="color:#66d9ef">template</span>:
+    <span style="color:#66d9ef">metadata</span>:
+      <span style="color:#66d9ef">labels</span>:
+        <span style="color:#66d9ef">app.kubernetes.io/name</span>: thanos-compact
+    <span style="color:#66d9ef">spec</span>:
+      <span style="color:#66d9ef">containers</span>:
+      - <span style="color:#66d9ef">args</span>:
+        - compact
+        - --wait
+        - --objstore.config-file=/etc/thanos/objectstorage.yaml
+        - --data-dir=/var/thanos/compact
+        - --debug.accept-malformed-index
+        - --log.level=debug
+        - --retention.resolution-raw=90d
+        - --retention.resolution-5m=180d
+        - --retention.resolution-1h=360d
+        <span style="color:#66d9ef">image</span>: thanosio/thanos:v0<span style="color:#ae81ff">.11.0</span>
+        <span style="color:#66d9ef">livenessProbe</span>:
+          <span style="color:#66d9ef">failureThreshold</span>: <span style="color:#ae81ff">4</span>
+          <span style="color:#66d9ef">httpGet</span>:
+            <span style="color:#66d9ef">path</span>: /-/healthy
+            <span style="color:#66d9ef">port</span>: <span style="color:#ae81ff">10902</span>
+            <span style="color:#66d9ef">scheme</span>: HTTP
+          <span style="color:#66d9ef">periodSeconds</span>: <span style="color:#ae81ff">30</span>
+        <span style="color:#66d9ef">name</span>: thanos-compact
+        <span style="color:#66d9ef">ports</span>:
+        - <span style="color:#66d9ef">containerPort</span>: <span style="color:#ae81ff">10902</span>
+          <span style="color:#66d9ef">name</span>: http
+        <span style="color:#66d9ef">readinessProbe</span>:
+          <span style="color:#66d9ef">failureThreshold</span>: <span style="color:#ae81ff">20</span>
+          <span style="color:#66d9ef">httpGet</span>:
+            <span style="color:#66d9ef">path</span>: /-/ready
+            <span style="color:#66d9ef">port</span>: <span style="color:#ae81ff">10902</span>
+            <span style="color:#66d9ef">scheme</span>: HTTP
+          <span style="color:#66d9ef">periodSeconds</span>: <span style="color:#ae81ff">5</span>
+        <span style="color:#66d9ef">terminationMessagePolicy</span>: FallbackToLogsOnError
+        <span style="color:#66d9ef">volumeMounts</span>:
+        - <span style="color:#66d9ef">mountPath</span>: /var/thanos/compact
+          <span style="color:#66d9ef">name</span>: data
+          <span style="color:#66d9ef">readOnly</span>: <span style="color:#66d9ef">false</span>
+        - <span style="color:#66d9ef">name</span>: thanos-objectstorage
+          <span style="color:#66d9ef">subPath</span>: objectstorage.yaml
+          <span style="color:#66d9ef">mountPath</span>: /etc/thanos/objectstorage.yaml
+      <span style="color:#66d9ef">terminationGracePeriodSeconds</span>: <span style="color:#ae81ff">120</span>
+      <span style="color:#66d9ef">volumes</span>:
+      - <span style="color:#66d9ef">name</span>: thanos-objectstorage
+        <span style="color:#66d9ef">secret</span>:
+          <span style="color:#66d9ef">secretName</span>: thanos-objectstorage
+  <span style="color:#66d9ef">volumeClaimTemplates</span>:
+  - <span style="color:#66d9ef">metadata</span>:
+      <span style="color:#66d9ef">labels</span>:
+        <span style="color:#66d9ef">app.kubernetes.io/name</span>: thanos-compact
+      <span style="color:#66d9ef">name</span>: data
+    <span style="color:#66d9ef">spec</span>:
+      <span style="color:#66d9ef">accessModes</span>:
+      - ReadWriteOnce
+      <span style="color:#66d9ef">resources</span>:
+        <span style="color:#66d9ef">requests</span>:
+          <span style="color:#66d9ef">storage</span>: 100Gi
+
+</code></pre></div><ul>
+<li>Compact 只能部署单个副本，因为如果多个副本都去对对象存储的数据做压缩和降采样的话，会造成冲突。</li>
+<li>使用 StatefulSet 部署，方便自动创建和挂载磁盘。磁盘用于存放临时数据，因为 Compact 需要一些磁盘空间来存放数据处理过程中产生的中间数据。</li>
+<li><code>--wait</code> 让 Compact 一直运行，轮询新数据来做压缩和降采样。</li>
+<li>Compact 也需要对象存储的配置，用于读取对象存储数据以及上传压缩和降采样后的数据到对象存储。</li>
+<li>创建一个普通 service，主要用于被 Prometheus 使用 kubernetes 的 endpoints 服务发现来采集指标(其它组件的 service 也一样有这个用途)。</li>
+<li><code>--retention.resolution-raw</code> 指定原始数据存放时长，<code>--retention.resolution-5m</code> 指定降采样到数据点 5 分钟间隔的数据存放时长，<code>--retention.resolution-1h</code> 指定降采样到数据点 1 小时间隔的数据存放时长，它们的数据精细程度递减，占用的存储空间也是递减，通常建议它们的存放时间递增配置 (一般只有比较新的数据才会放大看，久远的数据通常只会使用大时间范围查询来看个大致，所以建议将精细程度低的数据存放更长时间)</li>
+</ul>
+<h3 id="安装-receiver">安装 Receiver</h3>
+<p>该组件处于试验阶段，慎用。准备 Receiver 部署配置 <code>thanos-receiver.yaml</code>:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#66d9ef">apiVersion</span>: v1
+<span style="color:#66d9ef">kind</span>: ConfigMap
+<span style="color:#66d9ef">metadata</span>:
+  <span style="color:#66d9ef">name</span>: thanos-receive-hashrings
+  <span style="color:#66d9ef">namespace</span>: thanos
+<span style="color:#66d9ef">data</span>:
+  <span style="color:#66d9ef">thanos-receive-hashrings.json</span>: <span style="color:#e6db74">|
+</span><span style="color:#e6db74">    [</span>
+      {
+        <span style="color:#66d9ef">&#34;hashring&#34;: </span><span style="color:#e6db74">&#34;soft-tenants&#34;</span>,
+        <span style="color:#e6db74">&#34;endpoints&#34;</span>:
+        [
+          <span style="color:#e6db74">&#34;thanos-receive-0.thanos-receive.kube-system.svc.cluster.local:10901&#34;</span>,
+          <span style="color:#e6db74">&#34;thanos-receive-1.thanos-receive.kube-system.svc.cluster.local:10901&#34;</span>,
+          <span style="color:#e6db74">&#34;thanos-receive-2.thanos-receive.kube-system.svc.cluster.local:10901&#34;</span>
+        ]
+      }
+    ]
+---
+
+<span style="color:#66d9ef">apiVersion</span>: v1
+<span style="color:#66d9ef">kind</span>: Service
+<span style="color:#66d9ef">metadata</span>:
+  <span style="color:#66d9ef">name</span>: thanos-receive
+  <span style="color:#66d9ef">namespace</span>: thanos
+  <span style="color:#66d9ef">labels</span>:
+    <span style="color:#66d9ef">kubernetes.io/name</span>: thanos-receive
+<span style="color:#66d9ef">spec</span>:
+  <span style="color:#66d9ef">ports</span>:
+  - <span style="color:#66d9ef">name</span>: http
+    <span style="color:#66d9ef">port</span>: <span style="color:#ae81ff">10902</span>
+    <span style="color:#66d9ef">protocol</span>: TCP
+    <span style="color:#66d9ef">targetPort</span>: <span style="color:#ae81ff">10902</span>
+  - <span style="color:#66d9ef">name</span>: remote-write
+    <span style="color:#66d9ef">port</span>: <span style="color:#ae81ff">19291</span>
+    <span style="color:#66d9ef">protocol</span>: TCP
+    <span style="color:#66d9ef">targetPort</span>: <span style="color:#ae81ff">19291</span>
+  - <span style="color:#66d9ef">name</span>: grpc
+    <span style="color:#66d9ef">port</span>: <span style="color:#ae81ff">10901</span>
+    <span style="color:#66d9ef">protocol</span>: TCP
+    <span style="color:#66d9ef">targetPort</span>: <span style="color:#ae81ff">10901</span>
+  <span style="color:#66d9ef">selector</span>:
+    <span style="color:#66d9ef">kubernetes.io/name</span>: thanos-receive
+  <span style="color:#66d9ef">clusterIP</span>: None
+---
+
+<span style="color:#66d9ef">apiVersion</span>: apps/v1
+<span style="color:#66d9ef">kind</span>: StatefulSet
+<span style="color:#66d9ef">metadata</span>:
+  <span style="color:#66d9ef">labels</span>:
+    <span style="color:#66d9ef">kubernetes.io/name</span>: thanos-receive
+  <span style="color:#66d9ef">name</span>: thanos-receive
+  <span style="color:#66d9ef">namespace</span>: thanos
+<span style="color:#66d9ef">spec</span>:
+  <span style="color:#66d9ef">replicas</span>: <span style="color:#ae81ff">3</span>
+  <span style="color:#66d9ef">selector</span>:
+    <span style="color:#66d9ef">matchLabels</span>:
+      <span style="color:#66d9ef">kubernetes.io/name</span>: thanos-receive
+  <span style="color:#66d9ef">serviceName</span>: thanos-receive
+  <span style="color:#66d9ef">template</span>:
+    <span style="color:#66d9ef">metadata</span>:
+      <span style="color:#66d9ef">labels</span>:
+        <span style="color:#66d9ef">kubernetes.io/name</span>: thanos-receive
+    <span style="color:#66d9ef">spec</span>:
+      <span style="color:#66d9ef">containers</span>:
+      - <span style="color:#66d9ef">args</span>:
+        - receive
+        - --grpc-address=<span style="color:#ae81ff">0.0.0.0</span>:<span style="color:#ae81ff">10901</span>
+        - --http-address=<span style="color:#ae81ff">0.0.0.0</span>:<span style="color:#ae81ff">10902</span>
+        - --remote-write.address=<span style="color:#ae81ff">0.0.0.0</span>:<span style="color:#ae81ff">19291</span>
+        - --objstore.config-file=/etc/thanos/objectstorage.yaml
+        - --tsdb.path=/var/thanos/receive
+        - --tsdb.retention=12h
+        - --label=receive_replica=<span style="color:#e6db74">&#34;$(NAME)&#34;</span>
+        - --label=receive=<span style="color:#e6db74">&#34;true&#34;</span>
+        - --receive.hashrings-file=/etc/thanos/thanos-receive-hashrings.json
+        - --receive.local-endpoint=$(NAME).thanos-receive.thanos.svc.cluster.local:<span style="color:#ae81ff">10901</span>
+        <span style="color:#66d9ef">env</span>:
+        - <span style="color:#66d9ef">name</span>: NAME
+          <span style="color:#66d9ef">valueFrom</span>:
+            <span style="color:#66d9ef">fieldRef</span>:
+              <span style="color:#66d9ef">fieldPath</span>: metadata.name
+        <span style="color:#66d9ef">image</span>: thanosio/thanos:v0<span style="color:#ae81ff">.11.0</span>
+        <span style="color:#66d9ef">livenessProbe</span>:
+          <span style="color:#66d9ef">failureThreshold</span>: <span style="color:#ae81ff">4</span>
+          <span style="color:#66d9ef">httpGet</span>:
+            <span style="color:#66d9ef">path</span>: /-/healthy
+            <span style="color:#66d9ef">port</span>: <span style="color:#ae81ff">10902</span>
+            <span style="color:#66d9ef">scheme</span>: HTTP
+          <span style="color:#66d9ef">periodSeconds</span>: <span style="color:#ae81ff">30</span>
+        <span style="color:#66d9ef">name</span>: thanos-receive
+        <span style="color:#66d9ef">ports</span>:
+        - <span style="color:#66d9ef">containerPort</span>: <span style="color:#ae81ff">10901</span>
+          <span style="color:#66d9ef">name</span>: grpc
+        - <span style="color:#66d9ef">containerPort</span>: <span style="color:#ae81ff">10902</span>
+          <span style="color:#66d9ef">name</span>: http
+        - <span style="color:#66d9ef">containerPort</span>: <span style="color:#ae81ff">19291</span>
+          <span style="color:#66d9ef">name</span>: remote-write
+        <span style="color:#66d9ef">readinessProbe</span>:
+          <span style="color:#66d9ef">httpGet</span>:
+            <span style="color:#66d9ef">path</span>: /-/ready
+            <span style="color:#66d9ef">port</span>: <span style="color:#ae81ff">10902</span>
+            <span style="color:#66d9ef">scheme</span>: HTTP
+          <span style="color:#66d9ef">initialDelaySeconds</span>: <span style="color:#ae81ff">10</span>
+          <span style="color:#66d9ef">periodSeconds</span>: <span style="color:#ae81ff">30</span>
+        <span style="color:#66d9ef">resources</span>:
+          <span style="color:#66d9ef">limits</span>:
+            <span style="color:#66d9ef">cpu</span>: <span style="color:#e6db74">&#34;4&#34;</span>
+            <span style="color:#66d9ef">memory</span>: 8Gi
+          <span style="color:#66d9ef">requests</span>:
+            <span style="color:#66d9ef">cpu</span>: <span style="color:#e6db74">&#34;2&#34;</span>
+            <span style="color:#66d9ef">memory</span>: 4Gi
+        <span style="color:#66d9ef">volumeMounts</span>:
+        - <span style="color:#66d9ef">mountPath</span>: /var/thanos/receive
+          <span style="color:#66d9ef">name</span>: data
+          <span style="color:#66d9ef">readOnly</span>: <span style="color:#66d9ef">false</span>
+        - <span style="color:#66d9ef">mountPath</span>: /etc/thanos/thanos-receive-hashrings.json
+          <span style="color:#66d9ef">name</span>: thanos-receive-hashrings
+          <span style="color:#66d9ef">subPath</span>: thanos-receive-hashrings.json
+        - <span style="color:#66d9ef">mountPath</span>: /etc/thanos/objectstorage.yaml
+          <span style="color:#66d9ef">name</span>: thanos-objectstorage
+          <span style="color:#66d9ef">subPath</span>: objectstorage.yaml
+      <span style="color:#66d9ef">terminationGracePeriodSeconds</span>: <span style="color:#ae81ff">120</span>
+      <span style="color:#66d9ef">volumes</span>:
+      - <span style="color:#66d9ef">configMap</span>:
+          <span style="color:#66d9ef">defaultMode</span>: <span style="color:#ae81ff">420</span>
+          <span style="color:#66d9ef">name</span>: thanos-receive-hashrings
+        <span style="color:#66d9ef">name</span>: thanos-receive-hashrings
+      - <span style="color:#66d9ef">name</span>: thanos-objectstorage
+        <span style="color:#66d9ef">secret</span>:
+          <span style="color:#66d9ef">secretName</span>: thanos-objectstorage
+  <span style="color:#66d9ef">volumeClaimTemplates</span>:
+  - <span style="color:#66d9ef">metadata</span>:
+      <span style="color:#66d9ef">labels</span>:
+        <span style="color:#66d9ef">app.kubernetes.io/name</span>: thanos-receive
+      <span style="color:#66d9ef">name</span>: data
+    <span style="color:#66d9ef">spec</span>:
+      <span style="color:#66d9ef">accessModes</span>:
+      - ReadWriteOnce
+      <span style="color:#66d9ef">resources</span>:
+        <span style="color:#66d9ef">requests</span>:
+          <span style="color:#66d9ef">storage</span>: 200Gi
+</code></pre></div><ul>
+<li>部署 3 个副本， 配置 hashring， <code>--label=receive_replica</code> 为数据添加 <code>receive_replica</code> 这个 label (Query 的 <code>--query.replica-label</code> 也要加上这个) 来实现 Receiver 的高可用。</li>
+<li>Query 要指定 Receiver 后端地址: <code>--store=dnssrv+_grpc._tcp.thanos-receive.thanos.svc.cluster.local</code></li>
+<li>request, limit 根据自身规模情况自行做适当调整。</li>
+<li><code>--tsdb.retention</code> 根据自身需求调整最新数据的保留时间。</li>
+<li>如果改命名空间，记得把 Receiver 的 <code>--receive.local-endpoint</code> 参数也改下，不然会疯狂报错直至 OOMKilled。</li>
+</ul>
+<p>因为使用了 Receiver 来统一接收 Prometheus 的数据，所以 Prometheus 也不需要 Sidecar 了，但需要给 Prometheus 配置文件里加下 <code>remote_write</code>，让 Prometheus 将数据 push 给 Receiver:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">    <span style="color:#66d9ef">remote_write</span>:
+    - <span style="color:#66d9ef">url</span>: http://thanos-receive.thanos.svc.cluster.local:<span style="color:#ae81ff">19291</span>/api/v1/receive
+</code></pre></div><h3 id="指定-query-为数据源">指定 Query 为数据源</h3>
+<p>查询监控数据时需要指定 Prometheus 数据源地址，由于我们使用了 Thanos 来做分布式，而 Thanos 关键查询入口就是 Query，所以我们需要将数据源地址指定为 Query 的地址，假如使用 Grafana 查询，进入 <code>Configuration</code>-<code>Data Sources</code>-<code>Add data source</code>，选择 Prometheus，指定 thanos query 的地址: <code>http://thanos-query.thanos.svc.cluster.local:9090</code></p>
+<h2 id="总结">总结</h2>
+<p>本文教了大家如何选型 Thanos 部署方案并详细讲解了各个组件的安装方法，如果仔细阅读完本系列文章，我相信你已经有能力搭建并运维一套大型监控系统了。</p>
+
+            </article>
+
+            <ul class="pager blog-pager">
+                
+                <li class="previous">
+                    <a href="https://imroc.io/posts/build-cloud-native-large-scale-distributed-monitoring-system-2/" data-toggle="tooltip" data-placement="top" title="打造云原生大型分布式监控系统(二): Thanos 架构详解">&larr; 前一篇</a>
+                </li>
+                 
+            </ul>
+
+          
+            <div class="entry-shang text-center">
+    <p>「真诚赞赏，手留余香」</p>
+    <button class="zs show-zs btn btn-bred">赞赏</button>
+</div>
+<div class="zs-modal-bg"></div>
+<div class="zs-modal-box">
+    <div class="zs-modal-head">
+        <button type="button" class="close">×</button>
+        <span class="author"><img src="/favicon.png"/>roc</span>
+        <p class="tip"><i></i><span>请我喝杯咖啡？</span></p>
+    </div>
+    <div class="zs-modal-body">
+        <div class="zs-modal-btns">
+            <button class="btn btn-blink" data-num="2">2元</button>
+            <button class="btn btn-blink" data-num="5">5元</button>
+            <button class="btn btn-blink" data-num="10">10元</button>
+            <button class="btn btn-blink" data-num="50">50元</button>
+            <button class="btn btn-blink" data-num="100">100元</button>
+            <button class="btn btn-blink" data-num="1">任意金额</button>
+        </div>
+        <div class="zs-modal-pay">
+            <button class="btn btn-bred" id="pay-text">2元</button>
+            <p>使用<span id="pay-type">微信</span>扫描二维码完成支付</p>
+            <img src="/img/wechat-2.png" id="pay-image"/>
+        </div>
+    </div>
+    <div class="zs-modal-footer">
+        <label>
+            <input type="radio" name="zs-type" value="wechat" class="zs-type" checked="checked">
+            <span class="zs-wechat"><img src="/img/wechat-btn.png" /></span>
+        </label>
+        <label>
+            <input type="radio" name="zs-type" value="alipay" class="zs-type">
+            <span class="zs-alipay"><img src="/img/alipay-btn.png" /></span>
+        </label>
+    </div>
+</div>
+          
+
+          
+            
+
+  <h3>See Also</h3>
+  <ul style="margin-bottom: 25px;">
+      
+      <li><a href="/posts/build-cloud-native-large-scale-distributed-monitoring-system-2/">打造云原生大型分布式监控系统(二): Thanos 架构详解</a></li>
+      
+      <li><a href="/posts/build-cloud-native-large-scale-distributed-monitoring-system-1/">打造云原生大型分布式监控系统(一): 大规模场景下 Prometheus 的优化手段</a></li>
+      
+      <li><a href="/posts/kubernetes-overflow-and-drop/">Kubernetes 疑难杂症排查分享：神秘的溢出与丢包</a></li>
+      
+      <li><a href="/posts/kubernetes-no-route-to-host/">Kubernetes 疑难杂症排查分享: 诡异的 No route to host</a></li>
+      
+      <li><a href="/posts/kubernetes-service-topology/">k8s v1.17 新特性预告: 拓扑感知服务路由</a></li>
+      
+      <li><a href="/posts/troubleshooting-with-kubernetes-network/">Kubernetes 网络疑难杂症排查分享</a></li>
+      
+      <li><a href="/posts/lost-packets-once-enable-tcp-tw-recycle/">Kubernetes 踩坑分享：开启tcp_tw_recycle内核参数在NAT环境会丢包</a></li>
+      
+      <li><a href="/posts/handle-memory-fragmentation/">Kubernetes 最佳实践：处理内存碎片化</a></li>
+      
+      <li><a href="/posts/kubernetes-scale-keepalive-service/">Kubernetes 最佳实践：解决长连接服务扩容失效</a></li>
+      
+      <li><a href="/posts/capture-packets-in-container/">Kubernetes 问题定位技巧：容器内抓包</a></li>
+      
+  </ul>
+
+          
+
+          
+            
+<div id="gitalk-container"></div>
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+<script>
+  
+  
+    
+  
+  console.log("id:799afd1630d9f9367a44bd60d1349e0e")
+  var gitalk = new Gitalk({
+      clientID: 'd05b8f959b3111c6fb63',
+      clientSecret: 'f30ef76ea0050ed731ace76f7fbf684ae5d28fbc',
+      repo: 'imroc.github.io',
+      owner: 'imroc',
+      admin: 'imroc',
+      labels: ['Gitalk'],
+      title: '打造云原生大型分布式监控系统(三): Thanos 部署与实践',
+      createIssueManually: false,
+      id: '799afd1630d9f9367a44bd60d1349e0e',
+      distractionFreeMode: true
+  });
+  gitalk.render('gitalk-container');
+</script>
+
+          
+        </div>
+    </div>
+</div>
+
+    <footer>
+  <div id="copyright">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+          <ul class="list-inline text-center footer-links">
+            
+                <li>
+                  <a href="mailto:roc@imroc.io" title="Email me">
+                    <span class="fa-stack fa-lg">
+                      <i class="fas fa-circle fa-stack-2x"></i>
+                      <i class="fas fa-envelope fa-stack-1x fa-inverse"></i>
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="https://github.com/imroc" title="GitHub">
+                    <span class="fa-stack fa-lg">
+                      <i class="fas fa-circle fa-stack-2x"></i>
+                      <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="https://twitter.com/imrocchan" title="Twitter">
+                    <span class="fa-stack fa-lg">
+                      <i class="fas fa-circle fa-stack-2x"></i>
+                      <i class="fab fa-twitter fa-stack-1x fa-inverse"></i>
+                    </span>
+                  </a>
+                </li>
+            
+            <li>
+              <a href="https://imroc.io/index.xml" title="RSS">
+                <span class="fa-stack fa-lg">
+                  <i class="fa fa-circle fa-stack-2x"></i>
+                  <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                </span>
+              </a>
+            </li>
+            
+          </ul>
+          <p class="credits copyright text-muted">
+          &copy;2017-2020
+            
+              
+                <a href="/about">roc</a>
+              
+            
+            &nbsp;&bull;&nbsp;
+            2020-04-19
+            更新
+          </p>
+          <p class="credits theme-by text-muted">
+            由 <a href="http://gohugo.io">Hugo v0.65.3</a> 强力驱动 &nbsp;&bull;&nbsp; 主题 <a href="https://github.com/imroc/xhugo">xhugo</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  window.copyText='复制'==''?"Copy":'复制'
+  window.copiedText='已复制!'==''?"Copied":'已复制!'
+</script><script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.js"
+  integrity="sha384-K3vbOmF2BtaVai+Qk37uypf7VrgBubhQreNQe9aGsz9lB63dIFiQVlJbr92dw2Lx" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/contrib/auto-render.min.js"
+  integrity="sha384-kmZOZB5ObwgQnS/DuDg6TScgOiWWBiVt0plIRkZCmE6rDZGrEOQeHM5PcHi+nyqe" crossorigin="anonymous"></script>
+<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"
+  integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://cdn.bootcss.com/twitter-bootstrap/3.3.7/js/bootstrap.min.js"
+  integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+
+
+
+
+<script src='/js/bundle.min.3e2cb25916e0577d6eaf45f0f6125a6156723011439209b222abd8207bb6057f.js' integrity='sha256-PiyyWRbgV31ur0Xw9hJaYVZyMBFDkgmyIqvYIHu2BX8='></script>
+
+
+
+
+
+
+  </body>
+</html>
+

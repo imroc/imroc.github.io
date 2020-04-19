@@ -5,8 +5,8 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title> kubernetes - imroc.io|roc的博客|Cloud Native|Kubernetes|Go|Golang</title>
-  <meta name="description" content="imroc.io|roc的博客|Cloud Native|Kubernetes|Go|Golang" />
+  <title> kubernetes - roc的博客|Cloud Native|Kubernetes|Go|Golang|Service Mesh</title>
+  <meta name="description" content="roc的博客|Cloud Native|Kubernetes|Go|Golang|Service Mesh" />
   <meta property="og:title" content="kubernetes" />
   <meta name="twitter:title" content="kubernetes" />
   <meta name="author" content="{Description { .Site.Author.name }}"/>
@@ -20,19 +20,25 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="roc" />
 
-  <meta name="generator" content="Hugo 0.62.0" />
+  <meta name="generator" content="Hugo 0.65.3" />
   <link rel="canonical" href="https://imroc.io/categories/kubernetes/" />
-  <link rel="alternate" href="https://imroc.io/index.xml" type="application/rss+xml" title="roc">
+  <link rel="alternate" href="https://imroc.io/index.xml" type="application/rss+xml" title="roc"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css"
+    integrity="sha384-9eLZqc9ds8eNjO3TmqPeYcDj8n+Qfa4nuSiGYa6DjLNcv9BtN69ZIulL9+8CqC9Y" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/5.5.0/css/fontawesome.min.css"
+    integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.bootcss.com/twitter-bootstrap/3.3.7/css/bootstrap.min.css"
+    integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" /><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
 
   
-  <link href="https://fonts.googleapis.com/css?family=Lora:400,400i,700%7COpen+Sans:400,700" rel="stylesheet">
-
-  
 
 
 
-<link rel="stylesheet" href='/css/bundle.min.43522e1b6746447005cecd1381cc12a654c0364de88961016cdf5f133529476d.css' integrity='sha256-Q1IuG2dGRHAFzs0TgcwSplTANk3oiWEBbN9fEzUpR20='>
-  --><script>
+
+
+
+<link rel="stylesheet" href='/css/bundle.min.8fad4c9e81931afed0cc9eee450df2ae0e60d1129a4cd7ee011629c97c6394e9.css' integrity='sha256-j61MnoGTGv7QzJ7uRQ3yrg5g0RKaTNfuARYpyXxjlOk='><script>
 var _hmt = _hmt || [];
 (function() {
   var hm = document.createElement("script");
@@ -75,13 +81,10 @@ var _hmt = _hmt || [];
                   <a href="https://imroc.io/categories/golang">golang</a>
                 
                 
-                  <a href="https://imroc.io/categories/arch">架构</a>
+                  <a href="https://imroc.io/categories/geek">geek</a>
                 
                 
                   <a href="https://imroc.io/categories/istio">istio</a>
-                
-                
-                  <a href="https://imroc.io/categories/geek">极客</a>
                 
               </div>
             </li>
@@ -94,6 +97,12 @@ var _hmt = _hmt || [];
                 
                 
                   <a href="https://k8s.imroc.io">Kubernetes 实践指南</a>
+                
+                
+                  <a href="https://istio.imroc.io">Istio 实践指南</a>
+                
+                
+                  <a href="https://book.kubetencent.io">腾讯云容器服务指南</a>
                 
               </div>
             </li>
@@ -157,7 +166,7 @@ var _hmt = _hmt || [];
 <script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/algoliasearch.min.js"></script>
 <script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/autocomplete.min.js"></script>
 <script>
-    var client = algoliasearch("B6Q6PSGUV5", "d04f855d3a39eed8ad8d9365ba7c86af");
+    var client = algoliasearch("B6Q6PSGUV5", "5b4678e9995fe4211c4fa43ad2ffdab5");
     var index = client.initIndex("imroc-blog");
     
     autocomplete('#aa-search-input', {
@@ -172,8 +181,8 @@ var _hmt = _hmt || [];
         templates: {
             
             suggestion: function (suggestion) {
-                return '<span>' + '<a href="/posts/' + suggestion.slug + '">' +
-                    suggestion._highlightResult.title.value + '</a></span>';
+                return '<span>' + '<a href="/' + suggestion.uri + '">' + suggestion._highlightResult.title.value +
+                        '</a></span>';
             }
         }
     });
@@ -210,57 +219,23 @@ var _hmt = _hmt || [];
         <div class="posts-list">
           
             <article class="post-preview">
-              <a href="https://imroc.io/posts/kubernetes/install-kubernetes-1.9-on-centos7-with-kubeadm/">
-                <h2 class="post-title">国内使用Kubeadm在CentOS 7上安装Kubernetes 1.9</h2>
+              <a href="https://imroc.io/posts/sync-images-to-docker-hub-using-katacoda/">
+                <h2 class="post-title">利用Katacoda免费同步Docker镜像到Docker Hub</h2>
 
                 
                   <h3 class="post-subtitle">
-                    self host，ipvs替代iptables，CoreDNS替代kube-dns
+                    无需买服务器，脚本批量同步
                   </h3>
                 
               </a>
 
               <p class="post-meta">
-                发表于 March 7, 2018
+                发表于 2018-03-09
               </p>
               <div class="post-entry">
                 
-                  准备 修改系统配置 开启路由转发（保证 proxy 正常运行，Service 需要） sysctl -w net.ipv4.ip_forward=1 默认情况下，由于安全原因，linux是关闭了路由转发的，即同台机器不
-                  <a href="https://imroc.io/posts/kubernetes/install-kubernetes-1.9-on-centos7-with-kubeadm/" class="post-read-more">[阅读全文]</a>
-                
-              </div>
-
-              
-                <span class="post-meta">
-                  
-                    #<a href='https://imroc.io/tags/docker/'>docker</a>&nbsp;
-                  
-                    #<a href='https://imroc.io/tags/kubernetes/'>kubernetes</a>&nbsp;
-                  
-                    #<a href='https://imroc.io/tags/kubeadm/'>kubeadm</a>&nbsp;
-                  
-                </span>
-              
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://imroc.io/posts/kubernetes/kubernetes-binaries/">
-                <h2 class="post-title">Kubernetes程序二进制下载集合</h2>
-
-                
-                  <h3 class="post-subtitle">
-                    Kubernetes Binaries
-                  </h3>
-                
-              </a>
-
-              <p class="post-meta">
-                发表于 January 5, 2018
-              </p>
-              <div class="post-entry">
-                
-                  前言 由于国内网络的特殊性，安装Kubernetes很多时候会采用二进制方式部署，我将涉及到的二进制利用脚本传到百度云，方便大家下载，脚本开源
-                  <a href="https://imroc.io/posts/kubernetes/kubernetes-binaries/" class="post-read-more">[阅读全文]</a>
+                  为什么要同步 安装kubernetes的时候，我们需要用到 gcr.io/google_containers 下面的一些镜像，在国内是不能直接下载的。如果用 Self Host 方式安装，master 上的组件除
+                  <a href="https://imroc.io/posts/sync-images-to-docker-hub-using-katacoda/" class="post-read-more">[阅读全文]</a>
                 
               </div>
 
@@ -300,24 +275,24 @@ var _hmt = _hmt || [];
                 <li>
                   <a href="mailto:roc@imroc.io" title="Email me">
                     <span class="fa-stack fa-lg">
-                      <i class="fa fa-circle fa-stack-2x"></i>
-                      <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                      <i class="fas fa-circle fa-stack-2x"></i>
+                      <i class="fas fa-envelope fa-stack-1x fa-inverse"></i>
                     </span>
                   </a>
                 </li>
                 <li>
                   <a href="https://github.com/imroc" title="GitHub">
                     <span class="fa-stack fa-lg">
-                      <i class="fa fa-circle fa-stack-2x"></i>
-                      <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                      <i class="fas fa-circle fa-stack-2x"></i>
+                      <i class="fab fa-github fa-stack-1x fa-inverse"></i>
                     </span>
                   </a>
                 </li>
                 <li>
                   <a href="https://twitter.com/imrocchan" title="Twitter">
                     <span class="fa-stack fa-lg">
-                      <i class="fa fa-circle fa-stack-2x"></i>
-                      <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                      <i class="fas fa-circle fa-stack-2x"></i>
+                      <i class="fab fa-twitter fa-stack-1x fa-inverse"></i>
                     </span>
                   </a>
                 </li>
@@ -333,18 +308,18 @@ var _hmt = _hmt || [];
             
           </ul>
           <p class="credits copyright text-muted">
-          &copy;2017-2019
+          &copy;2017-2020
             
               
                 <a href="/about">roc</a>
               
             
             &nbsp;&bull;&nbsp;
-            December 15,2019
-            updated
+            2020-04-19
+            更新
           </p>
           <p class="credits theme-by text-muted">
-            由 <a href="http://gohugo.io">Hugo v0.62.0</a> 强力驱动 &nbsp;&bull;&nbsp; 主题 <a href="https://github.com/imroc/xhugo">xhugo</a>
+            由 <a href="http://gohugo.io">Hugo v0.65.3</a> 强力驱动 &nbsp;&bull;&nbsp; 主题 <a href="https://github.com/imroc/xhugo">xhugo</a>
           </p>
         </div>
       </div>
@@ -352,7 +327,23 @@ var _hmt = _hmt || [];
   </div>
 </footer>
 
-<script src='/js/bundle.min.21f7d58c95d27f6c2ca78a820bd04dd19724828061fc1cd5fd72c409096ef914.js' integrity='sha256-IffVjJXSf2wsp4qCC9BN0ZckgoBh/BzV/XLECQlu&#43;RQ='></script>
+<script>
+  window.copyText='复制'==''?"Copy":'复制'
+  window.copiedText='已复制!'==''?"Copied":'已复制!'
+</script><script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.js"
+  integrity="sha384-K3vbOmF2BtaVai+Qk37uypf7VrgBubhQreNQe9aGsz9lB63dIFiQVlJbr92dw2Lx" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/contrib/auto-render.min.js"
+  integrity="sha384-kmZOZB5ObwgQnS/DuDg6TScgOiWWBiVt0plIRkZCmE6rDZGrEOQeHM5PcHi+nyqe" crossorigin="anonymous"></script>
+<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"
+  integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://cdn.bootcss.com/twitter-bootstrap/3.3.7/js/bootstrap.min.js"
+  integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+
+
+
+
+<script src='/js/bundle.min.3e2cb25916e0577d6eaf45f0f6125a6156723011439209b222abd8207bb6057f.js' integrity='sha256-PiyyWRbgV31ur0Xw9hJaYVZyMBFDkgmyIqvYIHu2BX8='></script>
 
 
 

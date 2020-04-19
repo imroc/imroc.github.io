@@ -8,10 +8,19 @@
     <language>zh</language>
     <managingEditor>roc@imroc.io (roc)</managingEditor>
     <webMaster>roc@imroc.io (roc)</webMaster>
-    <lastBuildDate>Mon, 06 Apr 2020 13:50:00 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 19 Apr 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://imroc.io/tags/kubernetes/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>打造云原生大型分布式监控系统(三): Thanos 部署与实践</title>
+      <link>https://imroc.io/posts/build-cloud-native-large-scale-distributed-monitoring-system-3/</link>
+      <pubDate>Sun, 19 Apr 2020 00:00:00 +0000</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/posts/build-cloud-native-large-scale-distributed-monitoring-system-3/</guid>
+      <description>概述 上一篇 Thanos 架构详解 我们深入理解了 thanos 的架构设计与实现原理，现在我们来聊聊实战，分享一下如何部署和使用 Thanos。 部署方式 本文聚焦 Thanos 的云原生</description>
+    </item>
     
     <item>
       <title>打造云原生大型分布式监控系统(二): Thanos 架构详解</title>
