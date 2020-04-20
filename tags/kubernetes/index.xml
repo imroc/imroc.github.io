@@ -8,7 +8,7 @@
     <language>zh</language>
     <managingEditor>roc@imroc.io (roc)</managingEditor>
     <webMaster>roc@imroc.io (roc)</webMaster>
-    <lastBuildDate>Sun, 19 Apr 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 20 Apr 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://imroc.io/tags/kubernetes/index.xml" rel="self" type="application/rss+xml" />
     
@@ -16,10 +16,18 @@
     <item>
       <title>打造云原生大型分布式监控系统(三): Thanos 部署与实践</title>
       <link>https://imroc.io/posts/build-cloud-native-large-scale-distributed-monitoring-system-3/</link>
-      <pubDate>Sun, 19 Apr 2020 00:00:00 +0000</pubDate>
+      <pubDate>Mon, 20 Apr 2020 00:00:00 +0000</pubDate>
       <author>roc@imroc.io (roc)</author>
       <guid>https://imroc.io/posts/build-cloud-native-large-scale-distributed-monitoring-system-3/</guid>
-      <description>概述 上一篇 Thanos 架构详解 我们深入理解了 thanos 的架构设计与实现原理，现在我们来聊聊实战，分享一下如何部署和使用 Thanos。 部署方式 本文聚焦 Thanos 的云原生</description>
+      <description>&lt;h2 id=&#34;视频&#34;&gt;视频&lt;/h2&gt;
+&lt;p&gt;附上本系列完整视频&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;打造云原生大型分布式监控系统(一): 大规模场景下 Prometheus 的优化手段 &lt;a href=&#34;https://www.bilibili.com/video/BV17C4y1x7HE&#34;&gt;https://www.bilibili.com/video/BV17C4y1x7HE&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;打造云原生大型分布式监控系统(二): Thanos 架构详解 &lt;a href=&#34;https://www.bilibili.com/video/BV1Vk4y1R7S9&#34;&gt;https://www.bilibili.com/video/BV1Vk4y1R7S9&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;打造云原生大型分布式监控系统(三): Thanos 部署与实践 &lt;a href=&#34;https://www.bilibili.com/video/BV16g4y187HD&#34;&gt;https://www.bilibili.com/video/BV16g4y187HD&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;概述&#34;&gt;概述&lt;/h2&gt;
+&lt;p&gt;上一篇 &lt;a href=&#34;../build-cloud-native-large-scale-distributed-monitoring-system-2&#34;&gt;Thanos 架构详解&lt;/a&gt; 我们深入理解了 thanos 的架构设计与实现原理，现在我们来聊聊实战，分享一下如何部署和使用 Thanos。&lt;/p&gt;</description>
     </item>
     
     <item>

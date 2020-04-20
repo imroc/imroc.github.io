@@ -9,9 +9,30 @@
   <meta name="description" content="roc的博客|Cloud Native|Kubernetes|Go|Golang|Service Mesh" />
   <meta property="og:title" content="打造云原生大型分布式监控系统(三): Thanos 部署与实践" />
   <meta name="twitter:title" content="打造云原生大型分布式监控系统(三): Thanos 部署与实践" />
-  <meta name="description" content="概述 上一篇 Thanos 架构详解 我们深入理解了 thanos 的架构设计与实现原理，现在我们来聊聊实战，分享一下如何部署和使用 Thanos。 部署方式 本文聚焦 Thanos 的云原生">
-  <meta property="og:description" content="概述 上一篇 Thanos 架构详解 我们深入理解了 thanos 的架构设计与实现原理，现在我们来聊聊实战，分享一下如何部署和使用 Thanos。 部署方式 本文聚焦 Thanos 的云原生">
-  <meta name="twitter:description" content="概述 上一篇 Thanos 架构详解 我们深入理解了 thanos 的架构设计与实现原理，现在我们来聊聊实战，分享一下如何部署和使用 Thanos。 部署方式 本文聚焦 Thanos 的云原生">
+  <meta name="description" content="视频
+附上本系列完整视频
+
+打造云原生大型分布式监控系统(一): 大规模场景下 Prometheus 的优化手段 https://www.bilibili.com/video/BV17C4y1x7HE
+打造云原生大型分布式监控系统(二): Thanos 架构详解 https://www.bilibili.com/video/BV1Vk4y1R7S9
+打造云原生大型分布式监控系统(三): Thanos 部署与实践 https://www.bilibili.com/video/BV16g4y187HD
+
+概述
+上一篇 Thanos 架构详解 我们深入理解了 thanos 的架构设计与实现原理，现在我们来聊聊实战，分享一下如何部署和使用 Thanos。">
+  <meta property="og:description" content="视频
+附上本系列完整视频
+
+打造云原生大型分布式监控系统(一): 大规模场景下 Prometheus 的优化手段 https://www.bilibili.com/video/BV17C4y1x7HE
+打造云原生大型分布式监控系统(二): Thanos 架构详解 https://www.bilibili.com/video/BV1Vk4y1R7S9
+打造云原生大型分布式监控系统(三): Thanos 部署与实践 https://www.bilibili.com/video/BV16g4y187HD
+
+概述
+上一篇 Thanos 架构详解 我们深入理解了 thanos 的架构设计与实现原理，现在我们来聊聊实战，分享一下如何部署和使用 Thanos。">
+  <meta name="twitter:description" content="视频
+附上本系列完整视频
+
+打造云原生大型分布式监控系统(一): 大规模场景下 Prometheus 的优化手段 https://www.bilibili.com/video/BV17C4y1x7HE
+打造云原生大型分布式监控系统(二): Thanos 架构详解 https://www.bilibili.com/video/BV1Vk4y1R7S9
+打造云原生大型分布式监控系统(三): …">
   <meta name="author" content="{Description { .Site.Author.name }}"/>
   <link href='https://imroc.io/favicon.png' rel='icon' type='image/x-icon'/>
   <meta property="og:image" content="https://res.cloudinary.com/imroc/image/upload/v1521031841/avatar.png" />
@@ -226,7 +247,7 @@ var _hmt = _hmt || [];
                      
                     <span class="post-meta">
   
-  发表于 2020-04-19
+  发表于 2020-04-20
   
   
 </span>
@@ -281,6 +302,7 @@ var _hmt = _hmt || [];
 <aside class="toc">
   <nav id="TableOfContents">
   <ul>
+    <li><a href="#视频">视频</a></li>
     <li><a href="#概述">概述</a></li>
     <li><a href="#部署方式">部署方式</a></li>
     <li><a href="#方案选型">方案选型</a>
@@ -311,7 +333,14 @@ var _hmt = _hmt || [];
 </aside>
 
 
-                <h2 id="概述">概述</h2>
+                <h2 id="视频">视频</h2>
+<p>附上本系列完整视频</p>
+<ul>
+<li>打造云原生大型分布式监控系统(一): 大规模场景下 Prometheus 的优化手段 <a href="https://www.bilibili.com/video/BV17C4y1x7HE">https://www.bilibili.com/video/BV17C4y1x7HE</a></li>
+<li>打造云原生大型分布式监控系统(二): Thanos 架构详解 <a href="https://www.bilibili.com/video/BV1Vk4y1R7S9">https://www.bilibili.com/video/BV1Vk4y1R7S9</a></li>
+<li>打造云原生大型分布式监控系统(三): Thanos 部署与实践 <a href="https://www.bilibili.com/video/BV16g4y187HD">https://www.bilibili.com/video/BV16g4y187HD</a></li>
+</ul>
+<h2 id="概述">概述</h2>
 <p>上一篇 <a href="../build-cloud-native-large-scale-distributed-monitoring-system-2">Thanos 架构详解</a> 我们深入理解了 thanos 的架构设计与实现原理，现在我们来聊聊实战，分享一下如何部署和使用 Thanos。</p>
 <h2 id="部署方式">部署方式</h2>
 <p>本文聚焦 Thanos 的云原生部署方式，充分利用 Kubernetes 的资源调度与动态扩容能力。从官方 <a href="https://thanos.io/getting-started.md/#community-thanos-kubernetes-applications">这里</a> 可以看到，当前 thanos 在 Kubernetes 上部署有以下三种：</p>
@@ -602,7 +631,7 @@ var _hmt = _hmt || [];
 <li>Prometheus 使用 StatefulSet 方式部署，挂载数据盘以便存储最新监控数据。</li>
 <li>由于 Prometheus 副本之间没有启动顺序的依赖，所以 podManagementPolicy 指定为 Parallel，加快启动速度。</li>
 <li>为 Prometheus 绑定足够的 RBAC 权限，以便后续配置使用 k8s 的服务发现 (<code>kubernetes_sd_configs</code>) 时能够正常工作。</li>
-<li>为 Prometheus 创建 headless 类型 service，一方面是 StatefulSet 本身需要指定 headless 的 <code>serviceName</code>，另一方面是为后续 Thanos Query 通过 DNS SRV 记录来动态发现 Sidecar 的 gRPC 端点做准备 (使用 headless service 才能让 DNS SRV 正确返回所有端点)。</li>
+<li>为 Prometheus 创建 headless 类型 service，为后续 Thanos Query 通过 DNS SRV 记录来动态发现 Sidecar 的 gRPC 端点做准备 (使用 headless service 才能让 DNS SRV 正确返回所有端点)。</li>
 <li>使用两个 Prometheus 副本，用于实现高可用。</li>
 <li>使用硬反亲和，避免 Prometheus 部署在同一节点，既可以分散压力也可以避免单点故障。</li>
 <li>Prometheus 使用 <code>--storage.tsdb.retention.time</code> 指定数据保留时长，默认15天，可以根据数据增长速度和数据盘大小做适当调整(数据增长取决于采集的指标和目标端点的数量和采集频率)。</li>
@@ -1263,7 +1292,6 @@ var _hmt = _hmt || [];
 <p>查询监控数据时需要指定 Prometheus 数据源地址，由于我们使用了 Thanos 来做分布式，而 Thanos 关键查询入口就是 Query，所以我们需要将数据源地址指定为 Query 的地址，假如使用 Grafana 查询，进入 <code>Configuration</code>-<code>Data Sources</code>-<code>Add data source</code>，选择 Prometheus，指定 thanos query 的地址: <code>http://thanos-query.thanos.svc.cluster.local:9090</code></p>
 <h2 id="总结">总结</h2>
 <p>本文教了大家如何选型 Thanos 部署方案并详细讲解了各个组件的安装方法，如果仔细阅读完本系列文章，我相信你已经有能力搭建并运维一套大型监控系统了。</p>
-
             </article>
 
             <ul class="pager blog-pager">
@@ -1425,7 +1453,7 @@ var _hmt = _hmt || [];
               
             
             &nbsp;&bull;&nbsp;
-            2020-04-19
+            2020-04-20
             更新
           </p>
           <p class="credits theme-by text-muted">
