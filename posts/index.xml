@@ -8,10 +8,28 @@
     <language>zh</language>
     <managingEditor>roc@imroc.io (roc)</managingEditor>
     <webMaster>roc@imroc.io (roc)</webMaster>
-    <lastBuildDate>Mon, 20 Apr 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 16 Jun 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://imroc.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Kubernetes 服务部署最佳实践(一)</title>
+      <link>https://imroc.io/posts/kubernetes-app-deployment-best-practice-1/</link>
+      <pubDate>Tue, 16 Jun 2020 00:00:00 +0000</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/posts/kubernetes-app-deployment-best-practice-1/</guid>
+      <description>引言 业务容器化后，如何将其部署在 K8S 上？如果仅仅是将它跑起来，很简单，但如果是上生产，我们有许多地方是需要结合业务场景和部署环境进行方案选型和</description>
+    </item>
+    
+    <item>
+      <title>TKE 集群组建最佳实践</title>
+      <link>https://imroc.io/posts/tke-cluster-setup-best-practice/</link>
+      <pubDate>Mon, 25 May 2020 10:03:00 +0800</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/posts/tke-cluster-setup-best-practice/</guid>
+      <description>Kubernetes 版本 K8S 版本迭代比较快，新版本通常包含许多 bug 修复和新功能，旧版本逐渐淘汰，建议创建集群时选择当前 TKE 支持的最新版本，后续出新版本后也是可以支持</description>
+    </item>
     
     <item>
       <title>打造云原生大型分布式监控系统(三): Thanos 部署与实践</title>
