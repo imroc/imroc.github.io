@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title> Kubernetes 服务部署最佳实践(二) 如何提高服务可用性 - roc的博客|Cloud Native|Kubernetes|Go|Golang|Service Mesh</title>
+  <meta name="description" content="roc的博客|Cloud Native|Kubernetes|Go|Golang|Service Mesh" />
+  <meta property="og:title" content="Kubernetes 服务部署最佳实践(二) 如何提高服务可用性" />
+  <meta name="twitter:title" content="Kubernetes 服务部署最佳实践(二) 如何提高服务可用性" />
+  <meta name="description" content="引言 上一篇 文章我们围绕如何合理利用资源的主题做了一些最佳实践的分享，这一次我们就如何提高服务可用性的主题来展开探讨。 怎样提高我们部署服务的可">
+  <meta property="og:description" content="引言 上一篇 文章我们围绕如何合理利用资源的主题做了一些最佳实践的分享，这一次我们就如何提高服务可用性的主题来展开探讨。 怎样提高我们部署服务的可">
+  <meta name="twitter:description" content="引言 上一篇 文章我们围绕如何合理利用资源的主题做了一些最佳实践的分享，这一次我们就如何提高服务可用性的主题来展开探讨。 怎样提高我们部署服务的可">
+  <meta name="author" content="{Description { .Site.Author.name }}"/>
+  <link href='https://imroc.io/favicon.png' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://res.cloudinary.com/imroc/image/upload/v1521031841/avatar.png" />
+  <meta name="twitter:image" content="https://res.cloudinary.com/imroc/image/upload/v1521031841/avatar.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@imrocchan" />
+  <meta name="twitter:creator" content="@imrocchan" />
+  <meta property="og:url" content="https://imroc.io/posts/kubernetes-app-deployment-best-practice-2/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="roc" />
+
+  <meta name="generator" content="Hugo 0.65.3" />
+  <link rel="canonical" href="https://imroc.io/posts/kubernetes-app-deployment-best-practice-2/" />
+  <link rel="alternate" href="https://imroc.io/index.xml" type="application/rss+xml" title="roc"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css"
+    integrity="sha384-9eLZqc9ds8eNjO3TmqPeYcDj8n+Qfa4nuSiGYa6DjLNcv9BtN69ZIulL9+8CqC9Y" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/5.5.0/css/fontawesome.min.css"
+    integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.bootcss.com/twitter-bootstrap/3.3.7/css/bootstrap.min.css"
+    integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" /><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+  
+
+
+
+
+
+
+<link rel="stylesheet" href='/css/bundle.min.8fad4c9e81931afed0cc9eee450df2ae0e60d1129a4cd7ee011629c97c6394e9.css' integrity='sha256-j61MnoGTGv7QzJ7uRQ3yrg5g0RKaTNfuARYpyXxjlOk='><script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?05e1e8b7484a08c51cd0953664168cd7";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">切换导航</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://imroc.io/">roc</a>
+    </div>
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">分类</a>
+              <div class="navlinks-children">
+                
+                
+                  <a href="https://imroc.io/categories/kubernetes">kubernetes</a>
+                
+                
+                  <a href="https://imroc.io/categories/docker">docker</a>
+                
+                
+                  <a href="https://imroc.io/categories/golang">golang</a>
+                
+                
+                  <a href="https://imroc.io/categories/geek">geek</a>
+                
+                
+                  <a href="https://imroc.io/categories/istio">istio</a>
+                
+              </div>
+            </li>
+          
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">书籍</a>
+              <div class="navlinks-children">
+                
+                
+                  <a href="https://k8s.imroc.io">Kubernetes 实践指南</a>
+                
+                
+                  <a href="https://istio.imroc.io">Istio 实践指南</a>
+                
+                
+                  <a href="https://book.kubetencent.io">腾讯云容器服务指南</a>
+                
+              </div>
+            </li>
+          
+        
+
+        
+          
+            <li>
+              
+                
+              
+                
+                  <a href="/en" lang="en">English</a>
+                
+              
+            </li>
+          
+        
+
+        
+        <li>
+          <a href="#modalSearch" data-toggle="modal" data-target="#modalSearch" style="outline: none;">
+            <span id="searchGlyph" class="glyphicon glyphicon-search"></span>
+          </a>
+        </li>
+        
+      </ul>
+    </div>
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="roc" href="https://imroc.io/">
+            <img class="avatar-img" src="https://res.cloudinary.com/imroc/image/upload/v1521031841/avatar.png" alt="roc" />
+          </a>
+        
+      </div>
+    </div>
+  </div>
+</nav>
+
+
+  <div id="modalSearch" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">搜索</h4>
+        </div>
+        <div class="modal-body">
+            
+<div class="aa-input-container" id="aa-input-container">
+    <input type="search" id="aa-search-input" class="aa-input-search" placeholder="Search for titles or URIs..."
+        name="search" autocomplete="off" />
+    <svg class="aa-input-icon" viewBox="654 -372 1664 1664">
+        <path
+            d="M1806,332c0-123.3-43.8-228.8-131.5-316.5C1586.8-72.2,1481.3-116,1358-116s-228.8,43.8-316.5,131.5  C953.8,103.2,910,208.7,910,332s43.8,228.8,131.5,316.5C1129.2,736.2,1234.7,780,1358,780s228.8-43.8,316.5-131.5  C1762.2,560.8,1806,455.3,1806,332z M2318,1164c0,34.7-12.7,64.7-38,90s-55.3,38-90,38c-36,0-66-12.7-90-38l-343-342  c-119.3,82.7-252.3,124-399,124c-95.3,0-186.5-18.5-273.5-55.5s-162-87-225-150s-113-138-150-225S654,427.3,654,332  s18.5-186.5,55.5-273.5s87-162,150-225s138-113,225-150S1262.7-372,1358-372s186.5,18.5,273.5,55.5s162,87,225,150s113,138,150,225  S2062,236.7,2062,332c0,146.7-41.3,279.7-124,399l343,343C2305.7,1098.7,2318,1128.7,2318,1164z" />
+    </svg>
+</div>
+
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/algoliasearch.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/autocomplete.min.js"></script>
+<script>
+    var client = algoliasearch("B6Q6PSGUV5", "5b4678e9995fe4211c4fa43ad2ffdab5");
+    var index = client.initIndex("imroc-blog");
+    
+    autocomplete('#aa-search-input', {
+        hint: false
+    }, {
+        source: autocomplete.sources.hits(index, {
+            hitsPerPage: 5
+        }),
+        
+        displayKey: 'name',
+        
+        templates: {
+            
+            suggestion: function (suggestion) {
+                return '<span>' + '<a href="/' + suggestion.uri + '">' + suggestion._highlightResult.title.value +
+                        '</a></span>';
+            }
+        }
+    });
+</script>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    
+  
+  
+  
+
+
+
+
+  
+    <div id="header-big-imgs" data-num-img=1 data-img-src-1="https://res.cloudinary.com/imroc/image/upload/v1515849754/blog/banner/hacker.jpg" data-img-desc-1="Hacker"></div>
+  
+
+  <header class="header-section has-img">
+    
+      <div class="intro-header big-img">
+        
+        
+        <div class="container">
+          <div class="row">
+              <div class="col-lg-12 col-md-12 col-md-offset-0">
+                
+                <div class="post-heading">
+                
+                  
+                     <h1>Kubernetes 服务部署最佳实践(二) 如何提高服务可用性</h1>
+                     
+                    <span class="post-meta">
+  
+  发表于 2020-06-19
+  
+  
+</span>
+
+
+                    
+                  
+                  
+              </div>
+            </div>
+          </div>
+        </div>
+        <span class="img-desc" style="display: inline;"></span>
+      </div>
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12 col-md-12 col-md-offset-0">
+            <div class="posts-heading">
+                <h1 align="center">Kubernetes 服务部署最佳实践(二) 如何提高服务可用性</h1>
+                
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main" itemscope itemtype="http://schema.org/Article">
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            
+            <div>
+                
+                <h5 id="tags" style="margin-top: 30px;">标签: 
+                  
+                      <a
+                        href='https://imroc.io/tags/kubernetes/'>kubernetes</a>
+                      &nbsp;
+                  
+                </h5>
+            </div>
+            
+              
+            <article role="main" class="blog-post" itemprop="articleBody" id="content">
+                
+<aside class="toc">
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#引言">引言</a></li>
+    <li><a href="#如何避免单点故障">如何避免单点故障？</a></li>
+    <li><a href="#如何避免节点维护或升级时导致服务不可用">如何避免节点维护或升级时导致服务不可用？</a></li>
+    <li><a href="#如何让服务进行平滑更新">如何让服务进行平滑更新？</a></li>
+    <li><a href="#健康检查怎么配才好">健康检查怎么配才好？</a></li>
+    <li><a href="#参考资料">参考资料</a></li>
+  </ul>
+</nav>
+</aside>
+
+
+                <h2 id="引言">引言</h2>
+<p><a href="http://km.oa.com/group/31235/articles/show/426514?ts=1592572916">上一篇</a> 文章我们围绕如何合理利用资源的主题做了一些最佳实践的分享，这一次我们就如何提高服务可用性的主题来展开探讨。</p>
+<p>怎样提高我们部署服务的可用性呢？K8S 设计本身就考虑到了各种故障的可能性，并提供了一些自愈机制以提高系统的容错性，但有些情况还是可能导致较长时间不可用，拉低服务可用性的指标。本文将结合生产实践经验，为大家提供一些最佳实践来最大化的提高服务可用性。</p>
+<h2 id="如何避免单点故障">如何避免单点故障？</h2>
+<p>K8S 的设计就是假设节点是不可靠的。节点越多，发生软硬件故障导致节点不可用的几率就越高，所以我们通常需要给服务部署多个副本，根据实际情况调整 replicas 的值，如果值为 1 就必然存在单点故障，如果大于 1 但所有副本都调度到同一个节点了，那还是有单点故障，有时候还要考虑到灾难，比如整个机房不可用。</p>
+<p>所以我们不仅要有合理的副本数量，还需要让这些不同副本调度到不同的拓扑域(节点、可用区)，打散调度以避免单点故障，这个可以利用 Pod 反亲和性来做到，反亲和主要分强反亲和与弱反亲和两种。</p>
+<p>先来看个强反亲和的示例，将 dns 服务强制打散调度到不同节点上:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#66d9ef">affinity</span>:
+ <span style="color:#66d9ef">podAntiAffinity</span>:
+   <span style="color:#66d9ef">requiredDuringSchedulingIgnoredDuringExecution</span>:
+   - <span style="color:#66d9ef">labelSelector</span>:
+       <span style="color:#66d9ef">matchExpressions</span>:
+       - <span style="color:#66d9ef">key</span>: k8s-app
+         <span style="color:#66d9ef">operator</span>: In
+         <span style="color:#66d9ef">values</span>:
+         - kube-dns
+     <span style="color:#66d9ef">topologyKey</span>: kubernetes.io/hostname
+</code></pre></div><ul>
+<li><code>labelSelector.matchExpressions</code> 写该服务对应 pod 中 labels 的 key 与 value，因为 Pod 反亲和性是通过判断 replicas 的 pod label 来实现的。</li>
+<li><code>topologyKey</code> 指定反亲和的拓扑域，即节点 label 的 key。这里用的 <code>kubernetes.io/hostname</code> 表示避免 pod 调度到同一节点，如果你有更高的要求，比如避免调度到同一个可用区，实现异地多活，可以用 <code>failure-domain.beta.kubernetes.io/zone</code>。通常不会去避免调度到同一个地域，因为一般同一个集群的节点都在一个地域，如果跨地域，即使用专线时延也会很大，所以 <code>topologyKey</code> 一般不至于用 <code>failure-domain.beta.kubernetes.io/region</code>。</li>
+<li><code>requiredDuringSchedulingIgnoredDuringExecution</code> 调度时必须满足该反亲和性条件，如果没有节点满足条件就不调度到任何节点 (Pending)。</li>
+</ul>
+<p>如果不用这种硬性条件可以使用 <code>preferredDuringSchedulingIgnoredDuringExecution</code> 来指示调度器尽量满足反亲和性条件，即弱反亲和性，如果实在没有满足条件的，只要节点有足够资源，还是可以让其调度到某个节点，至少不会 Pending。</p>
+<p>我们再来看个弱反亲和的示例:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#66d9ef">affinity</span>:
+  <span style="color:#66d9ef">podAntiAffinity</span>:
+    <span style="color:#66d9ef">preferredDuringSchedulingIgnoredDuringExecution</span>:
+    - <span style="color:#66d9ef">weight</span>: <span style="color:#ae81ff">100</span>
+      <span style="color:#66d9ef">podAffinityTerm</span>:
+        <span style="color:#66d9ef">labelSelector</span>:
+          <span style="color:#66d9ef">matchExpressions</span>:
+          - <span style="color:#66d9ef">key</span>: k8s-app
+            <span style="color:#66d9ef">operator</span>: In
+            <span style="color:#66d9ef">values</span>:
+            - kube-dns
+      <span style="color:#66d9ef">topologyKey</span>: kubernetes.io/hostname
+</code></pre></div><p>注意到了吗？相比强反亲和有些不同哦，多了一个 <code>weight</code>，表示此匹配条件的权重，而匹配条件被挪到了 <code>podAffinityTerm</code> 下面。</p>
+<h2 id="如何避免节点维护或升级时导致服务不可用">如何避免节点维护或升级时导致服务不可用？</h2>
+<p>有时候我们需要对节点进行维护或进行版本升级等操作，操作之前需要对节点执行驱逐 (kubectl drain)，驱逐时会将节点上的 Pod 进行删除，以便它们漂移到其它节点上，当驱逐完毕之后，节点上的 Pod 都漂移到其它节点了，这时我们就可以放心的对节点进行操作了。</p>
+<p>有一个问题就是，驱逐节点是一种有损操作，驱逐的原理:</p>
+<ol>
+<li>封锁节点 (设为不可调度，避免新的 Pod 调度上来)。</li>
+<li>将该节点上的 Pod 删除。</li>
+<li>ReplicaSet 控制器检测到 Pod 减少，会重新创建一个 Pod，调度到新的节点上。</li>
+</ol>
+<p>这个过程是先删除，再创建，并非是滚动更新，因此更新过程中，如果一个服务的所有副本都在被驱逐的节点上，则可能导致该服务不可用。</p>
+<p>我们再来下什么情况下驱逐会导致服务不可用:</p>
+<ol>
+<li>服务存在单点故障，所有副本都在同一个节点，驱逐该节点时，就可能造成服务不可用。</li>
+<li>服务没有单点故障，但刚好这个服务涉及的 Pod 全部都部署在这一批被驱逐的节点上，所以这个服务的所有 Pod 同时被删，也会造成服务不可用。</li>
+<li>服务没有单点故障，也没有全部部署到这一批被驱逐的节点上，但驱逐时造成这个服务的一部分 Pod 被删，短时间内服务的处理能力下降导致服务过载，部分请求无法处理，也就降低了服务可用性。</li>
+</ol>
+<p>针对第一点，我们可以使用前面讲的反亲和性来避免单点故障。</p>
+<p>针对第二和第三点，我们可以通过配置 PDB (PodDisruptionBudget) 来避免所有副本同时被删除，驱逐时 K8S 会 &ldquo;观察&rdquo; nginx 的当前可用与期望的副本数，根据定义的 PDB 来控制 Pod 删除速率，达到阀值时会等待 Pod 在其它节点上启动并就绪后再继续删除，以避免同时删除太多的 Pod 导致服务不可用或可用性降低，下面给出两个示例。</p>
+<p>示例一 (保证驱逐时 nginx 至少有 90% 的副本可用):</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#66d9ef">apiVersion</span>: policy/v1beta1
+<span style="color:#66d9ef">kind</span>: PodDisruptionBudget
+<span style="color:#66d9ef">metadata</span>:
+  <span style="color:#66d9ef">name</span>: zk-pdb
+<span style="color:#66d9ef">spec</span>:
+  <span style="color:#66d9ef">minAvailable</span>: <span style="color:#ae81ff">90</span>%
+  <span style="color:#66d9ef">selector</span>:
+    <span style="color:#66d9ef">matchLabels</span>:
+      <span style="color:#66d9ef">app</span>: zookeeper
+</code></pre></div><p>示例二 (保证驱逐时 zookeeper 最多有一个副本不可用，相当于逐个删除并等待在其它节点完成重建):</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#66d9ef">apiVersion</span>: policy/v1beta1
+<span style="color:#66d9ef">kind</span>: PodDisruptionBudget
+<span style="color:#66d9ef">metadata</span>:
+  <span style="color:#66d9ef">name</span>: zk-pdb
+<span style="color:#66d9ef">spec</span>:
+  <span style="color:#66d9ef">maxUnavailable</span>: <span style="color:#ae81ff">1</span>
+  <span style="color:#66d9ef">selector</span>:
+    <span style="color:#66d9ef">matchLabels</span>:
+      <span style="color:#66d9ef">app</span>: zookeeper
+</code></pre></div><h2 id="如何让服务进行平滑更新">如何让服务进行平滑更新？</h2>
+<p>解决了服务单点故障和驱逐节点时导致的可用性降低问题后，我们还需要考虑一种可能导致可用性降低的场景，那就是滚动更新。为什么服务正常滚动更新也可能影响服务的可用性呢？别急，下面我来解释下原因。</p>
+<p>假如集群内存在服务间调用:</p>
+<p><img src="https://imroc.io/assets/blog/tke-best-practices-and-troubleshooting/rolling-update-interupt-connection-1.jpg" alt=""></p>
+<p>当 server 端发生滚动更新时:</p>
+<p><img src="https://imroc.io/assets/blog/tke-best-practices-and-troubleshooting/rolling-update-interupt-connection-4.jpg" alt=""></p>
+<p>发生两种尴尬的情况:</p>
+<ol>
+<li>旧的副本很快销毁，而 client 所在节点 kube-proxy 还没更新完转发规则，仍然将新连接调度给旧副本，造成连接异常，可能会报 &ldquo;connection refused&rdquo; (进程停止过程中，不再接受新请求) 或 &ldquo;no route to host&rdquo; (容器已经完全销毁，网卡和 IP 已不存在)。</li>
+<li>新副本启动，client 所在节点 kube-proxy 很快 watch 到了新副本，更新了转发规则，并将新连接调度给新副本，但容器内的进程启动很慢 (比如 Tomcat 这种 java 进程)，还在启动过程中，端口还未监听，无法处理连接，也造成连接异常，通常会报 &ldquo;connection refused&rdquo; 的错误。</li>
+</ol>
+<p>针对第一种情况，可以给 container 加 preStop，让 Pod 真正销毁前先 sleep 等待一段时间，等待 client 所在节点 kube-proxy 更新转发规则，然后再真正去销毁容器。这样能保证在 Pod Terminating 后还能继续正常运行一段时间，这段时间如果因为 client 侧的转发规则更新不及时导致还有新请求转发过来，Pod 还是可以正常处理请求，避免了连接异常的发生。听起来感觉有点不优雅，但实际效果还是比较好的，分布式的世界没有银弹，我们只能尽量在当前设计现状下找到并实践能够解决问题的最优解。</p>
+<p>针对第二种情况，可以给 container 加 ReadinessProbe (就绪检查)，让容器内进程真正启动完成后才更新 Service 的 Endpoint，然后 client 所在节点 kube-proxy 再更新转发规则，让流量进来。这样能够保证等 Pod 完全就绪了才会被转发流量，也就避免了链接异常的发生。</p>
+<p>最佳实践 yaml 示例:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">        <span style="color:#66d9ef">readinessProbe</span>:
+          <span style="color:#66d9ef">httpGet</span>:
+            <span style="color:#66d9ef">path</span>: /healthz
+            <span style="color:#66d9ef">port</span>: <span style="color:#ae81ff">80</span>
+            <span style="color:#66d9ef">httpHeaders</span>:
+            - <span style="color:#66d9ef">name</span>: X-Custom-Header
+              <span style="color:#66d9ef">value</span>: Awesome
+          <span style="color:#66d9ef">initialDelaySeconds</span>: <span style="color:#ae81ff">10</span>
+          <span style="color:#66d9ef">timeoutSeconds</span>: <span style="color:#ae81ff">1</span>
+        <span style="color:#66d9ef">lifecycle</span>:
+          <span style="color:#66d9ef">preStop</span>:
+            <span style="color:#66d9ef">exec</span>:
+              <span style="color:#66d9ef">command</span>: [<span style="color:#e6db74">&#34;/bin/bash&#34;</span>, <span style="color:#e6db74">&#34;-c&#34;</span>, <span style="color:#e6db74">&#34;sleep 10&#34;</span>]
+</code></pre></div><h2 id="健康检查怎么配才好">健康检查怎么配才好？</h2>
+<p>我们都知道，给 Pod 配置健康检查也是提高服务可用性的一种手段，配置 ReadinessProbe (就绪检查) 可以避免将流量转发给还没启动完全或出现异常的 Pod；配置 LivenessProbe (存活检查) 可以让存在 bug 导致死锁或 hang 住的应用重启来恢复。但是，如果配置配置不好，也可能引发其它问题，这里根据一些踩坑经验总结了一些指导性的建议：</p>
+<ul>
+<li>不要轻易使用 LivenessProbe，除非你了解后果并且明白为什么你需要它，参考 <a href="https://srcco.de/posts/kubernetes-liveness-probes-are-dangerous.html">Liveness Probes are Dangerous</a></li>
+<li>如果使用 LivenessProbe，不要和 ReadinessProbe 设置成一样 (failureThreshold 更大)</li>
+<li>探测逻辑里不要有外部依赖 (db, 其它 pod 等)，避免抖动导致级联故障</li>
+<li>业务程序应尽量暴露 HTTP 探测接口来适配健康检查，避免使用 TCP 探测，因为程序 hang 死时， TCP 探测仍然能通过 (TCP 的 SYN 包探测端口是否存活在内核态完成，应用层不感知)</li>
+</ul>
+<h2 id="参考资料">参考资料</h2>
+<ul>
+<li>Affinity and anti-affinity: <a href="https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#affinity-and-anti-affinity">https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#affinity-and-anti-affinity</a></li>
+<li>Specifying a Disruption Budget for your Application: <a href="https://kubernetes.io/docs/tasks/run-application/configure-pdb/">https://kubernetes.io/docs/tasks/run-application/configure-pdb/</a></li>
+<li>Liveness Probes are Dangerous: <a href="https://srcco.de/posts/kubernetes-liveness-probes-are-dangerous.html">https://srcco.de/posts/kubernetes-liveness-probes-are-dangerous.html</a></li>
+</ul>
+
+            </article>
+
+            <ul class="pager blog-pager">
+                
+                <li class="previous">
+                    <a href="https://imroc.io/posts/kubernetes-app-deployment-best-practice-1/" data-toggle="tooltip" data-placement="top" title="Kubernetes 服务部署最佳实践(一) 如何合理利用资源">&larr; 前一篇</a>
+                </li>
+                 
+            </ul>
+
+          
+            <div class="entry-shang text-center">
+    <p>「真诚赞赏，手留余香」</p>
+    <button class="zs show-zs btn btn-bred">赞赏</button>
+</div>
+<div class="zs-modal-bg"></div>
+<div class="zs-modal-box">
+    <div class="zs-modal-head">
+        <button type="button" class="close">×</button>
+        <span class="author"><img src="/favicon.png"/>roc</span>
+        <p class="tip"><i></i><span>请我喝杯咖啡？</span></p>
+    </div>
+    <div class="zs-modal-body">
+        <div class="zs-modal-btns">
+            <button class="btn btn-blink" data-num="2">2元</button>
+            <button class="btn btn-blink" data-num="5">5元</button>
+            <button class="btn btn-blink" data-num="10">10元</button>
+            <button class="btn btn-blink" data-num="50">50元</button>
+            <button class="btn btn-blink" data-num="100">100元</button>
+            <button class="btn btn-blink" data-num="1">任意金额</button>
+        </div>
+        <div class="zs-modal-pay">
+            <button class="btn btn-bred" id="pay-text">2元</button>
+            <p>使用<span id="pay-type">微信</span>扫描二维码完成支付</p>
+            <img src="/img/wechat-2.png" id="pay-image"/>
+        </div>
+    </div>
+    <div class="zs-modal-footer">
+        <label>
+            <input type="radio" name="zs-type" value="wechat" class="zs-type" checked="checked">
+            <span class="zs-wechat"><img src="/img/wechat-btn.png" /></span>
+        </label>
+        <label>
+            <input type="radio" name="zs-type" value="alipay" class="zs-type">
+            <span class="zs-alipay"><img src="/img/alipay-btn.png" /></span>
+        </label>
+    </div>
+</div>
+          
+
+          
+            
+
+  <h3>See Also</h3>
+  <ul style="margin-bottom: 25px;">
+      
+      <li><a href="/posts/kubernetes-app-deployment-best-practice-1/">Kubernetes 服务部署最佳实践(一) 如何合理利用资源</a></li>
+      
+      <li><a href="/posts/tke-cluster-setup-best-practice/">TKE 集群组建最佳实践</a></li>
+      
+      <li><a href="/posts/build-cloud-native-large-scale-distributed-monitoring-system-3/">打造云原生大型分布式监控系统(三): Thanos 部署与实践</a></li>
+      
+      <li><a href="/posts/build-cloud-native-large-scale-distributed-monitoring-system-2/">打造云原生大型分布式监控系统(二): Thanos 架构详解</a></li>
+      
+      <li><a href="/posts/build-cloud-native-large-scale-distributed-monitoring-system-1/">打造云原生大型分布式监控系统(一): 大规模场景下 Prometheus 的优化手段</a></li>
+      
+      <li><a href="/posts/kubernetes-overflow-and-drop/">Kubernetes 疑难杂症排查分享：神秘的溢出与丢包</a></li>
+      
+      <li><a href="/posts/kubernetes-no-route-to-host/">Kubernetes 疑难杂症排查分享: 诡异的 No route to host</a></li>
+      
+      <li><a href="/posts/kubernetes-service-topology/">k8s v1.17 新特性预告: 拓扑感知服务路由</a></li>
+      
+      <li><a href="/posts/troubleshooting-with-kubernetes-network/">Kubernetes 网络疑难杂症排查分享</a></li>
+      
+      <li><a href="/posts/lost-packets-once-enable-tcp-tw-recycle/">Kubernetes 踩坑分享：开启tcp_tw_recycle内核参数在NAT环境会丢包</a></li>
+      
+  </ul>
+
+          
+
+          
+            
+<div id="gitalk-container"></div>
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+<script>
+  
+  
+  console.log("id:kubernetes-app-deployment-best-practice-2-zh")
+  var gitalk = new Gitalk({
+      clientID: 'd05b8f959b3111c6fb63',
+      clientSecret: 'f30ef76ea0050ed731ace76f7fbf684ae5d28fbc',
+      repo: 'imroc.github.io',
+      owner: 'imroc',
+      admin: 'imroc',
+      labels: ['Gitalk'],
+      title: 'Kubernetes 服务部署最佳实践(二) 如何提高服务可用性',
+      createIssueManually: false,
+      id: 'kubernetes-app-deployment-best-practice-2-zh',
+      distractionFreeMode: true
+  });
+  gitalk.render('gitalk-container');
+</script>
+
+          
+        </div>
+    </div>
+</div>
+
+    <footer>
+  <div id="copyright">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+          <ul class="list-inline text-center footer-links">
+            
+                <li>
+                  <a href="mailto:roc@imroc.io" title="Email me">
+                    <span class="fa-stack fa-lg">
+                      <i class="fas fa-circle fa-stack-2x"></i>
+                      <i class="fas fa-envelope fa-stack-1x fa-inverse"></i>
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="https://github.com/imroc" title="GitHub">
+                    <span class="fa-stack fa-lg">
+                      <i class="fas fa-circle fa-stack-2x"></i>
+                      <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="https://twitter.com/imrocchan" title="Twitter">
+                    <span class="fa-stack fa-lg">
+                      <i class="fas fa-circle fa-stack-2x"></i>
+                      <i class="fab fa-twitter fa-stack-1x fa-inverse"></i>
+                    </span>
+                  </a>
+                </li>
+            
+            <li>
+              <a href="https://imroc.io/index.xml" title="RSS">
+                <span class="fa-stack fa-lg">
+                  <i class="fa fa-circle fa-stack-2x"></i>
+                  <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                </span>
+              </a>
+            </li>
+            
+          </ul>
+          <p class="credits copyright text-muted">
+          &copy;2017-2020
+            
+              
+                <a href="/about">roc</a>
+              
+            
+            &nbsp;&bull;&nbsp;
+            2020-06-19
+            更新
+          </p>
+          <p class="credits theme-by text-muted">
+            由 <a href="http://gohugo.io">Hugo v0.65.3</a> 强力驱动 &nbsp;&bull;&nbsp; 主题 <a href="https://github.com/imroc/xhugo">xhugo</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  window.copyText='复制'==''?"Copy":'复制'
+  window.copiedText='已复制!'==''?"Copied":'已复制!'
+</script><script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.js"
+  integrity="sha384-K3vbOmF2BtaVai+Qk37uypf7VrgBubhQreNQe9aGsz9lB63dIFiQVlJbr92dw2Lx" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/contrib/auto-render.min.js"
+  integrity="sha384-kmZOZB5ObwgQnS/DuDg6TScgOiWWBiVt0plIRkZCmE6rDZGrEOQeHM5PcHi+nyqe" crossorigin="anonymous"></script>
+<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"
+  integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://cdn.bootcss.com/twitter-bootstrap/3.3.7/js/bootstrap.min.js"
+  integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+
+
+
+
+<script src='/js/bundle.min.3e2cb25916e0577d6eaf45f0f6125a6156723011439209b222abd8207bb6057f.js' integrity='sha256-PiyyWRbgV31ur0Xw9hJaYVZyMBFDkgmyIqvYIHu2BX8='></script>
+
+
+
+
+
+
+  </body>
+</html>
+

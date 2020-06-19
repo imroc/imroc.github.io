@@ -8,10 +8,19 @@
     <language>zh</language>
     <managingEditor>roc@imroc.io (roc)</managingEditor>
     <webMaster>roc@imroc.io (roc)</webMaster>
-    <lastBuildDate>Tue, 16 Jun 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 19 Jun 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://imroc.io/categories/kubernetes/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Kubernetes 服务部署最佳实践(二) 如何提高服务可用性</title>
+      <link>https://imroc.io/posts/kubernetes-app-deployment-best-practice-2/</link>
+      <pubDate>Fri, 19 Jun 2020 00:00:00 +0000</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/posts/kubernetes-app-deployment-best-practice-2/</guid>
+      <description>引言 上一篇 文章我们围绕如何合理利用资源的主题做了一些最佳实践的分享，这一次我们就如何提高服务可用性的主题来展开探讨。 怎样提高我们部署服务的可</description>
+    </item>
     
     <item>
       <title>Kubernetes 服务部署最佳实践(一) 如何合理利用资源</title>

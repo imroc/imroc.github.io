@@ -219,6 +219,32 @@ var _hmt = _hmt || [];
         <div class="posts-list">
           
             <article class="post-preview">
+              <a href="https://imroc.io/posts/lost-packets-once-enable-tcp-tw-recycle/">
+                <h2 class="post-title">Kubernetes 踩坑分享：开启tcp_tw_recycle内核参数在NAT环境会丢包</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                发表于 2019-06-09
+              </p>
+              <div class="post-entry">
+                
+                  原因 tcp_tw_recycle参数。它用来快速回收TIME_WAIT连接，不过如果在NAT环境下会引发问题。 RFC1323中有如下一段描述
+                  <a href="https://imroc.io/posts/lost-packets-once-enable-tcp-tw-recycle/" class="post-read-more">[阅读全文]</a>
+                
+              </div>
+
+              
+                <span class="post-meta">
+                  
+                    #<a href='https://imroc.io/tags/kubernetes/'>kubernetes</a>&nbsp;
+                  
+                </span>
+              
+            </article>
+          
+            <article class="post-preview">
               <a href="https://imroc.io/posts/handle-memory-fragmentation/">
                 <h2 class="post-title">Kubernetes 最佳实践：处理内存碎片化</h2>
 
@@ -456,32 +482,6 @@ var _hmt = _hmt || [];
               
             </article>
           
-            <article class="post-preview">
-              <a href="https://imroc.io/posts/use-nginx-ingress-controller-to-expose-service/">
-                <h2 class="post-title">使用Nginx Ingress Controller导入外部流量到Kubernetes集群内部</h2>
-
-                
-              </a>
-
-              <p class="post-meta">
-                发表于 2018-07-23
-              </p>
-              <div class="post-entry">
-                
-                  概述 Nginx Ingress Controller 是 Kubernetes Ingress Controller 的一种实现，作为反向代理将外部流量导入集群内部，实现将 Kubernetes 内部的 Service 暴露给外部，这样我们就能通过公网或内网直接访问集群内部的服
-                  <a href="https://imroc.io/posts/use-nginx-ingress-controller-to-expose-service/" class="post-read-more">[阅读全文]</a>
-                
-              </div>
-
-              
-                <span class="post-meta">
-                  
-                    #<a href='https://imroc.io/tags/kubernetes/'>kubernetes</a>&nbsp;
-                  
-                </span>
-              
-            </article>
-          
         </div>
         
           <ul class="pager main-pager">
@@ -551,7 +551,7 @@ var _hmt = _hmt || [];
               
             
             &nbsp;&bull;&nbsp;
-            2020-06-16
+            2020-06-19
             更新
           </p>
           <p class="credits theme-by text-muted">
