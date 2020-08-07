@@ -8,10 +8,19 @@
     <language>zh</language>
     <managingEditor>roc@imroc.io (roc)</managingEditor>
     <webMaster>roc@imroc.io (roc)</webMaster>
-    <lastBuildDate>Fri, 19 Jun 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 07 Aug 2020 11:00:00 +0800</lastBuildDate>
     
 	<atom:link href="https://imroc.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Nginx Ingress on TKE 部署最佳实践</title>
+      <link>https://imroc.io/posts/nginx-on-tke/</link>
+      <pubDate>Fri, 07 Aug 2020 11:00:00 +0800</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/posts/nginx-on-tke/</guid>
+      <description>概述 开源的 Ingress Controller 的实现使用量最大的莫过于 Nginx Ingress 了，功能强大且性能极高。Nginx Ingress 有多种部署方式，本文将介绍 Nginx Ingress 在 TKE 上的一些部署方案，这几种方案</description>
+    </item>
     
     <item>
       <title>Kubernetes 服务部署最佳实践(二) 如何提高服务可用性</title>

@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title> Nginx Ingress on TKE 部署最佳实践 - roc的博客|Cloud Native|Kubernetes|Go|Golang|Service Mesh</title>
+  <meta name="description" content="roc的博客|Cloud Native|Kubernetes|Go|Golang|Service Mesh" />
+  <meta property="og:title" content="Nginx Ingress on TKE 部署最佳实践" />
+  <meta name="twitter:title" content="Nginx Ingress on TKE 部署最佳实践" />
+  <meta name="description" content="概述 开源的 Ingress Controller 的实现使用量最大的莫过于 Nginx Ingress 了，功能强大且性能极高。Nginx Ingress 有多种部署方式，本文将介绍 Nginx Ingress 在 TKE 上的一些部署方案，这几种方案">
+  <meta property="og:description" content="概述 开源的 Ingress Controller 的实现使用量最大的莫过于 Nginx Ingress 了，功能强大且性能极高。Nginx Ingress 有多种部署方式，本文将介绍 Nginx Ingress 在 TKE 上的一些部署方案，这几种方案">
+  <meta name="twitter:description" content="概述 开源的 Ingress Controller 的实现使用量最大的莫过于 Nginx Ingress 了，功能强大且性能极高。Nginx Ingress 有多种部署方式，本文将介绍 Nginx Ingress 在 TKE 上的一些部署方案，这几种方案">
+  <meta name="author" content="{Description { .Site.Author.name }}"/>
+  <link href='https://imroc.io/favicon.png' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://res.cloudinary.com/imroc/image/upload/v1521031841/avatar.png" />
+  <meta name="twitter:image" content="https://res.cloudinary.com/imroc/image/upload/v1521031841/avatar.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@imrocchan" />
+  <meta name="twitter:creator" content="@imrocchan" />
+  <meta property="og:url" content="https://imroc.io/posts/nginx-on-tke/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="roc" />
+
+  <meta name="generator" content="Hugo 0.65.3" />
+  <link rel="canonical" href="https://imroc.io/posts/nginx-on-tke/" />
+  <link rel="alternate" href="https://imroc.io/index.xml" type="application/rss+xml" title="roc"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css"
+    integrity="sha384-9eLZqc9ds8eNjO3TmqPeYcDj8n+Qfa4nuSiGYa6DjLNcv9BtN69ZIulL9+8CqC9Y" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/5.5.0/css/fontawesome.min.css"
+    integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.bootcss.com/twitter-bootstrap/3.3.7/css/bootstrap.min.css"
+    integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" /><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+  
+
+
+
+
+
+
+<link rel="stylesheet" href='/css/bundle.min.8fad4c9e81931afed0cc9eee450df2ae0e60d1129a4cd7ee011629c97c6394e9.css' integrity='sha256-j61MnoGTGv7QzJ7uRQ3yrg5g0RKaTNfuARYpyXxjlOk='><script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?05e1e8b7484a08c51cd0953664168cd7";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">切换导航</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://imroc.io/">roc</a>
+    </div>
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">分类</a>
+              <div class="navlinks-children">
+                
+                
+                  <a href="https://imroc.io/categories/kubernetes">kubernetes</a>
+                
+                
+                  <a href="https://imroc.io/categories/docker">docker</a>
+                
+                
+                  <a href="https://imroc.io/categories/golang">golang</a>
+                
+                
+                  <a href="https://imroc.io/categories/geek">geek</a>
+                
+                
+                  <a href="https://imroc.io/categories/istio">istio</a>
+                
+              </div>
+            </li>
+          
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">书籍</a>
+              <div class="navlinks-children">
+                
+                
+                  <a href="https://k8s.imroc.io">Kubernetes 实践指南</a>
+                
+                
+                  <a href="https://istio.imroc.io">Istio 实践指南</a>
+                
+                
+                  <a href="https://book.kubetencent.io">腾讯云容器服务指南</a>
+                
+              </div>
+            </li>
+          
+        
+
+        
+          
+            <li>
+              
+                
+              
+                
+                  <a href="/en" lang="en">English</a>
+                
+              
+            </li>
+          
+        
+
+        
+        <li>
+          <a href="#modalSearch" data-toggle="modal" data-target="#modalSearch" style="outline: none;">
+            <span id="searchGlyph" class="glyphicon glyphicon-search"></span>
+          </a>
+        </li>
+        
+      </ul>
+    </div>
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="roc" href="https://imroc.io/">
+            <img class="avatar-img" src="https://res.cloudinary.com/imroc/image/upload/v1521031841/avatar.png" alt="roc" />
+          </a>
+        
+      </div>
+    </div>
+  </div>
+</nav>
+
+
+  <div id="modalSearch" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">搜索</h4>
+        </div>
+        <div class="modal-body">
+            
+<div class="aa-input-container" id="aa-input-container">
+    <input type="search" id="aa-search-input" class="aa-input-search" placeholder="Search for titles or URIs..."
+        name="search" autocomplete="off" />
+    <svg class="aa-input-icon" viewBox="654 -372 1664 1664">
+        <path
+            d="M1806,332c0-123.3-43.8-228.8-131.5-316.5C1586.8-72.2,1481.3-116,1358-116s-228.8,43.8-316.5,131.5  C953.8,103.2,910,208.7,910,332s43.8,228.8,131.5,316.5C1129.2,736.2,1234.7,780,1358,780s228.8-43.8,316.5-131.5  C1762.2,560.8,1806,455.3,1806,332z M2318,1164c0,34.7-12.7,64.7-38,90s-55.3,38-90,38c-36,0-66-12.7-90-38l-343-342  c-119.3,82.7-252.3,124-399,124c-95.3,0-186.5-18.5-273.5-55.5s-162-87-225-150s-113-138-150-225S654,427.3,654,332  s18.5-186.5,55.5-273.5s87-162,150-225s138-113,225-150S1262.7-372,1358-372s186.5,18.5,273.5,55.5s162,87,225,150s113,138,150,225  S2062,236.7,2062,332c0,146.7-41.3,279.7-124,399l343,343C2305.7,1098.7,2318,1128.7,2318,1164z" />
+    </svg>
+</div>
+
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/algoliasearch.min.js"></script>
+<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/autocomplete.min.js"></script>
+<script>
+    var client = algoliasearch("B6Q6PSGUV5", "5b4678e9995fe4211c4fa43ad2ffdab5");
+    var index = client.initIndex("imroc-blog");
+    
+    autocomplete('#aa-search-input', {
+        hint: false
+    }, {
+        source: autocomplete.sources.hits(index, {
+            hitsPerPage: 5
+        }),
+        
+        displayKey: 'name',
+        
+        templates: {
+            
+            suggestion: function (suggestion) {
+                return '<span>' + '<a href="/' + suggestion.uri + '">' + suggestion._highlightResult.title.value +
+                        '</a></span>';
+            }
+        }
+    });
+</script>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    
+  
+  
+  
+
+
+
+
+  
+    <div id="header-big-imgs" data-num-img=1 data-img-src-1="https://res.cloudinary.com/imroc/image/upload/v1515849754/blog/banner/hacker.jpg" data-img-desc-1="Hacker"></div>
+  
+
+  <header class="header-section has-img">
+    
+      <div class="intro-header big-img">
+        
+        
+        <div class="container">
+          <div class="row">
+              <div class="col-lg-12 col-md-12 col-md-offset-0">
+                
+                <div class="post-heading">
+                
+                  
+                     <h1>Nginx Ingress on TKE 部署最佳实践</h1>
+                     
+                    <span class="post-meta">
+  
+  发表于 2020-08-07
+  
+  
+</span>
+
+
+                    
+                  
+                  
+              </div>
+            </div>
+          </div>
+        </div>
+        <span class="img-desc" style="display: inline;"></span>
+      </div>
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12 col-md-12 col-md-offset-0">
+            <div class="posts-heading">
+                <h1 align="center">Nginx Ingress on TKE 部署最佳实践</h1>
+                
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main" itemscope itemtype="http://schema.org/Article">
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            
+            <div>
+                
+                <h5 id="tags" style="margin-top: 30px;">标签: 
+                  
+                      <a
+                        href='https://imroc.io/tags/kubernetes/'>kubernetes</a>
+                      &nbsp;
+                  
+                </h5>
+            </div>
+            
+              
+            <article role="main" class="blog-post" itemprop="articleBody" id="content">
+                
+<aside class="toc">
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#概述">概述</a></li>
+    <li><a href="#什么是-nginx-ingress-">什么是 Nginx Ingress ?</a></li>
+    <li><a href="#有哪些部署方案-">有哪些部署方案 ?</a>
+      <ul>
+        <li><a href="#方案一-deployment--lb">方案一： Deployment + LB</a></li>
+        <li><a href="#方案二daemonset--hostnetwork--lb">方案二：Daemonset + HostNetwork + LB</a></li>
+        <li><a href="#方案三deployment--lb-直通-pod">方案三：Deployment + LB 直通 Pod</a></li>
+      </ul>
+    </li>
+    <li><a href="#如何选型">如何选型？</a></li>
+    <li><a href="#如何支持内网-ingress-">如何支持内网 Ingress ?</a></li>
+    <li><a href="#如何复用已有-lb-">如何复用已有 LB ?</a></li>
+    <li><a href="#nginx-ingress-公网带宽有多大">Nginx Ingress 公网带宽有多大？</a></li>
+    <li><a href="#如何创建-ingress-">如何创建 Ingress ?</a></li>
+    <li><a href="#如何监控">如何监控？</a></li>
+    <li><a href="#总结">总结</a></li>
+    <li><a href="#参考资料">参考资料</a></li>
+  </ul>
+</nav>
+</aside>
+
+
+                <h2 id="概述">概述</h2>
+<p>开源的 Ingress Controller 的实现使用量最大的莫过于 Nginx Ingress 了，功能强大且性能极高。Nginx Ingress 有多种部署方式，本文将介绍 Nginx Ingress 在 TKE 上的一些部署方案，这几种方案的原理、各自优缺点以及一些选型和使用上的建议。</p>
+<h2 id="什么是-nginx-ingress-">什么是 Nginx Ingress ?</h2>
+<p>在介绍如何部署 Nginx Ingress 之前，我们先简单了解下什么是 Nginx Ingress。</p>
+<p>Nginx Ingress 是 Kubernetes Ingress 的一种实现，它通过 watch Kubernetes 集群的 Ingress 资源，将 Ingress 规则转换成 Nginx 的配置，然后让 Nginx 来进行 7 层的流量转发:</p>
+<p><img src="https://imroc.io/assets/blog/nginx-ingress-on-tke-1.jpg" alt=""></p>
+<p>实际 Nginx Ingress 有两种实现：</p>
+<ol>
+<li><a href="https://github.com/kubernetes/ingress-nginx">https://github.com/kubernetes/ingress-nginx</a></li>
+<li><a href="https://github.com/nginxinc/kubernetes-ingress">https://github.com/nginxinc/kubernetes-ingress</a></li>
+</ol>
+<p>第一种是 Kubernetes 开源社区的实现，第二种是 Nginx 官方的实现，我们通常用的是 Kubernetes 社区的实现，这也是本文所关注的重点。</p>
+<h2 id="有哪些部署方案-">有哪些部署方案 ?</h2>
+<p>那么如何在 TKE 上部署 Nginx Ingress 呢？主要有三种方案，下面分别介绍下这几种方案及其部署方法。</p>
+<h3 id="方案一-deployment--lb">方案一： Deployment + LB</h3>
+<p>在 TKE 上部署 Nginx Ingress 最简单的方式就是将 Nginx Ingress Controller 以 Deployment 的方式部署，并且为其创建 LoadBalancer 类型的 Service(可以是自动创建 CLB 也可以是绑定已有 CLB)，这样就可以让 CLB 接收外部流量，然后转发到 Nginx Ingress 内部：</p>
+<p><img src="https://imroc.io/assets/blog/nginx-ingress-on-tke-2.jpg" alt=""></p>
+<p>当前 TKE 上 LoadBalancer 类型的 Service 默认实现是基于 NodePort，CLB 会绑定各节点的 NodePort 作为后端 rs，将流量转发到节点的 NodePort，然后节点上再通过 Iptables 或 IPVS 将请求路由到 Service 对应的后端 Pod，这里的 Pod 就是 Nginx Ingress Controller 的 Pod。后续如果有节点的增删，CLB 也会自动更新节点 NodePort 的绑定。</p>
+<p>这是最简单的一种方式，可以直接通过下面命令安装:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl create ns nginx-ingress
+kubectl apply -f https://raw.githubusercontent.com/TencentCloudContainerTeam/manifest/master/nginx-ingress/nginx-ingress-deployment.yaml -n nginx-ingress
+</code></pre></div><h3 id="方案二daemonset--hostnetwork--lb">方案二：Daemonset + HostNetwork + LB</h3>
+<p>方案一虽然简单，但是流量会经过一层 NodePort，会多一层转发。这种方式有一些缺点：</p>
+<ol>
+<li>转发路径较长，流量到了 NodePort 还会再经过 Kubernetes 内部负载均衡，通过 Iptables 或 IPVS 转发到 Nginx，会增加一点网络耗时。</li>
+<li>经过 NodePort 必然发生 SNAT，如果流量过于集中容易导致源端口耗尽或者 conntrack 插入冲突导致丢包，引发部分流量异常。</li>
+<li>每个节点的 NodePort 也充当一个负载均衡器，CLB 如果绑定大量节点的 NodePort，负载均衡的状态就分散在每个节点上，容易导致全局负载不均。</li>
+<li>CLB 会对 NodePort 进行健康探测，探测包最终会被转发到 Nginx Ingress 的 Pod，如果 CLB 绑定的节点多，Nginx Ingress 的 Pod 少，会导致探测包对 Nginx Ingress 造成较大的压力。</li>
+</ol>
+<p>我们可以让 Nginx Ingress 使用 hostNetwork，CLB 直接绑节点 IP + 端口(80,443)， 这样就不用走 NodePort；由于使用 hostNetwork，Nginx Ingress 的 pod 就不能被调度到同一节点避免端口监听冲突。通常做法是提前规划好，选取部分节点作为边缘节点，专门用于部署 Nginx Ingress，为这些节点打上 label，然后 Nginx Ingress 以 DaemonSet 方式部署在这些节点上。下面是架构图：</p>
+<p><img src="https://imroc.io/assets/blog/nginx-ingress-on-tke-3.jpg" alt=""></p>
+<p>安装步骤：</p>
+<ol>
+<li>将规划好的用于部署 Nginx Ingress 的节点打上 label: <code>kubectl label node 10.0.0.3 nginx-ingress=true</code>(注意替换节点名称)。</li>
+<li>将 Nginx Ingress 部署在这些节点上:</li>
+</ol>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl create ns nginx-ingress
+kubectl apply -f https://raw.githubusercontent.com/TencentCloudContainerTeam/manifest/master/nginx-ingress/nginx-ingress-daemonset-hostnetwork.yaml -n nginx-ingress
+</code></pre></div><ol start="3">
+<li>手动创建 CLB，创建 80 和 443 端口的 TCP 监听器，分别绑定部署了 Nginx Ingress 的这些节点的 80 和 443 端口。</li>
+</ol>
+<h3 id="方案三deployment--lb-直通-pod">方案三：Deployment + LB 直通 Pod</h3>
+<p>方案二虽然相比方案一有一些优势，但同时也引入了手动维护 CLB 和 Nginx Ingress 节点的运维成本，需要提前规划好 Nginx Ingress 的节点，增删 Nginx Ingress 节点时需要手动在 CLB 控制台绑定和解绑节点，也无法支持自动扩缩容。<!-- raw HTML omitted -->如果你的网络模式是 VPC-CNI，那么所有的 Pod 都使用的弹性网卡，弹性网卡的 Pod 是支持 CLB 直接绑 Pod 的，可以绕过 NodePort，并且不用手动管理 CLB，支持自动扩缩容:</p>
+<p><img src="https://imroc.io/assets/blog/nginx-ingress-on-tke-4.jpg" alt=""></p>
+<p>如果你的网络模式是 Global Router(大多集群都是这种模式)，你可以为集群开启 VPC-CNI 的支持，即两种网络模式混用，在集群信息页可打开：</p>
+<p><img src="https://imroc.io/assets/blog/nginx-ingress-on-tke-5.jpg" alt=""></p>
+<p>确保集群支持 VPC-CNI 之后，可以使用下面命令安装 Nginx Ingress:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl create ns nginx-ingress
+kubectl apply -f https://raw.githubusercontent.com/TencentCloudContainerTeam/manifest/master/nginx-ingress/nginx-ingress-deployment-eni.yaml -n nginx-ingress
+</code></pre></div><h2 id="如何选型">如何选型？</h2>
+<p>前面介绍了 Nginx Ingress 在 TKE 上部署的三种方案，也说了各种方案的优缺点，这里做一个简单汇总下，给出一些选型建议：</p>
+<ol>
+<li>方案一较为简单通用，但在大规模和高并发场景可能有一点性能问题。如果对性能要求不那么严格，可以考虑使用这种方案。</li>
+<li>方案二使用 hostNetwork 性能好，但需要手动维护 CLB 和 Nginx Ingress 节点，也无法实现自动扩缩容，通常不太建议用这种方案。</li>
+<li>方案三性能好，而且不需要手动维护 CLB，是最理想的方案。它需要集群支持 VPC-CNI，如果你的集群本身用的 VPC-CNI 网络插件，或者用的 Global Router 网络插件并开启了 VPC-CNI 的支持(两种模式混用)，那么建议直接使用这种方案。</li>
+</ol>
+<h2 id="如何支持内网-ingress-">如何支持内网 Ingress ?</h2>
+<p>方案二由于是手动管理 CLB，自行创建 CLB 时可以选择用公网还是内网；方案一和方案三默认会创建公网 CLB，如果要用内网，可以改下部署 YAML，给 <code>nginx-ingress-controller</code> 这个 Service 加一个 key 为 <code>service.kubernetes.io/qcloud-loadbalancer-internal-subnetid</code>，value 为内网 CLB 所被创建的子网 id 的 annotation，示例:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#66d9ef">apiVersion</span>: v1
+<span style="color:#66d9ef">kind</span>: Service
+<span style="color:#66d9ef">metadata</span>:
+  <span style="color:#66d9ef">annotations</span>:
+    <span style="color:#66d9ef">service.kubernetes.io/qcloud-loadbalancer-internal-subnetid</span>: subnet-xxxxxx <span style="color:#75715e"># value 替换为集群所在 vpc 的其中一个子网 id</span>
+  <span style="color:#66d9ef">labels</span>:
+    <span style="color:#66d9ef">app</span>: nginx-ingress
+    <span style="color:#66d9ef">component</span>: controller
+  <span style="color:#66d9ef">name</span>: nginx-ingress-controller
+</code></pre></div><h2 id="如何复用已有-lb-">如何复用已有 LB ?</h2>
+<p>方案一和方案三默认会自动创建新的 CLB，Ingress 的流量入口地址取决于新创建出来的 CLB 的 IP 地址。如果业务对入口地址有依赖，比如配置了 DNS 解析到之前的 CLB IP，不希望切换 IP；或者想使用包年包月的 CLB (默认创建是按量计费)，那么也可以让 Nginx Ingress 绑定已有的 CLB。</p>
+<p>操作方法同样也是修改下部署 yaml，给 <code>nginx-ingress-controller</code> 这个 Service 加一个 key 为 <code>service.kubernetes.io/tke-existed-lbid</code>，value 为 CLB ID 的 annotation，示例:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#66d9ef">apiVersion</span>: v1
+<span style="color:#66d9ef">kind</span>: Service
+<span style="color:#66d9ef">metadata</span>:
+  <span style="color:#66d9ef">annotations</span>:
+    <span style="color:#66d9ef">service.kubernetes.io/tke-existed-lbid</span>: lb-6swtxxxx <span style="color:#75715e"># value 替换为 CLB 的 ID</span>
+  <span style="color:#66d9ef">labels</span>:
+    <span style="color:#66d9ef">app</span>: nginx-ingress
+    <span style="color:#66d9ef">component</span>: controller
+  <span style="color:#66d9ef">name</span>: nginx-ingress-controller
+</code></pre></div><h2 id="nginx-ingress-公网带宽有多大">Nginx Ingress 公网带宽有多大？</h2>
+<p>有同学可能会问：我的 Nginx Ingress 的公网带宽到底有多大？能否支撑住我服务的并发量？</p>
+<p>这里需要普及一下，腾讯云账号有带宽上移和非带宽上移两种类型：</p>
+<ol>
+<li>非带宽上移，是指带宽在云主机(CVM)上管理。</li>
+<li>带宽上移，是指带宽上移到了 CLB 或 IP 上管理。</li>
+</ol>
+<p>具体来讲，如果你的账号是非带宽上移类型，Nginx Ingress 使用公网 CLB，那么 Nginx Ingress 的公网带宽是 CLB 所绑定的 TKE 节点的带宽之和；如果使用方案三，CLB 直通 Pod，也就是 CLB 不是直接绑的 TKE 节点，而是弹性网卡，那么此时 Nginx Ingress 的公网带宽是所有 Nginx Ingress Controller Pod 被调度到的节点上的带宽之和。</p>
+<p>如果你的账号是带宽上移类型就简单了，Nginx Ingress 的带宽就等于你所购买的 CLB 的带宽，默认是 10Mbps (按量计费)，你可以按需调整下。</p>
+<p>由于历史遗留原因，以前注册的账号大多是非带宽上移类型，参考 <a href="https://cloud.tencent.com/document/product/684/39903">这里</a> 来区分自己账号的类型。</p>
+<h2 id="如何创建-ingress-">如何创建 Ingress ?</h2>
+<p>目前还没有完成对 Nginx Ingress 的产品化支持，所以如果是在 TKE 上自行了部署 Nginx Ingress，想要使用 Nginx Ingress 来管理 Ingress，目前是无法通过在 TKE 控制台(网页) 上进行操作的，只有通过 YAML 的方式来创建，并且需要给每个 Ingress 都指定 Ingress Class 的 annotation，示例:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#66d9ef">apiVersion</span>: networking.k8s.io/v1beta1
+<span style="color:#66d9ef">kind</span>: Ingress
+<span style="color:#66d9ef">metadata</span>:
+  <span style="color:#66d9ef">name</span>: test-ingress
+  <span style="color:#66d9ef">annotations</span>:
+    <span style="color:#66d9ef">kubernetes.io/ingress.class</span>: nginx <span style="color:#75715e"># 这里是重点</span>
+<span style="color:#66d9ef">spec</span>:
+  <span style="color:#66d9ef">rules</span>:
+  - <span style="color:#66d9ef">host</span>: *
+    <span style="color:#66d9ef">http</span>:
+      <span style="color:#66d9ef">paths</span>:
+      - <span style="color:#66d9ef">path</span>: /
+        <span style="color:#66d9ef">backend</span>:
+          <span style="color:#66d9ef">serviceName</span>: nginx-v1
+          <span style="color:#66d9ef">servicePort</span>: <span style="color:#ae81ff">80</span>
+</code></pre></div><h2 id="如何监控">如何监控？</h2>
+<p>通过上面的方法安装的 Nginx Ingress，已经暴露了 metrics 端口，可以被 Prometheus 采集。如果集群内安装了 prometheus-operator，可以使用下面的 ServiceMonitor 来采集 Nginx Ingress 的监控数据:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#66d9ef">apiVersion</span>: monitoring.coreos.com/v1
+<span style="color:#66d9ef">kind</span>: ServiceMonitor
+<span style="color:#66d9ef">metadata</span>:
+  <span style="color:#66d9ef">name</span>: nginx-ingress-controller
+  <span style="color:#66d9ef">namespace</span>: nginx-ingress
+  <span style="color:#66d9ef">labels</span>:
+    <span style="color:#66d9ef">app</span>: nginx-ingress
+    <span style="color:#66d9ef">component</span>: controller
+<span style="color:#66d9ef">spec</span>:
+  <span style="color:#66d9ef">endpoints</span>:
+  - <span style="color:#66d9ef">port</span>: metrics
+    <span style="color:#66d9ef">interval</span>: 10s
+  <span style="color:#66d9ef">namespaceSelector</span>:
+    <span style="color:#66d9ef">matchNames</span>:
+    - nginx-ingress
+  <span style="color:#66d9ef">selector</span>:
+    <span style="color:#66d9ef">matchLabels</span>:
+      <span style="color:#66d9ef">app</span>: nginx-ingress
+      <span style="color:#66d9ef">component</span>: controller
+</code></pre></div><p>这里也给个原生 Prometheus 配置的示例:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">    - <span style="color:#66d9ef">job_name</span>: nginx-ingress
+      <span style="color:#66d9ef">scrape_interval</span>: 5s
+      <span style="color:#66d9ef">kubernetes_sd_configs</span>:
+      - <span style="color:#66d9ef">role</span>: endpoints
+        <span style="color:#66d9ef">namespaces</span>:
+          <span style="color:#66d9ef">names</span>:
+          - nginx-ingress
+      <span style="color:#66d9ef">relabel_configs</span>:
+      - <span style="color:#66d9ef">action</span>: keep
+        <span style="color:#66d9ef">source_labels</span>:
+        - __meta_kubernetes_service_label_app
+        - __meta_kubernetes_service_label_component
+        <span style="color:#66d9ef">regex</span>: nginx-ingress;controller
+      - <span style="color:#66d9ef">action</span>: keep
+        <span style="color:#66d9ef">source_labels</span>:
+        - __meta_kubernetes_endpoint_port_name
+        <span style="color:#66d9ef">regex</span>: metrics
+</code></pre></div><p>有了数据后，我们再给 grafana 配置一下面板来展示数据，Nginx Ingress 社区提供了面板：https://github.com/kubernetes/ingress-nginx/tree/master/deploy/grafana/dashboards</p>
+<p>我们直接复制 json 导入到 grafana 即可导入面板。其中，<code>nginx.json</code> 是展示 Nginx Ingress 各种常规监控的面板：</p>
+<p><img src="https://imroc.io/assets/blog/nginx-ingress-on-tke-6.jpg" alt=""></p>
+<p><code>request-handling-performance.json</code> 是展示 Nginx Ingress 性能方面的监控面板：</p>
+<p><img src="https://imroc.io/assets/blog/nginx-ingress-on-tke-6.jpg" alt=""></p>
+<h2 id="总结">总结</h2>
+<p>本文梳理了 Nginx Ingress 在 TKE 上部署的三种方案以及许多实用的建议，对于想要在 TKE 上使用 Nginx Ingress 的同学是一个很好的参考。由于 Nginx Ingress 的使用需求量较大，我们也正在做 Nginx Ingress 的产品化支持， 可以实现一键部署，集成日志和监控能力，并且会对其进行性能优化。相信在不久的将来，我们就能够在 TKE 上更简单高效的使用 Nginx Ingress 了，敬请期待吧！</p>
+<h2 id="参考资料">参考资料</h2>
+<ol>
+<li>TKE Service YAML 示例: <a href="https://cloud.tencent.com/document/product/457/45489#yaml-.E7.A4.BA.E4.BE.8B">https://cloud.tencent.com/document/product/457/45489#yaml-.E7.A4.BA.E4.BE.8B</a></li>
+<li>TKE Service 使用已有 CLB: <a href="https://cloud.tencent.com/document/product/457/45491">https://cloud.tencent.com/document/product/457/45491</a></li>
+<li>区分腾讯云账户类型: <a href="https://cloud.tencent.com/document/product/684/39903">https://cloud.tencent.com/document/product/684/39903</a></li>
+</ol>
+
+            </article>
+
+            <ul class="pager blog-pager">
+                
+                <li class="previous">
+                    <a href="https://imroc.io/posts/kubernetes-app-deployment-best-practice-2/" data-toggle="tooltip" data-placement="top" title="Kubernetes 服务部署最佳实践(二) 如何提高服务可用性">&larr; 前一篇</a>
+                </li>
+                 
+            </ul>
+
+          
+            <div class="entry-shang text-center">
+    <p>「真诚赞赏，手留余香」</p>
+    <button class="zs show-zs btn btn-bred">赞赏</button>
+</div>
+<div class="zs-modal-bg"></div>
+<div class="zs-modal-box">
+    <div class="zs-modal-head">
+        <button type="button" class="close">×</button>
+        <span class="author"><img src="/favicon.png"/>roc</span>
+        <p class="tip"><i></i><span>请我喝杯咖啡？</span></p>
+    </div>
+    <div class="zs-modal-body">
+        <div class="zs-modal-btns">
+            <button class="btn btn-blink" data-num="2">2元</button>
+            <button class="btn btn-blink" data-num="5">5元</button>
+            <button class="btn btn-blink" data-num="10">10元</button>
+            <button class="btn btn-blink" data-num="50">50元</button>
+            <button class="btn btn-blink" data-num="100">100元</button>
+            <button class="btn btn-blink" data-num="1">任意金额</button>
+        </div>
+        <div class="zs-modal-pay">
+            <button class="btn btn-bred" id="pay-text">2元</button>
+            <p>使用<span id="pay-type">微信</span>扫描二维码完成支付</p>
+            <img src="/img/wechat-2.png" id="pay-image"/>
+        </div>
+    </div>
+    <div class="zs-modal-footer">
+        <label>
+            <input type="radio" name="zs-type" value="wechat" class="zs-type" checked="checked">
+            <span class="zs-wechat"><img src="/img/wechat-btn.png" /></span>
+        </label>
+        <label>
+            <input type="radio" name="zs-type" value="alipay" class="zs-type">
+            <span class="zs-alipay"><img src="/img/alipay-btn.png" /></span>
+        </label>
+    </div>
+</div>
+          
+
+          
+            
+
+  <h3>See Also</h3>
+  <ul style="margin-bottom: 25px;">
+      
+      <li><a href="/posts/kubernetes-app-deployment-best-practice-2/">Kubernetes 服务部署最佳实践(二) 如何提高服务可用性</a></li>
+      
+      <li><a href="/posts/kubernetes-app-deployment-best-practice-1/">Kubernetes 服务部署最佳实践(一) 如何合理利用资源</a></li>
+      
+      <li><a href="/posts/tke-cluster-setup-best-practice/">TKE 集群组建最佳实践</a></li>
+      
+      <li><a href="/posts/build-cloud-native-large-scale-distributed-monitoring-system-3/">打造云原生大型分布式监控系统(三): Thanos 部署与实践</a></li>
+      
+      <li><a href="/posts/build-cloud-native-large-scale-distributed-monitoring-system-2/">打造云原生大型分布式监控系统(二): Thanos 架构详解</a></li>
+      
+      <li><a href="/posts/build-cloud-native-large-scale-distributed-monitoring-system-1/">打造云原生大型分布式监控系统(一): 大规模场景下 Prometheus 的优化手段</a></li>
+      
+      <li><a href="/posts/kubernetes-overflow-and-drop/">Kubernetes 疑难杂症排查分享：神秘的溢出与丢包</a></li>
+      
+      <li><a href="/posts/kubernetes-no-route-to-host/">Kubernetes 疑难杂症排查分享: 诡异的 No route to host</a></li>
+      
+      <li><a href="/posts/kubernetes-service-topology/">k8s v1.17 新特性预告: 拓扑感知服务路由</a></li>
+      
+      <li><a href="/posts/troubleshooting-with-kubernetes-network/">Kubernetes 网络疑难杂症排查分享</a></li>
+      
+  </ul>
+
+          
+
+          
+            
+<div id="gitalk-container"></div>
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+<script>
+  
+  
+  console.log("id:nginx-on-tke-zh")
+  var gitalk = new Gitalk({
+      clientID: 'd05b8f959b3111c6fb63',
+      clientSecret: 'f30ef76ea0050ed731ace76f7fbf684ae5d28fbc',
+      repo: 'imroc.github.io',
+      owner: 'imroc',
+      admin: 'imroc',
+      labels: ['Gitalk'],
+      title: 'Nginx Ingress on TKE 部署最佳实践',
+      createIssueManually: false,
+      id: 'nginx-on-tke-zh',
+      distractionFreeMode: true
+  });
+  gitalk.render('gitalk-container');
+</script>
+
+          
+        </div>
+    </div>
+</div>
+
+    <footer>
+  <div id="copyright">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+          <ul class="list-inline text-center footer-links">
+            
+                <li>
+                  <a href="mailto:roc@imroc.io" title="Email me">
+                    <span class="fa-stack fa-lg">
+                      <i class="fas fa-circle fa-stack-2x"></i>
+                      <i class="fas fa-envelope fa-stack-1x fa-inverse"></i>
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="https://github.com/imroc" title="GitHub">
+                    <span class="fa-stack fa-lg">
+                      <i class="fas fa-circle fa-stack-2x"></i>
+                      <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="https://twitter.com/imrocchan" title="Twitter">
+                    <span class="fa-stack fa-lg">
+                      <i class="fas fa-circle fa-stack-2x"></i>
+                      <i class="fab fa-twitter fa-stack-1x fa-inverse"></i>
+                    </span>
+                  </a>
+                </li>
+            
+            <li>
+              <a href="https://imroc.io/index.xml" title="RSS">
+                <span class="fa-stack fa-lg">
+                  <i class="fa fa-circle fa-stack-2x"></i>
+                  <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                </span>
+              </a>
+            </li>
+            
+          </ul>
+          <p class="credits copyright text-muted">
+          &copy;2017-2020
+            
+              
+                <a href="/about">roc</a>
+              
+            
+            &nbsp;&bull;&nbsp;
+            2020-08-07
+            更新
+          </p>
+          <p class="credits theme-by text-muted">
+            由 <a href="http://gohugo.io">Hugo v0.65.3</a> 强力驱动 &nbsp;&bull;&nbsp; 主题 <a href="https://github.com/imroc/xhugo">xhugo</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  window.copyText='复制'==''?"Copy":'复制'
+  window.copiedText='已复制!'==''?"Copied":'已复制!'
+</script><script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.js"
+  integrity="sha384-K3vbOmF2BtaVai+Qk37uypf7VrgBubhQreNQe9aGsz9lB63dIFiQVlJbr92dw2Lx" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/contrib/auto-render.min.js"
+  integrity="sha384-kmZOZB5ObwgQnS/DuDg6TScgOiWWBiVt0plIRkZCmE6rDZGrEOQeHM5PcHi+nyqe" crossorigin="anonymous"></script>
+<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"
+  integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://cdn.bootcss.com/twitter-bootstrap/3.3.7/js/bootstrap.min.js"
+  integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+
+
+
+
+<script src='/js/bundle.min.3e2cb25916e0577d6eaf45f0f6125a6156723011439209b222abd8207bb6057f.js' integrity='sha256-PiyyWRbgV31ur0Xw9hJaYVZyMBFDkgmyIqvYIHu2BX8='></script>
+
+
+
+
+
+
+  </body>
+</html>
+
