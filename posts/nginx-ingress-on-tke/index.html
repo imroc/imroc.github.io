@@ -448,7 +448,7 @@ kubectl apply -f https://raw.githubusercontent.com/TencentCloudContainerTeam/man
         <span style="color:#66d9ef">source_labels</span>:
         - __meta_kubernetes_endpoint_port_name
         <span style="color:#66d9ef">regex</span>: metrics
-</code></pre></div><p>有了数据后，我们再给 grafana 配置一下面板来展示数据，Nginx Ingress 社区提供了面板：https://github.com/kubernetes/ingress-nginx/tree/master/deploy/grafana/dashboards</p>
+</code></pre></div><p>有了数据后，我们再给 grafana 配置一下面板来展示数据，Nginx Ingress 社区提供了面板： <a href="https://github.com/kubernetes/ingress-nginx/tree/master/deploy/grafana/dashboards">https://github.com/kubernetes/ingress-nginx/tree/master/deploy/grafana/dashboards</a></p>
 <p>我们直接复制 json 导入到 grafana 即可导入面板。其中，<code>nginx.json</code> 是展示 Nginx Ingress 各种常规监控的面板：</p>
 <p><img src="https://imroc.io/assets/blog/nginx-ingress-on-tke-6.jpg" alt=""></p>
 <p><code>request-handling-performance.json</code> 是展示 Nginx Ingress 性能方面的监控面板：</p>
