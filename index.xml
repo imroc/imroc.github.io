@@ -8,10 +8,19 @@
     <language>zh</language>
     <managingEditor>roc@imroc.io (roc)</managingEditor>
     <webMaster>roc@imroc.io (roc)</webMaster>
-    <lastBuildDate>Fri, 07 Aug 2020 11:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 02 Sep 2020 20:50:00 +0800</lastBuildDate>
     
 	<atom:link href="https://imroc.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Nginx Ingress 高并发实践</title>
+      <link>https://imroc.io/posts/nginx-ingress-high-concurrency/</link>
+      <pubDate>Wed, 02 Sep 2020 20:50:00 +0800</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/posts/nginx-ingress-high-concurrency/</guid>
+      <description>概述 Nginx Ingress Controller 基于 Nginx 实现了 Kubernetes Ingress API，Nginx 是公认的高性能网关，但如果不对其进行一些参数调优，就不能充分发挥出高性能的优势。之前我们在 Nginx Ingress on</description>
+    </item>
     
     <item>
       <title>Nginx Ingress on TKE 部署最佳实践</title>

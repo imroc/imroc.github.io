@@ -262,6 +262,37 @@ var _hmt = _hmt || [];
         <div class="posts-list">
           
             <article class="post-preview">
+              <a href="https://imroc.io/posts/nginx-ingress-high-concurrency/">
+                <h2 class="post-title">Nginx Ingress 高并发实践</h2>
+                
+              </a>
+
+              <span class="post-meta">
+  
+  发表于 2020-09-02
+  
+  
+</span>
+
+
+              <div class="post-entry">
+                
+                  概述 Nginx Ingress Controller 基于 Nginx 实现了 Kubernetes Ingress API，Nginx 是公认的高性能网关，但如果不对其进行一些参数调优，就不能充分发挥出高性能的优势。之前我们在 Nginx Ingress on
+                  <a href="https://imroc.io/posts/nginx-ingress-high-concurrency/" class="post-read-more">[阅读全文]</a>
+                
+              </div>
+
+              
+                <span class="post-meta">
+                
+                  #<a
+                    href='https://imroc.io/tags/kubernetes/'>kubernetes</a>&nbsp;
+                
+                </span>
+              
+            </article>
+          
+            <article class="post-preview">
               <a href="https://imroc.io/posts/nginx-ingress-on-tke/">
                 <h2 class="post-title">Nginx Ingress on TKE 部署最佳实践</h2>
                 
@@ -639,55 +670,6 @@ $ ip a
               
             </article>
           
-            <article class="post-preview">
-              <a href="https://imroc.io/posts/kubernetes-service-topology/">
-                <h2 class="post-title">k8s v1.17 新特性预告: 拓扑感知服务路由</h2>
-                
-              </a>
-
-              <span class="post-meta">
-  
-  发表于 2019-11-26
-  
-  &nbsp;&bull;&nbsp; 其它语言: <a href="https://imroc.io/en/posts/kubernetes-service-topology/" lang="en">English</a>
-</span>
-
-
-              <div class="post-entry">
-                
-                  <p>今天给大家介绍下我参与开发的一个 k8s v1.17 新特性: 拓扑感知服务路由。</p>
-<h2 id="名词解释">名词解释</h2>
-<ul>
-<li>拓扑域: 表示在集群中的某一类 &ldquo;地方&rdquo;，比如某节点、某机架、某可用区或某地域等，这些都可以作为某种拓扑域。</li>
-<li>endpoint: k8s 某个服务的某个 ip+port，通常是 pod 的 ip+port。</li>
-<li>service: k8s 的 service 资源(服务)，关联一组 endpoint ，访问 service 会被转发到关联的某个 endpoint 上。</li>
-</ul>
-<h2 id="背景">背景</h2>
-<p>拓扑感知服务路由，此特性最初由杜军大佬提出并设计。为什么要设计此特性呢？想象一下，k8s 集群节点分布在不同的地方，service 对应的 endpoints 分布在不同节点，传统转发策略会对所有 endpoint 做负载均衡，通常会等概率转发，当访问 service 时，流量就可能被分散打到这些不同的地方。虽然 service 转发做了负载均衡，但如果 endpoint 距离比较远，流量转发过去网络时延就相对比较高，会影响网络性能，在某些情况下甚至还可能会付出额外的流量费用。要是如能实现 service 就近转发 endpoint，是不是就可以实现降低网络时延，提升网络性能了呢？是的！这也正是该特性所提出的目的和意义。</p>
-<h2 id="k8s-亲和性">k8s 亲和性</h2>
-<p>service 的就近转发实际就是一种网络的亲和性，倾向于转发到离自己比较近的 endpoint。在此特性之前，已经在调度和存储方面有一些亲和性的设计与实现:</p>
-<ul>
-<li>节点亲和性 (Node Affinity): 让 Pod 被调度到符合一些期望条件的 Node 上，比如限制调度到某一可用区，或者要求节点支持 GPU，这算是调度亲和，调度结果取决于节点属性。</li>
-<li>Pod 亲和性与反亲和性 (Pod Affinity/AntiAffinity): 让一组 Pod 调度到同一拓扑域的节点上，或者打散到不同拓扑域的节点， 这也算是调度亲和，调度结果取决于其它 Pod。</li>
-<li>数据卷拓扑感知调度 (Volume Topology-aware Scheduling): 让 Pod 只被调度到符合其绑定的存储所在拓扑域的节点上，这算是调度与存储的亲和，调度结果取决于存储的拓扑域。</li>
-<li>本地数据卷 (Local Persistent Volume): 让 Pod 使用本地数据卷，比如高性能 SSD，在某些需要高 IOPS 低时延的场景很有用，它还会保证 Pod 始终被调度到同一节点，数据就不会不丢失，这也算是调度与存储的亲和，调度结果取决于存储所在节点。</li>
-<li>数据卷拓扑感知动态创建 (Topology-Aware Volume Dynamic Provisioning): 先调度 Pod，再根据 Pod 所在节点的拓扑域来创建存储，这算是存储与调度的亲和，存储的创建取决于调度的结果。</li>
-</ul>
-<p>而 k8s 目前在网络方面还没有亲和性能力，拓扑感知服务路由这个新特性恰好可以补齐这个的空缺，此特性使得 service 可以实现就近转发而不是所有 endpoint 等概率转发。</p>
-                  <a href="https://imroc.io/posts/kubernetes-service-topology/" class="post-read-more">[阅读全文]</a>
-                
-              </div>
-
-              
-                <span class="post-meta">
-                
-                  #<a
-                    href='https://imroc.io/tags/kubernetes/'>kubernetes</a>&nbsp;
-                
-                </span>
-              
-            </article>
-          
         </div>
 
         
@@ -832,7 +814,7 @@ $ ip a
             
             
             
-            <a href="/tags/kubernetes"><i class="fa fa-tags"></i> kubernetes(25)</a>
+            <a href="/tags/kubernetes"><i class="fa fa-tags"></i> kubernetes(26)</a>
             
             
           </div>
@@ -891,7 +873,7 @@ $ ip a
               
             
             &nbsp;&bull;&nbsp;
-            2020-08-07
+            2020-09-02
             更新
           </p>
           <p class="credits theme-by text-muted">
