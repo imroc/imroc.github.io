@@ -98,12 +98,6 @@ var _hmt = _hmt || [];
                 
                   <a href="https://k8s.imroc.io">Kubernetes 实践指南</a>
                 
-                
-                  <a href="https://istio.imroc.io">Istio 实践指南</a>
-                
-                
-                  <a href="https://book.kubetencent.io">腾讯云容器服务指南</a>
-                
               </div>
             </li>
           
@@ -217,6 +211,32 @@ var _hmt = _hmt || [];
       <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
         
         <div class="posts-list">
+          
+            <article class="post-preview">
+              <a href="https://imroc.io/posts/kubernetes-analysis-exitcode/">
+                <h2 class="post-title">Kubernetes 问题定位技巧：分析 ExitCode</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                发表于 2018-12-21
+              </p>
+              <div class="post-entry">
+                
+                  使用 kubectl describe pod 查看异常的 pod 的状态，在容器列表里看 State 字段，其中 ExitCode 即程序退出时的状态码，正常退出时为0。如果不为0，表示异常退出，我们可以分析下原因
+                  <a href="https://imroc.io/posts/kubernetes-analysis-exitcode/" class="post-read-more">[阅读全文]</a>
+                
+              </div>
+
+              
+                <span class="post-meta">
+                  
+                    #<a href='https://imroc.io/tags/kubernetes/'>kubernetes</a>&nbsp;
+                  
+                </span>
+              
+            </article>
           
             <article class="post-preview">
               <a href="https://imroc.io/posts/git-trick-modify-history/">
@@ -466,32 +486,6 @@ var _hmt = _hmt || [];
               
             </article>
           
-            <article class="post-preview">
-              <a href="https://imroc.io/posts/kubernetes-nodeport-vs-loadbalancer-vs-ingress-when-should-i-use-what/">
-                <h2 class="post-title">对比Kubernetes的Nodeport、Loadbalancer和Ingress，什么时候该用哪种</h2>
-
-                
-              </a>
-
-              <p class="post-meta">
-                发表于 2018-03-13
-              </p>
-              <div class="post-entry">
-                
-                  本文翻译自：https://medium.com/google-cloud/kubernetes-nodeport-vs-loadbalan
-                  <a href="https://imroc.io/posts/kubernetes-nodeport-vs-loadbalancer-vs-ingress-when-should-i-use-what/" class="post-read-more">[阅读全文]</a>
-                
-              </div>
-
-              
-                <span class="post-meta">
-                  
-                    #<a href='https://imroc.io/tags/kubernetes/'>kubernetes</a>&nbsp;
-                  
-                </span>
-              
-            </article>
-          
         </div>
         
           <ul class="pager main-pager">
@@ -561,7 +555,7 @@ var _hmt = _hmt || [];
               
             
             &nbsp;&bull;&nbsp;
-            2020-09-02
+            2020-11-25
             更新
           </p>
           <p class="credits theme-by text-muted">

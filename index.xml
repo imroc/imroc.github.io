@@ -8,10 +8,19 @@
     <language>zh</language>
     <managingEditor>roc@imroc.io (roc)</managingEditor>
     <webMaster>roc@imroc.io (roc)</webMaster>
-    <lastBuildDate>Wed, 02 Sep 2020 20:50:00 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 25 Nov 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://imroc.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>打造云原生大型分布式监控系统(四): Kvass&#43;Thanos 监控超大规模容器集群</title>
+      <link>https://imroc.io/posts/build-cloud-native-large-scale-distributed-monitoring-system-4/</link>
+      <pubDate>Wed, 25 Nov 2020 00:00:00 +0000</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/posts/build-cloud-native-large-scale-distributed-monitoring-system-4/</guid>
+      <description>概述 继上一篇 Thanos 部署与实践 发布半年多之后，随着技术的发展，本系列又迎来了一次更新。本文将介绍如何结合 Kvass 与 Thanos，来更好的实现大规模容器集</description>
+    </item>
     
     <item>
       <title>Nginx Ingress 高并发实践</title>
@@ -464,6 +473,15 @@ $ ip a
       <author>roc@imroc.io (roc)</author>
       <guid>https://imroc.io/posts/golang-select/</guid>
       <description>很多时候我们需要让main函数不退出，让它在后台一直执行，例如： func main() { for i := 0; i &amp;lt; 20; i++ { //启动20个协程处理消息队列中的消息 c := consumer.New() go c.Start() } select</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://imroc.io/posts/build-cloud-native-large-scale-distributed-monitoring-system-4-copy/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>roc@imroc.io (roc)</author>
+      <guid>https://imroc.io/posts/build-cloud-native-large-scale-distributed-monitoring-system-4-copy/</guid>
+      <description>打造云原生大型分布式监控系统(四): Kvass+Thanos 监控超大规模容器集群 [TOC] 概述 继上一篇 Thanos 部署与实践 发布半年多之后，随着技术的发展，本系列又迎来了一次更新。</description>
     </item>
     
   </channel>

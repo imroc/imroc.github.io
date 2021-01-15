@@ -98,12 +98,6 @@ var _hmt = _hmt || [];
                 
                   <a href="https://k8s.imroc.io">Kubernetes 实践指南</a>
                 
-                
-                  <a href="https://istio.imroc.io">Istio 实践指南</a>
-                
-                
-                  <a href="https://book.kubetencent.io">腾讯云容器服务指南</a>
-                
               </div>
             </li>
           
@@ -217,6 +211,68 @@ var _hmt = _hmt || [];
       <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
         
         <div class="posts-list">
+          
+            <article class="post-preview">
+              <a href="https://imroc.io/posts/kubernetes-no-route-to-host/">
+                <h2 class="post-title">Kubernetes 疑难杂症排查分享: 诡异的 No route to host</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                发表于 2019-12-15
+              </p>
+              <div class="post-entry">
+                
+                  <p>之前发过一篇干货满满的爆火文章 <a href="https://imroc.io/posts/kubernetes/troubleshooting-with-kubernetes-network/">Kubernetes 网络疑难杂症排查分享</a>，包含多个疑难杂症的排查案例分享，信息量巨大。这次我又带来了续集，只讲一个案例，但信息量也不小，Are you ready ?</p>
+<h2 id="问题反馈">问题反馈</h2>
+<p>有用户反馈 Deployment 滚动更新的时候，业务日志偶尔会报 &ldquo;No route to host&rdquo; 的错误。</p>
+<h2 id="分析">分析</h2>
+<p>之前没遇到滚动更新会报 &ldquo;No route to host&rdquo; 的问题，我们先看下滚动更新导致连接异常有哪些常见的报错:</p>
+<ul>
+<li>
+<p><code>Connection reset by peer</code>: 连接被重置。通常是连接建立过，但 server 端发现 client 发的包不对劲就返回 RST，应用层就报错连接被重置。比如在 server 滚动更新过程中，client 给 server 发的请求还没完全结束，或者本身是一个类似 grpc 的多路复用长连接，当 server 对应的旧 Pod 删除(没有做优雅结束，停止时没有关闭连接)，新 Pod 很快创建启动并且刚好有跟之前旧 Pod 一样的 IP，这时 kube-proxy 也没感知到这个 IP 其实已经被删除然后又被重建了，针对这个 IP 的规则就不会更新，旧的连接依然发往这个 IP，但旧 Pod 已经不在了，后面继续发包时依然转发给这个 Pod IP，最终会被转发到这个有相同 IP 的新 Pod 上，而新 Pod 收到此包时检查报文发现不对劲，就返回 RST 给 client 告知将连接重置。针对这种情况，建议应用自身处理好优雅结束：Pod 进入 Terminating 状态后会发送 <code>SIGTERM</code> 信号给业务进程，业务进程的代码需处理这个信号，在进程退出前关闭所有连接。</p>
+</li>
+<li>
+<p><code>Connection refused</code>: 连接被拒绝。通常是连接还没建立，client 正在发 SYN 包请求建立连接，但到了 server 之后发现端口没监听，内核就返回 RST 包，然后应用层就报错连接被拒绝。比如在 server 滚动更新过程中，旧的 Pod 中的进程很快就停止了(网卡还未完全销毁)，但 client 所在节点的 iptables/ipvs 规则还没更新，包就可能会被转发到了这个停止的 Pod (由于 k8s 的 controller 模式，从 Pod 删除到 service 的 endpoint 更新，再到 kube-proxy watch 到更新并更新 节点上的 iptables/ipvs 规则，这个过程是异步的，中间存在一点时间差，所以有可能存在 Pod 中的进程已经没有监听，但 iptables/ipvs 规则还没更新的情况)。针对这种情况，建议给容器加一个 preStop，在真正销毁 Pod 之前等待一段时间，留时间给 kube-proxy 更新转发规则，更新完之后就不会再有新连接往这个旧 Pod 转发了，preStop 示例:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#66d9ef">lifecycle</span>:
+  <span style="color:#66d9ef">preStop</span>:
+    <span style="color:#66d9ef">exec</span>:
+      <span style="color:#66d9ef">command</span>:
+      - /bin/bash
+      - -c
+      - sleep <span style="color:#ae81ff">30</span>
+</code></pre></div><p>另外，还可能是新的 Pod 启动比较慢，虽然状态已经 Ready，但实际上可能端口还没监听，新的请求被转发到这个还没完全启动的 Pod 就会报错连接被拒绝。针对这种情况，建议给容器加就绪检查 (readinessProbe)，让容器真正启动完之后才将其状态置为 Ready，然后 kube-proxy 才会更新转发规则，这样就能保证新的请求只被转发到完全启动的 Pod，readinessProbe 示例:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#66d9ef">readinessProbe</span>:
+  <span style="color:#66d9ef">httpGet</span>:
+    <span style="color:#66d9ef">path</span>: /healthz
+    <span style="color:#66d9ef">port</span>: <span style="color:#ae81ff">80</span>
+    <span style="color:#66d9ef">httpHeaders</span>:
+    - <span style="color:#66d9ef">name</span>: X-Custom-Header
+      <span style="color:#66d9ef">value</span>: Awesome
+  <span style="color:#66d9ef">initialDelaySeconds</span>: <span style="color:#ae81ff">15</span>
+  <span style="color:#66d9ef">timeoutSeconds</span>: <span style="color:#ae81ff">1</span>
+</code></pre></div></li>
+<li>
+<p><code>Connection timed out</code>: 连接超时。通常是连接还没建立，client 发 SYN 请求建立连接一直等到超时时间都没有收到 ACK，然后就报错连接超时。这个可能场景跟前面 <code>Connection refused</code> 可能的场景类似，不同点在于端口有监听，但进程无法正常响应了: 转发规则还没更新，旧 Pod 的进程正在停止过程中，虽然端口有监听，但已经不响应了；或者转发规则更新了，新 Pod 端口也监听了，但还没有真正就绪，还没有能力处理新请求。针对这些情况的建议跟前面一样：加 preStop 和 readinessProbe。</p>
+</li>
+</ul>
+<p>下面我们来继续分析下滚动更新时发生 <code>No route to host</code> 的可能情况。</p>
+<p>这个报错很明显，IP 无法路由，通常是将报文发到了一个已经彻底销毁的 Pod (网卡已经不在)。不可能发到一个网卡还没创建好的 Pod，因为即便不加存活检查，也是要等到 Pod 网络初始化完后才可能 Ready，然后 kube-proxy 才会更新转发规则。</p>
+<p>什么情况下会转发到一个已经彻底销毁的 Pod？ 借鉴前面几种滚动更新的报错分析，我们推测应该是 Pod 很快销毁了但转发规则还没更新，从而新的请求被转发了这个已经销毁的 Pod，最终报文到达这个 Pod 所在 PodCIDR 的 Node 上时，Node 发现本机已经没有这个 IP 的容器，然后 Node 就返回 ICMP 包告知 client 这个 IP 不可达，client 收到 ICMP 后，应用层就会报错 &ldquo;No route to host&rdquo;。</p>
+<p>所以根据我们的分析，关键点在于 Pod 销毁太快，转发规则还没来得及更新，导致后来的请求被转发到已销毁的 Pod。针对这种情况，我们可以给容器加一个 preStop，留时间给 kube-proxy 更新转发规则来解决，参考 《Kubernetes实践指南》中的部分章节: <a href="https://k8s.imroc.io/best-practice/high-availability-deployment-of-applications#smooth-update-using-prestophook-and-readinessprobe">https://k8s.imroc.io/best-practice/high-availability-deployment-of-applications#smooth-update-using-prestophook-and-readinessprobe</a></p>
+                  <a href="https://imroc.io/posts/kubernetes-no-route-to-host/" class="post-read-more">[阅读全文]</a>
+                
+              </div>
+
+              
+                <span class="post-meta">
+                  
+                    #<a href='https://imroc.io/tags/kubernetes/'>kubernetes</a>&nbsp;
+                  
+                </span>
+              
+            </article>
           
             <article class="post-preview">
               <a href="https://imroc.io/posts/kubernetes-service-topology/">
@@ -477,32 +533,6 @@ var _hmt = _hmt || [];
               
             </article>
           
-            <article class="post-preview">
-              <a href="https://imroc.io/posts/understand-service-ingress-and-ingress-controller/">
-                <h2 class="post-title">通俗理解Kubernetes中Service、Ingress与Ingress Controller的作用与关系</h2>
-
-                
-              </a>
-
-              <p class="post-meta">
-                发表于 2018-07-24
-              </p>
-              <div class="post-entry">
-                
-                  通俗的讲: Service 是后端真实服务的抽象，一个 Service 可以代表多个相同的后端服务 Ingress 是反向代理规则，用来规定 HTTP/S 请求应该被转发到哪个 Service 上，比如根据请求中不同的
-                  <a href="https://imroc.io/posts/understand-service-ingress-and-ingress-controller/" class="post-read-more">[阅读全文]</a>
-                
-              </div>
-
-              
-                <span class="post-meta">
-                  
-                    #<a href='https://imroc.io/tags/kubernetes/'>kubernetes</a>&nbsp;
-                  
-                </span>
-              
-            </article>
-          
         </div>
         
           <ul class="pager main-pager">
@@ -572,7 +602,7 @@ var _hmt = _hmt || [];
               
             
             &nbsp;&bull;&nbsp;
-            2020-09-02
+            2020-11-25
             更新
           </p>
           <p class="credits theme-by text-muted">

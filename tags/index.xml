@@ -8,7 +8,7 @@
     <language>zh</language>
     <managingEditor>roc@imroc.io (roc)</managingEditor>
     <webMaster>roc@imroc.io (roc)</webMaster>
-    <lastBuildDate>Wed, 02 Sep 2020 20:50:00 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 25 Nov 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://imroc.io/tags/index.xml" rel="self" type="application/rss+xml" />
     
@@ -16,7 +16,7 @@
     <item>
       <title>kubernetes</title>
       <link>https://imroc.io/tags/kubernetes/</link>
-      <pubDate>Wed, 02 Sep 2020 20:50:00 +0800</pubDate>
+      <pubDate>Wed, 25 Nov 2020 00:00:00 +0000</pubDate>
       <author>roc@imroc.io (roc)</author>
       <guid>https://imroc.io/tags/kubernetes/</guid>
       <description></description>

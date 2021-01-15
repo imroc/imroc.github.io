@@ -5,13 +5,13 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title> Kubernetes 踩坑分享：开启tcp_tw_recycle内核参数在NAT环境会丢包 - roc的博客|Cloud Native|Kubernetes|Go|Golang|Service Mesh</title>
+  <title> roc - roc的博客|Cloud Native|Kubernetes|Go|Golang|Service Mesh</title>
   <meta name="description" content="roc的博客|Cloud Native|Kubernetes|Go|Golang|Service Mesh" />
-  <meta property="og:title" content="Kubernetes 踩坑分享：开启tcp_tw_recycle内核参数在NAT环境会丢包" />
-  <meta name="twitter:title" content="Kubernetes 踩坑分享：开启tcp_tw_recycle内核参数在NAT环境会丢包" />
-  <meta name="description" content="原因 tcp_tw_recycle参数。它用来快速回收TIME_WAIT连接，不过如果在NAT环境下会引发问题。 RFC1323中有如下一段描述">
-  <meta property="og:description" content="原因 tcp_tw_recycle参数。它用来快速回收TIME_WAIT连接，不过如果在NAT环境下会引发问题。 RFC1323中有如下一段描述">
-  <meta name="twitter:description" content="原因 tcp_tw_recycle参数。它用来快速回收TIME_WAIT连接，不过如果在NAT环境下会引发问题。 RFC1323中有如下一段描述">
+  <meta property="og:title" content="roc" />
+  <meta name="twitter:title" content="roc" />
+  <meta name="description" content="打造云原生大型分布式监控系统(四): Kvass&#43;Thanos 监控超大规模容器集群 [TOC] 概述 继上一篇 Thanos 部署与实践 发布半年多之后，随着技术的发展，本系列又迎来了一次更新。">
+  <meta property="og:description" content="打造云原生大型分布式监控系统(四): Kvass&#43;Thanos 监控超大规模容器集群 [TOC] 概述 继上一篇 Thanos 部署与实践 发布半年多之后，随着技术的发展，本系列又迎来了一次更新。">
+  <meta name="twitter:description" content="打造云原生大型分布式监控系统(四): Kvass&#43;Thanos 监控超大规模容器集群 [TOC] 概述 继上一篇 Thanos 部署与实践 发布半年多之后，随着技术的发展，本系列又迎来了一次更新。">
   <meta name="author" content="{Description { .Site.Author.name }}"/>
   <link href='https://imroc.io/favicon.png' rel='icon' type='image/x-icon'/>
   <meta property="og:image" content="https://res.cloudinary.com/imroc/image/upload/v1521031841/avatar.png" />
@@ -19,12 +19,12 @@
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:site" content="@imrocchan" />
   <meta name="twitter:creator" content="@imrocchan" />
-  <meta property="og:url" content="https://imroc.io/posts/lost-packets-once-enable-tcp-tw-recycle/" />
+  <meta property="og:url" content="https://imroc.io/posts/build-cloud-native-large-scale-distributed-monitoring-system-4-copy/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="roc" />
 
   <meta name="generator" content="Hugo 0.65.3" />
-  <link rel="canonical" href="https://imroc.io/posts/lost-packets-once-enable-tcp-tw-recycle/" />
+  <link rel="canonical" href="https://imroc.io/posts/build-cloud-native-large-scale-distributed-monitoring-system-4-copy/" />
   <link rel="alternate" href="https://imroc.io/index.xml" type="application/rss+xml" title="roc"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css"
     integrity="sha384-9eLZqc9ds8eNjO3TmqPeYcDj8n+Qfa4nuSiGYa6DjLNcv9BtN69ZIulL9+8CqC9Y" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/5.5.0/css/fontawesome.min.css"
@@ -200,57 +200,7 @@ var _hmt = _hmt || [];
 
 
 
-  
-    <div id="header-big-imgs" data-num-img=1 data-img-src-1="https://res.cloudinary.com/imroc/image/upload/v1515849754/blog/banner/hacker.jpg" data-img-desc-1="Hacker"></div>
-  
-
-  <header class="header-section has-img">
-    
-      <div class="intro-header big-img">
-        
-        
-        <div class="container">
-          <div class="row">
-              <div class="col-lg-12 col-md-12 col-md-offset-0">
-                
-                <div class="post-heading">
-                
-                  
-                     <h1>Kubernetes 踩坑分享：开启tcp_tw_recycle内核参数在NAT环境会丢包</h1>
-                     
-                    <span class="post-meta">
-  
-  发表于 2019-06-09
-  
-  
-</span>
-
-
-                    
-                  
-                  
-              </div>
-            </div>
-          </div>
-        </div>
-        <span class="img-desc" style="display: inline;"></span>
-      </div>
-    
-    <div class="intro-header no-img">
-      
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-12 col-md-12 col-md-offset-0">
-            <div class="posts-heading">
-                <h1 align="center">Kubernetes 踩坑分享：开启tcp_tw_recycle内核参数在NAT环境会丢包</h1>
-                
-                
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </header>
+  <div class="intro-header"></div>
 
 
     
@@ -258,63 +208,124 @@ var _hmt = _hmt || [];
     <div class="row">
         <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
             
-            <div>
-                
-                <h5 id="tags" style="margin-top: 30px;">标签: 
-                  
-                      <a
-                        href='https://imroc.io/tags/kubernetes/'>kubernetes</a>
-                      &nbsp;
-                  
-                </h5>
-            </div>
-            
               
             <article role="main" class="blog-post" itemprop="articleBody" id="content">
                 
 <aside class="toc">
   <nav id="TableOfContents">
   <ul>
-    <li><a href="#原因">原因</a></li>
-    <li><a href="#tke中-使用-nat-的场景">TKE中 使用 NAT 的场景</a></li>
+    <li><a href="#概述">概述</a></li>
+    <li><a href="#有-thanos-不够吗-">有 Thanos 不够吗 ?</a></li>
+    <li><a href="#什么是-kvass-">什么是 Kvass ?</a></li>
+    <li><a href="#部署实践">部署实践</a>
+      <ul>
+        <li><a href="#部署准备">部署准备</a></li>
+        <li><a href="#部署-kvass">部署 Kvass</a></li>
+        <li><a href="#部署-thanos-query">部署 thanos-query</a></li>
+      </ul>
+    </li>
+    <li><a href="#小结">小结</a></li>
   </ul>
 </nav>
 </aside>
 
 
-                <h2 id="原因">原因</h2>
-<p>tcp_tw_recycle参数。它用来快速回收TIME_WAIT连接，不过如果在NAT环境下会引发问题。
-RFC1323中有如下一段描述：</p>
-<p><code>An additional mechanism could be added to the TCP, a per-host cache of the last timestamp received from any connection. This value could then be used in the PAWS mechanism to reject old duplicate segments from earlier incarnations of the connection, if the timestamp clock can be guaranteed to have ticked at least once since the old connection was open. This would require that the TIME-WAIT delay plus the RTT together must be at least one tick of the sender’s timestamp clock. Such an extension is not part of the proposal of this RFC.</code></p>
-<ul>
-<li>
-<p>大概意思是说TCP有一种行为，可以缓存每个连接最新的时间戳，后续请求中如果时间戳小于缓存的时间戳，即视为无效，相应的数据包会被丢弃。</p>
-</li>
-<li>
-<p>Linux是否启用这种行为取决于tcp_timestamps和tcp_tw_recycle，因为tcp_timestamps缺省就是开启的，所以当tcp_tw_recycle被开启后，实际上这种行为就被激活了，当客户端或服务端以NAT方式构建的时候就可能出现问题，下面以客户端NAT为例来说明：</p>
-</li>
-<li>
-<p>当多个客户端通过NAT方式联网并与服务端交互时，服务端看到的是同一个IP，也就是说对服务端而言这些客户端实际上等同于一个，可惜由于这些客户端的时间戳可能存在差异，于是乎从服务端的视角看，便可能出现时间戳错乱的现象，进而直接导致时间戳小的数据包被丢弃。如果发生了此类问题，具体的表现通常是是客户端明明发送的SYN，但服务端就是不响应ACK。</p>
-</li>
-<li>
-<p>在4.12之后的内核已移除tcp_tw_recycle内核参数: <a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=4396e46187ca5070219b81773c4e65088dac50cc">https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=4396e46187ca5070219b81773c4e65088dac50cc</a> <a href="https://github.com/torvalds/linux/commit/4396e46187ca5070219b81773c4e65088dac50cc">https://github.com/torvalds/linux/commit/4396e46187ca5070219b81773c4e65088dac50cc</a></p>
-</li>
-</ul>
-<h2 id="tke中-使用-nat-的场景">TKE中 使用 NAT 的场景</h2>
-<ul>
-<li>跨 VPC 访问(通过对等连接、云联网、专线等方式打通)，会做 SNAT</li>
-</ul>
+                <h1 id="打造云原生大型分布式监控系统四-kvassthanos-监控超大规模容器集群">打造云原生大型分布式监控系统(四): Kvass+Thanos 监控超大规模容器集群</h1>
+<p>[TOC]</p>
+<h2 id="概述">概述</h2>
+<p>继上一篇 <a href="https://imroc.io/posts/build-cloud-native-large-scale-distributed-monitoring-system-3/">Thanos 部署与实践</a> 发布半年多之后，随着技术的发展，本系列又迎来了一次更新。本文将介绍如何结合 Kvass 与 Thanos，来更好的实现大规模容器集群场景下的监控。</p>
+<h2 id="有-thanos-不够吗-">有 Thanos 不够吗 ?</h2>
+<p>有同学可能会问，Thanos 不就是为了解决 Prometheus 的分布式问题么，有了 Thanos 不就可以实现大规模的 Prometheus 监控了吗？为什么还需要个 Kvass？
+Thanos 解决了 Prometheus 的分布式存储与查询的问题，但没有解决 Prometheus 分布式采集的问题，如果采集的任务和数据过多，还是会使 Prometheus 达到的瓶颈，不过对于这个问题，我们在系列的第一篇 <a href="https://imroc.io/posts/build-cloud-native-large-scale-distributed-monitoring-system-1/">大规模场景下 Prometheus 的优化手段</a> 中就讲了一些优化方法:</p>
+<ol>
+<li>从服务维度拆分采集任务到不同 Prometheus 实例。</li>
+<li>使用 Prometheus 自带的 hashmod 对采集任务做分片。</li>
+</ol>
+<p>但是，这些优化方法还是存在一些缺点:</p>
+<ol>
+<li>配置繁琐，每个 Prometheus 实例的采集配置都需要单独配。</li>
+<li>需要提前对数据规模做预估才好配置。</li>
+<li>不同 Prometheus 实例采集任务不同，负载很可能不太均衡，控制不好的话仍然可能存在部分实例负载过高的可能。</li>
+<li>如需对 Prometheus 进行扩缩容，需要手动调整，无法做到自动扩缩容。</li>
+</ol>
+<p>Kvass 就是为了解决这些问题而生，也是本文的重点。</p>
+<h2 id="什么是-kvass-">什么是 Kvass ?</h2>
+<p>Kvass 项目是腾讯云开源的轻量级 Prometheus 横向扩缩容方案，其巧妙的将服务发现与采集过程分离，并用 Sidecar 动态给 Prometheus 生成配置文件，从而达到无需手工配置就能实现不同 Prometheus 采集不同任务的效果，并且能够将采集任务进行负载均衡，以避免部分 Prometheus 实例负载过高，即使负载高了也可以自动扩容，再配合 Thanos 的全局视图，就可以轻松构建只使用一份配置文件的超大规模集群监控系统。下面是 Kvass+Thanos 的架构图:</p>
+<p><img src="build-cloud-native-large-scale-distributed-monitoring-system-4/image-20201125100807915.png" alt="image-20201125100807915"></p>
+<p>更多关于 Kvass 的详细介绍，请参考 <a href="https://mp.weixin.qq.com/s/P3F1grbVpb7LF2hcxYNOcg">如何用 Prometheus 监控十万 container 的 Kubernetes 集群</a> ，文章中详细介绍了原理和使用效果。</p>
+<h2 id="部署实践">部署实践</h2>
+<h3 id="部署准备">部署准备</h3>
+<p>首先下载 Kvass 的 repo 并进入 examples 目录:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git clone https://github.com/tkestack/kvass.git
+cd kvass/examples
+</code></pre></div><p>在部署 Kvass 之前我们需要有服务暴露指标以便采集，我们提供了一个 metrics 数据生成器，可以指定生成一定数量的 series，在本例子中，我们将部署 6 个 metrics 生成器副本，每个会生成 10045 series，将其一键部署到集群:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl create -f  metrics.yaml
+</code></pre></div><h3 id="部署-kvass">部署 Kvass</h3>
+<p>接着我们来部署 Kvass:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl create -f kvass-rbac.yaml <span style="color:#75715e"># Kvass 所需的 RBAC 配置</span>
+kubectl create -f config.yaml <span style="color:#75715e"># Prometheus 配置文件</span>
+kubectl create -f coordinator.yaml <span style="color:#75715e"># Kvass coordinator 部署配置</span>
+</code></pre></div><p>其中，<code>config.yaml</code> 的 Prometheus 配置文件，配了对刚才部署的 metrics 生成器的采集:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#66d9ef">global</span>:
+  <span style="color:#66d9ef">scrape_interval</span>: 15s
+  <span style="color:#66d9ef">evaluation_interval</span>: 15s
+  <span style="color:#66d9ef">external_labels</span>:
+    <span style="color:#66d9ef">cluster</span>: custom
+<span style="color:#66d9ef">scrape_configs</span>:
+- <span style="color:#66d9ef">job_name</span>: <span style="color:#e6db74">&#39;metrics-test&#39;</span>
+  <span style="color:#66d9ef">kubernetes_sd_configs</span>:
+    - <span style="color:#66d9ef">role</span>: pod
+  <span style="color:#66d9ef">relabel_configs</span>:
+  - <span style="color:#66d9ef">source_labels</span>: [__meta_kubernetes_pod_label_app_kubernetes_io_name]
+    <span style="color:#66d9ef">regex</span>: metrics
+    <span style="color:#66d9ef">action</span>: keep
+  - <span style="color:#66d9ef">source_labels</span>: [__meta_kubernetes_pod_ip]
+    <span style="color:#66d9ef">action</span>: replace
+    <span style="color:#66d9ef">regex</span>: (.<span style="color:#75715e">*)</span>
+    <span style="color:#66d9ef">replacement</span>: ${<span style="color:#ae81ff">1</span>}:<span style="color:#ae81ff">9091</span>
+    <span style="color:#66d9ef">target_label</span>: __address__
+  - <span style="color:#66d9ef">source_labels</span>:
+    - __meta_kubernetes_pod_name
+    <span style="color:#66d9ef">target_label</span>: pod
+</code></pre></div><p><code>coordinator.yaml</code> 我们给 Coordinator 的启动参数中设置每个分片的最大 head series 数目不超过 30000:</p>
+<blockquote>
+<p>&ndash;shard.max-series=30000</p>
+</blockquote>
+<p>然后部署 Prometheus 实例(包含 Thanos Sidecar 与 Kvass Sidecar)，一开始可以只需要单个副本:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl create -f prometheus-rep-0.yaml
+</code></pre></div><blockquote>
+<p>如果需要将数据存储到对象存储，请参考上一篇 <a href="https://imroc.io/posts/build-cloud-native-large-scale-distributed-monitoring-system-3/">Thanos 部署与实践</a> 对 Thanos Sidecar 的配置进行修改。</p>
+</blockquote>
+<h3 id="部署-thanos-query">部署 thanos-query</h3>
+<p>为了得到全局数据，我们需要部署一个 thanos-query:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl create -f thanos-query.yaml
+</code></pre></div><p>根据上述计算，监控目标总计 6  个 target, 60270 series，根据我们设置每个分片不能超过 30000 series，则预期需要 3 个分片。我们发现，Coordinator 成功将 StatefulSet 的副本数改成了 3。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ kubectl get pods
+NAME                                READY   STATUS    RESTARTS   AGE
+kvass-coordinator-c68f445f6-g9q5z   2/2     Running   <span style="color:#ae81ff">0</span>          64s
+metrics-5876dccf65-5cncw            1/1     Running   <span style="color:#ae81ff">0</span>          75s
+metrics-5876dccf65-6tw4b            1/1     Running   <span style="color:#ae81ff">0</span>          75s
+metrics-5876dccf65-dzj2c            1/1     Running   <span style="color:#ae81ff">0</span>          75s
+metrics-5876dccf65-gz9qd            1/1     Running   <span style="color:#ae81ff">0</span>          75s
+metrics-5876dccf65-r25db            1/1     Running   <span style="color:#ae81ff">0</span>          75s
+metrics-5876dccf65-tdqd7            1/1     Running   <span style="color:#ae81ff">0</span>          75s
+prometheus-rep-0-0                  3/3     Running   <span style="color:#ae81ff">0</span>          54s
+prometheus-rep-0-1                  3/3     Running   <span style="color:#ae81ff">0</span>          45s
+prometheus-rep-0-2                  3/3     Running   <span style="color:#ae81ff">0</span>          45s
+thanos-query-69b9cb857-d2b45        1/1     Running   <span style="color:#ae81ff">0</span>          49s
+</code></pre></div><p>我们再通过 thanos-query 来查看全局数据，发现数据是完整的(其中 metrics0 为指标生成器生成的指标名):</p>
+<p><img src="build-cloud-native-large-scale-distributed-monitoring-system-4/image-20201125110446591.png" alt="image-20201125110446591"></p>
+<p><img src="build-cloud-native-large-scale-distributed-monitoring-system-4/image-20201125110534688.png" alt="image-20201125110534688"></p>
+<p>如果需要用 Grafana 面板查看监控数据，可以添加 thanos-query 地址作为 Prometheus 数据源: <code>http://thanos-query.default.svc.cluster.local:9090</code>。</p>
+<h2 id="小结">小结</h2>
+<p>本文介绍了如何结合 Kvass 与 Thanos 来实现超大规模容器集群的监控，如果你使用了腾讯云容器服务，可以直接使用运维中心下的 <code>云原生监控</code> 服务，此服务就是基于 Kvass 构建的产品。</p>
 
             </article>
 
             <ul class="pager blog-pager">
-                
-                <li class="previous">
-                    <a href="https://imroc.io/posts/handle-memory-fragmentation/" data-toggle="tooltip" data-placement="top" title="Kubernetes 最佳实践：处理内存碎片化">&larr; 前一篇</a>
-                </li>
                  
                 <li class="next">
-                    <a href="https://imroc.io/posts/troubleshooting-with-kubernetes-network/" data-toggle="tooltip" data-placement="top" title="Kubernetes 网络疑难杂症排查分享">后一篇 &rarr;</a>
+                    <a href="https://imroc.io/posts/golang-select/" data-toggle="tooltip" data-placement="top" title="Go语言技巧-使用select{}阻塞main函数">后一篇 &rarr;</a>
                 </li>
                 
             </ul>
@@ -362,31 +373,6 @@ RFC1323中有如下一段描述：</p>
           
             
 
-  <h3>See Also</h3>
-  <ul style="margin-bottom: 25px;">
-      
-      <li><a href="/posts/handle-memory-fragmentation/">Kubernetes 最佳实践：处理内存碎片化</a></li>
-      
-      <li><a href="/posts/kubernetes-scale-keepalive-service/">Kubernetes 最佳实践：解决长连接服务扩容失效</a></li>
-      
-      <li><a href="/posts/capture-packets-in-container/">Kubernetes 问题定位技巧：容器内抓包</a></li>
-      
-      <li><a href="/posts/efficient-kubectl/">kubectl 高效技巧</a></li>
-      
-      <li><a href="/posts/kubernetes-wildcard-domain-forward/">Kubernetes 泛域名动态 Service 转发解决方案</a></li>
-      
-      <li><a href="/posts/kubernetes-analysis-exitcode/">Kubernetes 问题定位技巧：分析 ExitCode</a></li>
-      
-      <li><a href="/posts/understand-service-ingress-and-ingress-controller/">通俗理解Kubernetes中Service、Ingress与Ingress Controller的作用与关系</a></li>
-      
-      <li><a href="/posts/deploy-kubernetes-dashboard-and-enable-free-https/">利用Helm一键部署Kubernetes Dashboard并启用免费HTTPS</a></li>
-      
-      <li><a href="/posts/let-ingress-enable-free-https-with-cert-manager/">利用cert-manager让Ingress启用免费的HTTPS证书</a></li>
-      
-      <li><a href="/posts/use-nginx-ingress-controller-to-expose-service/">使用Nginx Ingress Controller导入外部流量到Kubernetes集群内部</a></li>
-      
-  </ul>
-
           
 
           
@@ -397,7 +383,9 @@ RFC1323中有如下一段描述：</p>
 <script>
   
   
-  console.log("id:lost-packets-once-enable-tcp-tw-recycle-zh")
+    
+  
+  console.log("id:878421d923e98a7e4ebece92ae7f6860")
   var gitalk = new Gitalk({
       clientID: 'd05b8f959b3111c6fb63',
       clientSecret: 'f30ef76ea0050ed731ace76f7fbf684ae5d28fbc',
@@ -405,9 +393,9 @@ RFC1323中有如下一段描述：</p>
       owner: 'imroc',
       admin: 'imroc',
       labels: ['Gitalk'],
-      title: 'Kubernetes 踩坑分享：开启tcp_tw_recycle内核参数在NAT环境会丢包',
+      title: '',
       createIssueManually: false,
-      id: 'lost-packets-once-enable-tcp-tw-recycle-zh',
+      id: '878421d923e98a7e4ebece92ae7f6860',
       distractionFreeMode: true
   });
   gitalk.render('gitalk-container');
