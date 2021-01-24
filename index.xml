@@ -13,6 +13,30 @@
     </image>
     
     <item>
+      <title>Kubernetes 学习笔记</title>
+      <link>/note/learning-kubernetes/</link>
+      <pubDate>Thu, 23 Jan 2020 00:00:00 +0000</pubDate>
+      <guid>/note/learning-kubernetes/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>TKE 学习笔记</title>
+      <link>/note/learning-tke/</link>
+      <pubDate>Fri, 24 Jan 2020 00:00:00 +0000</pubDate>
+      <guid>/note/learning-tke/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Hugo 学习笔记</title>
+      <link>/note/learning-hugo/</link>
+      <pubDate>Fri, 24 Jan 2020 00:00:00 +0000</pubDate>
+      <guid>/note/learning-hugo/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>打造云原生大型分布式监控系统(四): Kvass&#43;Thanos 监控超大规模容器集群</title>
       <link>/post/202011/build-cloud-native-large-scale-distributed-monitoring-system-4/</link>
       <pubDate>Wed, 25 Nov 2020 00:00:00 +0000</pubDate>
@@ -1923,22 +1947,6 @@ spec:
 &lt;p&gt;通过本文一系列对 Prometheus 的优化手段，我们在一定程度上解决了单机 Prometheus 在大规模场景下的痛点，但操作和运维复杂度比较高，并且不能够很好的支持数据的长期存储(long term storage)。对于一些时间比较久远的监控数据，我们通常查看的频率很低，但也希望能够低成本的保留足够长的时间，数据如果全部落盘到磁盘成本是很高的，并且容量有限，即便利用水平扩容可以增加存储容量，但同时也增大了资源成本，不可能无限扩容，所以需要设置一个数据过期策略，也就会丢失时间比较久远的监控数据。&lt;/p&gt;
 &lt;p&gt;对于这种不常用的冷数据，最理想的方式就是存到廉价的对象存储中，等需要查询的时候能够自动加载出来。Thanos 可以帮我们解决这些问题，它完全兼容 Prometheus API，提供统一查询聚合分布式部署的 Prometheus 数据的能力，同时也支持数据长期存储到各种对象存储(无限存储能力)以及降低采样率来加速大时间范围的数据查询。&lt;/p&gt;
 &lt;p&gt;下一篇我们将会介绍 Thanos 的架构详解，敬请期待。&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>Hugo 学习笔记</title>
-      <link>/note/learning-hugo/</link>
-      <pubDate>Fri, 24 Jan 2020 00:00:00 +0000</pubDate>
-      <guid>/note/learning-hugo/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Kubernetes 学习笔记</title>
-      <link>/note/learning-kubernetes/</link>
-      <pubDate>Thu, 23 Jan 2020 00:00:00 +0000</pubDate>
-      <guid>/note/learning-kubernetes/</guid>
-      <description></description>
     </item>
     
     <item>

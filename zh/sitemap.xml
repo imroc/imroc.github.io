@@ -3,6 +3,21 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>/note/learning-kubernetes/</loc>
+    <lastmod>2020-01-23T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/note/learning-tke/</loc>
+    <lastmod>2020-01-24T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/note/learning-hugo/</loc>
+    <lastmod>2020-01-24T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc></loc>
     <lastmod>2020-11-25T00:00:00+00:00</lastmod>
     <xhtml:link
@@ -108,28 +123,18 @@
   </url>
   
   <url>
-    <loc>/note/learning-hugo/</loc>
+    <loc>/note/</loc>
     <lastmod>2020-01-24T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/note/</loc>
+    <loc>/tag/%E4%BA%91%E5%8E%9F%E7%94%9F/</loc>
     <lastmod>2020-01-24T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>/tag/%E5%B7%A5%E5%85%B7/</loc>
     <lastmod>2020-01-24T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/note/learning-kubernetes/</loc>
-    <lastmod>2020-01-23T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tag/%E4%BA%91%E5%8E%9F%E7%94%9F/</loc>
-    <lastmod>2020-01-23T00:00:00+00:00</lastmod>
   </url>
   
   <url>
