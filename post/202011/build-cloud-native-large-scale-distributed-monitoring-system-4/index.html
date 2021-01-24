@@ -731,10 +731,10 @@
 </nav>
 </details>
 <h2 id="概述">概述</h2>
-<p>继上一篇 <a href="https://imroc.io/posts/build-cloud-native-large-scale-distributed-monitoring-system-3/" target="_blank" rel="noopener">Thanos 部署与实践</a> 发布半年多之后，随着技术的发展，本系列又迎来了一次更新。本文将介绍如何结合 Kvass 与 Thanos，来更好的实现大规模容器集群场景下的监控。</p>
+<p>继上一篇 <a href="../../202004/build-cloud-native-large-scale-distributed-monitoring-system-3/">Thanos 部署与实践</a> 发布半年多之后，随着技术的发展，本系列又迎来了一次更新。本文将介绍如何结合 Kvass 与 Thanos，来更好的实现大规模容器集群场景下的监控。</p>
 <h2 id="有-thanos-不够吗-">有 Thanos 不够吗 ?</h2>
 <p>有同学可能会问，Thanos 不就是为了解决 Prometheus 的分布式问题么，有了 Thanos 不就可以实现大规模的 Prometheus 监控了吗？为什么还需要个 Kvass？
-Thanos 解决了 Prometheus 的分布式存储与查询的问题，但没有解决 Prometheus 分布式采集的问题，如果采集的任务和数据过多，还是会使 Prometheus 达到的瓶颈，不过对于这个问题，我们在系列的第一篇 <a href="https://imroc.io/posts/build-cloud-native-large-scale-distributed-monitoring-system-1/" target="_blank" rel="noopener">大规模场景下 Prometheus 的优化手段</a> 中就讲了一些优化方法:</p>
+Thanos 解决了 Prometheus 的分布式存储与查询的问题，但没有解决 Prometheus 分布式采集的问题，如果采集的任务和数据过多，还是会使 Prometheus 达到的瓶颈，不过对于这个问题，我们在系列的第一篇 <a href="../../202003/build-cloud-native-large-scale-distributed-monitoring-system-1">大规模场景下 Prometheus 的优化手段</a> 中就讲了一些优化方法:</p>
 <ol>
 <li>从服务维度拆分采集任务到不同 Prometheus 实例。</li>
 <li>使用 Prometheus 自带的 hashmod 对采集任务做分片。</li>
@@ -749,7 +749,7 @@ Thanos 解决了 Prometheus 的分布式存储与查询的问题，但没有解�
 <p>Kvass 就是为了解决这些问题而生，也是本文的重点。</p>
 <h2 id="什么是-kvass-">什么是 Kvass ?</h2>
 <p>Kvass 项目是腾讯云开源的轻量级 Prometheus 横向扩缩容方案，其巧妙的将服务发现与采集过程分离，并用 Sidecar 动态给 Prometheus 生成配置文件，从而达到无需手工配置就能实现不同 Prometheus 采集不同任务的效果，并且能够将采集任务进行负载均衡，以避免部分 Prometheus 实例负载过高，即使负载高了也可以自动扩容，再配合 Thanos 的全局视图，就可以轻松构建只使用一份配置文件的超大规模集群监控系统。下面是 Kvass+Thanos 的架构图:</p>
-<p><img src="build-cloud-native-large-scale-distributed-monitoring-system-4/image-20201125100807915.png" alt="image-20201125100807915"></p>
+<p><img src="kvass-arch.jpeg" alt=""></p>
 <p>更多关于 Kvass 的详细介绍，请参考 <a href="https://mp.weixin.qq.com/s/P3F1grbVpb7LF2hcxYNOcg" target="_blank" rel="noopener">如何用 Prometheus 监控十万 container 的 Kubernetes 集群</a> ，文章中详细介绍了原理和使用效果。</p>
 <h2 id="部署实践">部署实践</h2>
 <h3 id="部署准备">部署准备</h3>
