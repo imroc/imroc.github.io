@@ -1,0 +1,1367 @@
+<!DOCTYPE html><html lang="zh-Hans" >
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  
+  
+  
+  <meta name="generator" content="Wowchemy 5.0.0-beta.1 for Hugo">
+  
+
+  
+
+  
+  
+
+  
+  
+  
+  
+  
+    
+    
+    
+  
+  
+
+  <meta name="author" content="roc">
+
+  
+  
+  
+    
+  
+  <meta name="description" content="
+  目录
+  
+  
+    问题反馈
+    分析
+    问题没有解决
+    深入分析
+    总结
+  
+
+
+之前发过一篇干货满满的爆火文章 Kubernetes 网络疑难杂症排查分享，包含多个疑难杂症的排查案例分享，信息量巨大。这次我又带来了续集，只讲一个案例，但信息量也不小，Are you ready ?
+问题反馈
+有用户反馈 Deployment 滚动更新的时候，业务日志偶尔会报 &ldquo;No route to host&rdquo; 的错误。
+分析
+之前没遇到滚动更新会报 &ldquo;No route to host&rdquo; 的问题，我们先看下滚动更新导致连接异常有哪些常见的报错:
+
+
+Connection reset by peer: 连接被重置。通常是连接建立过，但 server 端发现 client 发的包不对劲就返回 RST，应用层就报错连接被重置。比如在 server 滚动更新过程中，client 给 server 发的请求还没完全结束，或者本身是一个类似 grpc 的多路复用长连接，当 server 对应的旧 Pod 删除(没有做优雅结束，停止时没有关闭连接)，新 Pod 很快创建启动并且刚好有跟之前旧 Pod 一样的 IP，这时 kube-proxy 也没感知到这个 IP 其实已经被删除然后又被重建了，针对这个 IP 的规则就不会更新，旧的连接依然发往这个 IP，但旧 Pod 已经不在了，后面继续发包时依然转发给这个 Pod IP，最终会被转发到这个有相同 IP 的新 Pod 上，而新 Pod 收到此包时检查报文发现不对劲，就返回 RST 给 client 告知将连接重置。针对这种情况，建议应用自身处理好优雅结束：Pod 进入 Terminating 状态后会发送 SIGTERM 信号给业务进程，业务进程的代码需处理这个信号，在进程退出前关闭所有连接。
+
+
+Connection refused: 连接被拒绝。通常是连接还没建立，client 正在发 SYN 包请求建立连接，但到了 server 之后发现端口没监听，内核就返回 RST 包，然后应用层就报错连接被拒绝。比如在 server 滚动更新过程中，旧的 Pod 中的进程很快就停止了(网卡还未完全销毁)，但 client 所在节点的 iptables/ipvs 规则还没更新，包就可能会被转发到了这个停止的 Pod (由于 k8s 的 controller 模式，从 Pod 删除到 service 的 endpoint 更新，再到 kube-proxy watch 到更新并更新 节点上的 iptables/ipvs 规则，这个过程是异步的，中间存在一点时间差，所以有可能存在 Pod 中的进程已经没有监听，但 iptables/ipvs 规则还没更新的情况)。针对这种情况，建议给容器加一个 preStop，在真正销毁 Pod 之前等待一段时间，留时间给 kube-proxy 更新转发规则，更新完之后就不会再有新连接往这个旧 Pod 转发了，preStop 示例:
+lifecycle:
+  preStop:
+    exec:
+      command:
+      - /bin/bash
+      - -c
+      - sleep 30
+
+另外，还可能是新的 Pod 启动比较慢，虽然状态已经 Ready，但实际上可能端口还没监听，新的请求被转发到这个还没完全启动的 Pod 就会报错连接被拒绝。针对这种情况，建议给容器加就绪检查 (readinessProbe)，让容器真正启动完之后才将其状态置为 Ready，然后 kube-proxy 才会更新转发规则，这样就能保证新的请求只被转发到完全启动的 Pod，readinessProbe 示例:
+readinessProbe:
+  httpGet:
+    path: /healthz
+    port: 80
+    httpHeaders:
+    - name: X-Custom-Header
+      value: Awesome
+  initialDelaySeconds: 15
+  timeoutSeconds: 1
+
+
+
+Connection timed out: 连接超时。通常是连接还没建立，client 发 SYN 请求建立连接一直等到超时时间都没有收到 ACK，然后就报错连接超时。这个可能场景跟前面 Connection refused 可能的场景类似，不同点在于端口有监听，但进程无法正常响应了: 转发规则还没更新，旧 Pod 的进程正在停止过程中，虽然端口有监听，但已经不响应了；或者转发规则更新了，新 Pod 端口也监听了，但还没有真正就绪，还没有能力处理新请求。针对这些情况的建议跟前面一样：加 preStop 和 readinessProbe。
+
+
+下面我们来继续分析下滚动更新时发生 No route to host 的可能情况。
+这个报错很明显，IP 无法路由，通常是将报文发到了一个已经彻底销毁的 Pod (网卡已经不在)。不可能发到一个网卡还没创建好的 Pod，因为即便不加存活检查，也是要等到 Pod 网络初始化完后才可能 Ready，然后 kube-proxy 才会更新转发规则。
+什么情况下会转发到一个已经彻底销毁的 Pod？ 借鉴前面几种滚动更新的报错分析，我们推测应该是 Pod 很快销毁了但转发规则还没更新，从而新的请求被转发了这个已经销毁的 Pod，最终报文到达这个 Pod 所在 PodCIDR 的 Node 上时，Node 发现本机已经没有这个 IP 的容器，然后 Node 就返回 ICMP 包告知 client 这个 IP 不可达，client 收到 ICMP 后，应用层就会报错 &ldquo;No route to host&rdquo;。
+所以根据我们的分析，关键点在于 Pod 销毁太快，转发规则还没来得及更新，导致后来的请求被转发到已销毁的 Pod。针对这种情况，我们可以给容器加一个 preStop，留时间给 kube-proxy 更新转发规则来解决，参考 《Kubernetes实践指南》中的部分章节: https://k8s.imroc.io/best-practice/high-availability-deployment-of-applications#smooth-update-using-prestophook-and-readinessprobe">
+
+  
+  <link rel="alternate" hreflang="zh-Hans" href="/post/201912/kubernetes-no-route-to-host/">
+
+  
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  
+
+  
+  
+  
+  <meta name="theme-color" content="#1565c0">
+  
+
+  
+  
+
+  
+  
+  
+  
+    
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha256-FMvZuGapsJLjouA6k7Eo2lusoAX9i0ShlWFG6qt7SLc=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous" media="print" onload="this.media='all'">
+
+    
+    
+    
+      
+    
+    
+      
+      
+        
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/styles/github.min.css" crossorigin="anonymous" title="hl-light" media="print" onload="this.media='all'">
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/styles/dracula.min.css" crossorigin="anonymous" title="hl-dark" media="print" onload="this.media='all'" disabled>
+        
+      
+    
+
+    
+
+    
+
+    
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.2.2/lazysizes.min.js" integrity="sha512-TmDwFLhg3UA4ZG0Eb4MIyT1O1Mb+Oww5kFG0uHqXsdbyZz9DcvYQhKpGgNkamAI6h2lGGZq2X8ftOJvF/XjTUg==" crossorigin="anonymous" async></script>
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+        
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+
+  
+
+  
+  
+  
+    
+      
+      <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Roboto+Mono&family=Roboto:wght@400;700&display=swap">
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Roboto+Mono&family=Roboto:wght@400;700&display=swap" media="print" onload="this.media='all'">
+    
+  
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="/css/wowchemy.a2dda909fb8228e17412d06b4423e0a6.css">
+
+  
+
+
+
+
+  
+
+  
+
+
+  
+  
+
+  
+
+  
+  <link rel="manifest" href="/index.webmanifest">
+  
+
+  <link rel="icon" type="image/png" href="/images/icon_hua2ec155b4296a9c9791d015323e16eb5_11927_32x32_fill_lanczos_center_2.png">
+  <link rel="apple-touch-icon" type="image/png" href="/images/icon_hua2ec155b4296a9c9791d015323e16eb5_11927_192x192_fill_lanczos_center_2.png">
+
+  <link rel="canonical" href="/post/201912/kubernetes-no-route-to-host/">
+
+  
+  
+  
+  
+  
+  
+  
+    
+    
+  
+  
+  <meta property="twitter:card" content="summary">
+  
+  <meta property="twitter:site" content="@imrocchan">
+  <meta property="twitter:creator" content="@imrocchan">
+  
+  <meta property="og:site_name" content="roc的个人网站">
+  <meta property="og:url" content="/post/201912/kubernetes-no-route-to-host/">
+  <meta property="og:title" content="Kubernetes 疑难杂症排查分享: 诡异的 No route to host | roc的个人网站">
+  <meta property="og:description" content="
+  目录
+  
+  
+    问题反馈
+    分析
+    问题没有解决
+    深入分析
+    总结
+  
+
+
+之前发过一篇干货满满的爆火文章 Kubernetes 网络疑难杂症排查分享，包含多个疑难杂症的排查案例分享，信息量巨大。这次我又带来了续集，只讲一个案例，但信息量也不小，Are you ready ?
+问题反馈
+有用户反馈 Deployment 滚动更新的时候，业务日志偶尔会报 &ldquo;No route to host&rdquo; 的错误。
+分析
+之前没遇到滚动更新会报 &ldquo;No route to host&rdquo; 的问题，我们先看下滚动更新导致连接异常有哪些常见的报错:
+
+
+Connection reset by peer: 连接被重置。通常是连接建立过，但 server 端发现 client 发的包不对劲就返回 RST，应用层就报错连接被重置。比如在 server 滚动更新过程中，client 给 server 发的请求还没完全结束，或者本身是一个类似 grpc 的多路复用长连接，当 server 对应的旧 Pod 删除(没有做优雅结束，停止时没有关闭连接)，新 Pod 很快创建启动并且刚好有跟之前旧 Pod 一样的 IP，这时 kube-proxy 也没感知到这个 IP 其实已经被删除然后又被重建了，针对这个 IP 的规则就不会更新，旧的连接依然发往这个 IP，但旧 Pod 已经不在了，后面继续发包时依然转发给这个 Pod IP，最终会被转发到这个有相同 IP 的新 Pod 上，而新 Pod 收到此包时检查报文发现不对劲，就返回 RST 给 client 告知将连接重置。针对这种情况，建议应用自身处理好优雅结束：Pod 进入 Terminating 状态后会发送 SIGTERM 信号给业务进程，业务进程的代码需处理这个信号，在进程退出前关闭所有连接。
+
+
+Connection refused: 连接被拒绝。通常是连接还没建立，client 正在发 SYN 包请求建立连接，但到了 server 之后发现端口没监听，内核就返回 RST 包，然后应用层就报错连接被拒绝。比如在 server 滚动更新过程中，旧的 Pod 中的进程很快就停止了(网卡还未完全销毁)，但 client 所在节点的 iptables/ipvs 规则还没更新，包就可能会被转发到了这个停止的 Pod (由于 k8s 的 controller 模式，从 Pod 删除到 service 的 endpoint 更新，再到 kube-proxy watch 到更新并更新 节点上的 iptables/ipvs 规则，这个过程是异步的，中间存在一点时间差，所以有可能存在 Pod 中的进程已经没有监听，但 iptables/ipvs 规则还没更新的情况)。针对这种情况，建议给容器加一个 preStop，在真正销毁 Pod 之前等待一段时间，留时间给 kube-proxy 更新转发规则，更新完之后就不会再有新连接往这个旧 Pod 转发了，preStop 示例:
+lifecycle:
+  preStop:
+    exec:
+      command:
+      - /bin/bash
+      - -c
+      - sleep 30
+
+另外，还可能是新的 Pod 启动比较慢，虽然状态已经 Ready，但实际上可能端口还没监听，新的请求被转发到这个还没完全启动的 Pod 就会报错连接被拒绝。针对这种情况，建议给容器加就绪检查 (readinessProbe)，让容器真正启动完之后才将其状态置为 Ready，然后 kube-proxy 才会更新转发规则，这样就能保证新的请求只被转发到完全启动的 Pod，readinessProbe 示例:
+readinessProbe:
+  httpGet:
+    path: /healthz
+    port: 80
+    httpHeaders:
+    - name: X-Custom-Header
+      value: Awesome
+  initialDelaySeconds: 15
+  timeoutSeconds: 1
+
+
+
+Connection timed out: 连接超时。通常是连接还没建立，client 发 SYN 请求建立连接一直等到超时时间都没有收到 ACK，然后就报错连接超时。这个可能场景跟前面 Connection refused 可能的场景类似，不同点在于端口有监听，但进程无法正常响应了: 转发规则还没更新，旧 Pod 的进程正在停止过程中，虽然端口有监听，但已经不响应了；或者转发规则更新了，新 Pod 端口也监听了，但还没有真正就绪，还没有能力处理新请求。针对这些情况的建议跟前面一样：加 preStop 和 readinessProbe。
+
+
+下面我们来继续分析下滚动更新时发生 No route to host 的可能情况。
+这个报错很明显，IP 无法路由，通常是将报文发到了一个已经彻底销毁的 Pod (网卡已经不在)。不可能发到一个网卡还没创建好的 Pod，因为即便不加存活检查，也是要等到 Pod 网络初始化完后才可能 Ready，然后 kube-proxy 才会更新转发规则。
+什么情况下会转发到一个已经彻底销毁的 Pod？ 借鉴前面几种滚动更新的报错分析，我们推测应该是 Pod 很快销毁了但转发规则还没更新，从而新的请求被转发了这个已经销毁的 Pod，最终报文到达这个 Pod 所在 PodCIDR 的 Node 上时，Node 发现本机已经没有这个 IP 的容器，然后 Node 就返回 ICMP 包告知 client 这个 IP 不可达，client 收到 ICMP 后，应用层就会报错 &ldquo;No route to host&rdquo;。
+所以根据我们的分析，关键点在于 Pod 销毁太快，转发规则还没来得及更新，导致后来的请求被转发到已销毁的 Pod。针对这种情况，我们可以给容器加一个 preStop，留时间给 kube-proxy 更新转发规则来解决，参考 《Kubernetes实践指南》中的部分章节: https://k8s.imroc.io/best-practice/high-availability-deployment-of-applications#smooth-update-using-prestophook-and-readinessprobe"><meta property="og:image" content="/images/icon_hua2ec155b4296a9c9791d015323e16eb5_11927_512x512_fill_lanczos_center_2.png">
+  <meta property="twitter:image" content="/images/icon_hua2ec155b4296a9c9791d015323e16eb5_11927_512x512_fill_lanczos_center_2.png"><meta property="og:locale" content="zh-Hans">
+  
+    
+      <meta property="article:published_time" content="2019-12-15T12:03:00&#43;08:00">
+    
+    <meta property="article:modified_time" content="2020-11-25T00:00:00&#43;00:00">
+  
+
+  
+
+
+    
+
+
+
+
+
+
+  
+
+
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "/post/201912/kubernetes-no-route-to-host/"
+  },
+  "headline": "Kubernetes 疑难杂症排查分享: 诡异的 No route to host",
+  
+  "datePublished": "2019-12-15T12:03:00+08:00",
+  "dateModified": "2020-11-25T00:00:00Z",
+  
+  "author": {
+    "@type": "Person",
+    "name": "roc"
+  },
+  
+  "publisher": {
+    "@type": "Organization",
+    "name": "roc的个人网站",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "/images/icon_hua2ec155b4296a9c9791d015323e16eb5_11927_192x192_fill_lanczos_center_2.png"
+    }
+  },
+  "description": "\u003cdetails class=\"toc-inpage d-print-none  \" open\u003e\n  \u003csummary class=\"font-weight-bold\"\u003e目录\u003c/summary\u003e\n  \u003cnav id=\"TableOfContents\"\u003e\n  \u003cul\u003e\n    \u003cli\u003e\u003ca href=\"#问题反馈\"\u003e问题反馈\u003c/a\u003e\u003c/li\u003e\n    \u003cli\u003e\u003ca href=\"#分析\"\u003e分析\u003c/a\u003e\u003c/li\u003e\n    \u003cli\u003e\u003ca href=\"#问题没有解决\"\u003e问题没有解决\u003c/a\u003e\u003c/li\u003e\n    \u003cli\u003e\u003ca href=\"#深入分析\"\u003e深入分析\u003c/a\u003e\u003c/li\u003e\n    \u003cli\u003e\u003ca href=\"#总结\"\u003e总结\u003c/a\u003e\u003c/li\u003e\n  \u003c/ul\u003e\n\u003c/nav\u003e\n\u003c/details\u003e\n\u003cp\u003e之前发过一篇干货满满的爆火文章 \u003ca href=\"https://imroc.io/posts/kubernetes/troubleshooting-with-kubernetes-network/\" target=\"_blank\" rel=\"noopener\"\u003eKubernetes 网络疑难杂症排查分享\u003c/a\u003e，包含多个疑难杂症的排查案例分享，信息量巨大。这次我又带来了续集，只讲一个案例，但信息量也不小，Are you ready ?\u003c/p\u003e\n\u003ch2 id=\"问题反馈\"\u003e问题反馈\u003c/h2\u003e\n\u003cp\u003e有用户反馈 Deployment 滚动更新的时候，业务日志偶尔会报 \u0026ldquo;No route to host\u0026rdquo; 的错误。\u003c/p\u003e\n\u003ch2 id=\"分析\"\u003e分析\u003c/h2\u003e\n\u003cp\u003e之前没遇到滚动更新会报 \u0026ldquo;No route to host\u0026rdquo; 的问题，我们先看下滚动更新导致连接异常有哪些常见的报错:\u003c/p\u003e\n\u003cul\u003e\n\u003cli\u003e\n\u003cp\u003e\u003ccode\u003eConnection reset by peer\u003c/code\u003e: 连接被重置。通常是连接建立过，但 server 端发现 client 发的包不对劲就返回 RST，应用层就报错连接被重置。比如在 server 滚动更新过程中，client 给 server 发的请求还没完全结束，或者本身是一个类似 grpc 的多路复用长连接，当 server 对应的旧 Pod 删除(没有做优雅结束，停止时没有关闭连接)，新 Pod 很快创建启动并且刚好有跟之前旧 Pod 一样的 IP，这时 kube-proxy 也没感知到这个 IP 其实已经被删除然后又被重建了，针对这个 IP 的规则就不会更新，旧的连接依然发往这个 IP，但旧 Pod 已经不在了，后面继续发包时依然转发给这个 Pod IP，最终会被转发到这个有相同 IP 的新 Pod 上，而新 Pod 收到此包时检查报文发现不对劲，就返回 RST 给 client 告知将连接重置。针对这种情况，建议应用自身处理好优雅结束：Pod 进入 Terminating 状态后会发送 \u003ccode\u003eSIGTERM\u003c/code\u003e 信号给业务进程，业务进程的代码需处理这个信号，在进程退出前关闭所有连接。\u003c/p\u003e\n\u003c/li\u003e\n\u003cli\u003e\n\u003cp\u003e\u003ccode\u003eConnection refused\u003c/code\u003e: 连接被拒绝。通常是连接还没建立，client 正在发 SYN 包请求建立连接，但到了 server 之后发现端口没监听，内核就返回 RST 包，然后应用层就报错连接被拒绝。比如在 server 滚动更新过程中，旧的 Pod 中的进程很快就停止了(网卡还未完全销毁)，但 client 所在节点的 iptables/ipvs 规则还没更新，包就可能会被转发到了这个停止的 Pod (由于 k8s 的 controller 模式，从 Pod 删除到 service 的 endpoint 更新，再到 kube-proxy watch 到更新并更新 节点上的 iptables/ipvs 规则，这个过程是异步的，中间存在一点时间差，所以有可能存在 Pod 中的进程已经没有监听，但 iptables/ipvs 规则还没更新的情况)。针对这种情况，建议给容器加一个 preStop，在真正销毁 Pod 之前等待一段时间，留时间给 kube-proxy 更新转发规则，更新完之后就不会再有新连接往这个旧 Pod 转发了，preStop 示例:\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"language-yaml\"\u003elifecycle:\n  preStop:\n    exec:\n      command:\n      - /bin/bash\n      - -c\n      - sleep 30\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e另外，还可能是新的 Pod 启动比较慢，虽然状态已经 Ready，但实际上可能端口还没监听，新的请求被转发到这个还没完全启动的 Pod 就会报错连接被拒绝。针对这种情况，建议给容器加就绪检查 (readinessProbe)，让容器真正启动完之后才将其状态置为 Ready，然后 kube-proxy 才会更新转发规则，这样就能保证新的请求只被转发到完全启动的 Pod，readinessProbe 示例:\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"language-yaml\"\u003ereadinessProbe:\n  httpGet:\n    path: /healthz\n    port: 80\n    httpHeaders:\n    - name: X-Custom-Header\n      value: Awesome\n  initialDelaySeconds: 15\n  timeoutSeconds: 1\n\u003c/code\u003e\u003c/pre\u003e\n\u003c/li\u003e\n\u003cli\u003e\n\u003cp\u003e\u003ccode\u003eConnection timed out\u003c/code\u003e: 连接超时。通常是连接还没建立，client 发 SYN 请求建立连接一直等到超时时间都没有收到 ACK，然后就报错连接超时。这个可能场景跟前面 \u003ccode\u003eConnection refused\u003c/code\u003e 可能的场景类似，不同点在于端口有监听，但进程无法正常响应了: 转发规则还没更新，旧 Pod 的进程正在停止过程中，虽然端口有监听，但已经不响应了；或者转发规则更新了，新 Pod 端口也监听了，但还没有真正就绪，还没有能力处理新请求。针对这些情况的建议跟前面一样：加 preStop 和 readinessProbe。\u003c/p\u003e\n\u003c/li\u003e\n\u003c/ul\u003e\n\u003cp\u003e下面我们来继续分析下滚动更新时发生 \u003ccode\u003eNo route to host\u003c/code\u003e 的可能情况。\u003c/p\u003e\n\u003cp\u003e这个报错很明显，IP 无法路由，通常是将报文发到了一个已经彻底销毁的 Pod (网卡已经不在)。不可能发到一个网卡还没创建好的 Pod，因为即便不加存活检查，也是要等到 Pod 网络初始化完后才可能 Ready，然后 kube-proxy 才会更新转发规则。\u003c/p\u003e\n\u003cp\u003e什么情况下会转发到一个已经彻底销毁的 Pod？ 借鉴前面几种滚动更新的报错分析，我们推测应该是 Pod 很快销毁了但转发规则还没更新，从而新的请求被转发了这个已经销毁的 Pod，最终报文到达这个 Pod 所在 PodCIDR 的 Node 上时，Node 发现本机已经没有这个 IP 的容器，然后 Node 就返回 ICMP 包告知 client 这个 IP 不可达，client 收到 ICMP 后，应用层就会报错 \u0026ldquo;No route to host\u0026rdquo;。\u003c/p\u003e\n\u003cp\u003e所以根据我们的分析，关键点在于 Pod 销毁太快，转发规则还没来得及更新，导致后来的请求被转发到已销毁的 Pod。针对这种情况，我们可以给容器加一个 preStop，留时间给 kube-proxy 更新转发规则来解决，参考 《Kubernetes实践指南》中的部分章节: \u003ca href=\"https://k8s.imroc.io/best-practice/high-availability-deployment-of-applications#smooth-update-using-prestophook-and-readinessprobe\"\u003ehttps://k8s.imroc.io/best-practice/high-availability-deployment-of-applications#smooth-update-using-prestophook-and-readinessprobe\u003c/a\u003e\u003c/p\u003e"
+}
+</script>
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+
+  <title>Kubernetes 疑难杂症排查分享: 诡异的 No route to host | roc的个人网站</title>
+
+</head>
+
+
+<body id="top" data-spy="scroll" data-offset="70" data-target="#TableOfContents" class="page-wrapper  ">
+
+  
+  
+  
+  
+  
+  
+  
+  
+  <script src="/js/wowchemy-init.min.7264cf0eba3b66951b36da7d2cecf9c5.js"></script>
+
+  
+
+<aside class="search-modal" id="search">
+  <div class="container">
+    <section class="search-header">
+
+      <div class="row no-gutters justify-content-between mb-3">
+        <div class="col-6">
+          <h1>搜索</h1>
+        </div>
+        <div class="col-6 col-search-close">
+          <a class="js-search" href="#" aria-label="Close"><i class="fas fa-times-circle text-muted" aria-hidden="true"></i></a>
+        </div>
+      </div>
+
+      <div id="search-box">
+        
+        <input name="q" id="search-query" placeholder="搜索..." autocapitalize="off"
+        autocomplete="off" autocorrect="off" spellcheck="false" type="search" class="form-control"
+        aria-label="搜索...">
+        
+      </div>
+
+      
+      
+
+      
+
+    </section>
+    <section class="section-search-results">
+
+      <div id="search-hits">
+        
+      </div>
+
+    </section>
+  </div>
+</aside>
+
+
+
+  <div class="page-header">
+    
+
+
+
+
+
+
+
+
+
+
+
+
+<nav class="navbar navbar-expand-lg navbar-light compensate-for-scrollbar" id="navbar-main">
+  <div class="container-xl">
+
+    
+
+    
+    <button type="button" class="navbar-toggler" data-toggle="collapse"
+            data-target="#navbar-content" aria-controls="navbar" aria-expanded="false" aria-label="切换导航">
+    <span><i class="fas fa-bars"></i></span>
+    </button>
+    
+
+    
+
+    
+    
+    <div class="navbar-collapse main-menu-item collapse justify-content-center" id="navbar-content">
+
+      
+      <ul class="navbar-nav d-md-inline-flex">
+        
+
+        
+
+        
+        
+        
+
+        
+
+        
+        
+        
+        
+
+        
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/"><span>主页</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+
+        
+        
+        
+        
+
+        
+          
+            
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/post/"><span>技术博客</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+
+        
+        
+        
+        
+
+        
+          
+            
+            
+          
+          
+            
+            
+            
+              
+            
+            
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#notes"><span>学习笔记</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+
+        
+        
+        
+        
+
+        
+          
+            
+            
+          
+          
+            
+            
+            
+              
+            
+            
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#tags"><span>内容标签</span></a>
+        </li>
+
+        
+        
+
+      
+
+        
+      </ul>
+    </div>
+
+    <ul class="nav-icons navbar-nav flex-row ml-auto d-flex pl-md-2">
+
+      
+      
+        
+      
+
+      
+      
+      <li class="nav-item">
+        <a class="nav-link js-search" href="#" aria-label="搜索"><i class="fas fa-search" aria-hidden="true"></i></a>
+      </li>
+      
+
+      
+      
+      <li class="nav-item dropdown theme-dropdown">
+        <a href="#" class="nav-link" data-toggle="dropdown" aria-haspopup="true" aria-label="Display preferences">
+          <i class="fas fa-moon" aria-hidden="true"></i>
+        </a>
+        <div class="dropdown-menu">
+          <a href="#" class="dropdown-item js-set-theme-light">
+            <span>浅色</span>
+          </a>
+          <a href="#" class="dropdown-item js-set-theme-dark">
+            <span>深色</span>
+          </a>
+          <a href="#" class="dropdown-item js-set-theme-auto">
+            <span>自动</span>
+          </a>
+        </div>
+      </li>
+      
+
+      
+
+    </ul>
+
+  </div>
+</nav>
+
+
+  </div>
+
+  <div class="page-body">
+    <article class="article">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+  
+  
+<div class="article-container pt-3">
+  <h1>Kubernetes 疑难杂症排查分享: 诡异的 No route to host</h1>
+
+  
+
+  
+    
+
+
+<div class="article-metadata">
+
+  
+  
+  
+  
+  <div>
+    
+
+  <span class="author-highlighted">
+      roc</span>
+  </div>
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+          最近更新于
+      
+    
+    Nov 25, 2020
+  </span>
+  
+
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    4 分钟阅读时长
+  </span>
+  
+
+  
+  
+  
+  
+  
+
+  
+  
+
+</div>
+
+    
+
+
+
+
+
+  
+</div>
+
+
+
+  <div class="article-container">
+
+    <div class="article-style">
+      <details class="toc-inpage d-print-none  " open>
+  <summary class="font-weight-bold">目录</summary>
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#问题反馈">问题反馈</a></li>
+    <li><a href="#分析">分析</a></li>
+    <li><a href="#问题没有解决">问题没有解决</a></li>
+    <li><a href="#深入分析">深入分析</a></li>
+    <li><a href="#总结">总结</a></li>
+  </ul>
+</nav>
+</details>
+<p>之前发过一篇干货满满的爆火文章 <a href="https://imroc.io/posts/kubernetes/troubleshooting-with-kubernetes-network/" target="_blank" rel="noopener">Kubernetes 网络疑难杂症排查分享</a>，包含多个疑难杂症的排查案例分享，信息量巨大。这次我又带来了续集，只讲一个案例，但信息量也不小，Are you ready ?</p>
+<h2 id="问题反馈">问题反馈</h2>
+<p>有用户反馈 Deployment 滚动更新的时候，业务日志偶尔会报 &ldquo;No route to host&rdquo; 的错误。</p>
+<h2 id="分析">分析</h2>
+<p>之前没遇到滚动更新会报 &ldquo;No route to host&rdquo; 的问题，我们先看下滚动更新导致连接异常有哪些常见的报错:</p>
+<ul>
+<li>
+<p><code>Connection reset by peer</code>: 连接被重置。通常是连接建立过，但 server 端发现 client 发的包不对劲就返回 RST，应用层就报错连接被重置。比如在 server 滚动更新过程中，client 给 server 发的请求还没完全结束，或者本身是一个类似 grpc 的多路复用长连接，当 server 对应的旧 Pod 删除(没有做优雅结束，停止时没有关闭连接)，新 Pod 很快创建启动并且刚好有跟之前旧 Pod 一样的 IP，这时 kube-proxy 也没感知到这个 IP 其实已经被删除然后又被重建了，针对这个 IP 的规则就不会更新，旧的连接依然发往这个 IP，但旧 Pod 已经不在了，后面继续发包时依然转发给这个 Pod IP，最终会被转发到这个有相同 IP 的新 Pod 上，而新 Pod 收到此包时检查报文发现不对劲，就返回 RST 给 client 告知将连接重置。针对这种情况，建议应用自身处理好优雅结束：Pod 进入 Terminating 状态后会发送 <code>SIGTERM</code> 信号给业务进程，业务进程的代码需处理这个信号，在进程退出前关闭所有连接。</p>
+</li>
+<li>
+<p><code>Connection refused</code>: 连接被拒绝。通常是连接还没建立，client 正在发 SYN 包请求建立连接，但到了 server 之后发现端口没监听，内核就返回 RST 包，然后应用层就报错连接被拒绝。比如在 server 滚动更新过程中，旧的 Pod 中的进程很快就停止了(网卡还未完全销毁)，但 client 所在节点的 iptables/ipvs 规则还没更新，包就可能会被转发到了这个停止的 Pod (由于 k8s 的 controller 模式，从 Pod 删除到 service 的 endpoint 更新，再到 kube-proxy watch 到更新并更新 节点上的 iptables/ipvs 规则，这个过程是异步的，中间存在一点时间差，所以有可能存在 Pod 中的进程已经没有监听，但 iptables/ipvs 规则还没更新的情况)。针对这种情况，建议给容器加一个 preStop，在真正销毁 Pod 之前等待一段时间，留时间给 kube-proxy 更新转发规则，更新完之后就不会再有新连接往这个旧 Pod 转发了，preStop 示例:</p>
+<pre><code class="language-yaml">lifecycle:
+  preStop:
+    exec:
+      command:
+      - /bin/bash
+      - -c
+      - sleep 30
+</code></pre>
+<p>另外，还可能是新的 Pod 启动比较慢，虽然状态已经 Ready，但实际上可能端口还没监听，新的请求被转发到这个还没完全启动的 Pod 就会报错连接被拒绝。针对这种情况，建议给容器加就绪检查 (readinessProbe)，让容器真正启动完之后才将其状态置为 Ready，然后 kube-proxy 才会更新转发规则，这样就能保证新的请求只被转发到完全启动的 Pod，readinessProbe 示例:</p>
+<pre><code class="language-yaml">readinessProbe:
+  httpGet:
+    path: /healthz
+    port: 80
+    httpHeaders:
+    - name: X-Custom-Header
+      value: Awesome
+  initialDelaySeconds: 15
+  timeoutSeconds: 1
+</code></pre>
+</li>
+<li>
+<p><code>Connection timed out</code>: 连接超时。通常是连接还没建立，client 发 SYN 请求建立连接一直等到超时时间都没有收到 ACK，然后就报错连接超时。这个可能场景跟前面 <code>Connection refused</code> 可能的场景类似，不同点在于端口有监听，但进程无法正常响应了: 转发规则还没更新，旧 Pod 的进程正在停止过程中，虽然端口有监听，但已经不响应了；或者转发规则更新了，新 Pod 端口也监听了，但还没有真正就绪，还没有能力处理新请求。针对这些情况的建议跟前面一样：加 preStop 和 readinessProbe。</p>
+</li>
+</ul>
+<p>下面我们来继续分析下滚动更新时发生 <code>No route to host</code> 的可能情况。</p>
+<p>这个报错很明显，IP 无法路由，通常是将报文发到了一个已经彻底销毁的 Pod (网卡已经不在)。不可能发到一个网卡还没创建好的 Pod，因为即便不加存活检查，也是要等到 Pod 网络初始化完后才可能 Ready，然后 kube-proxy 才会更新转发规则。</p>
+<p>什么情况下会转发到一个已经彻底销毁的 Pod？ 借鉴前面几种滚动更新的报错分析，我们推测应该是 Pod 很快销毁了但转发规则还没更新，从而新的请求被转发了这个已经销毁的 Pod，最终报文到达这个 Pod 所在 PodCIDR 的 Node 上时，Node 发现本机已经没有这个 IP 的容器，然后 Node 就返回 ICMP 包告知 client 这个 IP 不可达，client 收到 ICMP 后，应用层就会报错 &ldquo;No route to host&rdquo;。</p>
+<p>所以根据我们的分析，关键点在于 Pod 销毁太快，转发规则还没来得及更新，导致后来的请求被转发到已销毁的 Pod。针对这种情况，我们可以给容器加一个 preStop，留时间给 kube-proxy 更新转发规则来解决，参考 《Kubernetes实践指南》中的部分章节: <a href="https://k8s.imroc.io/best-practice/high-availability-deployment-of-applications#smooth-update-using-prestophook-and-readinessprobe">https://k8s.imroc.io/best-practice/high-availability-deployment-of-applications#smooth-update-using-prestophook-and-readinessprobe</a></p>
+<h2 id="问题没有解决">问题没有解决</h2>
+<p>我们自己没有复现用户的 &ldquo;No route to host&rdquo; 的问题，可能是复现条件比较苛刻，最后将我们上面理论上的分析结论作为解决方案给到了用户。</p>
+<p>但用户尝试加了 preStop 之后，问题依然存在，服务滚动更新时偶尔还是会出现 &ldquo;No route to host&rdquo;。</p>
+<h2 id="深入分析">深入分析</h2>
+<p>为了弄清楚根本原因，我们请求用户协助搭建了一个可以复现问题的测试环境，最终这个问题在测试环境中可以稳定复现。</p>
+<p>仔细观察，实际是部署两个服务：ServiceA 和 ServiceB。使用 ab 压测工具去压测 ServiceA （短连接），然后 ServiceA 会通过 RPC 调用 ServiceB (短连接)，滚动更新的是 ServiceB，报错发生在 ServiceA 调用 ServiceB 这条链路。</p>
+<p>在 ServiceB 滚动更新期间，新的 Pod Ready 了之后会被添加到 IPVS 规则的 RS 列表，但旧的 Pod 不会立即被踢掉，而是将新的 Pod 权重置为1，旧的置为 0，通过在 client 所在节点查看 IPVS 规则可以看出来:</p>
+<pre><code class="language-bash">root@VM-0-3-ubuntu:~# ipvsadm -ln -t 172.16.255.241:80
+Prot LocalAddress:Port Scheduler Flags
+  -&gt; RemoteAddress:Port           Forward Weight ActiveConn InActConn
+TCP  172.16.255.241:80 rr
+  -&gt; 172.16.8.106:80              Masq    0      5          14048
+  -&gt; 172.16.8.107:80              Masq    1      2          243
+</code></pre>
+<p>为什么不立即踢掉旧的 Pod 呢？因为要支持优雅结束，让存量的连接处理完，等存量连接全部结束了再踢掉它(ActiveConn+InactiveConn=0)，这个逻辑可以通过这里的代码确认：https://github.com/kubernetes/kubernetes/blob/v1.17.0/pkg/proxy/ipvs/graceful_termination.go#L170</p>
+<p>然后再通过 <code>ipvsadm -lnc | grep 172.16.8.106</code> 发现旧 Pod 上的连接大多是 <code>TIME_WAIT</code> 状态，这个也容易理解：因为 ServiceA 作为 client 发起短连接请求调用 ServiceB，调用完成就会关闭连接，TCP 三次挥手后进入 <code>TIME_WAIT</code> 状态，等待 2*MSL (2 分钟) 的时长再清理连接。</p>
+<p>经过上面的分析，看起来都是符合预期的，那为什么还会出现 &ldquo;No route to host&rdquo; 呢？难道权重被置为 0 之后还有新连接往这个旧 Pod 转发？我们来抓包看下：</p>
+<pre><code class="language-bash">root@VM-0-3-ubuntu:~# tcpdump -i eth0 host 172.16.8.106 -n -tttt
+tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
+listening on eth0, link-type EN10MB (Ethernet), capture size 262144 bytes
+2019-12-13 11:49:47.319093 IP 10.0.0.3.36708 &gt; 172.16.8.106.80: Flags [S], seq 3988339656, win 29200, options [mss 1460,sackOK,TS val 3751111666 ecr 0,nop,wscale 9], length 0
+2019-12-13 11:49:47.319133 IP 10.0.0.3.36706 &gt; 172.16.8.106.80: Flags [S], seq 109196945, win 29200, options [mss 1460,sackOK,TS val 3751111666 ecr 0,nop,wscale 9], length 0
+2019-12-13 11:49:47.319144 IP 10.0.0.3.36704 &gt; 172.16.8.106.80: Flags [S], seq 1838682063, win 29200, options [mss 1460,sackOK,TS val 3751111666 ecr 0,nop,wscale 9], length 0
+2019-12-13 11:49:47.319153 IP 10.0.0.3.36702 &gt; 172.16.8.106.80: Flags [S], seq 1591982963, win 29200, options [mss 1460,sackOK,TS val 3751111666 ecr 0,nop,wscale 9], length 0
+</code></pre>
+<p>果然是！即使权重为 0，仍然会尝试发 SYN 包跟这个旧 Pod 建立连接，但永远无法收到 ACK，因为旧 Pod 已经销毁了。为什么会这样呢？难道是 IPVS 内核模块的调度算法有问题？尝试去看了下 linux 内核源码，并没有发现哪个调度策略的实现函数会将新连接调度到权重为 0 的 rs 上。</p>
+<p>这就奇怪了，可能不是调度算法的问题？继续尝试看更多的代码，主要是 <code>net/netfilter/ipvs/ip_vs_core.c</code> 中的 <code>ip_vs_in</code> 函数，也就是 IPVS 模块处理报文的主要入口，发现它会先在本地连接转发表看这个包是否已经有对应的连接了（匹配五元组），如果有就说明它不是新连接也就不会调度，直接发给这个连接对应的之前已经调度过的 rs (也不会判断权重)；如果没匹配到说明这个包是新的连接，就会走到调度这里 (rr, wrr 等调度策略)，这个逻辑看起来也没问题。</p>
+<p>那为什么会转发到权重为 0 的 rs ？难道是匹配连接这里出问题了？新的连接匹配到了旧的连接？我开始做实验验证这个猜想，修改一下这里的逻辑：检查匹配到的连接对应的 rs 如果权重为 0，则重新调度。然后重新编译和加载 IPVS 内核模块，再重新压测一下，发现问题解决了！没有报 &ldquo;No route to host&rdquo; 了。</p>
+<p>虽然通过改内核源码解决了，但我知道这不是一个好的解决方案，它会导致 IPVS 不支持连接的优雅结束，因为不再转发包给权重为 0 的 rs，存量的连接就会立即中断。</p>
+<p>继续陷入深思&hellip;&hellip;</p>
+<p>这个实验只是证明了猜想：新连接匹配到了旧连接。那为什么会这样呢？难道新连接报文的五元组跟旧连接的相同了？</p>
+<p>经过一番思考，发现这个是有可能的。因为 ServiceA 作为 client 请求 ServiceB，不同请求的源 IP 始终是相同的，关键点在于源端口是否可能相同。由于 ServiceA 向 ServiceB 发起大量短连接，ServiceA 所在节点就会有大量 <code>TIME_WAIT</code> 状态的连接，需要等 2 分钟 (2*MSL) 才会清理，而由于连接量太大，每次发起的连接都会占用一个源端口，当源端口不够用了，就会重用 <code>TIME_WAIT</code> 状态连接的源端口，这个时候当报文进入 IPVS 模块，检测到它的五元组跟本地连接转发表中的某个连接一致(<code>TIME_WAIT</code> 状态)，就以为它是一个存量连接，然后直接将报文转发给这个连接之前对应的 rs 上，然而这个 rs 对应的 Pod 早已销毁，所以抓包看到的现象是将 SYN 发给了旧 Pod，并且无法收到 ACK，伴随着返回 ICMP 告知这个 IP 不可达，也被应用解释为 &ldquo;No route to host&rdquo;。</p>
+<p>后来无意间又发现一个还在 open 状态的 issue，虽然还没提到 &ldquo;No route to host&rdquo; 关键字，但讨论的跟我们这个其实是同一个问题。我也参与了讨论，有兴趣的同学可以看下：https://github.com/kubernetes/kubernetes/issues/81775</p>
+<h2 id="总结">总结</h2>
+<p>这个问题通常发生的场景就是类似于我们测试环境这种：ServiceA 对外提供服务，当外部发起请求，ServiceA 会通过 rpc 或 http 调用 ServiceB，如果外部请求量变大，ServiceA 调用 ServiceB 的量也会跟着变大，大到一定程度，ServiceA 所在节点源端口不够用，复用 <code>TIME_WAIT</code> 状态连接的源端口，导致五元组跟 IPVS 里连接转发表中的 <code>TIME_WAIT</code> 连接相同，IPVS 就认为这是一个存量连接的报文，就不判断权重直接转发给之前的 rs，导致转发到已销毁的 Pod，从而发生 &ldquo;No route to host&rdquo;。</p>
+<p>如何规避？集群规模小可以使用 iptables 模式，如果需要使用 ipvs 模式，可以增加 ServiceA 的副本，并且配置反亲和性 (podAntiAffinity)，让 ServiceA 的 Pod 部署到不同节点，分摊流量，避免流量集中到某一个节点，导致调用 ServiceB 时源端口复用。</p>
+<p>如何彻底解决？暂时还没有一个完美的方案。</p>
+<p>Issue 85517 讨论让 kube-proxy 支持自定义配置几种连接状态的超时时间，但这对 <code>TIME_WAIT</code> 状态无效。</p>
+<p>Issue 81308 讨论 IVPS 的优雅结束是否不考虑不活跃的连接 (包括 <code>TIME_WAIT</code> 状态的连接)，也就是只考虑活跃连接，当活跃连接数为 0 之后立即踢掉 rs。这个确实可以更快的踢掉 rs，但无法让优雅结束做到那么优雅了，并且有人测试了，即便是不考虑不活跃连接，当请求量很大，还是不能很快踢掉 rs，因为源端口复用还是会导致不断有新的连接占用旧的连接，在较新的内核版本，<code>SYN_RECV</code> 状态也被视为活跃连接，所以活跃连接数还是不会很快降到 0。</p>
+<p>这个问题的终极解决方案该走向何方，我们拭目以待，感兴趣的同学可以持续关注 issue 81775 并参与讨论。想学习更多 K8S 知识，可以关注本人的开源书《Kubernetes实践指南》: <a href="https://k8s.imroc.io">https://k8s.imroc.io</a></p>
+    </div>
+
+    
+
+
+
+
+
+
+<div class="article-tags">
+  
+  <a class="badge badge-light" href="/tag/kubernetes/">kubernetes</a>
+  
+  <a class="badge badge-light" href="/tag/network/">network</a>
+  
+  <a class="badge badge-light" href="/tag/troubleshooting/">troubleshooting</a>
+  
+</div>
+
+
+
+<div class="share-box" aria-hidden="true">
+  <ul class="share">
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://twitter.com/intent/tweet?url=/post/201912/kubernetes-no-route-to-host/&amp;text=Kubernetes%20%e7%96%91%e9%9a%be%e6%9d%82%e7%97%87%e6%8e%92%e6%9f%a5%e5%88%86%e4%ba%ab:%20%e8%af%a1%e5%bc%82%e7%9a%84%20No%20route%20to%20host" target="_blank" rel="noopener" class="share-btn-twitter">
+          <i class="fab fa-twitter"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://www.facebook.com/sharer.php?u=/post/201912/kubernetes-no-route-to-host/&amp;t=Kubernetes%20%e7%96%91%e9%9a%be%e6%9d%82%e7%97%87%e6%8e%92%e6%9f%a5%e5%88%86%e4%ba%ab:%20%e8%af%a1%e5%bc%82%e7%9a%84%20No%20route%20to%20host" target="_blank" rel="noopener" class="share-btn-facebook">
+          <i class="fab fa-facebook"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="mailto:?subject=Kubernetes%20%e7%96%91%e9%9a%be%e6%9d%82%e7%97%87%e6%8e%92%e6%9f%a5%e5%88%86%e4%ba%ab:%20%e8%af%a1%e5%bc%82%e7%9a%84%20No%20route%20to%20host&amp;body=/post/201912/kubernetes-no-route-to-host/" target="_blank" rel="noopener" class="share-btn-email">
+          <i class="fas fa-envelope"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://www.linkedin.com/shareArticle?url=/post/201912/kubernetes-no-route-to-host/&amp;title=Kubernetes%20%e7%96%91%e9%9a%be%e6%9d%82%e7%97%87%e6%8e%92%e6%9f%a5%e5%88%86%e4%ba%ab:%20%e8%af%a1%e5%bc%82%e7%9a%84%20No%20route%20to%20host" target="_blank" rel="noopener" class="share-btn-linkedin">
+          <i class="fab fa-linkedin-in"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="whatsapp://send?text=Kubernetes%20%e7%96%91%e9%9a%be%e6%9d%82%e7%97%87%e6%8e%92%e6%9f%a5%e5%88%86%e4%ba%ab:%20%e8%af%a1%e5%bc%82%e7%9a%84%20No%20route%20to%20host%20/post/201912/kubernetes-no-route-to-host/" target="_blank" rel="noopener" class="share-btn-whatsapp">
+          <i class="fab fa-whatsapp"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://service.weibo.com/share/share.php?url=/post/201912/kubernetes-no-route-to-host/&amp;title=Kubernetes%20%e7%96%91%e9%9a%be%e6%9d%82%e7%97%87%e6%8e%92%e6%9f%a5%e5%88%86%e4%ba%ab:%20%e8%af%a1%e5%bc%82%e7%9a%84%20No%20route%20to%20host" target="_blank" rel="noopener" class="share-btn-weibo">
+          <i class="fab fa-weibo"></i>
+        </a>
+      </li>
+    
+  </ul>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+
+
+
+  
+  
+  
+    
+  
+  
+  
+  <div class="media author-card content-widget-hr">
+    
+      
+      <a href="/"><img class="avatar mr-3 avatar-circle" src="/author/roc/avatar_hu49c03114a9ce8ad2bc0bd62c0ddb3f2a_64404_270x270_fill_q75_lanczos_center.jpg" alt="roc"></a>
+    
+
+    <div class="media-body">
+      <h5 class="card-title"><a href="/">roc</a></h5>
+      <h6 class="card-subtitle">腾讯云高级工程师</h6>
+      <p class="card-text">授人以鱼不如授人以渔</p>
+      <ul class="network-icon" aria-hidden="true">
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="https://github.com/imroc" target="_blank" rel="noopener">
+        <i class="fab fa-github"></i>
+      </a>
+    </li>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+    <li>
+      <a href="mailto:roc@imroc.io" >
+        <i class="fas fa-envelope"></i>
+      </a>
+    </li>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="https://twitter.com/imrocchan" target="_blank" rel="noopener">
+        <i class="fab fa-twitter"></i>
+      </a>
+    </li>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="https://www.linkedin.com/in/%E9%B9%8F-%E9%99%88-b51646113" target="_blank" rel="noopener">
+        <i class="fab fa-linkedin"></i>
+      </a>
+    </li>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="https://www.youtube.com/channel/UCEtWQhtiNi1vvDmoC6wydNQ" target="_blank" rel="noopener">
+        <i class="fab fa-youtube"></i>
+      </a>
+    </li>
+  
+</ul>
+
+    </div>
+  </div>
+
+
+  
+
+
+
+
+
+
+
+
+
+
+<div class="article-widget">
+  
+<div class="post-nav">
+  
+  
+  
+  <div class="post-nav-item">
+    <div class="meta-nav">下一页</div>
+    <a href="/post/202001/kubernetes-overflow-and-drop/" rel="next">Kubernetes 疑难杂症排查分享：神秘的溢出与丢包</a>
+  </div>
+  
+  
+  
+  <div class="post-nav-item">
+    <div class="meta-nav">上一页</div>
+    <a href="/post/201911/" rel="prev">k8s v1.17 新特性预告: 拓扑感知服务路由</a>
+  </div>
+  
+</div>
+
+</div>
+
+
+
+
+
+  
+  
+  <div class="article-widget content-widget-hr">
+    <h3>相关</h3>
+    <ul>
+      
+      <li><a href="/post/202001/kubernetes-overflow-and-drop/">Kubernetes 疑难杂症排查分享：神秘的溢出与丢包</a></li>
+      
+      <li><a href="/post/201908/troubleshooting-with-kubernetes-network/">Kubernetes 网络疑难杂症排查分享</a></li>
+      
+      <li><a href="/post/202011/build-cloud-native-large-scale-distributed-monitoring-system-4/">打造云原生大型分布式监控系统(四): Kvass&#43;Thanos 监控超大规模容器集群</a></li>
+      
+      <li><a href="/post/202009/nginx-ingress-high-concurrency/">Nginx Ingress 高并发实践</a></li>
+      
+      <li><a href="/post/202008/nginx-ingress-on-tke/">Nginx Ingress on TKE 部署最佳实践</a></li>
+      
+    </ul>
+  </div>
+  
+
+
+
+
+
+  </div>
+</article>
+  </div>
+
+  <div class="page-footer">
+    
+    
+    <div class="container">
+      <footer class="site-footer">
+  
+
+  <p class="powered-by">
+    roc © 2021
+  </p>
+
+  
+  
+
+
+
+
+
+
+  <p class="powered-by">
+    
+    
+    
+    Published with
+    <a href="https://wowchemy.com/?utm_campaign=poweredby" target="_blank" rel="noopener">Wowchemy</a>  —
+    the free, <a href="https://github.com/wowchemy/wowchemy-hugo-modules" target="_blank" rel="noopener">
+    open source</a> website builder that empowers creators.
+    
+  </p>
+</footer>
+
+    </div>
+    
+  </div>
+
+  
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">引用</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <pre><code class="tex hljs"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-outline-primary my-1 js-copy-cite" href="#" target="_blank">
+          <i class="fas fa-copy"></i> 复制
+        </a>
+        <a class="btn btn-outline-primary my-1 js-download-cite" href="#" target="_blank">
+          <i class="fas fa-download"></i> 下载
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+      
+
+    
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+
+      
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js" integrity="sha256-lqvxZrPLtfffUl2G/e7szqSvPBILGbwmsGE1MKlOi0Q=" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js" integrity="sha256-CBrpuqrMhXwcLLUd5tvQ4euBHCdh7wGlDfNz8vbu/iI=" crossorigin="anonymous"></script>
+      
+
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/instant.page/5.1.0/instantpage.min.js" integrity="sha512-1+qUtKoh9XZW7j+6LhRMAyOrgSQKenQ4mluTR+cvxXjP1Z54RxZuzstR/H9kgPXQsVB8IW7DMDFUJpzLjvhGSQ==" crossorigin="anonymous"></script>
+
+      
+
+      
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/highlight.min.js" integrity="sha512-TDKKr+IvoqZnPzc3l35hdjpHD0m+b2EC2SrLEgKDRWpxf2rFCxemkgvJ5kfU48ip+Y+m2XVKyOCD85ybtlZDmw==" crossorigin="anonymous"></script>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/languages/r.min.js"></script>
+        
+      
+
+    
+
+    
+    
+
+    
+    
+
+    
+    
+    <script id="search-hit-fuse-template" type="text/x-template">
+      <div class="search-hit" id="summary-{{key}}">
+        <div class="search-hit-content">
+          <div class="search-hit-name">
+            <a href="{{relpermalink}}">{{title}}</a>
+            <div class="article-metadata search-hit-type">{{type}}</div>
+            <p class="search-hit-description">{{snippet}}</p>
+          </div>
+        </div>
+      </div>
+    </script>
+    
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.1/fuse.min.js" integrity="sha256-VzgmKYmhsGNNN4Ph1kMW+BjoYJM2jV5i4IlFoeZA9XI=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
+    
+
+    
+    
+    
+
+    
+    
+    
+
+    
+    
+
+    
+    
+
+    
+    
+      
+      
+      
+      
+      
+      
+      
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      
+      
+    
+    
+    <script src="/zh/js/wowchemy.min.64fd16cc68b6a5f25e0156dfff88edff.js"></script>
+
+    
+
+
+
+
+
+
+</body>
+</html>

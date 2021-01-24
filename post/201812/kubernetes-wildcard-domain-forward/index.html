@@ -1,0 +1,1409 @@
+<!DOCTYPE html><html lang="zh-Hans" >
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  
+  
+  
+  <meta name="generator" content="Wowchemy 5.0.0-beta.1 for Hugo">
+  
+
+  
+
+  
+  
+
+  
+  
+  
+  
+  
+    
+    
+    
+  
+  
+
+  <meta name="author" content="roc">
+
+  
+  
+  
+    
+  
+  <meta name="description" content="目录    需求 简单做法 正确姿势      需求 集群对外暴露了一个公网IP作为流量入口(可以是 Ingress 或 Service)，DNS 解析配置了一个泛域名指向该IP（比如 *.test.imroc.io），现希望根据请求中不同 Host 转发到不同的后端 Service。比如 a.test.imroc.io 的请求被转发到 my-svc-a，b.test.imroc.io 的请求转发到 my-svc-b
+简单做法 先说一种简单的方法，这也是大多数人的第一反应：配置 Ingress 规则">
+
+  
+  <link rel="alternate" hreflang="zh-Hans" href="/post/201812/kubernetes-wildcard-domain-forward/">
+
+  
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  
+
+  
+  
+  
+  <meta name="theme-color" content="#1565c0">
+  
+
+  
+  
+
+  
+  
+  
+  
+    
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha256-FMvZuGapsJLjouA6k7Eo2lusoAX9i0ShlWFG6qt7SLc=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous" media="print" onload="this.media='all'">
+
+    
+    
+    
+      
+    
+    
+      
+      
+        
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/styles/github.min.css" crossorigin="anonymous" title="hl-light" media="print" onload="this.media='all'">
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/styles/dracula.min.css" crossorigin="anonymous" title="hl-dark" media="print" onload="this.media='all'" disabled>
+        
+      
+    
+
+    
+
+    
+
+    
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.2.2/lazysizes.min.js" integrity="sha512-TmDwFLhg3UA4ZG0Eb4MIyT1O1Mb+Oww5kFG0uHqXsdbyZz9DcvYQhKpGgNkamAI6h2lGGZq2X8ftOJvF/XjTUg==" crossorigin="anonymous" async></script>
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+        
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+
+  
+
+  
+  
+  
+    
+      
+      <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Roboto+Mono&family=Roboto:wght@400;700&display=swap">
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Roboto+Mono&family=Roboto:wght@400;700&display=swap" media="print" onload="this.media='all'">
+    
+  
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="/css/wowchemy.a2dda909fb8228e17412d06b4423e0a6.css">
+
+  
+
+
+
+
+  
+
+  
+
+
+  
+  
+
+  
+
+  
+  <link rel="manifest" href="/index.webmanifest">
+  
+
+  <link rel="icon" type="image/png" href="/images/icon_hua2ec155b4296a9c9791d015323e16eb5_11927_32x32_fill_lanczos_center_2.png">
+  <link rel="apple-touch-icon" type="image/png" href="/images/icon_hua2ec155b4296a9c9791d015323e16eb5_11927_192x192_fill_lanczos_center_2.png">
+
+  <link rel="canonical" href="/post/201812/kubernetes-wildcard-domain-forward/">
+
+  
+  
+  
+  
+  
+  
+  
+    
+    
+  
+  
+  <meta property="twitter:card" content="summary">
+  
+  <meta property="twitter:site" content="@imrocchan">
+  <meta property="twitter:creator" content="@imrocchan">
+  
+  <meta property="og:site_name" content="roc的个人网站">
+  <meta property="og:url" content="/post/201812/kubernetes-wildcard-domain-forward/">
+  <meta property="og:title" content="Kubernetes 泛域名动态 Service 转发解决方案 | roc的个人网站">
+  <meta property="og:description" content="目录    需求 简单做法 正确姿势      需求 集群对外暴露了一个公网IP作为流量入口(可以是 Ingress 或 Service)，DNS 解析配置了一个泛域名指向该IP（比如 *.test.imroc.io），现希望根据请求中不同 Host 转发到不同的后端 Service。比如 a.test.imroc.io 的请求被转发到 my-svc-a，b.test.imroc.io 的请求转发到 my-svc-b
+简单做法 先说一种简单的方法，这也是大多数人的第一反应：配置 Ingress 规则"><meta property="og:image" content="/images/icon_hua2ec155b4296a9c9791d015323e16eb5_11927_512x512_fill_lanczos_center_2.png">
+  <meta property="twitter:image" content="/images/icon_hua2ec155b4296a9c9791d015323e16eb5_11927_512x512_fill_lanczos_center_2.png"><meta property="og:locale" content="zh-Hans">
+  
+    
+      <meta property="article:published_time" content="2018-12-22T01:09:00&#43;08:00">
+    
+    <meta property="article:modified_time" content="2018-12-22T01:09:00&#43;08:00">
+  
+
+  
+
+
+    
+
+
+
+
+
+
+  
+
+
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "/post/201812/kubernetes-wildcard-domain-forward/"
+  },
+  "headline": "Kubernetes 泛域名动态 Service 转发解决方案",
+  
+  "datePublished": "2018-12-22T01:09:00+08:00",
+  "dateModified": "2018-12-22T01:09:00+08:00",
+  
+  "author": {
+    "@type": "Person",
+    "name": "roc"
+  },
+  
+  "publisher": {
+    "@type": "Organization",
+    "name": "roc的个人网站",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "/images/icon_hua2ec155b4296a9c9791d015323e16eb5_11927_192x192_fill_lanczos_center_2.png"
+    }
+  },
+  "description": "目录    需求 简单做法 正确姿势      需求 集群对外暴露了一个公网IP作为流量入口(可以是 Ingress 或 Service)，DNS 解析配置了一个泛域名指向该IP（比如 *.test.imroc.io），现希望根据请求中不同 Host 转发到不同的后端 Service。比如 a.test.imroc.io 的请求被转发到 my-svc-a，b.test.imroc.io 的请求转发到 my-svc-b\n简单做法 先说一种简单的方法，这也是大多数人的第一反应：配置 Ingress 规则"
+}
+</script>
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+
+  <title>Kubernetes 泛域名动态 Service 转发解决方案 | roc的个人网站</title>
+
+</head>
+
+
+<body id="top" data-spy="scroll" data-offset="70" data-target="#TableOfContents" class="page-wrapper  ">
+
+  
+  
+  
+  
+  
+  
+  
+  
+  <script src="/js/wowchemy-init.min.7264cf0eba3b66951b36da7d2cecf9c5.js"></script>
+
+  
+
+<aside class="search-modal" id="search">
+  <div class="container">
+    <section class="search-header">
+
+      <div class="row no-gutters justify-content-between mb-3">
+        <div class="col-6">
+          <h1>搜索</h1>
+        </div>
+        <div class="col-6 col-search-close">
+          <a class="js-search" href="#" aria-label="Close"><i class="fas fa-times-circle text-muted" aria-hidden="true"></i></a>
+        </div>
+      </div>
+
+      <div id="search-box">
+        
+        <input name="q" id="search-query" placeholder="搜索..." autocapitalize="off"
+        autocomplete="off" autocorrect="off" spellcheck="false" type="search" class="form-control"
+        aria-label="搜索...">
+        
+      </div>
+
+      
+      
+
+      
+
+    </section>
+    <section class="section-search-results">
+
+      <div id="search-hits">
+        
+      </div>
+
+    </section>
+  </div>
+</aside>
+
+
+
+  <div class="page-header">
+    
+
+
+
+
+
+
+
+
+
+
+
+
+<nav class="navbar navbar-expand-lg navbar-light compensate-for-scrollbar" id="navbar-main">
+  <div class="container-xl">
+
+    
+
+    
+    <button type="button" class="navbar-toggler" data-toggle="collapse"
+            data-target="#navbar-content" aria-controls="navbar" aria-expanded="false" aria-label="切换导航">
+    <span><i class="fas fa-bars"></i></span>
+    </button>
+    
+
+    
+
+    
+    
+    <div class="navbar-collapse main-menu-item collapse justify-content-center" id="navbar-content">
+
+      
+      <ul class="navbar-nav d-md-inline-flex">
+        
+
+        
+
+        
+        
+        
+
+        
+
+        
+        
+        
+        
+
+        
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/"><span>主页</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+
+        
+        
+        
+        
+
+        
+          
+            
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/post/"><span>技术博客</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+
+        
+        
+        
+        
+
+        
+          
+            
+            
+          
+          
+            
+            
+            
+              
+            
+            
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#notes"><span>学习笔记</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+
+        
+        
+        
+        
+
+        
+          
+            
+            
+          
+          
+            
+            
+            
+              
+            
+            
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#tags"><span>内容标签</span></a>
+        </li>
+
+        
+        
+
+      
+
+        
+      </ul>
+    </div>
+
+    <ul class="nav-icons navbar-nav flex-row ml-auto d-flex pl-md-2">
+
+      
+      
+        
+      
+
+      
+      
+      <li class="nav-item">
+        <a class="nav-link js-search" href="#" aria-label="搜索"><i class="fas fa-search" aria-hidden="true"></i></a>
+      </li>
+      
+
+      
+      
+      <li class="nav-item dropdown theme-dropdown">
+        <a href="#" class="nav-link" data-toggle="dropdown" aria-haspopup="true" aria-label="Display preferences">
+          <i class="fas fa-moon" aria-hidden="true"></i>
+        </a>
+        <div class="dropdown-menu">
+          <a href="#" class="dropdown-item js-set-theme-light">
+            <span>浅色</span>
+          </a>
+          <a href="#" class="dropdown-item js-set-theme-dark">
+            <span>深色</span>
+          </a>
+          <a href="#" class="dropdown-item js-set-theme-auto">
+            <span>自动</span>
+          </a>
+        </div>
+      </li>
+      
+
+      
+
+    </ul>
+
+  </div>
+</nav>
+
+
+  </div>
+
+  <div class="page-body">
+    <article class="article">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+  
+  
+<div class="article-container pt-3">
+  <h1>Kubernetes 泛域名动态 Service 转发解决方案</h1>
+
+  
+
+  
+    
+
+
+<div class="article-metadata">
+
+  
+  
+  
+  
+  <div>
+    
+
+  <span class="author-highlighted">
+      roc</span>
+  </div>
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    Dec 22, 2018
+  </span>
+  
+
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    3 分钟阅读时长
+  </span>
+  
+
+  
+  
+  
+  
+  
+
+  
+  
+
+</div>
+
+    
+
+
+
+
+
+  
+</div>
+
+
+
+  <div class="article-container">
+
+    <div class="article-style">
+      <details class="toc-inpage d-print-none  " open>
+  <summary class="font-weight-bold">目录</summary>
+  <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#需求">需求</a></li>
+        <li><a href="#简单做法">简单做法</a></li>
+        <li><a href="#正确姿势">正确姿势</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+</details>
+<h3 id="需求">需求</h3>
+<p>集群对外暴露了一个公网IP作为流量入口(可以是 Ingress 或 Service)，DNS 解析配置了一个泛域名指向该IP（比如 <code>*.test.imroc.io</code>），现希望根据请求中不同 Host 转发到不同的后端 Service。比如 <code>a.test.imroc.io</code> 的请求被转发到 <code>my-svc-a</code>，<code>b.test.imroc.io</code> 的请求转发到 <code>my-svc-b</code></p>
+<h3 id="简单做法">简单做法</h3>
+<p>先说一种简单的方法，这也是大多数人的第一反应：<strong>配置 Ingress 规则</strong></p>
+<p>假如泛域名有两个不同 Host 分别转发到不同 Service，Ingress 类似这样写:</p>
+<pre><code class="language-yaml">apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: my-ingress
+spec:
+  rules:
+  - host: a.test.imroc.io
+    http:
+      paths:
+      - backend:
+          serviceName: my-svc-a
+          servicePort: 80
+        path: /
+  - host: b.test.imroc.io
+    http:
+      paths:
+      - backend:
+          serviceName: my-svc-b
+          servicePort: 80
+        path: /
+</code></pre>
+<p>但是！如果 Host 非常多会怎样？（比如200+）</p>
+<ul>
+<li>每次新增 Host 都要改 Ingress 规则，太麻烦</li>
+<li>单个 Ingress 上面的规则越来越多，更改规则对 LB 的压力变大，可能会导致偶尔访问不了</li>
+</ul>
+<h3 id="正确姿势">正确姿势</h3>
+<p>我们可以约定请求中泛域名 Host 通配符的 <code>*</code> 号匹配到的字符跟 Service 的名字相关联（可以是相等，或者 Service 统一在前面加个前缀，比如 <code>a.test.imroc.io</code> 转发到 <code>my-svc-a</code> 这个 Service)，集群内起一个反向代理服务，匹配泛域名的请求全部转发到这个代理服务上，这个代理服务只做一件简单的事，解析 Host，正则匹配抓取泛域名中 <code>*</code> 号这部分，把它转换为 Service 名字，然后在集群里转发（集群 DNS 解析)</p>
+<p>这个反向代理服务可以是 Nginx+Lua脚本 来实现，或者自己写个简单程序来做反向代理，这里我用 <a href="https://openresty.org" target="_blank" rel="noopener">OpenResty</a> 来实现，它可以看成是 Nginx 的发行版，自带 lua 支持。</p>
+<p>有几点需要说明下：</p>
+<ul>
+<li>我们使用 nginx 的  <code>proxy_pass</code> 来反向代理到后端服务，<code>proxy_pass</code> 后面跟的变量，我们需要用 lua 来判断 Host 修改变量</li>
+<li>nginx 的 <code>proxy_pass</code> 后面跟的如果是可变的域名（非IP，需要 dns 解析)，它需要一个域名解析器，不会走默认的 dns 解析，需要在 <code>nginx.conf</code> 里添加 <code>resolver</code> 配置项来设置一个外部的 dns 解析器</li>
+<li>这个解析器我们是用 go-dnsmasq 来实现，它可以将集群的 dns 解析代理给 nginx，以 sidecar 的形式注入到 pod 中，监听 53 端口</li>
+</ul>
+<p><code>nginx.conf</code> 里关键的配置如下图所示：</p>
+<p><img src="https://imroc.io/assets/blog/nginx-wilcard-conf.png" alt="nginx.conf"></p>
+<p>下面给出完整的 yaml 示例</p>
+<p><code>proxy.yaml</code>:</p>
+<pre><code class="language-yaml">apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    component: nginx
+  name: proxy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: nginx
+  template:
+    metadata:
+      labels:
+        component: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: &quot;openresty/openresty:centos&quot;
+        ports:
+        - name: http
+          containerPort: 80
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /usr/local/openresty/nginx/conf/nginx.conf
+          name: config
+          subPath: nginx.conf
+      - name: dnsmasq
+        image: &quot;janeczku/go-dnsmasq:release-1.0.7&quot;
+        args:
+          - --listen
+          - &quot;127.0.0.1:53&quot;
+          - --default-resolver
+          - --append-search-domains
+          - --hostsfile=/etc/hosts
+          - --verbose
+      volumes:
+      - name: config
+        configMap:
+          name: configmap-nginx
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    component: nginx
+  name: configmap-nginx
+data:
+  nginx.conf: |-
+    worker_processes  1;
+
+    error_log  /error.log;
+
+    events {
+        accept_mutex on;
+        multi_accept on;
+        use epoll;
+        worker_connections  1024;
+    }
+
+
+    http {
+        include       mime.types;
+        default_type  application/octet-stream;
+        log_format  main  '$time_local $remote_user $remote_addr $host $request_uri $request_method $http_cookie '
+                          '$status $body_bytes_sent &quot;$http_referer&quot; '
+                          '&quot;$http_user_agent&quot; &quot;$http_x_forwarded_for&quot; '
+                          '$request_time $upstream_response_time &quot;$upstream_cache_status&quot;';
+
+        log_format  browser '$time_iso8601 $cookie_km_uid $remote_addr $host $request_uri $request_method '
+                          '$status $body_bytes_sent &quot;$http_referer&quot; '
+                          '&quot;$http_user_agent&quot; &quot;$http_x_forwarded_for&quot; '
+                          '$request_time $upstream_response_time &quot;$upstream_cache_status&quot; $http_x_requested_with $http_x_real_ip $upstream_addr $request_body';
+
+        log_format client '{&quot;@timestamp&quot;:&quot;$time_iso8601&quot;,'
+                          '&quot;time_local&quot;:&quot;$time_local&quot;,'
+                          '&quot;remote_user&quot;:&quot;$remote_user&quot;,'
+                          '&quot;http_x_forwarded_for&quot;:&quot;$http_x_forwarded_for&quot;,'
+                          '&quot;host&quot;:&quot;$server_addr&quot;,'
+                          '&quot;remote_addr&quot;:&quot;$remote_addr&quot;,'
+                          '&quot;http_x_real_ip&quot;:&quot;$http_x_real_ip&quot;,'
+                          '&quot;body_bytes_sent&quot;:$body_bytes_sent,'
+                          '&quot;request_time&quot;:$request_time,'
+                          '&quot;status&quot;:$status,'
+                          '&quot;upstream_response_time&quot;:&quot;$upstream_response_time&quot;,'
+                          '&quot;upstream_response_status&quot;:&quot;$upstream_status&quot;,'
+                          '&quot;request&quot;:&quot;$request&quot;,'
+                          '&quot;http_referer&quot;:&quot;$http_referer&quot;,'
+                          '&quot;http_user_agent&quot;:&quot;$http_user_agent&quot;}';
+
+        access_log  /access.log  main;
+
+        sendfile        on;
+
+        keepalive_timeout 120s 100s;
+        keepalive_requests 500;
+        send_timeout 60000s;
+        client_header_buffer_size 4k;
+        proxy_ignore_client_abort on;
+        proxy_buffers 16 32k;
+        proxy_buffer_size 64k;
+
+        proxy_busy_buffers_size 64k;
+
+        proxy_send_timeout 60000;
+        proxy_read_timeout 60000;
+        proxy_connect_timeout 60000;
+        proxy_cache_valid 200 304 2h;
+        proxy_cache_valid 500 404 2s;
+        proxy_cache_key $host$request_uri$cookie_user;
+        proxy_cache_methods GET HEAD POST;
+
+        proxy_redirect off;
+        proxy_http_version 1.1;
+        proxy_set_header Host                $http_host;
+        proxy_set_header X-Real-IP           $remote_addr;
+        proxy_set_header X-Forwarded-For     $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto   $scheme;
+        proxy_set_header X-Frame-Options     SAMEORIGIN;
+
+        server_tokens off;
+        client_max_body_size 50G;
+        add_header X-Cache $upstream_cache_status;
+        autoindex off;
+
+        resolver      127.0.0.1:53 ipv6=off;
+  
+        server {
+            listen 80;
+
+            location / {
+                set $service  '';
+                rewrite_by_lua '
+                    local host = ngx.var.host
+                    local m = ngx.re.match(host, &quot;(.+).test.imroc.io&quot;)
+                    if m then
+                        ngx.var.service = &quot;my-svc-&quot; .. m[1]
+                    end
+                ';
+                proxy_pass http://$service;
+            }
+        }
+    }
+</code></pre>
+<p>让该代理服务暴露公网访问可以用 Service 或 Ingress</p>
+<p>用 Service 的示例 (<code>service.yaml</code>):</p>
+<pre><code class="language-yaml">apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    component: nginx
+  name: service-nginx
+spec:
+  type: LoadBalancer
+  ports:
+  - name: http
+    port: 80
+    targetPort: http
+  selector:
+    component: nginx
+</code></pre>
+<p>用 Ingress 的示例 (<code>ingress.yaml</code>):</p>
+<pre><code class="language-yaml">apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ingress-nginx
+spec:
+  rules:
+  - host: &quot;*.test.imroc.io&quot;
+    http:
+      paths:
+      - backend:
+          serviceName: service-nginx
+          servicePort: 80
+        path: /
+</code></pre>
+
+    </div>
+
+    
+
+
+
+
+
+
+<div class="article-tags">
+  
+  <a class="badge badge-light" href="/tag/kubernetes/">kubernetes</a>
+  
+</div>
+
+
+
+<div class="share-box" aria-hidden="true">
+  <ul class="share">
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://twitter.com/intent/tweet?url=/post/201812/kubernetes-wildcard-domain-forward/&amp;text=Kubernetes%20%e6%b3%9b%e5%9f%9f%e5%90%8d%e5%8a%a8%e6%80%81%20Service%20%e8%bd%ac%e5%8f%91%e8%a7%a3%e5%86%b3%e6%96%b9%e6%a1%88" target="_blank" rel="noopener" class="share-btn-twitter">
+          <i class="fab fa-twitter"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://www.facebook.com/sharer.php?u=/post/201812/kubernetes-wildcard-domain-forward/&amp;t=Kubernetes%20%e6%b3%9b%e5%9f%9f%e5%90%8d%e5%8a%a8%e6%80%81%20Service%20%e8%bd%ac%e5%8f%91%e8%a7%a3%e5%86%b3%e6%96%b9%e6%a1%88" target="_blank" rel="noopener" class="share-btn-facebook">
+          <i class="fab fa-facebook"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="mailto:?subject=Kubernetes%20%e6%b3%9b%e5%9f%9f%e5%90%8d%e5%8a%a8%e6%80%81%20Service%20%e8%bd%ac%e5%8f%91%e8%a7%a3%e5%86%b3%e6%96%b9%e6%a1%88&amp;body=/post/201812/kubernetes-wildcard-domain-forward/" target="_blank" rel="noopener" class="share-btn-email">
+          <i class="fas fa-envelope"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://www.linkedin.com/shareArticle?url=/post/201812/kubernetes-wildcard-domain-forward/&amp;title=Kubernetes%20%e6%b3%9b%e5%9f%9f%e5%90%8d%e5%8a%a8%e6%80%81%20Service%20%e8%bd%ac%e5%8f%91%e8%a7%a3%e5%86%b3%e6%96%b9%e6%a1%88" target="_blank" rel="noopener" class="share-btn-linkedin">
+          <i class="fab fa-linkedin-in"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="whatsapp://send?text=Kubernetes%20%e6%b3%9b%e5%9f%9f%e5%90%8d%e5%8a%a8%e6%80%81%20Service%20%e8%bd%ac%e5%8f%91%e8%a7%a3%e5%86%b3%e6%96%b9%e6%a1%88%20/post/201812/kubernetes-wildcard-domain-forward/" target="_blank" rel="noopener" class="share-btn-whatsapp">
+          <i class="fab fa-whatsapp"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://service.weibo.com/share/share.php?url=/post/201812/kubernetes-wildcard-domain-forward/&amp;title=Kubernetes%20%e6%b3%9b%e5%9f%9f%e5%90%8d%e5%8a%a8%e6%80%81%20Service%20%e8%bd%ac%e5%8f%91%e8%a7%a3%e5%86%b3%e6%96%b9%e6%a1%88" target="_blank" rel="noopener" class="share-btn-weibo">
+          <i class="fab fa-weibo"></i>
+        </a>
+      </li>
+    
+  </ul>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+
+
+
+  
+  
+  
+    
+  
+  
+  
+  <div class="media author-card content-widget-hr">
+    
+      
+      <a href="/"><img class="avatar mr-3 avatar-circle" src="/author/roc/avatar_hu49c03114a9ce8ad2bc0bd62c0ddb3f2a_64404_270x270_fill_q75_lanczos_center.jpg" alt="roc"></a>
+    
+
+    <div class="media-body">
+      <h5 class="card-title"><a href="/">roc</a></h5>
+      <h6 class="card-subtitle">腾讯云高级工程师</h6>
+      <p class="card-text">授人以鱼不如授人以渔</p>
+      <ul class="network-icon" aria-hidden="true">
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="https://github.com/imroc" target="_blank" rel="noopener">
+        <i class="fab fa-github"></i>
+      </a>
+    </li>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+    <li>
+      <a href="mailto:roc@imroc.io" >
+        <i class="fas fa-envelope"></i>
+      </a>
+    </li>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="https://twitter.com/imrocchan" target="_blank" rel="noopener">
+        <i class="fab fa-twitter"></i>
+      </a>
+    </li>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="https://www.linkedin.com/in/%E9%B9%8F-%E9%99%88-b51646113" target="_blank" rel="noopener">
+        <i class="fab fa-linkedin"></i>
+      </a>
+    </li>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="https://www.youtube.com/channel/UCEtWQhtiNi1vvDmoC6wydNQ" target="_blank" rel="noopener">
+        <i class="fab fa-youtube"></i>
+      </a>
+    </li>
+  
+</ul>
+
+    </div>
+  </div>
+
+
+  
+
+
+
+
+
+
+
+
+
+
+<div class="article-widget">
+  
+<div class="post-nav">
+  
+  
+  
+  <div class="post-nav-item">
+    <div class="meta-nav">下一页</div>
+    <a href="/post/201906/kubernetes-scale-keepalive-service/" rel="next">Kubernetes 最佳实践：解决长连接服务扩容失效</a>
+  </div>
+  
+  
+  
+  <div class="post-nav-item">
+    <div class="meta-nav">上一页</div>
+    <a href="/post/201810/alfred-and-dash/" rel="prev">极客工具之 Alfred 与 Dash</a>
+  </div>
+  
+</div>
+
+</div>
+
+
+
+
+
+  
+  
+  <div class="article-widget content-widget-hr">
+    <h3>相关</h3>
+    <ul>
+      
+      <li><a href="/post/202011/build-cloud-native-large-scale-distributed-monitoring-system-4/">打造云原生大型分布式监控系统(四): Kvass&#43;Thanos 监控超大规模容器集群</a></li>
+      
+      <li><a href="/post/202009/nginx-ingress-high-concurrency/">Nginx Ingress 高并发实践</a></li>
+      
+      <li><a href="/post/202008/nginx-ingress-on-tke/">Nginx Ingress on TKE 部署最佳实践</a></li>
+      
+      <li><a href="/post/202006/kubernetes-app-deployment-best-practice-2/">Kubernetes 服务部署最佳实践(二) 如何提高服务可用性</a></li>
+      
+      <li><a href="/post/202006/kubernetes-app-deployment-best-practice-1/">Kubernetes 服务部署最佳实践(一) 如何合理利用资源</a></li>
+      
+    </ul>
+  </div>
+  
+
+
+
+
+
+  </div>
+</article>
+  </div>
+
+  <div class="page-footer">
+    
+    
+    <div class="container">
+      <footer class="site-footer">
+  
+
+  <p class="powered-by">
+    roc © 2021
+  </p>
+
+  
+  
+
+
+
+
+
+
+  <p class="powered-by">
+    
+    
+    
+    Published with
+    <a href="https://wowchemy.com/?utm_campaign=poweredby" target="_blank" rel="noopener">Wowchemy</a>  —
+    the free, <a href="https://github.com/wowchemy/wowchemy-hugo-modules" target="_blank" rel="noopener">
+    open source</a> website builder that empowers creators.
+    
+  </p>
+</footer>
+
+    </div>
+    
+  </div>
+
+  
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">引用</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <pre><code class="tex hljs"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-outline-primary my-1 js-copy-cite" href="#" target="_blank">
+          <i class="fas fa-copy"></i> 复制
+        </a>
+        <a class="btn btn-outline-primary my-1 js-download-cite" href="#" target="_blank">
+          <i class="fas fa-download"></i> 下载
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+      
+
+    
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+
+      
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js" integrity="sha256-lqvxZrPLtfffUl2G/e7szqSvPBILGbwmsGE1MKlOi0Q=" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js" integrity="sha256-CBrpuqrMhXwcLLUd5tvQ4euBHCdh7wGlDfNz8vbu/iI=" crossorigin="anonymous"></script>
+      
+
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/instant.page/5.1.0/instantpage.min.js" integrity="sha512-1+qUtKoh9XZW7j+6LhRMAyOrgSQKenQ4mluTR+cvxXjP1Z54RxZuzstR/H9kgPXQsVB8IW7DMDFUJpzLjvhGSQ==" crossorigin="anonymous"></script>
+
+      
+
+      
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/highlight.min.js" integrity="sha512-TDKKr+IvoqZnPzc3l35hdjpHD0m+b2EC2SrLEgKDRWpxf2rFCxemkgvJ5kfU48ip+Y+m2XVKyOCD85ybtlZDmw==" crossorigin="anonymous"></script>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/languages/r.min.js"></script>
+        
+      
+
+    
+
+    
+    
+
+    
+    
+
+    
+    
+    <script id="search-hit-fuse-template" type="text/x-template">
+      <div class="search-hit" id="summary-{{key}}">
+        <div class="search-hit-content">
+          <div class="search-hit-name">
+            <a href="{{relpermalink}}">{{title}}</a>
+            <div class="article-metadata search-hit-type">{{type}}</div>
+            <p class="search-hit-description">{{snippet}}</p>
+          </div>
+        </div>
+      </div>
+    </script>
+    
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.1/fuse.min.js" integrity="sha256-VzgmKYmhsGNNN4Ph1kMW+BjoYJM2jV5i4IlFoeZA9XI=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
+    
+
+    
+    
+    
+
+    
+    
+    
+
+    
+    
+
+    
+    
+
+    
+    
+      
+      
+      
+      
+      
+      
+      
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      
+      
+    
+    
+    <script src="/zh/js/wowchemy.min.64fd16cc68b6a5f25e0156dfff88edff.js"></script>
+
+    
+
+
+
+
+
+
+</body>
+</html>

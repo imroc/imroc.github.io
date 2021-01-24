@@ -3,362 +3,256 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://imroc.io/categories/</loc>
+    <loc>/learning-hugo/chapter1/syllabus/</loc>
+    <lastmod>2019-05-05T00:00:00+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/learning-hugo/chapter2/syllabus/</loc>
+    <lastmod>2019-05-05T00:00:00+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/learning-hugo/chapter1/</loc>
+    <lastmod>2018-09-09T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/learning-hugo/chapter2/</loc>
+    <lastmod>2018-09-09T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/learning-hugo/chapter1/reading-list/</loc>
+    <lastmod>2019-05-05T00:00:00+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/learning-hugo/chapter2/reading-list/</loc>
+    <lastmod>2019-05-05T00:00:00+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/learning-hugo/chapter1/takeaways/</loc>
+    <lastmod>2019-05-05T00:00:00+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc></loc>
     <lastmod>2020-11-25T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://imroc.io/en/categories/"
+                href="/en/authors/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="zh"
-                href="https://imroc.io/categories/"
+                href=""
                 />
   </url>
   
   <url>
-    <loc>https://imroc.io/tags/kubernetes/</loc>
+    <loc>/tag/kubernetes/</loc>
+    <lastmod>2020-11-25T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tag/prometheus/</loc>
+    <lastmod>2020-11-25T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc></loc>
+    <lastmod>2020-11-25T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/</loc>
     <lastmod>2020-11-25T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://imroc.io/en/tags/kubernetes/"
+                href="/en/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="zh"
-                href="https://imroc.io/tags/kubernetes/"
+                href="/"
                 />
   </url>
   
   <url>
-    <loc>https://imroc.io/categories/kubernetes/</loc>
+    <loc>/tags/</loc>
     <lastmod>2020-11-25T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://imroc.io/en/categories/kubernetes/"
+                href="/en/tags/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="zh"
-                href="https://imroc.io/categories/kubernetes/"
+                href="/tags/"
                 />
   </url>
   
   <url>
-    <loc>https://imroc.io/posts/</loc>
-    <lastmod>2020-11-25T00:00:00+00:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="https://imroc.io/en/posts/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="zh"
-                href="https://imroc.io/posts/"
-                />
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/</loc>
-    <lastmod>2020-11-25T00:00:00+00:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="https://imroc.io/en/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="zh"
-                href="https://imroc.io/"
-                />
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/tags/</loc>
-    <lastmod>2020-11-25T00:00:00+00:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="https://imroc.io/en/tags/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="zh"
-                href="https://imroc.io/tags/"
-                />
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/posts/build-cloud-native-large-scale-distributed-monitoring-system-4/</loc>
+    <loc>/post/202011/build-cloud-native-large-scale-distributed-monitoring-system-4/</loc>
     <lastmod>2020-11-25T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://imroc.io/posts/nginx-ingress-high-concurrency/</loc>
+    <loc>/post/</loc>
+    <lastmod>2020-11-25T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/202009/nginx-ingress-high-concurrency/</loc>
     <lastmod>2020-09-02T20:50:00+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://imroc.io/posts/nginx-ingress-on-tke/</loc>
+    <loc>/post/202008/nginx-ingress-on-tke/</loc>
     <lastmod>2020-08-07T11:00:00+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://imroc.io/posts/kubernetes-app-deployment-best-practice-2/</loc>
+    <loc>/post/202006/kubernetes-app-deployment-best-practice-2/</loc>
     <lastmod>2020-06-19T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://imroc.io/posts/kubernetes-app-deployment-best-practice-1/</loc>
+    <loc>/post/202006/kubernetes-app-deployment-best-practice-1/</loc>
     <lastmod>2020-06-16T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://imroc.io/posts/tke-cluster-setup-best-practice/</loc>
-    <lastmod>2020-05-25T10:03:00+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/posts/build-cloud-native-large-scale-distributed-monitoring-system-3/</loc>
+    <loc>/post/202004/build-cloud-native-large-scale-distributed-monitoring-system-3/</loc>
     <lastmod>2020-04-20T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://imroc.io/posts/build-cloud-native-large-scale-distributed-monitoring-system-2/</loc>
+    <loc>/post/202004/build-cloud-native-large-scale-distributed-monitoring-system-2/</loc>
     <lastmod>2020-04-06T13:50:00+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://imroc.io/posts/build-cloud-native-large-scale-distributed-monitoring-system-1/</loc>
+    <loc>/post/202003/build-cloud-native-large-scale-distributed-monitoring-system-1/</loc>
     <lastmod>2020-03-26T22:50:00+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://imroc.io/posts/kubernetes-overflow-and-drop/</loc>
+    <loc>/note/learning-hugo/</loc>
+    <lastmod>2020-01-24T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/note/</loc>
+    <lastmod>2020-01-24T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tag/%E5%B7%A5%E5%85%B7/</loc>
+    <lastmod>2020-01-24T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/note/learning-kubernetes/</loc>
+    <lastmod>2020-01-23T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tag/%E4%BA%91%E5%8E%9F%E7%94%9F/</loc>
+    <lastmod>2020-01-23T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/202001/kubernetes-overflow-and-drop/</loc>
     <lastmod>2020-01-12T19:20:00+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://imroc.io/posts/kubernetes-no-route-to-host/</loc>
-    <lastmod>2019-12-15T12:03:00+08:00</lastmod>
+    <loc>/tag/network/</loc>
+    <lastmod>2020-11-25T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://imroc.io/posts/kubernetes-service-topology/</loc>
+    <loc>/tag/troubleshooting/</loc>
+    <lastmod>2020-11-25T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/201912/kubernetes-no-route-to-host/</loc>
+    <lastmod>2020-11-25T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/201911/</loc>
     <lastmod>2019-11-26T16:49:00+08:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="https://imroc.io/en/posts/kubernetes-service-topology/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="zh"
-                href="https://imroc.io/posts/kubernetes-service-topology/"
-                />
   </url>
   
   <url>
-    <loc>https://imroc.io/posts/troubleshooting-with-kubernetes-network/</loc>
+    <loc>/post/201908/troubleshooting-with-kubernetes-network/</loc>
     <lastmod>2019-08-12T16:59:00+08:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="https://imroc.io/en/posts/troubleshooting-with-kubernetes-network/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="zh"
-                href="https://imroc.io/posts/troubleshooting-with-kubernetes-network/"
-                />
   </url>
   
   <url>
-    <loc>https://imroc.io/posts/lost-packets-once-enable-tcp-tw-recycle/</loc>
-    <lastmod>2019-06-09T22:00:00+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/posts/handle-memory-fragmentation/</loc>
-    <lastmod>2019-06-08T13:59:00+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/posts/kubernetes-scale-keepalive-service/</loc>
+    <loc>/post/201906/kubernetes-scale-keepalive-service/</loc>
     <lastmod>2019-06-06T17:06:00+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://imroc.io/posts/capture-packets-in-container/</loc>
-    <lastmod>2019-05-19T11:24:00+08:00</lastmod>
+    <loc>/learning-hugo/</loc>
+    <lastmod>2019-05-05T00:00:00+01:00</lastmod>
   </url>
   
   <url>
-    <loc>https://imroc.io/tags/istio/</loc>
-    <lastmod>2019-04-07T11:54:00+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/categories/istio/</loc>
-    <lastmod>2019-04-07T11:54:00+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/posts/istio-cni/</loc>
-    <lastmod>2019-04-07T11:54:00+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/posts/efficient-kubectl/</loc>
-    <lastmod>2019-03-10T14:05:00+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/posts/kubernetes-wildcard-domain-forward/</loc>
+    <loc>/post/201812/kubernetes-wildcard-domain-forward/</loc>
     <lastmod>2018-12-22T01:09:00+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://imroc.io/posts/kubernetes-analysis-exitcode/</loc>
-    <lastmod>2018-12-21T16:10:00+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/tags/geek/</loc>
-    <lastmod>2018-12-07T18:05:00+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/categories/geek/</loc>
-    <lastmod>2018-12-07T18:05:00+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/tags/git/</loc>
-    <lastmod>2018-12-07T18:05:00+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/posts/git-trick-modify-history/</loc>
-    <lastmod>2018-12-07T18:05:00+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/posts/chrome/</loc>
-    <lastmod>2018-10-21T23:00:00+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/posts/alfred-and-dash/</loc>
+    <loc>/tag/geek/</loc>
     <lastmod>2018-10-21T07:00:00+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://imroc.io/posts/oh-my-zsh/</loc>
-    <lastmod>2018-10-20T01:35:00+08:00</lastmod>
+    <loc>/tag/macos/</loc>
+    <lastmod>2018-10-21T07:00:00+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://imroc.io/posts/understand-service-ingress-and-ingress-controller/</loc>
-    <lastmod>2018-07-24T22:19:37+08:00</lastmod>
+    <loc>/post/201810/alfred-and-dash/</loc>
+    <lastmod>2018-10-21T07:00:00+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://imroc.io/posts/deploy-kubernetes-dashboard-and-enable-free-https/</loc>
-    <lastmod>2018-07-23T21:49:54+08:00</lastmod>
+    <loc>/categories/</loc>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="/en/categories/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh"
+                href="/categories/"
+                />
   </url>
   
   <url>
-    <loc>https://imroc.io/posts/let-ingress-enable-free-https-with-cert-manager/</loc>
-    <lastmod>2018-07-23T20:08:01+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/posts/use-nginx-ingress-controller-to-expose-service/</loc>
-    <lastmod>2018-07-23T14:29:37+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/tags/ci/</loc>
-    <lastmod>2018-04-13T22:23:22+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/posts/ci-with-gitlab-and-jenkins/</loc>
-    <lastmod>2018-04-13T22:23:22+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/posts/kubernetes-nodeport-vs-loadbalancer-vs-ingress-when-should-i-use-what/</loc>
-    <lastmod>2018-03-13T22:45:26+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/posts/kubernetes-source-code-reading-notes-kube-apiserver-code-main-line/</loc>
-    <lastmod>2018-03-12T11:47:19+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/tags/docker/</loc>
-    <lastmod>2018-03-09T10:39:17+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/posts/sync-images-to-docker-hub-using-katacoda/</loc>
-    <lastmod>2018-03-09T10:39:17+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/tags/hugo/</loc>
-    <lastmod>2018-01-16T20:35:06+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/categories/hugo/</loc>
-    <lastmod>2018-01-16T20:35:06+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/posts/building-website-for-free-using-hugo-and-github-pages/</loc>
-    <lastmod>2018-01-16T20:35:06+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/tags/golang/</loc>
-    <lastmod>2017-09-06T15:35:18+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/categories/golang/</loc>
-    <lastmod>2017-09-06T15:35:18+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/posts/golang-append/</loc>
-    <lastmod>2017-09-06T15:35:18+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/posts/golang-package/</loc>
-    <lastmod>2017-09-06T15:35:18+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/posts/golang-for-range-time-tick/</loc>
-    <lastmod>2017-09-06T15:35:18+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/posts/golang-select/</loc>
-    <lastmod>2017-09-06T15:35:18+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://imroc.io/posts/build-cloud-native-large-scale-distributed-monitoring-system-4-copy/</loc>
+    <loc>/publication_types/</loc>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="/en/publication_types/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="zh"
+                href="/publication_types/"
+                />
   </url>
   
 </urlset>

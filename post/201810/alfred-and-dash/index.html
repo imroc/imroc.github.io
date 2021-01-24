@@ -1,0 +1,1231 @@
+<!DOCTYPE html><html lang="zh-Hans" >
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  
+  
+  
+  <meta name="generator" content="Wowchemy 5.0.0-beta.1 for Hugo">
+  
+
+  
+
+  
+  
+
+  
+  
+  
+  
+  
+    
+    
+    
+  
+  
+
+  <meta name="author" content="roc">
+
+  
+  
+  
+    
+  
+  <meta name="description" content="目录  Alfred     Dash     推荐系统快捷键    Alfred 使用 Alfred 可以让你在 macOS 程序间自由切换、快速查找或打开文件、调起浏览器进行网页搜索、 还可以做计算器。 另外，还有许多其它搜索功能以及付费的工作流特性，Powerpack 就是 Alfred 工作流模块，需要付费才能使用，不过，我觉得免费的功能已经完全够用了， 而且很简洁，功能太多咱也学不过来。
+下载安装 Alfred 官网是 https://www.">
+
+  
+  <link rel="alternate" hreflang="zh-Hans" href="/post/201810/alfred-and-dash/">
+
+  
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  
+
+  
+  
+  
+  <meta name="theme-color" content="#1565c0">
+  
+
+  
+  
+
+  
+  
+  
+  
+    
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha256-FMvZuGapsJLjouA6k7Eo2lusoAX9i0ShlWFG6qt7SLc=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous" media="print" onload="this.media='all'">
+
+    
+    
+    
+      
+    
+    
+      
+      
+        
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/styles/github.min.css" crossorigin="anonymous" title="hl-light" media="print" onload="this.media='all'">
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/styles/dracula.min.css" crossorigin="anonymous" title="hl-dark" media="print" onload="this.media='all'" disabled>
+        
+      
+    
+
+    
+
+    
+
+    
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.2.2/lazysizes.min.js" integrity="sha512-TmDwFLhg3UA4ZG0Eb4MIyT1O1Mb+Oww5kFG0uHqXsdbyZz9DcvYQhKpGgNkamAI6h2lGGZq2X8ftOJvF/XjTUg==" crossorigin="anonymous" async></script>
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+        
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+
+  
+
+  
+  
+  
+    
+      
+      <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Roboto+Mono&family=Roboto:wght@400;700&display=swap">
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Roboto+Mono&family=Roboto:wght@400;700&display=swap" media="print" onload="this.media='all'">
+    
+  
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="/css/wowchemy.a2dda909fb8228e17412d06b4423e0a6.css">
+
+  
+
+
+
+
+  
+
+  
+
+
+  
+  
+
+  
+
+  
+  <link rel="manifest" href="/index.webmanifest">
+  
+
+  <link rel="icon" type="image/png" href="/images/icon_hua2ec155b4296a9c9791d015323e16eb5_11927_32x32_fill_lanczos_center_2.png">
+  <link rel="apple-touch-icon" type="image/png" href="/images/icon_hua2ec155b4296a9c9791d015323e16eb5_11927_192x192_fill_lanczos_center_2.png">
+
+  <link rel="canonical" href="/post/201810/alfred-and-dash/">
+
+  
+  
+  
+  
+  
+  
+  
+    
+    
+  
+  
+  <meta property="twitter:card" content="summary">
+  
+  <meta property="twitter:site" content="@imrocchan">
+  <meta property="twitter:creator" content="@imrocchan">
+  
+  <meta property="og:site_name" content="roc的个人网站">
+  <meta property="og:url" content="/post/201810/alfred-and-dash/">
+  <meta property="og:title" content="极客工具之 Alfred 与 Dash | roc的个人网站">
+  <meta property="og:description" content="目录  Alfred     Dash     推荐系统快捷键    Alfred 使用 Alfred 可以让你在 macOS 程序间自由切换、快速查找或打开文件、调起浏览器进行网页搜索、 还可以做计算器。 另外，还有许多其它搜索功能以及付费的工作流特性，Powerpack 就是 Alfred 工作流模块，需要付费才能使用，不过，我觉得免费的功能已经完全够用了， 而且很简洁，功能太多咱也学不过来。
+下载安装 Alfred 官网是 https://www."><meta property="og:image" content="/images/icon_hua2ec155b4296a9c9791d015323e16eb5_11927_512x512_fill_lanczos_center_2.png">
+  <meta property="twitter:image" content="/images/icon_hua2ec155b4296a9c9791d015323e16eb5_11927_512x512_fill_lanczos_center_2.png"><meta property="og:locale" content="zh-Hans">
+  
+    
+      <meta property="article:published_time" content="2018-10-21T07:00:00&#43;08:00">
+    
+    <meta property="article:modified_time" content="2018-10-21T07:00:00&#43;08:00">
+  
+
+  
+
+
+    
+
+
+
+
+
+
+  
+
+
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "/post/201810/alfred-and-dash/"
+  },
+  "headline": "极客工具之 Alfred 与 Dash",
+  
+  "datePublished": "2018-10-21T07:00:00+08:00",
+  "dateModified": "2018-10-21T07:00:00+08:00",
+  
+  "author": {
+    "@type": "Person",
+    "name": "roc"
+  },
+  
+  "publisher": {
+    "@type": "Organization",
+    "name": "roc的个人网站",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "/images/icon_hua2ec155b4296a9c9791d015323e16eb5_11927_192x192_fill_lanczos_center_2.png"
+    }
+  },
+  "description": "目录  Alfred     Dash     推荐系统快捷键    Alfred 使用 Alfred 可以让你在 macOS 程序间自由切换、快速查找或打开文件、调起浏览器进行网页搜索、 还可以做计算器。 另外，还有许多其它搜索功能以及付费的工作流特性，Powerpack 就是 Alfred 工作流模块，需要付费才能使用，不过，我觉得免费的功能已经完全够用了， 而且很简洁，功能太多咱也学不过来。\n下载安装 Alfred 官网是 https://www."
+}
+</script>
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+
+  <title>极客工具之 Alfred 与 Dash | roc的个人网站</title>
+
+</head>
+
+
+<body id="top" data-spy="scroll" data-offset="70" data-target="#TableOfContents" class="page-wrapper  ">
+
+  
+  
+  
+  
+  
+  
+  
+  
+  <script src="/js/wowchemy-init.min.7264cf0eba3b66951b36da7d2cecf9c5.js"></script>
+
+  
+
+<aside class="search-modal" id="search">
+  <div class="container">
+    <section class="search-header">
+
+      <div class="row no-gutters justify-content-between mb-3">
+        <div class="col-6">
+          <h1>搜索</h1>
+        </div>
+        <div class="col-6 col-search-close">
+          <a class="js-search" href="#" aria-label="Close"><i class="fas fa-times-circle text-muted" aria-hidden="true"></i></a>
+        </div>
+      </div>
+
+      <div id="search-box">
+        
+        <input name="q" id="search-query" placeholder="搜索..." autocapitalize="off"
+        autocomplete="off" autocorrect="off" spellcheck="false" type="search" class="form-control"
+        aria-label="搜索...">
+        
+      </div>
+
+      
+      
+
+      
+
+    </section>
+    <section class="section-search-results">
+
+      <div id="search-hits">
+        
+      </div>
+
+    </section>
+  </div>
+</aside>
+
+
+
+  <div class="page-header">
+    
+
+
+
+
+
+
+
+
+
+
+
+
+<nav class="navbar navbar-expand-lg navbar-light compensate-for-scrollbar" id="navbar-main">
+  <div class="container-xl">
+
+    
+
+    
+    <button type="button" class="navbar-toggler" data-toggle="collapse"
+            data-target="#navbar-content" aria-controls="navbar" aria-expanded="false" aria-label="切换导航">
+    <span><i class="fas fa-bars"></i></span>
+    </button>
+    
+
+    
+
+    
+    
+    <div class="navbar-collapse main-menu-item collapse justify-content-center" id="navbar-content">
+
+      
+      <ul class="navbar-nav d-md-inline-flex">
+        
+
+        
+
+        
+        
+        
+
+        
+
+        
+        
+        
+        
+
+        
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/"><span>主页</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+
+        
+        
+        
+        
+
+        
+          
+            
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/post/"><span>技术博客</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+
+        
+        
+        
+        
+
+        
+          
+            
+            
+          
+          
+            
+            
+            
+              
+            
+            
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#notes"><span>学习笔记</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+
+        
+        
+        
+        
+
+        
+          
+            
+            
+          
+          
+            
+            
+            
+              
+            
+            
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#tags"><span>内容标签</span></a>
+        </li>
+
+        
+        
+
+      
+
+        
+      </ul>
+    </div>
+
+    <ul class="nav-icons navbar-nav flex-row ml-auto d-flex pl-md-2">
+
+      
+      
+        
+      
+
+      
+      
+      <li class="nav-item">
+        <a class="nav-link js-search" href="#" aria-label="搜索"><i class="fas fa-search" aria-hidden="true"></i></a>
+      </li>
+      
+
+      
+      
+      <li class="nav-item dropdown theme-dropdown">
+        <a href="#" class="nav-link" data-toggle="dropdown" aria-haspopup="true" aria-label="Display preferences">
+          <i class="fas fa-moon" aria-hidden="true"></i>
+        </a>
+        <div class="dropdown-menu">
+          <a href="#" class="dropdown-item js-set-theme-light">
+            <span>浅色</span>
+          </a>
+          <a href="#" class="dropdown-item js-set-theme-dark">
+            <span>深色</span>
+          </a>
+          <a href="#" class="dropdown-item js-set-theme-auto">
+            <span>自动</span>
+          </a>
+        </div>
+      </li>
+      
+
+      
+
+    </ul>
+
+  </div>
+</nav>
+
+
+  </div>
+
+  <div class="page-body">
+    <article class="article">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+  
+  
+<div class="article-container pt-3">
+  <h1>极客工具之 Alfred 与 Dash</h1>
+
+  
+  <p class="page-subtitle">效率神器，macOS 专属</p>
+  
+
+  
+    
+
+
+<div class="article-metadata">
+
+  
+  
+  
+  
+  <div>
+    
+
+  <span class="author-highlighted">
+      roc</span>
+  </div>
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    Oct 21, 2018
+  </span>
+  
+
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    1 分钟阅读时长
+  </span>
+  
+
+  
+  
+  
+  
+  
+
+  
+  
+
+</div>
+
+    
+
+
+
+
+
+  
+</div>
+
+
+
+  <div class="article-container">
+
+    <div class="article-style">
+      <details class="toc-inpage d-print-none  " open>
+  <summary class="font-weight-bold">目录</summary>
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#alfred">Alfred</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#dash">Dash</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#推荐系统快捷键">推荐系统快捷键</a></li>
+  </ul>
+</nav>
+</details>
+<h2 id="alfred">Alfred</h2>
+<p>使用 Alfred 可以让你在 macOS 程序间自由切换、快速查找或打开文件、调起浏览器进行网页搜索、 还可以做计算器。 另外，还有许多其它搜索功能以及付费的工作流特性，Powerpack 就是 Alfred 工作流模块，需要付费才能使用，不过，我觉得免费的功能已经完全够用了， 而且很简洁，功能太多咱也学不过来。</p>
+<h4 id="下载安装">下载安装</h4>
+<p>Alfred 官网是 <a href="https://www.alfredapp.com/" target="_blank" rel="noopener">https://www.alfredapp.com/</a></p>
+<h4 id="禁用自带的-spotlight">禁用自带的 Spotlight</h4>
+<p>macOS 自带了搜索工具 Spotlight, 但是功能相对于 Alfred 就弱爆了，它默认的快捷键是 <code>cmd+space</code>，我们最好禁用它，进入 <code>系统偏好设置-键盘-快捷键-聚焦</code>，然后取消勾选 <code>显示“聚焦”搜索</code></p>
+<p><img src="https://res.cloudinary.com/imroc/image/upload/v1540031377/blog/geek/alfred-disable-spotlight.png" alt="alfred setting"></p>
+<p>并且将 Alfred 的热键也设为 <code>cmd+space</code></p>
+<p><img src="https://res.cloudinary.com/imroc/image/upload/v1540031375/blog/geek/alfred-setting.png" alt="alfred setting"></p>
+<h4 id="程序间快速切换">程序间快速切换</h4>
+<p>我们之前常用的程序切换方式有：</p>
+<ul>
+<li>cmd+tab 和 shift+cmd+tab 切换程序</li>
+<li>在触摸板三根手指上滑打开调度中心，结合三根手指左右滑切换桌面，然后选择要切换的程序</li>
+</ul>
+<p>它们的缺点很明显，程序窗口所在的位置不一定是固定的，需要观察一下才能找到，而且如果打开的程序非常多，找起来就更麻烦。如果用 Alfred， 则只需输入能匹配程序名称部分的简短字母就能找到（如果程序含中文名，使用拼音也能搜到)， 再按下回车就能切换到指定程序上，比如切换到 <code>Google Chrome</code>，只需要输入 <code>chr</code> 就能定位到 Chrome 浏览器。</p>
+<p><img src="https://res.cloudinary.com/imroc/image/upload/v1540031373/blog/geek/alfred-search-app.png" alt="search app"></p>
+<h4 id="快速查找和打开文件或目录">快速查找和打开文件或目录</h4>
+<p>Alfred 还支持很多指令，<code>find</code> 是在磁盘找到文件，回车后就将搜到的文件或目录显示在 Finder 中，搜索是瞬间完成的，灰常灰常快。</p>
+<p><img src="https://res.cloudinary.com/imroc/image/upload/v1540031373/blog/geek/alfred-find.png" alt="aflred find"></p>
+<p><code>open</code> 命令与 <code>find</code> 类似，唯一的区别是 <code>open</code> 会将文件直接通过默认的打开方式打开而不是显示在 <code>Finder</code> 中。</p>
+<h4 id="计算器">计算器</h4>
+<p>偶尔我们需要做些数学计算，打开自带的计算器太麻烦，而且功能很弱，面对复杂的数学表达式输入显得不够直观简单，利用 Alfred 可以直接输入可读性很好的运算表达式，非常直观简单。</p>
+<p><img src="https://res.cloudinary.com/imroc/image/upload/v1540031373/blog/geek/alfred-calculator.png" alt="aflred calculator"></p>
+<h4 id="网页搜索">网页搜索</h4>
+<p>没有输入命令的情况下，如果你的输入无法找到对应的程序，默认就会推荐到网页搜索</p>
+<p><img src="https://res.cloudinary.com/imroc/image/upload/v1540031376/blog/geek/alfred-search-web.png" alt="aflred search web"></p>
+<p>你也可以一开始就指定用某个搜索引擎搜索，比如谷歌默认用的 <code>gg</code> 命令</p>
+<p><img src="https://res.cloudinary.com/imroc/image/upload/v1540031373/blog/geek/alfred-search-google.png" alt="aflred search google"></p>
+<p>你还可以自定义搜索引擎，比如百度、淘宝、京东、Github 等，以添加 Github 为例，打开 Alfred 的 <code>Preferences-Features-Web Search-Add Custom Search</code>， 各选项填写如下：</p>
+<ul>
+<li>Search URL: <a href="https://github.com/search?q=%7Bquery%7D">https://github.com/search?q={query}</a></li>
+<li>Title: Search with Github for {query}</li>
+<li>Keyword: gh</li>
+</ul>
+<p><img src="https://res.cloudinary.com/imroc/image/upload/v1540031374/blog/geek/alfred-custom-search.png" alt="aflred custom search"></p>
+<p><code>{query}</code> 是会填充的搜索词变量，随便在 Github 搜索一个关键词，然后复制 url ，将搜索词替换为 <code>{query}</code> 就得到 <code>Search URL</code> 了，其它搜索引擎的 <code>Search URL</code> 也同理可得。</p>
+<p>现在在 Alfred 中输入 <code>gh</code> 命令就可以搜索 Github 项目了，如果希望搜索的时候显示 Github 的 logo，可以自己把 logo 图片文件拖到上图设置右侧方框处。</p>
+<h2 id="dash">Dash</h2>
+<p>很多人应该都知道 Dash ，程序员看文档的神器，但其实它还有一个功能: <code>Snippets</code>，这才是我频繁使用它的原因。它可以让你不受编辑器约束，在任意可以输入的地方都快速输入代码片段或者叫做文本模板，避免重复输入，提高效率。我会举一些实际使用的例子让你知道它为什么这么爽。</p>
+<h4 id="下载安装-1">下载安装</h4>
+<p>Dash 的官网是 <a href="https://kapeli.com/dash">https://kapeli.com/dash</a></p>
+<h4 id="确保-dash-权限">确保 Dash 权限</h4>
+<p>进入 <code>系统偏好设置-键盘-快捷键-服务</code>，确保搜索下面的 <code>Look Up in Dash</code> 是勾选状态</p>
+<p><img src="https://res.cloudinary.com/imroc/image/upload/v1540031374/blog/geek/dash-setting.png" alt="dash setting"></p>
+<h4 id="添加-snippet">添加 Snippet</h4>
+<p>进入 Dash 的 Snippets，我们尝试添加一个，就拿我经常要输入的命令的举例</p>
+<p><img src="https://res.cloudinary.com/imroc/image/upload/v1540031375/blog/geek/dash-snippets.png" alt="dash snippets"></p>
+<p>新建了一个名字是 <code>kx.</code> 的 <code>Snippet</code>，不管我们在哪输入了这个名字，他都会触发这个 <code>Snippet</code>，我习惯用 &ldquo;.&rdquo; 号来触发，所以在名字默认都加了 &ldquo;.&rdquo;</p>
+<p>来看下使用效果</p>
+<p><img src="https://res.cloudinary.com/imroc/image/upload/v1540031374/blog/geek/dash-demo.gif" alt="dash demo"></p>
+<p>除了方便我们快速输入常用而又冗长的命令之外，你还可以把常用的服务器 ip 也做成 <code>Snippet</code>，起个容易记得名字，这样你的服务器 ip 很多也不怕了， 不需要查服务器 ip 列表，直接输入 <code>Snippet</code> 名称。你也可以把你的公钥也做成 <code>Snippet</code>，这样就可以很方便把公钥输入到服务器的 <code>~/.ssh/authorized_keys</code> ，以便让我们不输入密码就可以登录服务器。当然你写代码的时候还可以用它来键入代码片段，不过它和 vscode 兼容性有点不好，有时会输入不想要的字符。我建议代码片段功能就用编辑器或 IDE 自带的，功能更加丰富点。</p>
+<h2 id="推荐系统快捷键">推荐系统快捷键</h2>
+<ul>
+<li>在 <code>系统偏好设置-键盘-修饰键</code> 把 <code>大写锁定键</code> 映射为 <code>Control</code> 键，因为 ctrl 用的实在太频繁了，自带的键盘和其它普通的键盘的 ctrl 键位不好按，像 hhkb 这种键盘的 ctrl 键本身就在普通键盘的大写锁定键位置，所以就不用映射。</li>
+<li>在 <code>系统偏好设置-键盘-调度中心</code>，将 <code>向左移动一个空间</code> 快捷键绑定为 <code>ctrl+,</code>，<code>向右移动一个空间</code> 快捷键绑定为 <code>ctrl+.</code>。这样多个桌面空间之间的切换也很方便了，快捷键也不会跟其它软件冲突。</li>
+</ul>
+<p>最后，我还录了一个视频供大家参考学习：</p>
+<p><embed src="https://imgcache.qq.com/tencentvideo_v1/playerv3/TPout.swf?max_age=86400&v=20161117&vid=f075714x4s9&auto=0" allowFullScreen="true" quality="high" width="900" height="700" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash"></embed></p>
+
+    </div>
+
+    
+
+
+
+
+
+
+<div class="article-tags">
+  
+  <a class="badge badge-light" href="/tag/geek/">geek</a>
+  
+  <a class="badge badge-light" href="/tag/macos/">macOS</a>
+  
+</div>
+
+
+
+<div class="share-box" aria-hidden="true">
+  <ul class="share">
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://twitter.com/intent/tweet?url=/post/201810/alfred-and-dash/&amp;text=%e6%9e%81%e5%ae%a2%e5%b7%a5%e5%85%b7%e4%b9%8b%20Alfred%20%e4%b8%8e%20Dash" target="_blank" rel="noopener" class="share-btn-twitter">
+          <i class="fab fa-twitter"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://www.facebook.com/sharer.php?u=/post/201810/alfred-and-dash/&amp;t=%e6%9e%81%e5%ae%a2%e5%b7%a5%e5%85%b7%e4%b9%8b%20Alfred%20%e4%b8%8e%20Dash" target="_blank" rel="noopener" class="share-btn-facebook">
+          <i class="fab fa-facebook"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="mailto:?subject=%e6%9e%81%e5%ae%a2%e5%b7%a5%e5%85%b7%e4%b9%8b%20Alfred%20%e4%b8%8e%20Dash&amp;body=/post/201810/alfred-and-dash/" target="_blank" rel="noopener" class="share-btn-email">
+          <i class="fas fa-envelope"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://www.linkedin.com/shareArticle?url=/post/201810/alfred-and-dash/&amp;title=%e6%9e%81%e5%ae%a2%e5%b7%a5%e5%85%b7%e4%b9%8b%20Alfred%20%e4%b8%8e%20Dash" target="_blank" rel="noopener" class="share-btn-linkedin">
+          <i class="fab fa-linkedin-in"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="whatsapp://send?text=%e6%9e%81%e5%ae%a2%e5%b7%a5%e5%85%b7%e4%b9%8b%20Alfred%20%e4%b8%8e%20Dash%20/post/201810/alfred-and-dash/" target="_blank" rel="noopener" class="share-btn-whatsapp">
+          <i class="fab fa-whatsapp"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://service.weibo.com/share/share.php?url=/post/201810/alfred-and-dash/&amp;title=%e6%9e%81%e5%ae%a2%e5%b7%a5%e5%85%b7%e4%b9%8b%20Alfred%20%e4%b8%8e%20Dash" target="_blank" rel="noopener" class="share-btn-weibo">
+          <i class="fab fa-weibo"></i>
+        </a>
+      </li>
+    
+  </ul>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+
+
+
+  
+  
+  
+    
+  
+  
+  
+  <div class="media author-card content-widget-hr">
+    
+      
+      <a href="/"><img class="avatar mr-3 avatar-circle" src="/author/roc/avatar_hu49c03114a9ce8ad2bc0bd62c0ddb3f2a_64404_270x270_fill_q75_lanczos_center.jpg" alt="roc"></a>
+    
+
+    <div class="media-body">
+      <h5 class="card-title"><a href="/">roc</a></h5>
+      <h6 class="card-subtitle">腾讯云高级工程师</h6>
+      <p class="card-text">授人以鱼不如授人以渔</p>
+      <ul class="network-icon" aria-hidden="true">
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="https://github.com/imroc" target="_blank" rel="noopener">
+        <i class="fab fa-github"></i>
+      </a>
+    </li>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+    <li>
+      <a href="mailto:roc@imroc.io" >
+        <i class="fas fa-envelope"></i>
+      </a>
+    </li>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="https://twitter.com/imrocchan" target="_blank" rel="noopener">
+        <i class="fab fa-twitter"></i>
+      </a>
+    </li>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="https://www.linkedin.com/in/%E9%B9%8F-%E9%99%88-b51646113" target="_blank" rel="noopener">
+        <i class="fab fa-linkedin"></i>
+      </a>
+    </li>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="https://www.youtube.com/channel/UCEtWQhtiNi1vvDmoC6wydNQ" target="_blank" rel="noopener">
+        <i class="fab fa-youtube"></i>
+      </a>
+    </li>
+  
+</ul>
+
+    </div>
+  </div>
+
+
+  
+
+
+
+
+
+
+
+
+
+
+<div class="article-widget">
+  
+<div class="post-nav">
+  
+  
+  
+  <div class="post-nav-item">
+    <div class="meta-nav">下一页</div>
+    <a href="/post/201812/kubernetes-wildcard-domain-forward/" rel="next">Kubernetes 泛域名动态 Service 转发解决方案</a>
+  </div>
+  
+  
+</div>
+
+</div>
+
+
+
+
+
+  
+  
+
+
+
+
+
+  </div>
+</article>
+  </div>
+
+  <div class="page-footer">
+    
+    
+    <div class="container">
+      <footer class="site-footer">
+  
+
+  <p class="powered-by">
+    roc © 2021
+  </p>
+
+  
+  
+
+
+
+
+
+
+  <p class="powered-by">
+    
+    
+    
+    Published with
+    <a href="https://wowchemy.com/?utm_campaign=poweredby" target="_blank" rel="noopener">Wowchemy</a>  —
+    the free, <a href="https://github.com/wowchemy/wowchemy-hugo-modules" target="_blank" rel="noopener">
+    open source</a> website builder that empowers creators.
+    
+  </p>
+</footer>
+
+    </div>
+    
+  </div>
+
+  
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">引用</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <pre><code class="tex hljs"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-outline-primary my-1 js-copy-cite" href="#" target="_blank">
+          <i class="fas fa-copy"></i> 复制
+        </a>
+        <a class="btn btn-outline-primary my-1 js-download-cite" href="#" target="_blank">
+          <i class="fas fa-download"></i> 下载
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+      
+
+    
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+
+      
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js" integrity="sha256-lqvxZrPLtfffUl2G/e7szqSvPBILGbwmsGE1MKlOi0Q=" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js" integrity="sha256-CBrpuqrMhXwcLLUd5tvQ4euBHCdh7wGlDfNz8vbu/iI=" crossorigin="anonymous"></script>
+      
+
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/instant.page/5.1.0/instantpage.min.js" integrity="sha512-1+qUtKoh9XZW7j+6LhRMAyOrgSQKenQ4mluTR+cvxXjP1Z54RxZuzstR/H9kgPXQsVB8IW7DMDFUJpzLjvhGSQ==" crossorigin="anonymous"></script>
+
+      
+
+      
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/highlight.min.js" integrity="sha512-TDKKr+IvoqZnPzc3l35hdjpHD0m+b2EC2SrLEgKDRWpxf2rFCxemkgvJ5kfU48ip+Y+m2XVKyOCD85ybtlZDmw==" crossorigin="anonymous"></script>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/languages/r.min.js"></script>
+        
+      
+
+    
+
+    
+    
+
+    
+    
+
+    
+    
+    <script id="search-hit-fuse-template" type="text/x-template">
+      <div class="search-hit" id="summary-{{key}}">
+        <div class="search-hit-content">
+          <div class="search-hit-name">
+            <a href="{{relpermalink}}">{{title}}</a>
+            <div class="article-metadata search-hit-type">{{type}}</div>
+            <p class="search-hit-description">{{snippet}}</p>
+          </div>
+        </div>
+      </div>
+    </script>
+    
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.1/fuse.min.js" integrity="sha256-VzgmKYmhsGNNN4Ph1kMW+BjoYJM2jV5i4IlFoeZA9XI=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
+    
+
+    
+    
+    
+
+    
+    
+    
+
+    
+    
+
+    
+    
+
+    
+    
+      
+      
+      
+      
+      
+      
+      
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      
+      
+    
+    
+    <script src="/zh/js/wowchemy.min.64fd16cc68b6a5f25e0156dfff88edff.js"></script>
+
+    
+
+
+
+
+
+
+</body>
+</html>

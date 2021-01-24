@@ -1,0 +1,1312 @@
+<!DOCTYPE html><html lang="zh-Hans" >
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  
+  
+  
+  <meta name="generator" content="Wowchemy 5.0.0-beta.1 for Hugo">
+  
+
+  
+
+  
+  
+
+  
+  
+  
+  
+  
+    
+    
+    
+  
+  
+
+  <meta name="author" content="roc">
+
+  
+  
+  
+    
+  
+  <meta name="description" content="目录  引言 如何避免单点故障？ 如何避免节点维护或升级时导致服务不可用？ 如何让服务进行平滑更新？ 健康检查怎么配才好？ 参考资料    引言 上一篇 文章我们围绕如何合理利用资源的主题做了一些最佳实践的分享，这一次我们就如何提高服务可用性的主题来展开探讨。
+怎样提高我们部署服务的可用性呢？K8S 设计本身就考虑到了各种故障的可能性，并提供了一些自愈机制以提高系统的容错性，但有些情况还是可能导致较长时间不可用，拉低服务可用性的指标。本文将结合生产实践经验，为大家提供一些最佳实践来最大化的提高服务可用性。
+如何避免单点故障？ K8S 的设计就是假设节点是不可靠的。节点越多，发生软硬件故障导致节点不可用的几率就越高，所以我们通常需要给服务部署多个副本，根据实际情况调整 replicas 的值，如果值为 1 就必然存在单点故障，如果大于 1 但所有副本都调度到同一个节点了，那还是有单点故障，有时候还要考虑到灾难，比如整个机房不可用。
+所以我们不仅要有合理的副本数量，还需要让这些不同副本调度到不同的拓扑域(节点、可用区)，打散调度以避免单点故障，这个可以利用 Pod 反亲和性来做到，反亲和主要分强反亲和与弱反亲和两种。
+先来看个强反亲和的示例，将 dns 服务强制打散调度到不同节点上:">
+
+  
+  <link rel="alternate" hreflang="zh-Hans" href="/post/202006/kubernetes-app-deployment-best-practice-2/">
+
+  
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  
+
+  
+  
+  
+  <meta name="theme-color" content="#1565c0">
+  
+
+  
+  
+
+  
+  
+  
+  
+    
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha256-FMvZuGapsJLjouA6k7Eo2lusoAX9i0ShlWFG6qt7SLc=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous" media="print" onload="this.media='all'">
+
+    
+    
+    
+      
+    
+    
+      
+      
+        
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/styles/github.min.css" crossorigin="anonymous" title="hl-light" media="print" onload="this.media='all'">
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/styles/dracula.min.css" crossorigin="anonymous" title="hl-dark" media="print" onload="this.media='all'" disabled>
+        
+      
+    
+
+    
+
+    
+
+    
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.2.2/lazysizes.min.js" integrity="sha512-TmDwFLhg3UA4ZG0Eb4MIyT1O1Mb+Oww5kFG0uHqXsdbyZz9DcvYQhKpGgNkamAI6h2lGGZq2X8ftOJvF/XjTUg==" crossorigin="anonymous" async></script>
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+        
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+
+  
+
+  
+  
+  
+    
+      
+      <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Roboto+Mono&family=Roboto:wght@400;700&display=swap">
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Roboto+Mono&family=Roboto:wght@400;700&display=swap" media="print" onload="this.media='all'">
+    
+  
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="/css/wowchemy.a2dda909fb8228e17412d06b4423e0a6.css">
+
+  
+
+
+
+
+  
+
+  
+
+
+  
+  
+
+  
+
+  
+  <link rel="manifest" href="/index.webmanifest">
+  
+
+  <link rel="icon" type="image/png" href="/images/icon_hua2ec155b4296a9c9791d015323e16eb5_11927_32x32_fill_lanczos_center_2.png">
+  <link rel="apple-touch-icon" type="image/png" href="/images/icon_hua2ec155b4296a9c9791d015323e16eb5_11927_192x192_fill_lanczos_center_2.png">
+
+  <link rel="canonical" href="/post/202006/kubernetes-app-deployment-best-practice-2/">
+
+  
+  
+  
+  
+  
+  
+  
+    
+    
+  
+  
+  <meta property="twitter:card" content="summary">
+  
+  <meta property="twitter:site" content="@imrocchan">
+  <meta property="twitter:creator" content="@imrocchan">
+  
+  <meta property="og:site_name" content="roc的个人网站">
+  <meta property="og:url" content="/post/202006/kubernetes-app-deployment-best-practice-2/">
+  <meta property="og:title" content="Kubernetes 服务部署最佳实践(二) 如何提高服务可用性 | roc的个人网站">
+  <meta property="og:description" content="目录  引言 如何避免单点故障？ 如何避免节点维护或升级时导致服务不可用？ 如何让服务进行平滑更新？ 健康检查怎么配才好？ 参考资料    引言 上一篇 文章我们围绕如何合理利用资源的主题做了一些最佳实践的分享，这一次我们就如何提高服务可用性的主题来展开探讨。
+怎样提高我们部署服务的可用性呢？K8S 设计本身就考虑到了各种故障的可能性，并提供了一些自愈机制以提高系统的容错性，但有些情况还是可能导致较长时间不可用，拉低服务可用性的指标。本文将结合生产实践经验，为大家提供一些最佳实践来最大化的提高服务可用性。
+如何避免单点故障？ K8S 的设计就是假设节点是不可靠的。节点越多，发生软硬件故障导致节点不可用的几率就越高，所以我们通常需要给服务部署多个副本，根据实际情况调整 replicas 的值，如果值为 1 就必然存在单点故障，如果大于 1 但所有副本都调度到同一个节点了，那还是有单点故障，有时候还要考虑到灾难，比如整个机房不可用。
+所以我们不仅要有合理的副本数量，还需要让这些不同副本调度到不同的拓扑域(节点、可用区)，打散调度以避免单点故障，这个可以利用 Pod 反亲和性来做到，反亲和主要分强反亲和与弱反亲和两种。
+先来看个强反亲和的示例，将 dns 服务强制打散调度到不同节点上:"><meta property="og:image" content="/images/icon_hua2ec155b4296a9c9791d015323e16eb5_11927_512x512_fill_lanczos_center_2.png">
+  <meta property="twitter:image" content="/images/icon_hua2ec155b4296a9c9791d015323e16eb5_11927_512x512_fill_lanczos_center_2.png"><meta property="og:locale" content="zh-Hans">
+  
+    
+      <meta property="article:published_time" content="2020-06-19T00:00:00&#43;00:00">
+    
+    <meta property="article:modified_time" content="2020-06-19T00:00:00&#43;00:00">
+  
+
+  
+
+
+    
+
+
+
+
+
+
+  
+
+
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "/post/202006/kubernetes-app-deployment-best-practice-2/"
+  },
+  "headline": "Kubernetes 服务部署最佳实践(二) 如何提高服务可用性",
+  
+  "datePublished": "2020-06-19T00:00:00Z",
+  "dateModified": "2020-06-19T00:00:00Z",
+  
+  "author": {
+    "@type": "Person",
+    "name": "roc"
+  },
+  
+  "publisher": {
+    "@type": "Organization",
+    "name": "roc的个人网站",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "/images/icon_hua2ec155b4296a9c9791d015323e16eb5_11927_192x192_fill_lanczos_center_2.png"
+    }
+  },
+  "description": "目录  引言 如何避免单点故障？ 如何避免节点维护或升级时导致服务不可用？ 如何让服务进行平滑更新？ 健康检查怎么配才好？ 参考资料    引言 上一篇 文章我们围绕如何合理利用资源的主题做了一些最佳实践的分享，这一次我们就如何提高服务可用性的主题来展开探讨。\n怎样提高我们部署服务的可用性呢？K8S 设计本身就考虑到了各种故障的可能性，并提供了一些自愈机制以提高系统的容错性，但有些情况还是可能导致较长时间不可用，拉低服务可用性的指标。本文将结合生产实践经验，为大家提供一些最佳实践来最大化的提高服务可用性。\n如何避免单点故障？ K8S 的设计就是假设节点是不可靠的。节点越多，发生软硬件故障导致节点不可用的几率就越高，所以我们通常需要给服务部署多个副本，根据实际情况调整 replicas 的值，如果值为 1 就必然存在单点故障，如果大于 1 但所有副本都调度到同一个节点了，那还是有单点故障，有时候还要考虑到灾难，比如整个机房不可用。\n所以我们不仅要有合理的副本数量，还需要让这些不同副本调度到不同的拓扑域(节点、可用区)，打散调度以避免单点故障，这个可以利用 Pod 反亲和性来做到，反亲和主要分强反亲和与弱反亲和两种。\n先来看个强反亲和的示例，将 dns 服务强制打散调度到不同节点上:"
+}
+</script>
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+
+  <title>Kubernetes 服务部署最佳实践(二) 如何提高服务可用性 | roc的个人网站</title>
+
+</head>
+
+
+<body id="top" data-spy="scroll" data-offset="70" data-target="#TableOfContents" class="page-wrapper  ">
+
+  
+  
+  
+  
+  
+  
+  
+  
+  <script src="/js/wowchemy-init.min.7264cf0eba3b66951b36da7d2cecf9c5.js"></script>
+
+  
+
+<aside class="search-modal" id="search">
+  <div class="container">
+    <section class="search-header">
+
+      <div class="row no-gutters justify-content-between mb-3">
+        <div class="col-6">
+          <h1>搜索</h1>
+        </div>
+        <div class="col-6 col-search-close">
+          <a class="js-search" href="#" aria-label="Close"><i class="fas fa-times-circle text-muted" aria-hidden="true"></i></a>
+        </div>
+      </div>
+
+      <div id="search-box">
+        
+        <input name="q" id="search-query" placeholder="搜索..." autocapitalize="off"
+        autocomplete="off" autocorrect="off" spellcheck="false" type="search" class="form-control"
+        aria-label="搜索...">
+        
+      </div>
+
+      
+      
+
+      
+
+    </section>
+    <section class="section-search-results">
+
+      <div id="search-hits">
+        
+      </div>
+
+    </section>
+  </div>
+</aside>
+
+
+
+  <div class="page-header">
+    
+
+
+
+
+
+
+
+
+
+
+
+
+<nav class="navbar navbar-expand-lg navbar-light compensate-for-scrollbar" id="navbar-main">
+  <div class="container-xl">
+
+    
+
+    
+    <button type="button" class="navbar-toggler" data-toggle="collapse"
+            data-target="#navbar-content" aria-controls="navbar" aria-expanded="false" aria-label="切换导航">
+    <span><i class="fas fa-bars"></i></span>
+    </button>
+    
+
+    
+
+    
+    
+    <div class="navbar-collapse main-menu-item collapse justify-content-center" id="navbar-content">
+
+      
+      <ul class="navbar-nav d-md-inline-flex">
+        
+
+        
+
+        
+        
+        
+
+        
+
+        
+        
+        
+        
+
+        
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/"><span>主页</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+
+        
+        
+        
+        
+
+        
+          
+            
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/post/"><span>技术博客</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+
+        
+        
+        
+        
+
+        
+          
+            
+            
+          
+          
+            
+            
+            
+              
+            
+            
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#notes"><span>学习笔记</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+
+        
+        
+        
+        
+
+        
+          
+            
+            
+          
+          
+            
+            
+            
+              
+            
+            
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#tags"><span>内容标签</span></a>
+        </li>
+
+        
+        
+
+      
+
+        
+      </ul>
+    </div>
+
+    <ul class="nav-icons navbar-nav flex-row ml-auto d-flex pl-md-2">
+
+      
+      
+        
+      
+
+      
+      
+      <li class="nav-item">
+        <a class="nav-link js-search" href="#" aria-label="搜索"><i class="fas fa-search" aria-hidden="true"></i></a>
+      </li>
+      
+
+      
+      
+      <li class="nav-item dropdown theme-dropdown">
+        <a href="#" class="nav-link" data-toggle="dropdown" aria-haspopup="true" aria-label="Display preferences">
+          <i class="fas fa-moon" aria-hidden="true"></i>
+        </a>
+        <div class="dropdown-menu">
+          <a href="#" class="dropdown-item js-set-theme-light">
+            <span>浅色</span>
+          </a>
+          <a href="#" class="dropdown-item js-set-theme-dark">
+            <span>深色</span>
+          </a>
+          <a href="#" class="dropdown-item js-set-theme-auto">
+            <span>自动</span>
+          </a>
+        </div>
+      </li>
+      
+
+      
+
+    </ul>
+
+  </div>
+</nav>
+
+
+  </div>
+
+  <div class="page-body">
+    <article class="article">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+  
+  
+<div class="article-container pt-3">
+  <h1>Kubernetes 服务部署最佳实践(二) 如何提高服务可用性</h1>
+
+  
+
+  
+    
+
+
+<div class="article-metadata">
+
+  
+  
+  
+  
+  <div>
+    
+
+  <span class="author-highlighted">
+      roc</span>
+  </div>
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    Jun 19, 2020
+  </span>
+  
+
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    2 分钟阅读时长
+  </span>
+  
+
+  
+  
+  
+  
+  
+
+  
+  
+
+</div>
+
+    
+
+
+
+
+
+  
+</div>
+
+
+
+  <div class="article-container">
+
+    <div class="article-style">
+      <details class="toc-inpage d-print-none  " open>
+  <summary class="font-weight-bold">目录</summary>
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#引言">引言</a></li>
+    <li><a href="#如何避免单点故障">如何避免单点故障？</a></li>
+    <li><a href="#如何避免节点维护或升级时导致服务不可用">如何避免节点维护或升级时导致服务不可用？</a></li>
+    <li><a href="#如何让服务进行平滑更新">如何让服务进行平滑更新？</a></li>
+    <li><a href="#健康检查怎么配才好">健康检查怎么配才好？</a></li>
+    <li><a href="#参考资料">参考资料</a></li>
+  </ul>
+</nav>
+</details>
+<h2 id="引言">引言</h2>
+<p><a href="https://imroc.io/posts/kubernetes-app-deployment-best-practice-1/" target="_blank" rel="noopener">上一篇</a> 文章我们围绕如何合理利用资源的主题做了一些最佳实践的分享，这一次我们就如何提高服务可用性的主题来展开探讨。</p>
+<p>怎样提高我们部署服务的可用性呢？K8S 设计本身就考虑到了各种故障的可能性，并提供了一些自愈机制以提高系统的容错性，但有些情况还是可能导致较长时间不可用，拉低服务可用性的指标。本文将结合生产实践经验，为大家提供一些最佳实践来最大化的提高服务可用性。</p>
+<h2 id="如何避免单点故障">如何避免单点故障？</h2>
+<p>K8S 的设计就是假设节点是不可靠的。节点越多，发生软硬件故障导致节点不可用的几率就越高，所以我们通常需要给服务部署多个副本，根据实际情况调整 replicas 的值，如果值为 1 就必然存在单点故障，如果大于 1 但所有副本都调度到同一个节点了，那还是有单点故障，有时候还要考虑到灾难，比如整个机房不可用。</p>
+<p>所以我们不仅要有合理的副本数量，还需要让这些不同副本调度到不同的拓扑域(节点、可用区)，打散调度以避免单点故障，这个可以利用 Pod 反亲和性来做到，反亲和主要分强反亲和与弱反亲和两种。</p>
+<p>先来看个强反亲和的示例，将 dns 服务强制打散调度到不同节点上:</p>
+<pre><code class="language-yaml">affinity:
+ podAntiAffinity:
+   requiredDuringSchedulingIgnoredDuringExecution:
+   - labelSelector:
+       matchExpressions:
+       - key: k8s-app
+         operator: In
+         values:
+         - kube-dns
+     topologyKey: kubernetes.io/hostname
+</code></pre>
+<ul>
+<li><code>labelSelector.matchExpressions</code> 写该服务对应 pod 中 labels 的 key 与 value，因为 Pod 反亲和性是通过判断 replicas 的 pod label 来实现的。</li>
+<li><code>topologyKey</code> 指定反亲和的拓扑域，即节点 label 的 key。这里用的 <code>kubernetes.io/hostname</code> 表示避免 pod 调度到同一节点，如果你有更高的要求，比如避免调度到同一个可用区，实现异地多活，可以用 <code>failure-domain.beta.kubernetes.io/zone</code>。通常不会去避免调度到同一个地域，因为一般同一个集群的节点都在一个地域，如果跨地域，即使用专线时延也会很大，所以 <code>topologyKey</code> 一般不至于用 <code>failure-domain.beta.kubernetes.io/region</code>。</li>
+<li><code>requiredDuringSchedulingIgnoredDuringExecution</code> 调度时必须满足该反亲和性条件，如果没有节点满足条件就不调度到任何节点 (Pending)。</li>
+</ul>
+<p>如果不用这种硬性条件可以使用 <code>preferredDuringSchedulingIgnoredDuringExecution</code> 来指示调度器尽量满足反亲和性条件，即弱反亲和性，如果实在没有满足条件的，只要节点有足够资源，还是可以让其调度到某个节点，至少不会 Pending。</p>
+<p>我们再来看个弱反亲和的示例:</p>
+<pre><code class="language-yaml">affinity:
+  podAntiAffinity:
+    preferredDuringSchedulingIgnoredDuringExecution:
+    - weight: 100
+      podAffinityTerm:
+        labelSelector:
+          matchExpressions:
+          - key: k8s-app
+            operator: In
+            values:
+            - kube-dns
+      topologyKey: kubernetes.io/hostname
+</code></pre>
+<p>注意到了吗？相比强反亲和有些不同哦，多了一个 <code>weight</code>，表示此匹配条件的权重，而匹配条件被挪到了 <code>podAffinityTerm</code> 下面。</p>
+<h2 id="如何避免节点维护或升级时导致服务不可用">如何避免节点维护或升级时导致服务不可用？</h2>
+<p>有时候我们需要对节点进行维护或进行版本升级等操作，操作之前需要对节点执行驱逐 (kubectl drain)，驱逐时会将节点上的 Pod 进行删除，以便它们漂移到其它节点上，当驱逐完毕之后，节点上的 Pod 都漂移到其它节点了，这时我们就可以放心的对节点进行操作了。</p>
+<p>有一个问题就是，驱逐节点是一种有损操作，驱逐的原理:</p>
+<ol>
+<li>封锁节点 (设为不可调度，避免新的 Pod 调度上来)。</li>
+<li>将该节点上的 Pod 删除。</li>
+<li>ReplicaSet 控制器检测到 Pod 减少，会重新创建一个 Pod，调度到新的节点上。</li>
+</ol>
+<p>这个过程是先删除，再创建，并非是滚动更新，因此更新过程中，如果一个服务的所有副本都在被驱逐的节点上，则可能导致该服务不可用。</p>
+<p>我们再来下什么情况下驱逐会导致服务不可用:</p>
+<ol>
+<li>服务存在单点故障，所有副本都在同一个节点，驱逐该节点时，就可能造成服务不可用。</li>
+<li>服务没有单点故障，但刚好这个服务涉及的 Pod 全部都部署在这一批被驱逐的节点上，所以这个服务的所有 Pod 同时被删，也会造成服务不可用。</li>
+<li>服务没有单点故障，也没有全部部署到这一批被驱逐的节点上，但驱逐时造成这个服务的一部分 Pod 被删，短时间内服务的处理能力下降导致服务过载，部分请求无法处理，也就降低了服务可用性。</li>
+</ol>
+<p>针对第一点，我们可以使用前面讲的反亲和性来避免单点故障。</p>
+<p>针对第二和第三点，我们可以通过配置 PDB (PodDisruptionBudget) 来避免所有副本同时被删除，驱逐时 K8S 会 &ldquo;观察&rdquo; nginx 的当前可用与期望的副本数，根据定义的 PDB 来控制 Pod 删除速率，达到阀值时会等待 Pod 在其它节点上启动并就绪后再继续删除，以避免同时删除太多的 Pod 导致服务不可用或可用性降低，下面给出两个示例。</p>
+<p>示例一 (保证驱逐时 nginx 至少有 90% 的副本可用):</p>
+<pre><code class="language-yaml">apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  name: zk-pdb
+spec:
+  minAvailable: 90%
+  selector:
+    matchLabels:
+      app: zookeeper
+</code></pre>
+<p>示例二 (保证驱逐时 zookeeper 最多有一个副本不可用，相当于逐个删除并等待在其它节点完成重建):</p>
+<pre><code class="language-yaml">apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  name: zk-pdb
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: zookeeper
+</code></pre>
+<h2 id="如何让服务进行平滑更新">如何让服务进行平滑更新？</h2>
+<p>解决了服务单点故障和驱逐节点时导致的可用性降低问题后，我们还需要考虑一种可能导致可用性降低的场景，那就是滚动更新。为什么服务正常滚动更新也可能影响服务的可用性呢？别急，下面我来解释下原因。</p>
+<p>假如集群内存在服务间调用:</p>
+<p><img src="https://imroc.io/assets/blog/tke-best-practices-and-troubleshooting/rolling-update-interupt-connection-1.jpg" alt=""></p>
+<p>当 server 端发生滚动更新时:</p>
+<p><img src="https://imroc.io/assets/blog/tke-best-practices-and-troubleshooting/rolling-update-interupt-connection-4.jpg" alt=""></p>
+<p>发生两种尴尬的情况:</p>
+<ol>
+<li>旧的副本很快销毁，而 client 所在节点 kube-proxy 还没更新完转发规则，仍然将新连接调度给旧副本，造成连接异常，可能会报 &ldquo;connection refused&rdquo; (进程停止过程中，不再接受新请求) 或 &ldquo;no route to host&rdquo; (容器已经完全销毁，网卡和 IP 已不存在)。</li>
+<li>新副本启动，client 所在节点 kube-proxy 很快 watch 到了新副本，更新了转发规则，并将新连接调度给新副本，但容器内的进程启动很慢 (比如 Tomcat 这种 java 进程)，还在启动过程中，端口还未监听，无法处理连接，也造成连接异常，通常会报 &ldquo;connection refused&rdquo; 的错误。</li>
+</ol>
+<p>针对第一种情况，可以给 container 加 preStop，让 Pod 真正销毁前先 sleep 等待一段时间，等待 client 所在节点 kube-proxy 更新转发规则，然后再真正去销毁容器。这样能保证在 Pod Terminating 后还能继续正常运行一段时间，这段时间如果因为 client 侧的转发规则更新不及时导致还有新请求转发过来，Pod 还是可以正常处理请求，避免了连接异常的发生。听起来感觉有点不优雅，但实际效果还是比较好的，分布式的世界没有银弹，我们只能尽量在当前设计现状下找到并实践能够解决问题的最优解。</p>
+<p>针对第二种情况，可以给 container 加 ReadinessProbe (就绪检查)，让容器内进程真正启动完成后才更新 Service 的 Endpoint，然后 client 所在节点 kube-proxy 再更新转发规则，让流量进来。这样能够保证等 Pod 完全就绪了才会被转发流量，也就避免了链接异常的发生。</p>
+<p>最佳实践 yaml 示例:</p>
+<pre><code class="language-yaml">        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 80
+            httpHeaders:
+            - name: X-Custom-Header
+              value: Awesome
+          initialDelaySeconds: 10
+          timeoutSeconds: 1
+        lifecycle:
+          preStop:
+            exec:
+              command: [&quot;/bin/bash&quot;, &quot;-c&quot;, &quot;sleep 10&quot;]
+</code></pre>
+<h2 id="健康检查怎么配才好">健康检查怎么配才好？</h2>
+<p>我们都知道，给 Pod 配置健康检查也是提高服务可用性的一种手段，配置 ReadinessProbe (就绪检查) 可以避免将流量转发给还没启动完全或出现异常的 Pod；配置 LivenessProbe (存活检查) 可以让存在 bug 导致死锁或 hang 住的应用重启来恢复。但是，如果配置配置不好，也可能引发其它问题，这里根据一些踩坑经验总结了一些指导性的建议：</p>
+<ul>
+<li>不要轻易使用 LivenessProbe，除非你了解后果并且明白为什么你需要它，参考 <a href="https://srcco.de/posts/kubernetes-liveness-probes-are-dangerous.html" target="_blank" rel="noopener">Liveness Probes are Dangerous</a></li>
+<li>如果使用 LivenessProbe，不要和 ReadinessProbe 设置成一样 (failureThreshold 更大)</li>
+<li>探测逻辑里不要有外部依赖 (db, 其它 pod 等)，避免抖动导致级联故障</li>
+<li>业务程序应尽量暴露 HTTP 探测接口来适配健康检查，避免使用 TCP 探测，因为程序 hang 死时， TCP 探测仍然能通过 (TCP 的 SYN 包探测端口是否存活在内核态完成，应用层不感知)</li>
+</ul>
+<h2 id="参考资料">参考资料</h2>
+<ul>
+<li>Affinity and anti-affinity: <a href="https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#affinity-and-anti-affinity">https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#affinity-and-anti-affinity</a></li>
+<li>Specifying a Disruption Budget for your Application: <a href="https://kubernetes.io/docs/tasks/run-application/configure-pdb/">https://kubernetes.io/docs/tasks/run-application/configure-pdb/</a></li>
+<li>Liveness Probes are Dangerous: <a href="https://srcco.de/posts/kubernetes-liveness-probes-are-dangerous.html">https://srcco.de/posts/kubernetes-liveness-probes-are-dangerous.html</a></li>
+</ul>
+
+    </div>
+
+    
+
+
+
+
+
+
+<div class="article-tags">
+  
+  <a class="badge badge-light" href="/tag/kubernetes/">kubernetes</a>
+  
+</div>
+
+
+
+<div class="share-box" aria-hidden="true">
+  <ul class="share">
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://twitter.com/intent/tweet?url=/post/202006/kubernetes-app-deployment-best-practice-2/&amp;text=Kubernetes%20%e6%9c%8d%e5%8a%a1%e9%83%a8%e7%bd%b2%e6%9c%80%e4%bd%b3%e5%ae%9e%e8%b7%b5%28%e4%ba%8c%29%20%e5%a6%82%e4%bd%95%e6%8f%90%e9%ab%98%e6%9c%8d%e5%8a%a1%e5%8f%af%e7%94%a8%e6%80%a7" target="_blank" rel="noopener" class="share-btn-twitter">
+          <i class="fab fa-twitter"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://www.facebook.com/sharer.php?u=/post/202006/kubernetes-app-deployment-best-practice-2/&amp;t=Kubernetes%20%e6%9c%8d%e5%8a%a1%e9%83%a8%e7%bd%b2%e6%9c%80%e4%bd%b3%e5%ae%9e%e8%b7%b5%28%e4%ba%8c%29%20%e5%a6%82%e4%bd%95%e6%8f%90%e9%ab%98%e6%9c%8d%e5%8a%a1%e5%8f%af%e7%94%a8%e6%80%a7" target="_blank" rel="noopener" class="share-btn-facebook">
+          <i class="fab fa-facebook"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="mailto:?subject=Kubernetes%20%e6%9c%8d%e5%8a%a1%e9%83%a8%e7%bd%b2%e6%9c%80%e4%bd%b3%e5%ae%9e%e8%b7%b5%28%e4%ba%8c%29%20%e5%a6%82%e4%bd%95%e6%8f%90%e9%ab%98%e6%9c%8d%e5%8a%a1%e5%8f%af%e7%94%a8%e6%80%a7&amp;body=/post/202006/kubernetes-app-deployment-best-practice-2/" target="_blank" rel="noopener" class="share-btn-email">
+          <i class="fas fa-envelope"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://www.linkedin.com/shareArticle?url=/post/202006/kubernetes-app-deployment-best-practice-2/&amp;title=Kubernetes%20%e6%9c%8d%e5%8a%a1%e9%83%a8%e7%bd%b2%e6%9c%80%e4%bd%b3%e5%ae%9e%e8%b7%b5%28%e4%ba%8c%29%20%e5%a6%82%e4%bd%95%e6%8f%90%e9%ab%98%e6%9c%8d%e5%8a%a1%e5%8f%af%e7%94%a8%e6%80%a7" target="_blank" rel="noopener" class="share-btn-linkedin">
+          <i class="fab fa-linkedin-in"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="whatsapp://send?text=Kubernetes%20%e6%9c%8d%e5%8a%a1%e9%83%a8%e7%bd%b2%e6%9c%80%e4%bd%b3%e5%ae%9e%e8%b7%b5%28%e4%ba%8c%29%20%e5%a6%82%e4%bd%95%e6%8f%90%e9%ab%98%e6%9c%8d%e5%8a%a1%e5%8f%af%e7%94%a8%e6%80%a7%20/post/202006/kubernetes-app-deployment-best-practice-2/" target="_blank" rel="noopener" class="share-btn-whatsapp">
+          <i class="fab fa-whatsapp"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://service.weibo.com/share/share.php?url=/post/202006/kubernetes-app-deployment-best-practice-2/&amp;title=Kubernetes%20%e6%9c%8d%e5%8a%a1%e9%83%a8%e7%bd%b2%e6%9c%80%e4%bd%b3%e5%ae%9e%e8%b7%b5%28%e4%ba%8c%29%20%e5%a6%82%e4%bd%95%e6%8f%90%e9%ab%98%e6%9c%8d%e5%8a%a1%e5%8f%af%e7%94%a8%e6%80%a7" target="_blank" rel="noopener" class="share-btn-weibo">
+          <i class="fab fa-weibo"></i>
+        </a>
+      </li>
+    
+  </ul>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+
+
+
+  
+  
+  
+    
+  
+  
+  
+  <div class="media author-card content-widget-hr">
+    
+      
+      <a href="/"><img class="avatar mr-3 avatar-circle" src="/author/roc/avatar_hu49c03114a9ce8ad2bc0bd62c0ddb3f2a_64404_270x270_fill_q75_lanczos_center.jpg" alt="roc"></a>
+    
+
+    <div class="media-body">
+      <h5 class="card-title"><a href="/">roc</a></h5>
+      <h6 class="card-subtitle">腾讯云高级工程师</h6>
+      <p class="card-text">授人以鱼不如授人以渔</p>
+      <ul class="network-icon" aria-hidden="true">
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="https://github.com/imroc" target="_blank" rel="noopener">
+        <i class="fab fa-github"></i>
+      </a>
+    </li>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+    <li>
+      <a href="mailto:roc@imroc.io" >
+        <i class="fas fa-envelope"></i>
+      </a>
+    </li>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="https://twitter.com/imrocchan" target="_blank" rel="noopener">
+        <i class="fab fa-twitter"></i>
+      </a>
+    </li>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="https://www.linkedin.com/in/%E9%B9%8F-%E9%99%88-b51646113" target="_blank" rel="noopener">
+        <i class="fab fa-linkedin"></i>
+      </a>
+    </li>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="https://www.youtube.com/channel/UCEtWQhtiNi1vvDmoC6wydNQ" target="_blank" rel="noopener">
+        <i class="fab fa-youtube"></i>
+      </a>
+    </li>
+  
+</ul>
+
+    </div>
+  </div>
+
+
+  
+
+
+
+
+
+
+
+
+
+
+<div class="article-widget">
+  
+<div class="post-nav">
+  
+  
+  
+  <div class="post-nav-item">
+    <div class="meta-nav">下一页</div>
+    <a href="/post/202008/nginx-ingress-on-tke/" rel="next">Nginx Ingress on TKE 部署最佳实践</a>
+  </div>
+  
+  
+  
+  <div class="post-nav-item">
+    <div class="meta-nav">上一页</div>
+    <a href="/post/202006/kubernetes-app-deployment-best-practice-1/" rel="prev">Kubernetes 服务部署最佳实践(一) 如何合理利用资源</a>
+  </div>
+  
+</div>
+
+</div>
+
+
+
+
+
+  
+  
+  <div class="article-widget content-widget-hr">
+    <h3>相关</h3>
+    <ul>
+      
+      <li><a href="/post/202011/build-cloud-native-large-scale-distributed-monitoring-system-4/">打造云原生大型分布式监控系统(四): Kvass&#43;Thanos 监控超大规模容器集群</a></li>
+      
+      <li><a href="/post/202009/nginx-ingress-high-concurrency/">Nginx Ingress 高并发实践</a></li>
+      
+      <li><a href="/post/202008/nginx-ingress-on-tke/">Nginx Ingress on TKE 部署最佳实践</a></li>
+      
+      <li><a href="/post/202006/kubernetes-app-deployment-best-practice-1/">Kubernetes 服务部署最佳实践(一) 如何合理利用资源</a></li>
+      
+      <li><a href="/post/202004/build-cloud-native-large-scale-distributed-monitoring-system-3/">打造云原生大型分布式监控系统(三): Thanos 部署与实践</a></li>
+      
+    </ul>
+  </div>
+  
+
+
+
+
+
+  </div>
+</article>
+  </div>
+
+  <div class="page-footer">
+    
+    
+    <div class="container">
+      <footer class="site-footer">
+  
+
+  <p class="powered-by">
+    roc © 2021
+  </p>
+
+  
+  
+
+
+
+
+
+
+  <p class="powered-by">
+    
+    
+    
+    Published with
+    <a href="https://wowchemy.com/?utm_campaign=poweredby" target="_blank" rel="noopener">Wowchemy</a>  —
+    the free, <a href="https://github.com/wowchemy/wowchemy-hugo-modules" target="_blank" rel="noopener">
+    open source</a> website builder that empowers creators.
+    
+  </p>
+</footer>
+
+    </div>
+    
+  </div>
+
+  
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">引用</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <pre><code class="tex hljs"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-outline-primary my-1 js-copy-cite" href="#" target="_blank">
+          <i class="fas fa-copy"></i> 复制
+        </a>
+        <a class="btn btn-outline-primary my-1 js-download-cite" href="#" target="_blank">
+          <i class="fas fa-download"></i> 下载
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+      
+
+    
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+
+      
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js" integrity="sha256-lqvxZrPLtfffUl2G/e7szqSvPBILGbwmsGE1MKlOi0Q=" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js" integrity="sha256-CBrpuqrMhXwcLLUd5tvQ4euBHCdh7wGlDfNz8vbu/iI=" crossorigin="anonymous"></script>
+      
+
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/instant.page/5.1.0/instantpage.min.js" integrity="sha512-1+qUtKoh9XZW7j+6LhRMAyOrgSQKenQ4mluTR+cvxXjP1Z54RxZuzstR/H9kgPXQsVB8IW7DMDFUJpzLjvhGSQ==" crossorigin="anonymous"></script>
+
+      
+
+      
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/highlight.min.js" integrity="sha512-TDKKr+IvoqZnPzc3l35hdjpHD0m+b2EC2SrLEgKDRWpxf2rFCxemkgvJ5kfU48ip+Y+m2XVKyOCD85ybtlZDmw==" crossorigin="anonymous"></script>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/languages/r.min.js"></script>
+        
+      
+
+    
+
+    
+    
+
+    
+    
+
+    
+    
+    <script id="search-hit-fuse-template" type="text/x-template">
+      <div class="search-hit" id="summary-{{key}}">
+        <div class="search-hit-content">
+          <div class="search-hit-name">
+            <a href="{{relpermalink}}">{{title}}</a>
+            <div class="article-metadata search-hit-type">{{type}}</div>
+            <p class="search-hit-description">{{snippet}}</p>
+          </div>
+        </div>
+      </div>
+    </script>
+    
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.1/fuse.min.js" integrity="sha256-VzgmKYmhsGNNN4Ph1kMW+BjoYJM2jV5i4IlFoeZA9XI=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
+    
+
+    
+    
+    
+
+    
+    
+    
+
+    
+    
+
+    
+    
+
+    
+    
+      
+      
+      
+      
+      
+      
+      
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      
+      
+    
+    
+    <script src="/zh/js/wowchemy.min.64fd16cc68b6a5f25e0156dfff88edff.js"></script>
+
+    
+
+
+
+
+
+
+</body>
+</html>

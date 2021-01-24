@@ -1,35 +1,45 @@
-<!DOCTYPE html>
-<html lang="zh">
-  <head>
-  <meta charset="utf-8" />
+<!DOCTYPE html><html lang="zh-Hans" >
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  
+  
+  
+  <meta name="generator" content="Wowchemy 5.0.0-beta.1 for Hugo">
+  
 
-  <title> roc - roc的博客|Cloud Native|Kubernetes|Go|Golang|Service Mesh</title>
-  <meta name="description" content="roc的博客|Cloud Native|Kubernetes|Go|Golang|Service Mesh" />
-  <meta property="og:title" content="roc" />
-  <meta name="twitter:title" content="roc" />
-  <meta name="author" content="{Description { .Site.Author.name }}"/>
-  <link href='https://imroc.io/favicon.png' rel='icon' type='image/x-icon'/>
-  <meta property="og:image" content="https://res.cloudinary.com/imroc/image/upload/v1521031841/avatar.png" />
-  <meta name="twitter:image" content="https://res.cloudinary.com/imroc/image/upload/v1521031841/avatar.png" />
-  <meta name="twitter:card" content="summary" />
-  <meta name="twitter:site" content="@imrocchan" />
-  <meta name="twitter:creator" content="@imrocchan" />
-  <meta property="og:url" content="https://imroc.io/" />
-  <meta property="og:type" content="website" />
-  <meta property="og:site_name" content="roc" />
+  
 
-  <meta name="generator" content="Hugo 0.65.3" />
-  <link rel="canonical" href="https://imroc.io/" />
-  <link rel="alternate" href="https://imroc.io/index.xml" type="application/rss+xml" title="roc"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css"
-    integrity="sha384-9eLZqc9ds8eNjO3TmqPeYcDj8n+Qfa4nuSiGYa6DjLNcv9BtN69ZIulL9+8CqC9Y" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/5.5.0/css/fontawesome.min.css"
-    integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://cdn.bootcss.com/twitter-bootstrap/3.3.7/css/bootstrap.min.css"
-    integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
-  <link rel="stylesheet"
-    href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" /><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+  
+  
+
+  
+  
+  
+  
+  
+    
+    
+    
+  
+  
+
+  <meta name="author" content="roc">
+
+  
+  
+  
+    
+  
+  <meta name="description" content="云原生 | 容器 | Kubernetes | Service Mesh | Istio">
+
+  
+  <link rel="alternate" hreflang="en" href="/en/">
+  
+  <link rel="alternate" hreflang="zh-Hans" href="/">
 
   
 
@@ -38,834 +48,2091 @@
 
 
 
-<link rel="stylesheet" href='/css/bundle.min.8fad4c9e81931afed0cc9eee450df2ae0e60d1129a4cd7ee011629c97c6394e9.css' integrity='sha256-j61MnoGTGv7QzJ7uRQ3yrg5g0RKaTNfuARYpyXxjlOk='><script>
-var _hmt = _hmt || [];
-(function() {
-  var hm = document.createElement("script");
-  hm.src = "https://hm.baidu.com/hm.js?05e1e8b7484a08c51cd0953664168cd7";
-  var s = document.getElementsByTagName("script")[0];
-  s.parentNode.insertBefore(hm, s);
-})();
+
+  
+
+
+
+
+  
+  
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  
+
+  
+  
+  
+  <meta name="theme-color" content="#1565c0">
+  
+
+  
+  
+
+  
+  
+  
+  
+    
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha256-FMvZuGapsJLjouA6k7Eo2lusoAX9i0ShlWFG6qt7SLc=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous" media="print" onload="this.media='all'">
+
+    
+    
+    
+      
+    
+    
+      
+      
+        
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/styles/github.min.css" crossorigin="anonymous" title="hl-light" media="print" onload="this.media='all'">
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/styles/dracula.min.css" crossorigin="anonymous" title="hl-dark" media="print" onload="this.media='all'" disabled>
+        
+      
+    
+
+    
+
+    
+
+    
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.2.2/lazysizes.min.js" integrity="sha512-TmDwFLhg3UA4ZG0Eb4MIyT1O1Mb+Oww5kFG0uHqXsdbyZz9DcvYQhKpGgNkamAI6h2lGGZq2X8ftOJvF/XjTUg==" crossorigin="anonymous" async></script>
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+        
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+
+  
+
+  
+  
+  
+    
+      
+      <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Roboto+Mono&family=Roboto:wght@400;700&display=swap">
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Roboto+Mono&family=Roboto:wght@400;700&display=swap" media="print" onload="this.media='all'">
+    
+  
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="/css/wowchemy.a2dda909fb8228e17412d06b4423e0a6.css">
+
+  
+
+
+
+
+  
+
+  
+
+
+  
+  
+
+  
+  <link rel="alternate" href="/index.xml" type="application/rss+xml" title="roc的个人网站">
+  
+
+  
+  <link rel="manifest" href="/index.webmanifest">
+  
+
+  <link rel="icon" type="image/png" href="/images/icon_hua2ec155b4296a9c9791d015323e16eb5_11927_32x32_fill_lanczos_center_2.png">
+  <link rel="apple-touch-icon" type="image/png" href="/images/icon_hua2ec155b4296a9c9791d015323e16eb5_11927_192x192_fill_lanczos_center_2.png">
+
+  <link rel="canonical" href="/">
+
+  
+  
+  
+  
+  
+  
+  
+    
+    
+  
+  
+  <meta property="twitter:card" content="summary">
+  
+  <meta property="twitter:site" content="@imrocchan">
+  <meta property="twitter:creator" content="@imrocchan">
+  
+  <meta property="og:site_name" content="roc的个人网站">
+  <meta property="og:url" content="/">
+  <meta property="og:title" content="roc的个人网站">
+  <meta property="og:description" content="云原生 | 容器 | Kubernetes | Service Mesh | Istio"><meta property="og:image" content="/images/icon_hua2ec155b4296a9c9791d015323e16eb5_11927_512x512_fill_lanczos_center_2.png">
+  <meta property="twitter:image" content="/images/icon_hua2ec155b4296a9c9791d015323e16eb5_11927_512x512_fill_lanczos_center_2.png"><meta property="og:locale" content="zh-Hans">
+  
+    <meta property="og:updated_time" content="2020-11-25T00:00:00&#43;00:00">
+  
+
+  
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "/?q={search_term_string}",
+    "query-input": "required name=search_term_string"
+  },
+  "url": "/"
+}
 </script>
 
 
+  
+
+
+  
+
+
+  
+
+
+
+
+
+  <title>roc的个人网站</title>
+
 </head>
 
-  <body>
-    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+
+<body id="top" data-spy="scroll" data-offset="70" data-target="#TableOfContents" class="page-wrapper  ">
+
+  
+  
+  
+  
+  
+  
+  
+  
+  <script src="/js/wowchemy-init.min.7264cf0eba3b66951b36da7d2cecf9c5.js"></script>
+
+  
+
+<aside class="search-modal" id="search">
   <div class="container">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
-        <span class="sr-only">切换导航</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="https://imroc.io/">roc</a>
-    </div>
-    <div class="collapse navbar-collapse" id="main-navbar">
-      <ul class="nav navbar-nav navbar-right">
+    <section class="search-header">
+
+      <div class="row no-gutters justify-content-between mb-3">
+        <div class="col-6">
+          <h1>搜索</h1>
+        </div>
+        <div class="col-6 col-search-close">
+          <a class="js-search" href="#" aria-label="Close"><i class="fas fa-times-circle text-muted" aria-hidden="true"></i></a>
+        </div>
+      </div>
+
+      <div id="search-box">
         
-          
-            <li class="navlinks-container">
-              <a class="navlinks-parent" href="javascript:void(0)">分类</a>
-              <div class="navlinks-children">
-                
-                
-                  <a href="https://imroc.io/categories/kubernetes">kubernetes</a>
-                
-                
-                  <a href="https://imroc.io/categories/docker">docker</a>
-                
-                
-                  <a href="https://imroc.io/categories/golang">golang</a>
-                
-                
-                  <a href="https://imroc.io/categories/geek">geek</a>
-                
-                
-                  <a href="https://imroc.io/categories/istio">istio</a>
-                
-              </div>
-            </li>
-          
+        <input name="q" id="search-query" placeholder="搜索..." autocapitalize="off"
+        autocomplete="off" autocorrect="off" spellcheck="false" type="search" class="form-control"
+        aria-label="搜索...">
         
-          
-            <li class="navlinks-container">
-              <a class="navlinks-parent" href="javascript:void(0)">书籍</a>
-              <div class="navlinks-children">
-                
-                
-                  <a href="https://k8s.imroc.io">Kubernetes 实践指南</a>
-                
-              </div>
-            </li>
-          
+      </div>
+
+      
+      
+
+      
+
+    </section>
+    <section class="section-search-results">
+
+      <div id="search-hits">
+        
+      </div>
+
+    </section>
+  </div>
+</aside>
+
+
+
+  <div class="page-header">
+    
+
+
+
+
+
+
+
+
+
+
+
+
+<nav class="navbar navbar-expand-lg navbar-light compensate-for-scrollbar" id="navbar-main">
+  <div class="container-xl">
+
+    
+
+    
+    <button type="button" class="navbar-toggler" data-toggle="collapse"
+            data-target="#navbar-content" aria-controls="navbar" aria-expanded="false" aria-label="切换导航">
+    <span><i class="fas fa-bars"></i></span>
+    </button>
+    
+
+    
+
+    
+    
+    <div class="navbar-collapse main-menu-item collapse justify-content-center" id="navbar-content">
+
+      
+      <ul class="navbar-nav d-md-inline-flex">
+        
+
+        
+
+        
+        
+        
+
+        
+
+        
+        
+        
         
 
         
           
-            <li>
-              
-                
-              
-                
-                  <a href="/en" lang="en">English</a>
-                
-              
-            </li>
-          
         
 
-        
-        <li>
-          <a href="#modalSearch" data-toggle="modal" data-target="#modalSearch" style="outline: none;">
-            <span id="searchGlyph" class="glyphicon glyphicon-search"></span>
-          </a>
+        <li class="nav-item">
+          <a class="nav-link " href="/"><span>主页</span></a>
         </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+
+        
+        
+        
+        
+
+        
+          
+            
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/post/"><span>技术博客</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+
+        
+        
+        
+        
+
+        
+          
+            
+            
+          
+          
+            
+            
+            
+              
+            
+            
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#notes" data-target="#notes"><span>学习笔记</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+
+        
+        
+        
+        
+
+        
+          
+            
+            
+          
+          
+            
+            
+            
+              
+            
+            
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#tags" data-target="#tags"><span>内容标签</span></a>
+        </li>
+
+        
+        
+
+      
+
         
       </ul>
     </div>
-    <div class="avatar-container">
-      <div class="avatar-img-border">
+
+    <ul class="nav-icons navbar-nav flex-row ml-auto d-flex pl-md-2">
+
+      
+      
         
-          <a title="roc" href="https://imroc.io/">
-            <img class="avatar-img" src="https://res.cloudinary.com/imroc/image/upload/v1521031841/avatar.png" alt="roc" />
+      
+
+      
+      
+      <li class="nav-item">
+        <a class="nav-link js-search" href="#" aria-label="搜索"><i class="fas fa-search" aria-hidden="true"></i></a>
+      </li>
+      
+
+      
+      
+      <li class="nav-item dropdown theme-dropdown">
+        <a href="#" class="nav-link" data-toggle="dropdown" aria-haspopup="true" aria-label="Display preferences">
+          <i class="fas fa-moon" aria-hidden="true"></i>
+        </a>
+        <div class="dropdown-menu">
+          <a href="#" class="dropdown-item js-set-theme-light">
+            <span>浅色</span>
           </a>
-        
-      </div>
-    </div>
+          <a href="#" class="dropdown-item js-set-theme-dark">
+            <span>深色</span>
+          </a>
+          <a href="#" class="dropdown-item js-set-theme-auto">
+            <span>自动</span>
+          </a>
+        </div>
+      </li>
+      
+
+      
+      <li class="nav-item dropdown i18n-dropdown">
+        <a href="#" class="nav-link " data-toggle="dropdown"
+           aria-haspopup="true" aria-label="Languages">
+          <i class="fas fa-globe mr-1" aria-hidden="true"></i></a>
+        <div class="dropdown-menu">
+          <div class="dropdown-item dropdown-item-active">
+            <span>中文 (简体)</span>
+          </div>
+          
+          <a class="dropdown-item" href="/en/" data-target="/en/">
+            <span>English</span>
+          </a>
+          
+        </div>
+      </li>
+      
+
+    </ul>
+
   </div>
 </nav>
 
 
-  <div id="modalSearch" class="modal fade" role="dialog">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">搜索</h4>
-        </div>
-        <div class="modal-body">
-            
-<div class="aa-input-container" id="aa-input-container">
-    <input type="search" id="aa-search-input" class="aa-input-search" placeholder="Search for titles or URIs..."
-        name="search" autocomplete="off" />
-    <svg class="aa-input-icon" viewBox="654 -372 1664 1664">
-        <path
-            d="M1806,332c0-123.3-43.8-228.8-131.5-316.5C1586.8-72.2,1481.3-116,1358-116s-228.8,43.8-316.5,131.5  C953.8,103.2,910,208.7,910,332s43.8,228.8,131.5,316.5C1129.2,736.2,1234.7,780,1358,780s228.8-43.8,316.5-131.5  C1762.2,560.8,1806,455.3,1806,332z M2318,1164c0,34.7-12.7,64.7-38,90s-55.3,38-90,38c-36,0-66-12.7-90-38l-343-342  c-119.3,82.7-252.3,124-399,124c-95.3,0-186.5-18.5-273.5-55.5s-162-87-225-150s-113-138-150-225S654,427.3,654,332  s18.5-186.5,55.5-273.5s87-162,150-225s138-113,225-150S1262.7-372,1358-372s186.5,18.5,273.5,55.5s162,87,225,150s113,138,150,225  S2062,236.7,2062,332c0,146.7-41.3,279.7-124,399l343,343C2305.7,1098.7,2318,1128.7,2318,1164z" />
-    </svg>
+  </div>
+
+  <div class="page-body">
+    
+
+
+
+
+
+
+
+
+
+  
+<span class="js-widget-page d-none"></span>
+
+
+
+
+
+  
+  
+  
+  
+
+
+
+
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+  <section id="about" class="home-section wg-about  "  >
+   <div class="home-section-bg " ></div>
+    <div class="container">
+
+    
+
+      
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+<div class="row">
+  <div class="col-12 col-lg-4">
+    <div id="profile">
+
+      
+      
+      <img class="avatar avatar-circle" src="/author/roc/avatar_hu49c03114a9ce8ad2bc0bd62c0ddb3f2a_64404_270x270_fill_q75_lanczos_center.jpg" alt="roc">
+      
+
+      <div class="portrait-title">
+        <h2>roc</h2>
+        <h3>腾讯云高级工程师</h3>
+
+        
+        <h3>
+          <a href="https://www.tencent.com/" target="_blank" rel="noopener">
+          <span>Tencent</span>
+          </a>
+        </h3>
+        
+      </div>
+
+      <ul class="network-icon" aria-hidden="true">
+        
+        
+        
+        
+          
+        
+        
+        
+        
+        
+          
+        
+        <li>
+          <a href="https://github.com/imroc" target="_blank" rel="noopener" aria-label="github">
+            <i class="fab fa-github big-icon"></i>
+          </a>
+        </li>
+        
+        
+        
+        
+          
+        
+        
+        
+        
+        
+        <li>
+          <a href="mailto:roc@imroc.io"  aria-label="envelope">
+            <i class="fas fa-envelope big-icon"></i>
+          </a>
+        </li>
+        
+        
+        
+        
+          
+        
+        
+        
+        
+        
+          
+        
+        <li>
+          <a href="https://twitter.com/imrocchan" target="_blank" rel="noopener" aria-label="twitter">
+            <i class="fab fa-twitter big-icon"></i>
+          </a>
+        </li>
+        
+        
+        
+        
+          
+        
+        
+        
+        
+        
+          
+        
+        <li>
+          <a href="https://www.linkedin.com/in/%E9%B9%8F-%E9%99%88-b51646113" target="_blank" rel="noopener" aria-label="linkedin">
+            <i class="fab fa-linkedin big-icon"></i>
+          </a>
+        </li>
+        
+        
+        
+        
+          
+        
+        
+        
+        
+        
+          
+        
+        <li>
+          <a href="https://www.youtube.com/channel/UCEtWQhtiNi1vvDmoC6wydNQ" target="_blank" rel="noopener" aria-label="youtube">
+            <i class="fab fa-youtube big-icon"></i>
+          </a>
+        </li>
+        
+      </ul>
+
+    </div>
+  </div>
+  <div class="col-12 col-lg-8">
+
+    
+    <h1>关于</h1>
+
+    <div class="article-style">
+      <p>Hi，我是 roc，专注云原生技术领域，不定期分享容器、Kubernetes、Service Mesh 等相关干货。</p>
+<p>（欢迎使用 <a href="/index.xml">RSS订阅</a> 本站内容更新）</p>
+
+    </div>
+
+    <div class="row">
+
+      
+
+      
+
+    </div>
+  </div>
 </div>
 
-<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/algoliasearch.min.js"></script>
-<script src="https://res.cloudinary.com/jimmysong/raw/upload/rootsongjc-hugo/autocomplete.min.js"></script>
-<script>
-    var client = algoliasearch("B6Q6PSGUV5", "5b4678e9995fe4211c4fa43ad2ffdab5");
-    var index = client.initIndex("imroc-blog");
+
     
-    autocomplete('#aa-search-input', {
-        hint: false
-    }, {
-        source: autocomplete.sources.hits(index, {
-            hitsPerPage: 5
-        }),
-        
-        displayKey: 'name',
-        
-        templates: {
-            
-            suggestion: function (suggestion) {
-                return '<span>' + '<a href="/' + suggestion.uri + '">' + suggestion._highlightResult.title.value +
-                        '</a></span>';
-            }
-        }
-    });
-</script>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">close</button>
-        </div>
-      </div>
+
     </div>
-  </div>
+  </section>
 
-    
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+  
+
+  
+  
+  
+
   
   
   
   
-
-
-
-
-  
-    <div id="header-big-imgs" data-num-img=1 data-img-src-1="https://res.cloudinary.com/imroc/image/upload/v1515849754/blog/banner/hacker.jpg" data-img-desc-1="Hacker"></div>
   
 
-  <header class="header-section has-img">
-    
-      <div class="intro-header big-img">
-        
-        
-        <div class="container">
-          <div class="row">
-              <div class="col-lg-12 col-md-12 col-md-offset-0">
-                
-                <div class="page-heading">
-                
-                  
-                     <h1 align="center">Hi,I&#39;m Roc</h1>
-                  
-                  
-              </div>
-            </div>
-          </div>
-        </div>
-        <span class="img-desc" style="display: inline;"></span>
-      </div>
-    
-    <div class="intro-header no-img">
-      
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-12 col-md-12 col-md-offset-0">
-            <div class="page-heading">
-                <h1 align="center">roc</h1>
-                
-                
-                  <span class="post-meta">
-  
-  &nbsp;&bull;&nbsp; 其它语言: <a href="https://imroc.io/en/" lang="en">English</a>
-</span>
-
-
-                
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </header>
-
-
-    <div role="main" class="container">
-    <div class="row">
-      <div class="col-lg-8 col-md-10">
-        
-
-        <div class="posts-list">
-          
-            <article class="post-preview">
-              <a href="https://imroc.io/posts/build-cloud-native-large-scale-distributed-monitoring-system-4/">
-                <h2 class="post-title">打造云原生大型分布式监控系统(四): Kvass&#43;Thanos 监控超大规模容器集群</h2>
-                
-              </a>
-
-              <span class="post-meta">
-  
-  发表于 2020-11-25
   
   
-</span>
 
-
-              <div class="post-entry">
-                
-                  概述 继上一篇 Thanos 部署与实践 发布半年多之后，随着技术的发展，本系列又迎来了一次更新。本文将介绍如何结合 Kvass 与 Thanos，来更好的实现大规模容器集
-                  <a href="https://imroc.io/posts/build-cloud-native-large-scale-distributed-monitoring-system-4/" class="post-read-more">[阅读全文]</a>
-                
-              </div>
-
-              
-                <span class="post-meta">
-                
-                  #<a
-                    href='https://imroc.io/tags/kubernetes/'>kubernetes</a>&nbsp;
-                
-                </span>
-              
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://imroc.io/posts/nginx-ingress-high-concurrency/">
-                <h2 class="post-title">Nginx Ingress 高并发实践</h2>
-                
-              </a>
-
-              <span class="post-meta">
   
-  发表于 2020-09-02
+
   
   
-</span>
 
-
-              <div class="post-entry">
-                
-                  概述 Nginx Ingress Controller 基于 Nginx 实现了 Kubernetes Ingress API，Nginx 是公认的高性能网关，但如果不对其进行一些参数调优，就不能充分发挥出高性能的优势。之前我们在 Nginx Ingress on
-                  <a href="https://imroc.io/posts/nginx-ingress-high-concurrency/" class="post-read-more">[阅读全文]</a>
-                
-              </div>
-
-              
-                <span class="post-meta">
-                
-                  #<a
-                    href='https://imroc.io/tags/kubernetes/'>kubernetes</a>&nbsp;
-                
-                </span>
-              
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://imroc.io/posts/nginx-ingress-on-tke/">
-                <h2 class="post-title">Nginx Ingress on TKE 部署最佳实践</h2>
-                
-              </a>
-
-              <span class="post-meta">
-  
-  发表于 2020-08-07
   
   
-</span>
 
-
-              <div class="post-entry">
-                
-                  概述 开源的 Ingress Controller 的实现使用量最大的莫过于 Nginx Ingress 了，功能强大且性能极高。Nginx Ingress 有多种部署方式，本文将介绍 Nginx Ingress 在 TKE 上的一些部署方案，这几种方案
-                  <a href="https://imroc.io/posts/nginx-ingress-on-tke/" class="post-read-more">[阅读全文]</a>
-                
-              </div>
-
-              
-                <span class="post-meta">
-                
-                  #<a
-                    href='https://imroc.io/tags/kubernetes/'>kubernetes</a>&nbsp;
-                
-                </span>
-              
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://imroc.io/posts/kubernetes-app-deployment-best-practice-2/">
-                <h2 class="post-title">Kubernetes 服务部署最佳实践(二) 如何提高服务可用性</h2>
-                
-              </a>
-
-              <span class="post-meta">
   
-  发表于 2020-06-19
-  
-  
-</span>
-
-
-              <div class="post-entry">
-                
-                  引言 上一篇 文章我们围绕如何合理利用资源的主题做了一些最佳实践的分享，这一次我们就如何提高服务可用性的主题来展开探讨。 怎样提高我们部署服务的可
-                  <a href="https://imroc.io/posts/kubernetes-app-deployment-best-practice-2/" class="post-read-more">[阅读全文]</a>
-                
-              </div>
-
-              
-                <span class="post-meta">
-                
-                  #<a
-                    href='https://imroc.io/tags/kubernetes/'>kubernetes</a>&nbsp;
-                
-                </span>
-              
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://imroc.io/posts/kubernetes-app-deployment-best-practice-1/">
-                <h2 class="post-title">Kubernetes 服务部署最佳实践(一) 如何合理利用资源</h2>
-                
-              </a>
-
-              <span class="post-meta">
-  
-  发表于 2020-06-16
-  
-  
-</span>
-
-
-              <div class="post-entry">
-                
-                  引言 业务容器化后，如何将其部署在 K8S 上？如果仅仅是将它跑起来，很简单，但如果是上生产，我们有许多地方是需要结合业务场景和部署环境进行方案选型和
-                  <a href="https://imroc.io/posts/kubernetes-app-deployment-best-practice-1/" class="post-read-more">[阅读全文]</a>
-                
-              </div>
-
-              
-                <span class="post-meta">
-                
-                  #<a
-                    href='https://imroc.io/tags/kubernetes/'>kubernetes</a>&nbsp;
-                
-                </span>
-              
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://imroc.io/posts/tke-cluster-setup-best-practice/">
-                <h2 class="post-title">TKE 集群组建最佳实践</h2>
-                
-              </a>
-
-              <span class="post-meta">
-  
-  发表于 2020-05-25
-  
-  
-</span>
-
-
-              <div class="post-entry">
-                
-                  Kubernetes 版本 K8S 版本迭代比较快，新版本通常包含许多 bug 修复和新功能，旧版本逐渐淘汰，建议创建集群时选择当前 TKE 支持的最新版本，后续出新版本后也是可以支持
-                  <a href="https://imroc.io/posts/tke-cluster-setup-best-practice/" class="post-read-more">[阅读全文]</a>
-                
-              </div>
-
-              
-                <span class="post-meta">
-                
-                  #<a
-                    href='https://imroc.io/tags/kubernetes/'>kubernetes</a>&nbsp;
-                
-                </span>
-              
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://imroc.io/posts/build-cloud-native-large-scale-distributed-monitoring-system-3/">
-                <h2 class="post-title">打造云原生大型分布式监控系统(三): Thanos 部署与实践</h2>
-                
-              </a>
-
-              <span class="post-meta">
-  
-  发表于 2020-04-20
-  
-  
-</span>
-
-
-              <div class="post-entry">
-                
-                  <h2 id="视频">视频</h2>
-<p>附上本系列完整视频</p>
-<ul>
-<li>打造云原生大型分布式监控系统(一): 大规模场景下 Prometheus 的优化手段 <a href="https://www.bilibili.com/video/BV17C4y1x7HE">https://www.bilibili.com/video/BV17C4y1x7HE</a></li>
-<li>打造云原生大型分布式监控系统(二): Thanos 架构详解 <a href="https://www.bilibili.com/video/BV1Vk4y1R7S9">https://www.bilibili.com/video/BV1Vk4y1R7S9</a></li>
-<li>打造云原生大型分布式监控系统(三): Thanos 部署与实践 <a href="https://www.bilibili.com/video/BV16g4y187HD">https://www.bilibili.com/video/BV16g4y187HD</a></li>
-</ul>
-<h2 id="概述">概述</h2>
-<p>上一篇 <a href="../build-cloud-native-large-scale-distributed-monitoring-system-2">Thanos 架构详解</a> 我们深入理解了 thanos 的架构设计与实现原理，现在我们来聊聊实战，分享一下如何部署和使用 Thanos。</p>
-                  <a href="https://imroc.io/posts/build-cloud-native-large-scale-distributed-monitoring-system-3/" class="post-read-more">[阅读全文]</a>
-                
-              </div>
-
-              
-                <span class="post-meta">
-                
-                  #<a
-                    href='https://imroc.io/tags/kubernetes/'>kubernetes</a>&nbsp;
-                
-                </span>
-              
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://imroc.io/posts/build-cloud-native-large-scale-distributed-monitoring-system-2/">
-                <h2 class="post-title">打造云原生大型分布式监控系统(二): Thanos 架构详解</h2>
-                
-              </a>
-
-              <span class="post-meta">
-  
-  发表于 2020-04-06
-  
-  
-</span>
-
-
-              <div class="post-entry">
-                
-                  <h2 id="概述">概述</h2>
-<p>之前在 <a href="../build-cloud-native-large-scale-distributed-monitoring-system-1">大规模场景下 Prometheus 的优化手段</a> 中，我们想尽 &ldquo;千方百计&rdquo; 才好不容易把 Prometheus 优化到适配大规模场景，部署和后期维护麻烦且复杂不说，还有很多不完美的地方，并且还无法满足一些更高级的诉求，比如查看时间久远的监控数据，对于一些时间久远不常用的 &ldquo;冷数据&rdquo;，最理想的方式就是存到廉价的对象存储中，等需要查询的时候能够自动加载出来。</p>
-<p>Thanos (没错，就是灭霸) 可以帮我们简化分布式 Prometheus 的部署与管理，并提供了一些的高级特性：<strong>全局视图</strong>，<strong>长期存储</strong>，<strong>高可用</strong>。下面我们来详细讲解一下。</p>
-                  <a href="https://imroc.io/posts/build-cloud-native-large-scale-distributed-monitoring-system-2/" class="post-read-more">[阅读全文]</a>
-                
-              </div>
-
-              
-                <span class="post-meta">
-                
-                  #<a
-                    href='https://imroc.io/tags/kubernetes/'>kubernetes</a>&nbsp;
-                
-                </span>
-              
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://imroc.io/posts/build-cloud-native-large-scale-distributed-monitoring-system-1/">
-                <h2 class="post-title">打造云原生大型分布式监控系统(一): 大规模场景下 Prometheus 的优化手段</h2>
-                
-              </a>
-
-              <span class="post-meta">
-  
-  发表于 2020-03-26
-  
-  
-</span>
-
-
-              <div class="post-entry">
-                
-                  <h2 id="概述">概述</h2>
-<p>Prometheus 几乎已成为监控领域的事实标准，它自带高效的时序数据库存储，可以让单台 Prometheus 能够高效的处理大量的数据，还有友好并且强大的 PromQL 语法，可以用来灵活的查询各种监控数据以及配置告警规则，同时它的 pull 模型指标采集方式被广泛采纳，非常多的应用都实现了 Prometheus 的 metrics 接口以暴露自身各项数据指标让 Prometheus 去采集，很多没有适配的应用也会有第三方 exporter 帮它去适配 Prometheus，所以监控系统我们通常首选用 Prometheus，本系列文章也将基于 Prometheus 来打造云原生环境下的大型分布式监控系统。</p>
-<h2 id="大规模场景下-prometheus-的痛点">大规模场景下 Prometheus 的痛点</h2>
-<p>Prometheus 本身只支持单机部署，没有自带支持集群部署，也就不支持高可用以及水平扩容，在大规模场景下，最让人关心的问题是它的存储空间也受限于单机磁盘容量，磁盘容量决定了单个 Prometheus 所能存储的数据量，数据量大小又取决于被采集服务的指标数量、服务数量、采集速率以及数据过期时间。在数据量大的情况下，我们可能就需要做很多取舍，比如丢弃不重要的指标、降低采集速率、设置较短的数据过期时间(默认只保留15天的数据，看不到比较久远的监控数据)。</p>
-<p>这些痛点实际也是可以通过一些优化手段来改善的，下面我们来细讲一下。</p>
-                  <a href="https://imroc.io/posts/build-cloud-native-large-scale-distributed-monitoring-system-1/" class="post-read-more">[阅读全文]</a>
-                
-              </div>
-
-              
-                <span class="post-meta">
-                
-                  #<a
-                    href='https://imroc.io/tags/kubernetes/'>kubernetes</a>&nbsp;
-                
-                </span>
-              
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://imroc.io/posts/kubernetes-overflow-and-drop/">
-                <h2 class="post-title">Kubernetes 疑难杂症排查分享：神秘的溢出与丢包</h2>
-                
-              </a>
-
-              <span class="post-meta">
-  
-  发表于 2020-01-12
-  
-  
-</span>
-
-
-              <div class="post-entry">
-                
-                  <blockquote>
-<p>上一篇 <a href="https://imroc.io/posts/kubernetes/kubernetes-no-route-to-host/">Kubernetes 疑难杂症排查分享: 诡异的 No route to host</a> 不小心又爆火，这次继续带来干货，看之前请提前泡好茶，避免口干。</p>
-</blockquote>
-<h2 id="问题描述">问题描述</h2>
-<p>有用户反馈大量图片加载不出来。</p>
-<p>图片下载走的 k8s ingress，这个 ingress 路径对应后端 service 是一个代理静态图片文件的 nginx deployment，这个 deployment 只有一个副本，静态文件存储在 nfs 上，nginx 通过挂载 nfs 来读取静态文件来提供图片下载服务，所以调用链是：client &ndash;&gt; k8s ingress &ndash;&gt; nginx &ndash;&gt; nfs。</p>
-<h2 id="猜测">猜测</h2>
-<p>猜测: ingress 图片下载路径对应的后端服务出问题了。</p>
-<p>验证：在 k8s 集群直接 curl nginx 的 pod ip，发现不通，果然是后端服务的问题！</p>
-<h2 id="抓包">抓包</h2>
-<p>继续抓包测试观察，登上 nginx pod 所在节点，进入容器的 netns 中：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># 拿到 pod 中 nginx 的容器 id</span>
-$ kubectl describe pod tcpbench-6484d4b457-847gl | grep -A10 <span style="color:#e6db74">&#34;^Containers:&#34;</span> | grep -Eo <span style="color:#e6db74">&#39;docker://.*$&#39;</span> | head -n <span style="color:#ae81ff">1</span> | sed <span style="color:#e6db74">&#39;s/docker:\/\/\(.*\)$/\1/&#39;</span>
-49b4135534dae77ce5151c6c7db4d528f05b69b0c6f8b9dd037ec4e7043c113e
-
-<span style="color:#75715e"># 通过容器 id 拿到 nginx 进程 pid</span>
-$ docker inspect -f <span style="color:#f92672">{{</span>.State.Pid<span style="color:#f92672">}}</span> 49b4135534dae77ce5151c6c7db4d528f05b69b0c6f8b9dd037ec4e7043c113e
-<span style="color:#ae81ff">3985</span>
-
-<span style="color:#75715e"># 进入 nginx 进程所在的 netns</span>
-$ nsenter -n -t <span style="color:#ae81ff">3985</span>
-
-<span style="color:#75715e"># 查看容器 netns 中的网卡信息，确认下</span>
-$ ip a
-1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu <span style="color:#ae81ff">65536</span> qdisc noqueue state UNKNOWN group default qlen <span style="color:#ae81ff">1000</span>
-    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
-    inet 127.0.0.1/8 scope host lo
-       valid_lft forever preferred_lft forever
-3: eth0@if11: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu <span style="color:#ae81ff">1500</span> qdisc noqueue state UP group default
-    link/ether 56:04:c7:28:b0:3c brd ff:ff:ff:ff:ff:ff link-netnsid <span style="color:#ae81ff">0</span>
-    inet 172.26.0.8/26 scope global eth0
-       valid_lft forever preferred_lft forever
-</code></pre></div><p>使用 tcpdump 指定端口 24568 抓容器 netns 中 eth0 网卡的包:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">tcpdump -i eth0 -nnnn -ttt port <span style="color:#ae81ff">24568</span>
-</code></pre></div><p>在其它节点准备使用 nc 指定源端口为 24568 向容器发包：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">nc -u <span style="color:#ae81ff">24568</span> 172.16.1.21 <span style="color:#ae81ff">80</span>
-</code></pre></div><p>观察抓包结果：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">00:00:00.000000 IP 10.0.0.3.24568 &gt; 172.16.1.21.80: Flags <span style="color:#f92672">[</span>S<span style="color:#f92672">]</span>, seq 416500297, win 29200, options <span style="color:#f92672">[</span>mss 1424,sackOK,TS val <span style="color:#ae81ff">3000206334</span> ecr 0,nop,wscale 9<span style="color:#f92672">]</span>, length <span style="color:#ae81ff">0</span>
-00:00:01.032218 IP 10.0.0.3.24568 &gt; 172.16.1.21.80: Flags <span style="color:#f92672">[</span>S<span style="color:#f92672">]</span>, seq 416500297, win 29200, options <span style="color:#f92672">[</span>mss 1424,sackOK,TS val <span style="color:#ae81ff">3000207366</span> ecr 0,nop,wscale 9<span style="color:#f92672">]</span>, length <span style="color:#ae81ff">0</span>
-00:00:02.011962 IP 10.0.0.3.24568 &gt; 172.16.1.21.80: Flags <span style="color:#f92672">[</span>S<span style="color:#f92672">]</span>, seq 416500297, win 29200, options <span style="color:#f92672">[</span>mss 1424,sackOK,TS val <span style="color:#ae81ff">3000209378</span> ecr 0,nop,wscale 9<span style="color:#f92672">]</span>, length <span style="color:#ae81ff">0</span>
-00:00:04.127943 IP 10.0.0.3.24568 &gt; 172.16.1.21.80: Flags <span style="color:#f92672">[</span>S<span style="color:#f92672">]</span>, seq 416500297, win 29200, options <span style="color:#f92672">[</span>mss 1424,sackOK,TS val <span style="color:#ae81ff">3000213506</span> ecr 0,nop,wscale 9<span style="color:#f92672">]</span>, length <span style="color:#ae81ff">0</span>
-00:00:08.192056 IP 10.0.0.3.24568 &gt; 172.16.1.21.80: Flags <span style="color:#f92672">[</span>S<span style="color:#f92672">]</span>, seq 416500297, win 29200, options <span style="color:#f92672">[</span>mss 1424,sackOK,TS val <span style="color:#ae81ff">3000221698</span> ecr 0,nop,wscale 9<span style="color:#f92672">]</span>, length <span style="color:#ae81ff">0</span>
-00:00:16.127983 IP 10.0.0.3.24568 &gt; 172.16.1.21.80: Flags <span style="color:#f92672">[</span>S<span style="color:#f92672">]</span>, seq 416500297, win 29200, options <span style="color:#f92672">[</span>mss 1424,sackOK,TS val <span style="color:#ae81ff">3000237826</span> ecr 0,nop,wscale 9<span style="color:#f92672">]</span>, length <span style="color:#ae81ff">0</span>
-00:00:33.791988 IP 10.0.0.3.24568 &gt; 172.16.1.21.80: Flags <span style="color:#f92672">[</span>S<span style="color:#f92672">]</span>, seq 416500297, win 29200, options <span style="color:#f92672">[</span>mss 1424,sackOK,TS val <span style="color:#ae81ff">3000271618</span> ecr 0,nop,wscale 9<span style="color:#f92672">]</span>, length <span style="color:#ae81ff">0</span>
-</code></pre></div><p>SYN 包到容器内网卡了，但容器没回 ACK，像是报文到达容器内的网卡后就被丢了。看样子跟防火墙应该也没什么关系，也检查了容器 netns 内的 iptables 规则，是空的，没问题。</p>
-<p>排除是 iptables 规则问题，在容器 netns 中使用 <code>netstat -s</code> 检查下是否有丢包统计:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ netstat -s | grep -E <span style="color:#e6db74">&#39;overflow|drop&#39;</span>
-    <span style="color:#ae81ff">12178939</span> times the listen queue of a socket overflowed
-    <span style="color:#ae81ff">12247395</span> SYNs to LISTEN sockets dropped
-</code></pre></div><p>果然有丢包，为了理解这里的丢包统计，我深入研究了一下，下面插播一些相关知识。</p>
-                  <a href="https://imroc.io/posts/kubernetes-overflow-and-drop/" class="post-read-more">[阅读全文]</a>
-                
-              </div>
-
-              
-                <span class="post-meta">
-                
-                  #<a
-                    href='https://imroc.io/tags/kubernetes/'>kubernetes</a>&nbsp;
-                
-                </span>
-              
-            </article>
-          
-        </div>
-
-        
-          <ul class="pager main-pager">
-            
-            
-              <li class="next">
-                <a href="/page/2">下一页 &rarr;</a>
-              </li>
-            
-          </ul>
-        
-        <div align="center" class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-          
-
-<ul class="pagination">
-    
-    <li class="page-item">
-        <a href="/" class="page-link" aria-label="First"><span aria-hidden="true">&laquo;&laquo;</span></a>
-    </li>
-    
-    <li class="page-item disabled">
-    <a  class="page-link" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a>
-    </li>
-    
-    
-    
-    
-    
-    
-    
-        
-        
-    
-    
-    <li class="page-item active"><a class="page-link" href="/">1</a></li>
-    
-    
-    
-    
-    
-    
-        
-        
-    
-    
-    <li class="page-item"><a class="page-link" href="/page/2/">2</a></li>
-    
-    
-    
-    
-    
-    
-        
-        
-    
-    
-    <li class="page-item"><a class="page-link" href="/page/3/">3</a></li>
-    
-    
-    
-    
-    
-    
-        
-        
-    
-    
-    <li class="page-item"><a class="page-link" href="/page/4/">4</a></li>
-    
-    
-    <li class="page-item">
-    <a href="/page/2/" class="page-link" aria-label="Next"><span aria-hidden="true">&raquo;</span></a>
-    </li>
-    
-    <li class="page-item">
-        <a href="/page/4/" class="page-link" aria-label="Last"><span aria-hidden="true">&raquo;&raquo;</span></a>
-    </li>
-    
-</ul>
-
-
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-        </div>
-      </div>
-      <div class="col-lg-4 col-md-2">
-        <div class="sidebar-wrap sidebar-about">
-          <div class="about-img">
-            <img src="/img/avatar.jpg" alt="roc" class="rounded-circle">
-          </div>
-          <p class="about-text">
-            大家好，我是 roc，专注云原生技术领域，不定期分享容器、Kubernetes、Service Mesh 等相关干货。
-          </p>
-          
-          <img src="https://roc-1251707795.file.myqcloud.com/blog/qrcode_for_cloudnative_universe.jpg" alt="云原生知识宇宙">
-          <p class="about-text">
-            扫码关注 "云原生知识宇宙" 公众号可接收文章推送。
-          </p>
-          
-        </div>
-        
-        <div class="sidebar-block">
-          <h4 class="sidebar-title">标签</h4>
-          <div class="list-unstyled tags-cloud">
-            
-            
-            <a href="/tags/ci"><i class="fa fa-tags"></i> ci(1)</a>
-            
-            
-            
-            <a href="/tags/docker"><i class="fa fa-tags"></i> docker(1)</a>
-            
-            
-            
-            <a href="/tags/geek"><i class="fa fa-tags"></i> geek(4)</a>
-            
-            
-            
-            <a href="/tags/git"><i class="fa fa-tags"></i> git(1)</a>
-            
-            
-            
-            <a href="/tags/golang"><i class="fa fa-tags"></i> golang(4)</a>
-            
-            
-            
-            <a href="/tags/hugo"><i class="fa fa-tags"></i> hugo(1)</a>
-            
-            
-            
-            <a href="/tags/istio"><i class="fa fa-tags"></i> istio(1)</a>
-            
-            
-            
-            <a href="/tags/kubernetes"><i class="fa fa-tags"></i> kubernetes(27)</a>
-            
-            
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-    <footer>
-  <div id="copyright">
+  <section id="notes" class="home-section wg-portfolio  "  >
+   <div class="home-section-bg " ></div>
     <div class="container">
-      <div class="row">
-        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-          <ul class="list-inline text-center footer-links">
+
+    
+      <div class="row  justify-content-center">
+      
+        
+          <div class="col-12 section-heading text-center">
+            <h1>学习笔记</h1>
             
-                <li>
-                  <a href="mailto:roc@imroc.io" title="Email me">
-                    <span class="fa-stack fa-lg">
-                      <i class="fas fa-circle fa-stack-2x"></i>
-                      <i class="fas fa-envelope fa-stack-1x fa-inverse"></i>
-                    </span>
-                  </a>
-                </li>
-                <li>
-                  <a href="https://github.com/imroc" title="GitHub">
-                    <span class="fa-stack fa-lg">
-                      <i class="fas fa-circle fa-stack-2x"></i>
-                      <i class="fab fa-github fa-stack-1x fa-inverse"></i>
-                    </span>
-                  </a>
-                </li>
-                <li>
-                  <a href="https://twitter.com/imrocchan" title="Twitter">
-                    <span class="fa-stack fa-lg">
-                      <i class="fas fa-circle fa-stack-2x"></i>
-                      <i class="fab fa-twitter fa-stack-1x fa-inverse"></i>
-                    </span>
-                  </a>
-                </li>
-            
-            <li>
-              <a href="https://imroc.io/index.xml" title="RSS">
-                <span class="fa-stack fa-lg">
-                  <i class="fa fa-circle fa-stack-2x"></i>
-                  <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
-                </span>
-              </a>
-            </li>
-            
-          </ul>
-          <p class="credits copyright text-muted">
-          &copy;2017-2020
+          </div>
+        
+      
+    
+
+      
+
+
+
+
+
+
+
+
+
+<div class="col-12 ">
+
+  
+
+  
+
+    
+
+    
+    
+    
+    
+      
+    
+
+    <span class="d-none default-project-filter">*</span>
+
+    
+    
+    <div class="project-toolbar">
+      <div class="project-filters">
+        <div class="btn-toolbar">
+          <div class="btn-group flex-wrap">
             
               
-                <a href="/about">roc</a>
               
+              
+                
+              
+              <a href="#" data-filter="*" class="btn btn-primary btn-lg active">全部</a>
             
-            &nbsp;&bull;&nbsp;
-            2020-11-25
-            更新
-          </p>
-          <p class="credits theme-by text-muted">
-            由 <a href="http://gohugo.io">Hugo v0.65.3</a> 强力驱动 &nbsp;&bull;&nbsp; 主题 <a href="https://github.com/imroc/xhugo">xhugo</a>
-          </p>
+              
+              
+              
+              <a href="#" data-filter=".js-id-工具" class="btn btn-primary btn-lg">工具</a>
+            
+              
+              
+              
+              <a href="#" data-filter=".js-id-云原生" class="btn btn-primary btn-lg">云原生</a>
+            
+          </div>
         </div>
       </div>
     </div>
+    
+  
+
+  <div class="isotope projects-container js-layout-masonry ">
+
+    
+    
+      
+    
+
+    
+
+      
+      
+      
+        
+        
+      
+
+      
+        
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+<div class="project-card project-item isotope-item js-id-工具">
+  <div class="card">
+    
+    
+    
+    
+    <a href="https://imroc.io" target="_blank" rel="noopener" class="card-image hover-overlay">
+      <img src="/note/learning-hugo/featured_hu3d03a01dcc18bc5be0e67db3d8d209a6_224363_8b75a9bee711d28a20738224a15f44dc.jpg" data-src="/note/learning-hugo/featured_hu3d03a01dcc18bc5be0e67db3d8d209a6_224363_550x0_resize_q75_lanczos.jpg" alt="Hugo 学习笔记" class="img-responsive lazyload">
+    </a>
+    
+    <div class="card-text">
+      <h4><a href="https://imroc.io" target="_blank" rel="noopener">Hugo 学习笔记</a></h4>
+
+      
+      <div class="article-style">
+        <p>分享 hugo 经验</p>
+      </div>
+      
+
+      
+      <div class="btn-links">
+        
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+    
+  
+  
+  
+  
+  
+    
+  
+  <a class="btn btn-outline-primary btn-page-header btn-sm" href="https://github.com/imroc" target="_blank" rel="noopener">
+    <i class="fab fa-github mr-1"></i>
+    Star
+  </a>
+
+
+      </div>
+      
+    </div>
   </div>
+</div>
+
+      
+
+    
+
+      
+      
+      
+        
+        
+      
+
+      
+        
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+<div class="project-card project-item isotope-item js-id-云原生">
+  <div class="card">
+    
+    
+    
+    
+    <a href="https://imroc.io" target="_blank" rel="noopener" class="card-image hover-overlay">
+      <img src="/note/learning-kubernetes/featured_hu3d03a01dcc18bc5be0e67db3d8d209a6_224363_8b75a9bee711d28a20738224a15f44dc.jpg" data-src="/note/learning-kubernetes/featured_hu3d03a01dcc18bc5be0e67db3d8d209a6_224363_550x0_resize_q75_lanczos.jpg" alt="Kubernetes 学习笔记" class="img-responsive lazyload">
+    </a>
+    
+    <div class="card-text">
+      <h4><a href="https://imroc.io" target="_blank" rel="noopener">Kubernetes 学习笔记</a></h4>
+
+      
+      <div class="article-style">
+        <p>一起学习 k8s</p>
+      </div>
+      
+
+      
+      <div class="btn-links">
+        
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+    
+  
+  
+  
+  
+  
+    
+  
+  <a class="btn btn-outline-primary btn-page-header btn-sm" href="https://twitter.com/georgecushen" target="_blank" rel="noopener">
+    <i class="fab fa-twitter mr-1"></i>
+    Follow
+  </a>
+
+
+      </div>
+      
+    </div>
+  </div>
+</div>
+
+      
+
+    
+  </div>
+</div>
+
+
+    
+      </div>
+    
+
+    </div>
+  </section>
+
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+  <section id="posts" class="home-section wg-pages  "  >
+   <div class="home-section-bg " ></div>
+    <div class="container">
+
+    
+      <div class="row  ">
+      
+        
+          <div class="col-12 col-lg-4 section-heading">
+            <h1>技术博客</h1>
+            
+          </div>
+        
+      
+    
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+<div class="col-12 col-lg-8">
+
+  
+
+  
+    
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<div class="media stream-item">
+  <div class="media-body">
+
+    <div class="section-subheading article-title mb-0 mt-0">
+      <a href="/post/202011/build-cloud-native-large-scale-distributed-monitoring-system-4/" >打造云原生大型分布式监控系统(四): Kvass&#43;Thanos 监控超大规模容器集群</a>
+    </div>
+
+    
+    <a href="/post/202011/build-cloud-native-large-scale-distributed-monitoring-system-4/"  class="summary-link">
+      <div class="article-style">
+        目录  概述 有 Thanos 不够吗 ? 什么是 Kvass ? 部署实践  部署准备 部署 Kvass 部署 thanos-query   小结    概述 继上一篇 Thanos 部署与实践 发布半年多之后，随着技术的发展，本系列又迎来了一次更新。本文将介绍如何结合 Kvass 与 Thanos，来更好的实现大规模容器集群场景下的监控。
+      </div>
+    </a>
+    
+
+    <div class="stream-meta article-metadata">
+
+      
+
+      
+        
+
+
+<div class="article-metadata">
+
+  
+  
+  
+  
+  <div>
+    
+
+  <span class="author-highlighted">
+      roc</span>
+  </div>
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    Nov 25, 2020
+  </span>
+  
+
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    2 分钟阅读时长
+  </span>
+  
+
+  
+  
+  
+  
+  
+
+  
+  
+
+</div>
+
+      
+    </div>
+
+    
+
+  </div>
+  <div class="ml-3">
+    
+    
+  </div>
+</div>
+
+    
+  
+    
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<div class="media stream-item">
+  <div class="media-body">
+
+    <div class="section-subheading article-title mb-0 mt-0">
+      <a href="/post/202009/nginx-ingress-high-concurrency/" >Nginx Ingress 高并发实践</a>
+    </div>
+
+    
+    <a href="/post/202009/nginx-ingress-high-concurrency/"  class="summary-link">
+      <div class="article-style">
+        目录  概述 内核参数调优  调大连接队列的大小 扩大源端口范围 TIME_WAIT 复用 调大最大文件句柄数 配置示例   全局配置调优  调高 keepalive 连接最大请求数 调高 keepalive 最大空闲连接数 调高单个 worker 最大连接数 配置示例   总结 参考资料    概述 Nginx Ingress Controller 基于 Nginx 实现了 Kubernetes Ingress API，Nginx 是公认的高性能网关，但如果不对其进行一些参数调优，就不能充分发挥出高性能的优势。之前我们在 Nginx Ingress on TKE 部署最佳实践 一文中讲了 Nginx Ingress 在 TKE 上部署最佳实践，涉及的部署 YAML 其实已经包含了一些性能方面的参数优化，只是没有提及，本文将继续展开介绍针对 Nginx Ingress 的一些全局配置与内核参数调优的建议，可用于支撑我们的高并发业务。
+      </div>
+    </a>
+    
+
+    <div class="stream-meta article-metadata">
+
+      
+
+      
+        
+
+
+<div class="article-metadata">
+
+  
+  
+  
+  
+  <div>
+    
+
+  <span class="author-highlighted">
+      roc</span>
+  </div>
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    Sep 2, 2020
+  </span>
+  
+
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    3 分钟阅读时长
+  </span>
+  
+
+  
+  
+  
+  
+  
+
+  
+  
+
+</div>
+
+      
+    </div>
+
+    
+
+  </div>
+  <div class="ml-3">
+    
+    
+  </div>
+</div>
+
+    
+  
+    
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<div class="media stream-item">
+  <div class="media-body">
+
+    <div class="section-subheading article-title mb-0 mt-0">
+      <a href="/post/202008/nginx-ingress-on-tke/" >Nginx Ingress on TKE 部署最佳实践</a>
+    </div>
+
+    
+    <a href="/post/202008/nginx-ingress-on-tke/"  class="summary-link">
+      <div class="article-style">
+        目录  概述 什么是 Nginx Ingress ? 有哪些部署方案 ?  方案一： Deployment + LB 方案二：Daemonset + HostNetwork + LB 方案三：Deployment + LB 直通 Pod   如何选型？ 如何支持内网 Ingress ? 如何复用已有 LB ?
+      </div>
+    </a>
+    
+
+    <div class="stream-meta article-metadata">
+
+      
+
+      
+        
+
+
+<div class="article-metadata">
+
+  
+  
+  
+  
+  <div>
+    
+
+  <span class="author-highlighted">
+      roc</span>
+  </div>
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    Aug 7, 2020
+  </span>
+  
+
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    4 分钟阅读时长
+  </span>
+  
+
+  
+  
+  
+  
+  
+
+  
+  
+
+</div>
+
+      
+    </div>
+
+    
+
+  </div>
+  <div class="ml-3">
+    
+    
+  </div>
+</div>
+
+    
+  
+    
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<div class="media stream-item">
+  <div class="media-body">
+
+    <div class="section-subheading article-title mb-0 mt-0">
+      <a href="/post/202006/kubernetes-app-deployment-best-practice-2/" >Kubernetes 服务部署最佳实践(二) 如何提高服务可用性</a>
+    </div>
+
+    
+    <a href="/post/202006/kubernetes-app-deployment-best-practice-2/"  class="summary-link">
+      <div class="article-style">
+        目录  引言 如何避免单点故障？ 如何避免节点维护或升级时导致服务不可用？ 如何让服务进行平滑更新？ 健康检查怎么配才好？ 参考资料    引言 上一篇 文章我们围绕如何合理利用资源的主题做了一些最佳实践的分享，这一次我们就如何提高服务可用性的主题来展开探讨。
+怎样提高我们部署服务的可用性呢？K8S 设计本身就考虑到了各种故障的可能性，并提供了一些自愈机制以提高系统的容错性，但有些情况还是可能导致较长时间不可用，拉低服务可用性的指标。本文将结合生产实践经验，为大家提供一些最佳实践来最大化的提高服务可用性。
+如何避免单点故障？ K8S 的设计就是假设节点是不可靠的。节点越多，发生软硬件故障导致节点不可用的几率就越高，所以我们通常需要给服务部署多个副本，根据实际情况调整 replicas 的值，如果值为 1 就必然存在单点故障，如果大于 1 但所有副本都调度到同一个节点了，那还是有单点故障，有时候还要考虑到灾难，比如整个机房不可用。
+所以我们不仅要有合理的副本数量，还需要让这些不同副本调度到不同的拓扑域(节点、可用区)，打散调度以避免单点故障，这个可以利用 Pod 反亲和性来做到，反亲和主要分强反亲和与弱反亲和两种。
+先来看个强反亲和的示例，将 dns 服务强制打散调度到不同节点上:
+      </div>
+    </a>
+    
+
+    <div class="stream-meta article-metadata">
+
+      
+
+      
+        
+
+
+<div class="article-metadata">
+
+  
+  
+  
+  
+  <div>
+    
+
+  <span class="author-highlighted">
+      roc</span>
+  </div>
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    Jun 19, 2020
+  </span>
+  
+
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    2 分钟阅读时长
+  </span>
+  
+
+  
+  
+  
+  
+  
+
+  
+  
+
+</div>
+
+      
+    </div>
+
+    
+
+  </div>
+  <div class="ml-3">
+    
+    
+  </div>
+</div>
+
+    
+  
+    
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<div class="media stream-item">
+  <div class="media-body">
+
+    <div class="section-subheading article-title mb-0 mt-0">
+      <a href="/post/202006/kubernetes-app-deployment-best-practice-1/" >Kubernetes 服务部署最佳实践(一) 如何合理利用资源</a>
+    </div>
+
+    
+    <a href="/post/202006/kubernetes-app-deployment-best-practice-1/"  class="summary-link">
+      <div class="article-style">
+        目录  引言 Request 与 Limit 怎么设置才好  所有容器都应该设置 request 老是忘记设置怎么办 重要的线上应用改如何设置 怎样设置才能提高资源利用率 尽量避免使用过大的 request 与 limit 避免测试 namespace 消耗过多资源影响生产业务   如何让资源得到更合理的分配  使用亲和性 使用污点与容忍   弹性伸缩  如何支持流量突发型业务 如何节约成本 无法水平扩容的服务怎么办   参考资料    引言 业务容器化后，如何将其部署在 K8S 上？如果仅仅是将它跑起来，很简单，但如果是上生产，我们有许多地方是需要结合业务场景和部署环境进行方案选型和配置调优的。比如，如何设置容器的 Request 与 Limit、如何让部署的服务做到高可用、如何配置健康检查、如何进行弹性伸缩、如何更好的进行资源调度、如何选择持久化存储、如何对外暴露服务等。
+      </div>
+    </a>
+    
+
+    <div class="stream-meta article-metadata">
+
+      
+
+      
+        
+
+
+<div class="article-metadata">
+
+  
+  
+  
+  
+  <div>
+    
+
+  <span class="author-highlighted">
+      roc</span>
+  </div>
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    Jun 16, 2020
+  </span>
+  
+
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    2 分钟阅读时长
+  </span>
+  
+
+  
+  
+  
+  
+  
+
+  
+  
+
+</div>
+
+      
+    </div>
+
+    
+
+  </div>
+  <div class="ml-3">
+    
+    
+  </div>
+</div>
+
+    
+  
+
+  
+  
+  
+
+    
+    
+      
+    
+
+    
+
+    <div class="see-all">
+      <a href="/post/">
+        查看全部文章
+        <i class="fas fa-angle-right"></i>
+      </a>
+    </div>
+  
+
+</div>
+
+
+    
+      </div>
+    
+
+    </div>
+  </section>
+
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+  
+  
+
+  
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+  <section id="tags" class="home-section wg-tag-cloud  "  >
+   <div class="home-section-bg " ></div>
+    <div class="container">
+
+    
+      <div class="row  ">
+      
+        
+          <div class="col-12 col-lg-4 section-heading">
+            <h1>内容标签</h1>
+            
+          </div>
+        
+      
+    
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+<div class="col-12 col-lg-8">
+  
+
+  
+
+    
+    
+    
+    
+    
+    
+
+    <div class="tag-cloud">
+      
+        
+        
+        
+        <a href="/tag/geek/" style="font-size:0.7rem">geek</a>
+      
+        
+        
+        
+        <a href="/tag/kubernetes/" style="font-size:1.9668799592797315rem">kubernetes</a>
+      
+        
+        
+        
+        <a href="/tag/macos/" style="font-size:0.7rem">macOS</a>
+      
+        
+        
+        
+        <a href="/tag/network/" style="font-size:1.2273890324068768rem">network</a>
+      
+        
+        
+        
+        <a href="/tag/prometheus/" style="font-size:1.3654908645055204rem">prometheus</a>
+      
+        
+        
+        
+        <a href="/tag/troubleshooting/" style="font-size:1.2273890324068768rem">troubleshooting</a>
+      
+        
+        
+        
+        <a href="/tag/%E4%BA%91%E5%8E%9F%E7%94%9F/" style="font-size:0.7rem">云原生</a>
+      
+        
+        
+        
+        <a href="/tag/%E5%B7%A5%E5%85%B7/" style="font-size:0.7rem">工具</a>
+      
+    </div>
+  
+
+</div>
+
+
+    
+      </div>
+    
+
+    </div>
+  </section>
+
+
+
+  </div>
+
+  <div class="page-footer">
+    
+    
+    <div class="container">
+      <footer class="site-footer">
+  
+
+  <p class="powered-by">
+    roc © 2021
+  </p>
+
+  
+  
+
+
+
+
+
+
+  <p class="powered-by">
+    
+    
+    
+    Published with
+    <a href="https://wowchemy.com/?utm_campaign=poweredby" target="_blank" rel="noopener">Wowchemy</a>  —
+    the free, <a href="https://github.com/wowchemy/wowchemy-hugo-modules" target="_blank" rel="noopener">
+    open source</a> website builder that empowers creators.
+    
+  </p>
 </footer>
 
-<script>
-  window.copyText='复制'==''?"Copy":'复制'
-  window.copiedText='已复制!'==''?"Copied":'已复制!'
-</script><script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.js"
-  integrity="sha384-K3vbOmF2BtaVai+Qk37uypf7VrgBubhQreNQe9aGsz9lB63dIFiQVlJbr92dw2Lx" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/contrib/auto-render.min.js"
-  integrity="sha384-kmZOZB5ObwgQnS/DuDg6TScgOiWWBiVt0plIRkZCmE6rDZGrEOQeHM5PcHi+nyqe" crossorigin="anonymous"></script>
-<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"
-  integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
-<script src="https://cdn.bootcss.com/twitter-bootstrap/3.3.7/js/bootstrap.min.js"
-  integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    </div>
+    
+  </div>
+
+  
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">引用</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <pre><code class="tex hljs"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-outline-primary my-1 js-copy-cite" href="#" target="_blank">
+          <i class="fas fa-copy"></i> 复制
+        </a>
+        <a class="btn btn-outline-primary my-1 js-download-cite" href="#" target="_blank">
+          <i class="fas fa-download"></i> 下载
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+      
+
+    
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+
+      
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js" integrity="sha256-lqvxZrPLtfffUl2G/e7szqSvPBILGbwmsGE1MKlOi0Q=" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js" integrity="sha256-CBrpuqrMhXwcLLUd5tvQ4euBHCdh7wGlDfNz8vbu/iI=" crossorigin="anonymous"></script>
+      
+
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/instant.page/5.1.0/instantpage.min.js" integrity="sha512-1+qUtKoh9XZW7j+6LhRMAyOrgSQKenQ4mluTR+cvxXjP1Z54RxZuzstR/H9kgPXQsVB8IW7DMDFUJpzLjvhGSQ==" crossorigin="anonymous"></script>
+
+      
+
+      
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/highlight.min.js" integrity="sha512-TDKKr+IvoqZnPzc3l35hdjpHD0m+b2EC2SrLEgKDRWpxf2rFCxemkgvJ5kfU48ip+Y+m2XVKyOCD85ybtlZDmw==" crossorigin="anonymous"></script>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/languages/r.min.js"></script>
+        
+      
+
+    
+
+    
+    
+
+    
+    
+
+    
+    
+    <script id="search-hit-fuse-template" type="text/x-template">
+      <div class="search-hit" id="summary-{{key}}">
+        <div class="search-hit-content">
+          <div class="search-hit-name">
+            <a href="{{relpermalink}}">{{title}}</a>
+            <div class="article-metadata search-hit-type">{{type}}</div>
+            <p class="search-hit-description">{{snippet}}</p>
+          </div>
+        </div>
+      </div>
+    </script>
+    
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.1/fuse.min.js" integrity="sha256-VzgmKYmhsGNNN4Ph1kMW+BjoYJM2jV5i4IlFoeZA9XI=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
+    
+
+    
+    
+    
+
+    
+    
+    
+
+    
+    
+
+    
+    
+
+    
+    
+      
+      
+      
+      
+      
+      
+      
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      
+      
+    
+    
+    <script src="/zh/js/wowchemy.min.64fd16cc68b6a5f25e0156dfff88edff.js"></script>
+
+    
 
 
 
 
 
-<script src='/js/bundle.min.3e2cb25916e0577d6eaf45f0f6125a6156723011439209b222abd8207bb6057f.js' integrity='sha256-PiyyWRbgV31ur0Xw9hJaYVZyMBFDkgmyIqvYIHu2BX8='></script>
 
-
-
-
-
-
-  </body>
+</body>
 </html>
-

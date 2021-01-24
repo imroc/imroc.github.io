@@ -1,26 +1,16 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Categories on roc</title>
-    <link>https://imroc.io/en/categories/</link>
-    <description>Recent content in Categories on roc</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>zh</language>
-    <managingEditor>roc@imroc.io (roc)</managingEditor>
-    <webMaster>roc@imroc.io (roc)</webMaster>
-    <lastBuildDate>Sat, 30 Nov 2019 15:32:00 +0800</lastBuildDate>
-    
-	<atom:link href="https://imroc.io/en/categories/index.xml" rel="self" type="application/rss+xml" />
-    
-    
-    <item>
-      <title>kubernetes</title>
-      <link>https://imroc.io/en/categories/kubernetes/</link>
-      <pubDate>Sat, 30 Nov 2019 15:32:00 +0800</pubDate>
-      <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/en/categories/kubernetes/</guid>
-      <description></description>
-    </item>
+    <title>Categories | roc的个人网站</title>
+    <link>/en/categories/</link>
+      <atom:link href="/en/categories/index.xml" rel="self" type="application/rss+xml" />
+    <description>Categories</description>
+    <generator>Wowchemy (https://wowchemy.com)</generator><language>en-us</language><copyright>roc © 2021</copyright>
+    <image>
+      <url>/images/icon_hua2ec155b4296a9c9791d015323e16eb5_11927_512x512_fill_lanczos_center_2.png</url>
+      <title>Categories</title>
+      <link>/en/categories/</link>
+    </image>
     
   </channel>
 </rss>

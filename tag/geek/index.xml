@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>geek | roc的个人网站</title>
+    <link>/tag/geek/</link>
+      <atom:link href="/tag/geek/index.xml" rel="self" type="application/rss+xml" />
+    <description>geek</description>
+    <generator>Wowchemy (https://wowchemy.com)</generator><language>zh-Hans</language><copyright>roc © 2021</copyright><lastBuildDate>Sun, 21 Oct 2018 07:00:00 +0800</lastBuildDate>
+    <image>
+      <url>/images/icon_hua2ec155b4296a9c9791d015323e16eb5_11927_512x512_fill_lanczos_center_2.png</url>
+      <title>geek</title>
+      <link>/tag/geek/</link>
+    </image>
+    
+    <item>
+      <title>极客工具之 Alfred 与 Dash</title>
+      <link>/post/201810/alfred-and-dash/</link>
+      <pubDate>Sun, 21 Oct 2018 07:00:00 +0800</pubDate>
+      <guid>/post/201810/alfred-and-dash/</guid>
+      <description>&lt;details class=&#34;toc-inpage d-print-none  &#34; open&gt;
+  &lt;summary class=&#34;font-weight-bold&#34;&gt;目录&lt;/summary&gt;
+  &lt;nav id=&#34;TableOfContents&#34;&gt;
+  &lt;ul&gt;
+    &lt;li&gt;&lt;a href=&#34;#alfred&#34;&gt;Alfred&lt;/a&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/li&gt;
+    &lt;li&gt;&lt;a href=&#34;#dash&#34;&gt;Dash&lt;/a&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/li&gt;
+    &lt;li&gt;&lt;a href=&#34;#推荐系统快捷键&#34;&gt;推荐系统快捷键&lt;/a&gt;&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/nav&gt;
+&lt;/details&gt;
+&lt;h2 id=&#34;alfred&#34;&gt;Alfred&lt;/h2&gt;
+&lt;p&gt;使用 Alfred 可以让你在 macOS 程序间自由切换、快速查找或打开文件、调起浏览器进行网页搜索、 还可以做计算器。 另外，还有许多其它搜索功能以及付费的工作流特性，Powerpack 就是 Alfred 工作流模块，需要付费才能使用，不过，我觉得免费的功能已经完全够用了， 而且很简洁，功能太多咱也学不过来。&lt;/p&gt;
+&lt;h4 id=&#34;下载安装&#34;&gt;下载安装&lt;/h4&gt;
+&lt;p&gt;Alfred 官网是 &lt;a href=&#34;https://www.alfredapp.com/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;https://www.alfredapp.com/&lt;/a&gt;&lt;/p&gt;
+&lt;h4 id=&#34;禁用自带的-spotlight&#34;&gt;禁用自带的 Spotlight&lt;/h4&gt;
+&lt;p&gt;macOS 自带了搜索工具 Spotlight, 但是功能相对于 Alfred 就弱爆了，它默认的快捷键是 &lt;code&gt;cmd+space&lt;/code&gt;，我们最好禁用它，进入 &lt;code&gt;系统偏好设置-键盘-快捷键-聚焦&lt;/code&gt;，然后取消勾选 &lt;code&gt;显示“聚焦”搜索&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://res.cloudinary.com/imroc/image/upload/v1540031377/blog/geek/alfred-disable-spotlight.png&#34; alt=&#34;alfred setting&#34;&gt;&lt;/p&gt;
+&lt;p&gt;并且将 Alfred 的热键也设为 &lt;code&gt;cmd+space&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://res.cloudinary.com/imroc/image/upload/v1540031375/blog/geek/alfred-setting.png&#34; alt=&#34;alfred setting&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;程序间快速切换&#34;&gt;程序间快速切换&lt;/h4&gt;
+&lt;p&gt;我们之前常用的程序切换方式有：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;cmd+tab 和 shift+cmd+tab 切换程序&lt;/li&gt;
+&lt;li&gt;在触摸板三根手指上滑打开调度中心，结合三根手指左右滑切换桌面，然后选择要切换的程序&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;它们的缺点很明显，程序窗口所在的位置不一定是固定的，需要观察一下才能找到，而且如果打开的程序非常多，找起来就更麻烦。如果用 Alfred， 则只需输入能匹配程序名称部分的简短字母就能找到（如果程序含中文名，使用拼音也能搜到)， 再按下回车就能切换到指定程序上，比如切换到 &lt;code&gt;Google Chrome&lt;/code&gt;，只需要输入 &lt;code&gt;chr&lt;/code&gt; 就能定位到 Chrome 浏览器。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://res.cloudinary.com/imroc/image/upload/v1540031373/blog/geek/alfred-search-app.png&#34; alt=&#34;search app&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;快速查找和打开文件或目录&#34;&gt;快速查找和打开文件或目录&lt;/h4&gt;
+&lt;p&gt;Alfred 还支持很多指令，&lt;code&gt;find&lt;/code&gt; 是在磁盘找到文件，回车后就将搜到的文件或目录显示在 Finder 中，搜索是瞬间完成的，灰常灰常快。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://res.cloudinary.com/imroc/image/upload/v1540031373/blog/geek/alfred-find.png&#34; alt=&#34;aflred find&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;open&lt;/code&gt; 命令与 &lt;code&gt;find&lt;/code&gt; 类似，唯一的区别是 &lt;code&gt;open&lt;/code&gt; 会将文件直接通过默认的打开方式打开而不是显示在 &lt;code&gt;Finder&lt;/code&gt; 中。&lt;/p&gt;
+&lt;h4 id=&#34;计算器&#34;&gt;计算器&lt;/h4&gt;
+&lt;p&gt;偶尔我们需要做些数学计算，打开自带的计算器太麻烦，而且功能很弱，面对复杂的数学表达式输入显得不够直观简单，利用 Alfred 可以直接输入可读性很好的运算表达式，非常直观简单。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://res.cloudinary.com/imroc/image/upload/v1540031373/blog/geek/alfred-calculator.png&#34; alt=&#34;aflred calculator&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;网页搜索&#34;&gt;网页搜索&lt;/h4&gt;
+&lt;p&gt;没有输入命令的情况下，如果你的输入无法找到对应的程序，默认就会推荐到网页搜索&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://res.cloudinary.com/imroc/image/upload/v1540031376/blog/geek/alfred-search-web.png&#34; alt=&#34;aflred search web&#34;&gt;&lt;/p&gt;
+&lt;p&gt;你也可以一开始就指定用某个搜索引擎搜索，比如谷歌默认用的 &lt;code&gt;gg&lt;/code&gt; 命令&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://res.cloudinary.com/imroc/image/upload/v1540031373/blog/geek/alfred-search-google.png&#34; alt=&#34;aflred search google&#34;&gt;&lt;/p&gt;
+&lt;p&gt;你还可以自定义搜索引擎，比如百度、淘宝、京东、Github 等，以添加 Github 为例，打开 Alfred 的 &lt;code&gt;Preferences-Features-Web Search-Add Custom Search&lt;/code&gt;， 各选项填写如下：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Search URL: &lt;a href=&#34;https://github.com/search?q=%7Bquery%7D&#34;&gt;https://github.com/search?q={query}&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Title: Search with Github for {query}&lt;/li&gt;
+&lt;li&gt;Keyword: gh&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;https://res.cloudinary.com/imroc/image/upload/v1540031374/blog/geek/alfred-custom-search.png&#34; alt=&#34;aflred custom search&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;{query}&lt;/code&gt; 是会填充的搜索词变量，随便在 Github 搜索一个关键词，然后复制 url ，将搜索词替换为 &lt;code&gt;{query}&lt;/code&gt; 就得到 &lt;code&gt;Search URL&lt;/code&gt; 了，其它搜索引擎的 &lt;code&gt;Search URL&lt;/code&gt; 也同理可得。&lt;/p&gt;
+&lt;p&gt;现在在 Alfred 中输入 &lt;code&gt;gh&lt;/code&gt; 命令就可以搜索 Github 项目了，如果希望搜索的时候显示 Github 的 logo，可以自己把 logo 图片文件拖到上图设置右侧方框处。&lt;/p&gt;
+&lt;h2 id=&#34;dash&#34;&gt;Dash&lt;/h2&gt;
+&lt;p&gt;很多人应该都知道 Dash ，程序员看文档的神器，但其实它还有一个功能: &lt;code&gt;Snippets&lt;/code&gt;，这才是我频繁使用它的原因。它可以让你不受编辑器约束，在任意可以输入的地方都快速输入代码片段或者叫做文本模板，避免重复输入，提高效率。我会举一些实际使用的例子让你知道它为什么这么爽。&lt;/p&gt;
+&lt;h4 id=&#34;下载安装-1&#34;&gt;下载安装&lt;/h4&gt;
+&lt;p&gt;Dash 的官网是 &lt;a href=&#34;https://kapeli.com/dash&#34;&gt;https://kapeli.com/dash&lt;/a&gt;&lt;/p&gt;
+&lt;h4 id=&#34;确保-dash-权限&#34;&gt;确保 Dash 权限&lt;/h4&gt;
+&lt;p&gt;进入 &lt;code&gt;系统偏好设置-键盘-快捷键-服务&lt;/code&gt;，确保搜索下面的 &lt;code&gt;Look Up in Dash&lt;/code&gt; 是勾选状态&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://res.cloudinary.com/imroc/image/upload/v1540031374/blog/geek/dash-setting.png&#34; alt=&#34;dash setting&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;添加-snippet&#34;&gt;添加 Snippet&lt;/h4&gt;
+&lt;p&gt;进入 Dash 的 Snippets，我们尝试添加一个，就拿我经常要输入的命令的举例&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://res.cloudinary.com/imroc/image/upload/v1540031375/blog/geek/dash-snippets.png&#34; alt=&#34;dash snippets&#34;&gt;&lt;/p&gt;
+&lt;p&gt;新建了一个名字是 &lt;code&gt;kx.&lt;/code&gt; 的 &lt;code&gt;Snippet&lt;/code&gt;，不管我们在哪输入了这个名字，他都会触发这个 &lt;code&gt;Snippet&lt;/code&gt;，我习惯用 &amp;ldquo;.&amp;rdquo; 号来触发，所以在名字默认都加了 &amp;ldquo;.&amp;rdquo;&lt;/p&gt;
+&lt;p&gt;来看下使用效果&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://res.cloudinary.com/imroc/image/upload/v1540031374/blog/geek/dash-demo.gif&#34; alt=&#34;dash demo&#34;&gt;&lt;/p&gt;
+&lt;p&gt;除了方便我们快速输入常用而又冗长的命令之外，你还可以把常用的服务器 ip 也做成 &lt;code&gt;Snippet&lt;/code&gt;，起个容易记得名字，这样你的服务器 ip 很多也不怕了， 不需要查服务器 ip 列表，直接输入 &lt;code&gt;Snippet&lt;/code&gt; 名称。你也可以把你的公钥也做成 &lt;code&gt;Snippet&lt;/code&gt;，这样就可以很方便把公钥输入到服务器的 &lt;code&gt;~/.ssh/authorized_keys&lt;/code&gt; ，以便让我们不输入密码就可以登录服务器。当然你写代码的时候还可以用它来键入代码片段，不过它和 vscode 兼容性有点不好，有时会输入不想要的字符。我建议代码片段功能就用编辑器或 IDE 自带的，功能更加丰富点。&lt;/p&gt;
+&lt;h2 id=&#34;推荐系统快捷键&#34;&gt;推荐系统快捷键&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;在 &lt;code&gt;系统偏好设置-键盘-修饰键&lt;/code&gt; 把 &lt;code&gt;大写锁定键&lt;/code&gt; 映射为 &lt;code&gt;Control&lt;/code&gt; 键，因为 ctrl 用的实在太频繁了，自带的键盘和其它普通的键盘的 ctrl 键位不好按，像 hhkb 这种键盘的 ctrl 键本身就在普通键盘的大写锁定键位置，所以就不用映射。&lt;/li&gt;
+&lt;li&gt;在 &lt;code&gt;系统偏好设置-键盘-调度中心&lt;/code&gt;，将 &lt;code&gt;向左移动一个空间&lt;/code&gt; 快捷键绑定为 &lt;code&gt;ctrl+,&lt;/code&gt;，&lt;code&gt;向右移动一个空间&lt;/code&gt; 快捷键绑定为 &lt;code&gt;ctrl+.&lt;/code&gt;。这样多个桌面空间之间的切换也很方便了，快捷键也不会跟其它软件冲突。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;最后，我还录了一个视频供大家参考学习：&lt;/p&gt;
+&lt;p&gt;&lt;embed src=&#34;https://imgcache.qq.com/tencentvideo_v1/playerv3/TPout.swf?max_age=86400&amp;v=20161117&amp;vid=f075714x4s9&amp;auto=0&#34; allowFullScreen=&#34;true&#34; quality=&#34;high&#34; width=&#34;900&#34; height=&#34;700&#34; align=&#34;middle&#34; allowScriptAccess=&#34;always&#34; type=&#34;application/x-shockwave-flash&#34;&gt;&lt;/embed&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

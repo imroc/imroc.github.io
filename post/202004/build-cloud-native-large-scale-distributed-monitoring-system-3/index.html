@@ -1,0 +1,2248 @@
+<!DOCTYPE html><html lang="zh-Hans" >
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  
+  
+  
+  <meta name="generator" content="Wowchemy 5.0.0-beta.1 for Hugo">
+  
+
+  
+
+  
+  
+
+  
+  
+  
+  
+  
+    
+    
+    
+  
+  
+
+  <meta name="author" content="roc">
+
+  
+  
+  
+    
+  
+  <meta name="description" content="
+  目录
+  
+  
+    视频
+    概述
+    部署方式
+    方案选型
+      
+        Sidecar or Receiver
+        评估是否需要 Ruler
+        评估是否需要 Store Gateway 与 Compact
+      
+    
+    部署实践
+      
+        准备对象存储配置
+        给 Prometheus 加上 Sidecar
+        安装 Query
+        安装 Store Gateway
+        安装 Ruler
+        安装 Compact
+        安装 Receiver
+        指定 Query 为数据源
+      
+    
+    总结
+  
+
+
+视频
+附上本系列完整视频
+
+打造云原生大型分布式监控系统(一): 大规模场景下 Prometheus 的优化手段 https://www.bilibili.com/video/BV17C4y1x7HE
+打造云原生大型分布式监控系统(二): Thanos 架构详解 https://www.bilibili.com/video/BV1Vk4y1R7S9
+打造云原生大型分布式监控系统(三): Thanos 部署与实践 https://www.bilibili.com/video/BV16g4y187HD
+
+概述
+上一篇 Thanos 架构详解 我们深入理解了 thanos 的架构设计与实现原理，现在我们来聊聊实战，分享一下如何部署和使用 Thanos。">
+
+  
+  <link rel="alternate" hreflang="zh-Hans" href="/post/202004/build-cloud-native-large-scale-distributed-monitoring-system-3/">
+
+  
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  
+
+  
+  
+  
+  <meta name="theme-color" content="#1565c0">
+  
+
+  
+  
+
+  
+  
+  
+  
+    
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha256-FMvZuGapsJLjouA6k7Eo2lusoAX9i0ShlWFG6qt7SLc=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous" media="print" onload="this.media='all'">
+
+    
+    
+    
+      
+    
+    
+      
+      
+        
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/styles/github.min.css" crossorigin="anonymous" title="hl-light" media="print" onload="this.media='all'">
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/styles/dracula.min.css" crossorigin="anonymous" title="hl-dark" media="print" onload="this.media='all'" disabled>
+        
+      
+    
+
+    
+
+    
+
+    
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.2.2/lazysizes.min.js" integrity="sha512-TmDwFLhg3UA4ZG0Eb4MIyT1O1Mb+Oww5kFG0uHqXsdbyZz9DcvYQhKpGgNkamAI6h2lGGZq2X8ftOJvF/XjTUg==" crossorigin="anonymous" async></script>
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+        
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+
+  
+
+  
+  
+  
+    
+      
+      <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Roboto+Mono&family=Roboto:wght@400;700&display=swap">
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Roboto+Mono&family=Roboto:wght@400;700&display=swap" media="print" onload="this.media='all'">
+    
+  
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="/css/wowchemy.a2dda909fb8228e17412d06b4423e0a6.css">
+
+  
+
+
+
+
+  
+
+  
+
+
+  
+  
+
+  
+
+  
+  <link rel="manifest" href="/index.webmanifest">
+  
+
+  <link rel="icon" type="image/png" href="/images/icon_hua2ec155b4296a9c9791d015323e16eb5_11927_32x32_fill_lanczos_center_2.png">
+  <link rel="apple-touch-icon" type="image/png" href="/images/icon_hua2ec155b4296a9c9791d015323e16eb5_11927_192x192_fill_lanczos_center_2.png">
+
+  <link rel="canonical" href="/post/202004/build-cloud-native-large-scale-distributed-monitoring-system-3/">
+
+  
+  
+  
+  
+  
+  
+  
+    
+    
+  
+  
+  <meta property="twitter:card" content="summary">
+  
+  <meta property="twitter:site" content="@imrocchan">
+  <meta property="twitter:creator" content="@imrocchan">
+  
+  <meta property="og:site_name" content="roc的个人网站">
+  <meta property="og:url" content="/post/202004/build-cloud-native-large-scale-distributed-monitoring-system-3/">
+  <meta property="og:title" content="打造云原生大型分布式监控系统(三): Thanos 部署与实践 | roc的个人网站">
+  <meta property="og:description" content="
+  目录
+  
+  
+    视频
+    概述
+    部署方式
+    方案选型
+      
+        Sidecar or Receiver
+        评估是否需要 Ruler
+        评估是否需要 Store Gateway 与 Compact
+      
+    
+    部署实践
+      
+        准备对象存储配置
+        给 Prometheus 加上 Sidecar
+        安装 Query
+        安装 Store Gateway
+        安装 Ruler
+        安装 Compact
+        安装 Receiver
+        指定 Query 为数据源
+      
+    
+    总结
+  
+
+
+视频
+附上本系列完整视频
+
+打造云原生大型分布式监控系统(一): 大规模场景下 Prometheus 的优化手段 https://www.bilibili.com/video/BV17C4y1x7HE
+打造云原生大型分布式监控系统(二): Thanos 架构详解 https://www.bilibili.com/video/BV1Vk4y1R7S9
+打造云原生大型分布式监控系统(三): Thanos 部署与实践 https://www.bilibili.com/video/BV16g4y187HD
+
+概述
+上一篇 Thanos 架构详解 我们深入理解了 thanos 的架构设计与实现原理，现在我们来聊聊实战，分享一下如何部署和使用 Thanos。"><meta property="og:image" content="/images/icon_hua2ec155b4296a9c9791d015323e16eb5_11927_512x512_fill_lanczos_center_2.png">
+  <meta property="twitter:image" content="/images/icon_hua2ec155b4296a9c9791d015323e16eb5_11927_512x512_fill_lanczos_center_2.png"><meta property="og:locale" content="zh-Hans">
+  
+    
+      <meta property="article:published_time" content="2020-04-20T00:00:00&#43;00:00">
+    
+    <meta property="article:modified_time" content="2020-04-20T00:00:00&#43;00:00">
+  
+
+  
+
+
+    
+
+
+
+
+
+
+  
+
+
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "/post/202004/build-cloud-native-large-scale-distributed-monitoring-system-3/"
+  },
+  "headline": "打造云原生大型分布式监控系统(三): Thanos 部署与实践",
+  
+  "datePublished": "2020-04-20T00:00:00Z",
+  "dateModified": "2020-04-20T00:00:00Z",
+  
+  "author": {
+    "@type": "Person",
+    "name": "roc"
+  },
+  
+  "publisher": {
+    "@type": "Organization",
+    "name": "roc的个人网站",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "/images/icon_hua2ec155b4296a9c9791d015323e16eb5_11927_192x192_fill_lanczos_center_2.png"
+    }
+  },
+  "description": "\u003cdetails class=\"toc-inpage d-print-none  \" open\u003e\n  \u003csummary class=\"font-weight-bold\"\u003e目录\u003c/summary\u003e\n  \u003cnav id=\"TableOfContents\"\u003e\n  \u003cul\u003e\n    \u003cli\u003e\u003ca href=\"#视频\"\u003e视频\u003c/a\u003e\u003c/li\u003e\n    \u003cli\u003e\u003ca href=\"#概述\"\u003e概述\u003c/a\u003e\u003c/li\u003e\n    \u003cli\u003e\u003ca href=\"#部署方式\"\u003e部署方式\u003c/a\u003e\u003c/li\u003e\n    \u003cli\u003e\u003ca href=\"#方案选型\"\u003e方案选型\u003c/a\u003e\n      \u003cul\u003e\n        \u003cli\u003e\u003ca href=\"#sidecar-or-receiver\"\u003eSidecar or Receiver\u003c/a\u003e\u003c/li\u003e\n        \u003cli\u003e\u003ca href=\"#评估是否需要-ruler\"\u003e评估是否需要 Ruler\u003c/a\u003e\u003c/li\u003e\n        \u003cli\u003e\u003ca href=\"#评估是否需要-store-gateway-与-compact\"\u003e评估是否需要 Store Gateway 与 Compact\u003c/a\u003e\u003c/li\u003e\n      \u003c/ul\u003e\n    \u003c/li\u003e\n    \u003cli\u003e\u003ca href=\"#部署实践\"\u003e部署实践\u003c/a\u003e\n      \u003cul\u003e\n        \u003cli\u003e\u003ca href=\"#准备对象存储配置\"\u003e准备对象存储配置\u003c/a\u003e\u003c/li\u003e\n        \u003cli\u003e\u003ca href=\"#给-prometheus-加上-sidecar\"\u003e给 Prometheus 加上 Sidecar\u003c/a\u003e\u003c/li\u003e\n        \u003cli\u003e\u003ca href=\"#安装-query\"\u003e安装 Query\u003c/a\u003e\u003c/li\u003e\n        \u003cli\u003e\u003ca href=\"#安装-store-gateway\"\u003e安装 Store Gateway\u003c/a\u003e\u003c/li\u003e\n        \u003cli\u003e\u003ca href=\"#安装-ruler\"\u003e安装 Ruler\u003c/a\u003e\u003c/li\u003e\n        \u003cli\u003e\u003ca href=\"#安装-compact\"\u003e安装 Compact\u003c/a\u003e\u003c/li\u003e\n        \u003cli\u003e\u003ca href=\"#安装-receiver\"\u003e安装 Receiver\u003c/a\u003e\u003c/li\u003e\n        \u003cli\u003e\u003ca href=\"#指定-query-为数据源\"\u003e指定 Query 为数据源\u003c/a\u003e\u003c/li\u003e\n      \u003c/ul\u003e\n    \u003c/li\u003e\n    \u003cli\u003e\u003ca href=\"#总结\"\u003e总结\u003c/a\u003e\u003c/li\u003e\n  \u003c/ul\u003e\n\u003c/nav\u003e\n\u003c/details\u003e\n\u003ch2 id=\"视频\"\u003e视频\u003c/h2\u003e\n\u003cp\u003e附上本系列完整视频\u003c/p\u003e\n\u003cul\u003e\n\u003cli\u003e打造云原生大型分布式监控系统(一): 大规模场景下 Prometheus 的优化手段 \u003ca href=\"https://www.bilibili.com/video/BV17C4y1x7HE\"\u003ehttps://www.bilibili.com/video/BV17C4y1x7HE\u003c/a\u003e\u003c/li\u003e\n\u003cli\u003e打造云原生大型分布式监控系统(二): Thanos 架构详解 \u003ca href=\"https://www.bilibili.com/video/BV1Vk4y1R7S9\"\u003ehttps://www.bilibili.com/video/BV1Vk4y1R7S9\u003c/a\u003e\u003c/li\u003e\n\u003cli\u003e打造云原生大型分布式监控系统(三): Thanos 部署与实践 \u003ca href=\"https://www.bilibili.com/video/BV16g4y187HD\"\u003ehttps://www.bilibili.com/video/BV16g4y187HD\u003c/a\u003e\u003c/li\u003e\n\u003c/ul\u003e\n\u003ch2 id=\"概述\"\u003e概述\u003c/h2\u003e\n\u003cp\u003e上一篇 \u003ca href=\"../build-cloud-native-large-scale-distributed-monitoring-system-2\"\u003eThanos 架构详解\u003c/a\u003e 我们深入理解了 thanos 的架构设计与实现原理，现在我们来聊聊实战，分享一下如何部署和使用 Thanos。\u003c/p\u003e"
+}
+</script>
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+
+  <title>打造云原生大型分布式监控系统(三): Thanos 部署与实践 | roc的个人网站</title>
+
+</head>
+
+
+<body id="top" data-spy="scroll" data-offset="70" data-target="#TableOfContents" class="page-wrapper  ">
+
+  
+  
+  
+  
+  
+  
+  
+  
+  <script src="/js/wowchemy-init.min.7264cf0eba3b66951b36da7d2cecf9c5.js"></script>
+
+  
+
+<aside class="search-modal" id="search">
+  <div class="container">
+    <section class="search-header">
+
+      <div class="row no-gutters justify-content-between mb-3">
+        <div class="col-6">
+          <h1>搜索</h1>
+        </div>
+        <div class="col-6 col-search-close">
+          <a class="js-search" href="#" aria-label="Close"><i class="fas fa-times-circle text-muted" aria-hidden="true"></i></a>
+        </div>
+      </div>
+
+      <div id="search-box">
+        
+        <input name="q" id="search-query" placeholder="搜索..." autocapitalize="off"
+        autocomplete="off" autocorrect="off" spellcheck="false" type="search" class="form-control"
+        aria-label="搜索...">
+        
+      </div>
+
+      
+      
+
+      
+
+    </section>
+    <section class="section-search-results">
+
+      <div id="search-hits">
+        
+      </div>
+
+    </section>
+  </div>
+</aside>
+
+
+
+  <div class="page-header">
+    
+
+
+
+
+
+
+
+
+
+
+
+
+<nav class="navbar navbar-expand-lg navbar-light compensate-for-scrollbar" id="navbar-main">
+  <div class="container-xl">
+
+    
+
+    
+    <button type="button" class="navbar-toggler" data-toggle="collapse"
+            data-target="#navbar-content" aria-controls="navbar" aria-expanded="false" aria-label="切换导航">
+    <span><i class="fas fa-bars"></i></span>
+    </button>
+    
+
+    
+
+    
+    
+    <div class="navbar-collapse main-menu-item collapse justify-content-center" id="navbar-content">
+
+      
+      <ul class="navbar-nav d-md-inline-flex">
+        
+
+        
+
+        
+        
+        
+
+        
+
+        
+        
+        
+        
+
+        
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/"><span>主页</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+
+        
+        
+        
+        
+
+        
+          
+            
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/post/"><span>技术博客</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+
+        
+        
+        
+        
+
+        
+          
+            
+            
+          
+          
+            
+            
+            
+              
+            
+            
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#notes"><span>学习笔记</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+
+        
+        
+        
+        
+
+        
+          
+            
+            
+          
+          
+            
+            
+            
+              
+            
+            
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#tags"><span>内容标签</span></a>
+        </li>
+
+        
+        
+
+      
+
+        
+      </ul>
+    </div>
+
+    <ul class="nav-icons navbar-nav flex-row ml-auto d-flex pl-md-2">
+
+      
+      
+        
+      
+
+      
+      
+      <li class="nav-item">
+        <a class="nav-link js-search" href="#" aria-label="搜索"><i class="fas fa-search" aria-hidden="true"></i></a>
+      </li>
+      
+
+      
+      
+      <li class="nav-item dropdown theme-dropdown">
+        <a href="#" class="nav-link" data-toggle="dropdown" aria-haspopup="true" aria-label="Display preferences">
+          <i class="fas fa-moon" aria-hidden="true"></i>
+        </a>
+        <div class="dropdown-menu">
+          <a href="#" class="dropdown-item js-set-theme-light">
+            <span>浅色</span>
+          </a>
+          <a href="#" class="dropdown-item js-set-theme-dark">
+            <span>深色</span>
+          </a>
+          <a href="#" class="dropdown-item js-set-theme-auto">
+            <span>自动</span>
+          </a>
+        </div>
+      </li>
+      
+
+      
+
+    </ul>
+
+  </div>
+</nav>
+
+
+  </div>
+
+  <div class="page-body">
+    <article class="article">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+  
+  
+<div class="article-container pt-3">
+  <h1>打造云原生大型分布式监控系统(三): Thanos 部署与实践</h1>
+
+  
+
+  
+    
+
+
+<div class="article-metadata">
+
+  
+  
+  
+  
+  <div>
+    
+
+  <span class="author-highlighted">
+      roc</span>
+  </div>
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    Apr 20, 2020
+  </span>
+  
+
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    11 分钟阅读时长
+  </span>
+  
+
+  
+  
+  
+  
+  
+
+  
+  
+
+</div>
+
+    
+
+
+
+
+
+  
+</div>
+
+
+
+  <div class="article-container">
+
+    <div class="article-style">
+      <details class="toc-inpage d-print-none  " open>
+  <summary class="font-weight-bold">目录</summary>
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#视频">视频</a></li>
+    <li><a href="#概述">概述</a></li>
+    <li><a href="#部署方式">部署方式</a></li>
+    <li><a href="#方案选型">方案选型</a>
+      <ul>
+        <li><a href="#sidecar-or-receiver">Sidecar or Receiver</a></li>
+        <li><a href="#评估是否需要-ruler">评估是否需要 Ruler</a></li>
+        <li><a href="#评估是否需要-store-gateway-与-compact">评估是否需要 Store Gateway 与 Compact</a></li>
+      </ul>
+    </li>
+    <li><a href="#部署实践">部署实践</a>
+      <ul>
+        <li><a href="#准备对象存储配置">准备对象存储配置</a></li>
+        <li><a href="#给-prometheus-加上-sidecar">给 Prometheus 加上 Sidecar</a></li>
+        <li><a href="#安装-query">安装 Query</a></li>
+        <li><a href="#安装-store-gateway">安装 Store Gateway</a></li>
+        <li><a href="#安装-ruler">安装 Ruler</a></li>
+        <li><a href="#安装-compact">安装 Compact</a></li>
+        <li><a href="#安装-receiver">安装 Receiver</a></li>
+        <li><a href="#指定-query-为数据源">指定 Query 为数据源</a></li>
+      </ul>
+    </li>
+    <li><a href="#总结">总结</a></li>
+  </ul>
+</nav>
+</details>
+<h2 id="视频">视频</h2>
+<p>附上本系列完整视频</p>
+<ul>
+<li>打造云原生大型分布式监控系统(一): 大规模场景下 Prometheus 的优化手段 <a href="https://www.bilibili.com/video/BV17C4y1x7HE">https://www.bilibili.com/video/BV17C4y1x7HE</a></li>
+<li>打造云原生大型分布式监控系统(二): Thanos 架构详解 <a href="https://www.bilibili.com/video/BV1Vk4y1R7S9">https://www.bilibili.com/video/BV1Vk4y1R7S9</a></li>
+<li>打造云原生大型分布式监控系统(三): Thanos 部署与实践 <a href="https://www.bilibili.com/video/BV16g4y187HD">https://www.bilibili.com/video/BV16g4y187HD</a></li>
+</ul>
+<h2 id="概述">概述</h2>
+<p>上一篇 <a href="../build-cloud-native-large-scale-distributed-monitoring-system-2">Thanos 架构详解</a> 我们深入理解了 thanos 的架构设计与实现原理，现在我们来聊聊实战，分享一下如何部署和使用 Thanos。</p>
+<h2 id="部署方式">部署方式</h2>
+<p>本文聚焦 Thanos 的云原生部署方式，充分利用 Kubernetes 的资源调度与动态扩容能力。从官方 <a href="https://thanos.io/getting-started.md/#community-thanos-kubernetes-applications" target="_blank" rel="noopener">这里</a> 可以看到，当前 thanos 在 Kubernetes 上部署有以下三种：</p>
+<ul>
+<li><a href="https://github.com/coreos/prometheus-operator" target="_blank" rel="noopener">prometheus-operator</a>: 集群中安装了 prometheus-operator 后，就可以通过创建 CRD 对象来部署 Thanos 了。</li>
+<li><a href="https://hub.helm.sh/charts?q=thanos" target="_blank" rel="noopener">社区贡献的一些 helm charts</a>: 很多个版本，目标都是能够使用 helm 来一键部署 thanos。</li>
+<li><a href="https://github.com/thanos-io/kube-thanos" target="_blank" rel="noopener">kube-thanos</a>: Thanos 官方的开源项目，包含部署 thanos 到 kubernetes 的 jsonnet 模板与 yaml 示例。</li>
+</ul>
+<p>本文将使用基于 kube-thanos 提供的 yaml 示例 (<code>examples/all/manifests</code>) 来部署，原因是 prometheus-operator 与社区的 helm chart 方式部署多了一层封装，屏蔽了许多细节，并且它们的实现都还不太成熟；直接使用 kubernetes 的 yaml 资源文件部署更直观，也更容易做自定义，而且我相信使用 thanos 的用户通常都是高玩了，也有必要对 thanos 理解透彻，日后才好根据实际场景做架构和配置的调整，直接使用 yaml 部署能够让我们看清细节。</p>
+<h2 id="方案选型">方案选型</h2>
+<h3 id="sidecar-or-receiver">Sidecar or Receiver</h3>
+<p>看了上一篇文章的同学应该知道，目前官方的架构图用的 Sidecar 方案，Receiver 是一个暂时还没有完全发布的组件。通常来说，Sidecar 方案相对成熟一些，最新的数据存储和计算 (比如聚合函数) 比较 &ldquo;分布式&rdquo;，更加高效也更容易扩展。</p>
+<p><img src="https://imroc.io/assets/blog/thanos-sidecar.png" alt=""></p>
+<p>Receiver 方案是让 Prometheus 通过 remote wirte API 将数据 push 到 Receiver 集中存储 (同样会清理过期数据):</p>
+<p><img src="https://imroc.io/assets/blog/thanos-receiver-without-objectstore.png" alt=""></p>
+<p>那么该选哪种方案呢？我的建议是：</p>
+<ol>
+<li>如果你的 Query 跟 Sidecar 离的比较远，比如 Sidecar 分布在多个数据中心，Query 向所有 Sidecar 查数据，速度会很慢，这种情况可以考虑用 Receiver，将数据集中吐到 Receiver，然后 Receiver 与 Query 部署在一起，Query 直接向 Receiver 查最新数据，提升查询性能。</li>
+<li>如果你的使用场景只允许 Prometheus 将数据 push 到远程，可以考虑使用 Receiver。比如 IoT 设备没有持久化存储，只能将数据 push 到远程。</li>
+</ol>
+<p>此外的场景应该都尽量使用 Sidecar 方案。</p>
+<h3 id="评估是否需要-ruler">评估是否需要 Ruler</h3>
+<p>Ruler 是一个可选组件，原则上推荐尽量使用 Prometheus 自带的 rule 功能 (生成新指标+告警)，这个功能需要一些 Prometheus 最新数据，直接使用 Prometheus 本机 rule 功能和数据，性能开销相比 Thanos Ruler 这种分布式方案小得多，并且几乎不会出错，Thanos Ruler 由于是分布式，所以更容易出错一些。</p>
+<p>如果某些有关联的数据分散在多个不同 Prometheus 上，比如对某个大规模服务采集做了分片，每个 Prometheus 仅采集一部分 endpoint 的数据，对于 <code>record</code> 类型的 rule (生成的新指标)，还是可以使用 Prometheus 自带的 rule 功能，在查询时再聚合一下就可以(如果可以接受的话)；对于 <code>alert</code> 类型的 rule，就需要用 Thanos Ruler 来做了，因为有关联的数据分散在多个 Prometheus 上，用单机数据去做 alert 计算是不准确的，就可能会造成误告警或不告警。</p>
+<h3 id="评估是否需要-store-gateway-与-compact">评估是否需要 Store Gateway 与 Compact</h3>
+<p>Store 也是一个可选组件，也是 Thanos 的一大亮点的关键：数据长期保存。</p>
+<p>评估是否需要 Store 组件实际就是评估一下自己是否有数据长期存储的需求，比如查看一两个月前的监控数据。如果有，那么 Thanos 可以将数据上传到对象存储保存。Thanos 支持以下对象存储:</p>
+<ul>
+<li>Google Cloud Storage</li>
+<li>AWS/S3</li>
+<li>Azure Storage Account</li>
+<li>OpenStack Swift</li>
+<li>Tencent COS</li>
+<li>AliYun OSS</li>
+</ul>
+<p>在国内，最方便还是使用腾讯云 COS 或者阿里云 OSS 这样的公有云对象存储服务。如果你的服务没有跑在公有云上，也可以通过跟云服务厂商拉专线的方式来走内网使用对象存储，这样速度通常也是可以满足需求的；如果实在用不了公有云的对象存储服务，也可以自己安装 <a href="https://github.com/minio/minio" target="_blank" rel="noopener">minio</a> 来搭建兼容 AWS 的 S3 对象存储服务。</p>
+<p>搞定了对象存储，还需要给 Thanos 多个组件配置对象存储相关的信息，以便能够上传与读取监控数据。除 Query 以外的所有 Thanos 组件 (Sidecar、Receiver、Ruler、Store Gateway、Compact) 都需要配置对象存储信息，使用 <code>--objstore.config</code> 直接配置内容或 <code>--objstore.config-file</code> 引用对象存储配置文件，不同对象存储配置方式不一样，参考官方文档: <a href="https://thanos.io/storage.md">https://thanos.io/storage.md</a></p>
+<p>通常使用了对象存储来长期保存数据不止要安装 Store Gateway，还需要安装 Compact 来对对象存储里的数据进行压缩与降采样，这样可以提升查询大时间范围监控数据的性能。注意：Compact 并不会减少对象存储的使用空间，而是会增加，增加更长采样间隔的监控数据，这样当查询大时间范围的数据时，就自动拉取更长时间间隔采样的数据以减少查询数据的总量，从而加快查询速度 (大时间范围的数据不需要那么精细)，当放大查看时 (选择其中一小段时间)，又自动选择拉取更短采样间隔的数据，从而也能显示出小时间范围的监控细节。</p>
+<h2 id="部署实践">部署实践</h2>
+<p>这里以 Thanos 最新版本为例，选择 Sidecar 方案，介绍各个组件的 k8s yaml 定义方式并解释一些重要细节 (根据自身需求，参考上一节的方案选型，自行评估需要安装哪些组件)。</p>
+<h3 id="准备对象存储配置">准备对象存储配置</h3>
+<p>如果我们要使用对象存储来长期保存数据，那么就要准备下对象存储的配置信息 (<code>thanos-objectstorage-secret.yaml</code>)，比如使用腾讯云 COS 来存储:</p>
+<pre><code class="language-yaml">apiVersion: v1
+kind: Secret
+metadata:
+  name: thanos-objectstorage
+  namespace: thanos
+type: Opaque
+stringData:
+  objectstorage.yaml: |
+    type: COS
+    config:
+      bucket: &quot;thanos&quot;
+      region: &quot;ap-singapore&quot;
+      app_id: &quot;12*******5&quot;
+      secret_key: &quot;tsY***************************Edm&quot;
+      secret_id: &quot;AKI******************************gEY&quot;
+</code></pre>
+<p>或者使用阿里云 OSS 存储:</p>
+<pre><code class="language-yaml">apiVersion: v1
+kind: Secret
+metadata:
+  name: thanos-objectstorage
+  namespace: thanos
+type: Opaque
+stringData:
+  objectstorage.yaml: |
+    type: ALIYUNOSS
+    config:
+      endpoint: &quot;oss-cn-hangzhou-internal.aliyuncs.com&quot;
+      bucket: &quot;thanos&quot;
+      access_key_id: &quot;LTA******************KBu&quot;
+      access_key_secret: &quot;oki************************2HQ&quot;
+</code></pre>
+<blockquote>
+<p>注: 对敏感信息打码了</p>
+</blockquote>
+<h3 id="给-prometheus-加上-sidecar">给 Prometheus 加上 Sidecar</h3>
+<p>如果选用 Sidecar 方案，就需要给 Prometheus 加上 Thanos Sidecar，准备 <code>prometheus.yaml</code>:</p>
+<pre><code class="language-yaml">kind: Service
+apiVersion: v1
+metadata:
+  name: prometheus-headless
+  namespace: thanos
+  labels:
+    app.kubernetes.io/name: prometheus
+spec:
+  type: ClusterIP
+  clusterIP: None
+  selector:
+    app.kubernetes.io/name: prometheus
+  ports:
+  - name: web
+    protocol: TCP
+    port: 9090
+    targetPort: web
+  - name: grpc
+    port: 10901
+    targetPort: grpc
+---
+
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: prometheus
+  namespace: thanos
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRole
+metadata:
+  name: prometheus
+  namespace: thanos
+rules:
+- apiGroups: [&quot;&quot;]
+  resources:
+  - nodes
+  - nodes/proxy
+  - nodes/metrics
+  - services
+  - endpoints
+  - pods
+  verbs: [&quot;get&quot;, &quot;list&quot;, &quot;watch&quot;]
+- apiGroups: [&quot;&quot;]
+  resources: [&quot;configmaps&quot;]
+  verbs: [&quot;get&quot;]
+- nonResourceURLs: [&quot;/metrics&quot;]
+  verbs: [&quot;get&quot;]
+
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  name: prometheus
+subjects:
+  - kind: ServiceAccount
+    name: prometheus
+    namespace: thanos
+roleRef:
+  kind: ClusterRole
+  name: prometheus
+  apiGroup: rbac.authorization.k8s.io
+---
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: prometheus
+  namespace: thanos
+  labels:
+    app.kubernetes.io/name: thanos-query
+spec:
+  serviceName: prometheus-headless
+  podManagementPolicy: Parallel
+  replicas: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: prometheus
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: prometheus
+    spec:
+      serviceAccountName: prometheus
+      securityContext:
+        fsGroup: 2000
+        runAsNonRoot: true
+        runAsUser: 1000
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app.kubernetes.io/name
+                operator: In
+                values:
+                - prometheus
+            topologyKey: kubernetes.io/hostname
+      containers:
+      - name: prometheus
+        image: quay.io/prometheus/prometheus:v2.15.2
+        args:
+        - --config.file=/etc/prometheus/config_out/prometheus.yaml
+        - --storage.tsdb.path=/prometheus
+        - --storage.tsdb.retention.time=10d
+        - --web.route-prefix=/
+        - --web.enable-lifecycle
+        - --storage.tsdb.no-lockfile
+        - --storage.tsdb.min-block-duration=2h
+        - --storage.tsdb.max-block-duration=2h
+        - --log.level=debug
+        ports:
+        - containerPort: 9090
+          name: web
+          protocol: TCP
+        livenessProbe:
+          failureThreshold: 6
+          httpGet:
+            path: /-/healthy
+            port: web
+            scheme: HTTP
+          periodSeconds: 5
+          successThreshold: 1
+          timeoutSeconds: 3
+        readinessProbe:
+          failureThreshold: 120
+          httpGet:
+            path: /-/ready
+            port: web
+            scheme: HTTP
+          periodSeconds: 5
+          successThreshold: 1
+          timeoutSeconds: 3
+        volumeMounts:
+        - mountPath: /etc/prometheus/config_out
+          name: prometheus-config-out
+          readOnly: true
+        - mountPath: /prometheus
+          name: prometheus-storage
+        - mountPath: /etc/prometheus/rules
+          name: prometheus-rules
+      - name: thanos
+        image: quay.io/thanos/thanos:v0.11.0
+        args:
+        - sidecar
+        - --log.level=debug
+        - --tsdb.path=/prometheus
+        - --prometheus.url=http://127.0.0.1:9090
+        - --objstore.config-file=/etc/thanos/objectstorage.yaml
+        - --reloader.config-file=/etc/prometheus/config/prometheus.yaml.tmpl
+        - --reloader.config-envsubst-file=/etc/prometheus/config_out/prometheus.yaml
+        - --reloader.rule-dir=/etc/prometheus/rules/
+        env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        ports:
+        - name: http-sidecar
+          containerPort: 10902
+        - name: grpc
+          containerPort: 10901
+        livenessProbe:
+            httpGet:
+              port: 10902
+              path: /-/healthy
+        readinessProbe:
+          httpGet:
+            port: 10902
+            path: /-/ready
+        volumeMounts:
+        - name: prometheus-config-tmpl
+          mountPath: /etc/prometheus/config
+        - name: prometheus-config-out
+          mountPath: /etc/prometheus/config_out
+        - name: prometheus-rules
+          mountPath: /etc/prometheus/rules
+        - name: prometheus-storage
+          mountPath: /prometheus
+        - name: thanos-objectstorage
+          subPath: objectstorage.yaml
+          mountPath: /etc/thanos/objectstorage.yaml
+      volumes:
+      - name: prometheus-config-tmpl
+        configMap:
+          defaultMode: 420
+          name: prometheus-config-tmpl
+      - name: prometheus-config-out
+        emptyDir: {}
+      - name: prometheus-rules
+        configMap:
+          name: prometheus-rules
+      - name: thanos-objectstorage
+        secret:
+          secretName: thanos-objectstorage
+  volumeClaimTemplates:
+  - metadata:
+      name: prometheus-storage
+      labels:
+        app.kubernetes.io/name: prometheus
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 200Gi
+      volumeMode: Filesystem
+</code></pre>
+<ul>
+<li>Prometheus 使用 StatefulSet 方式部署，挂载数据盘以便存储最新监控数据。</li>
+<li>由于 Prometheus 副本之间没有启动顺序的依赖，所以 podManagementPolicy 指定为 Parallel，加快启动速度。</li>
+<li>为 Prometheus 绑定足够的 RBAC 权限，以便后续配置使用 k8s 的服务发现 (<code>kubernetes_sd_configs</code>) 时能够正常工作。</li>
+<li>为 Prometheus 创建 headless 类型 service，为后续 Thanos Query 通过 DNS SRV 记录来动态发现 Sidecar 的 gRPC 端点做准备 (使用 headless service 才能让 DNS SRV 正确返回所有端点)。</li>
+<li>使用两个 Prometheus 副本，用于实现高可用。</li>
+<li>使用硬反亲和，避免 Prometheus 部署在同一节点，既可以分散压力也可以避免单点故障。</li>
+<li>Prometheus 使用 <code>--storage.tsdb.retention.time</code> 指定数据保留时长，默认15天，可以根据数据增长速度和数据盘大小做适当调整(数据增长取决于采集的指标和目标端点的数量和采集频率)。</li>
+<li>Sidecar 使用 <code>--objstore.config-file</code> 引用我们刚刚创建并挂载的对象存储配置文件，用于上传数据到对象存储。</li>
+<li>通常会给 Prometheus 附带一个 quay.io/coreos/prometheus-config-reloader 来监听配置变更并动态加载，但 thanos sidecar 也为我们提供了这个功能，所以可以直接用 thanos sidecar 来实现此功能，也支持配置文件根据模板动态生成：<code>--reloader.config-file</code> 指定 Prometheus 配置文件模板，<code>--reloader.config-envsubst-file</code> 指定生成配置文件的存放路径，假设是 <code>/etc/prometheus/config_out/prometheus.yaml</code> ，那么 <code>/etc/prometheus/config_out</code> 这个路径使用 emptyDir 让 Prometheus 与 Sidecar 实现配置文件共享挂载，Prometheus 再通过 <code>--config.file</code> 指定生成出来的配置文件，当配置有更新时，挂载的配置文件也会同步更新，Sidecar 也会通知 Prometheus 重新加载配置。另外，Sidecar 与 Prometheus 也挂载同一份 rules 配置文件，配置更新后 Sidecar 仅通知 Prometheus 加载配置，不支持模板，因为 rules 配置不需要模板来动态生成。</li>
+</ul>
+<p>然后再给 Prometheus 准备配置 (<code>prometheus-config.yaml</code>):</p>
+<pre><code class="language-yaml">apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-config-tmpl
+  namespace: thanos
+data:
+  prometheus.yaml.tmpl: |-
+    global:
+      scrape_interval: 5s
+      evaluation_interval: 5s
+      external_labels:
+        cluster: prometheus-ha
+        prometheus_replica: $(POD_NAME)
+    rule_files:
+    - /etc/prometheus/rules/*rules.yaml
+    scrape_configs:
+    - job_name: cadvisor
+      metrics_path: /metrics/cadvisor
+      scrape_interval: 10s
+      scrape_timeout: 10s
+      scheme: https
+      tls_config:
+        insecure_skip_verify: true
+      bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+      kubernetes_sd_configs:
+      - role: node
+      relabel_configs:
+      - action: labelmap
+        regex: __meta_kubernetes_node_label_(.+)
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-rules
+  labels:
+    name: prometheus-rules
+  namespace: thanos
+data:
+  alert-rules.yaml: |-
+    groups:
+    - name: k8s.rules
+      rules:
+      - expr: |
+          sum(rate(container_cpu_usage_seconds_total{job=&quot;cadvisor&quot;, image!=&quot;&quot;, container!=&quot;&quot;}[5m])) by (namespace)
+        record: namespace:container_cpu_usage_seconds_total:sum_rate
+      - expr: |
+          sum(container_memory_usage_bytes{job=&quot;cadvisor&quot;, image!=&quot;&quot;, container!=&quot;&quot;}) by (namespace)
+        record: namespace:container_memory_usage_bytes:sum
+      - expr: |
+          sum by (namespace, pod, container) (
+            rate(container_cpu_usage_seconds_total{job=&quot;cadvisor&quot;, image!=&quot;&quot;, container!=&quot;&quot;}[5m])
+          )
+        record: namespace_pod_container:container_cpu_usage_seconds_total:sum_rate
+</code></pre>
+<ul>
+<li>本文重点不在 prometheus 的配置文件，所以这里仅以采集 kubelet 所暴露的 cadvisor 容器指标的简单配置为例。</li>
+<li>Prometheus 实例采集的所有指标数据里都会额外加上 <code>external_labels</code> 里指定的 label，通常用 <code>cluster</code> 区分当前 Prometheus 所在集群的名称，我们再加了个 <code>prometheus_replica</code>，用于区分相同 Prometheus 副本（这些副本所采集的数据除了 <code>prometheus_replica</code> 的值不一样，其它几乎一致，这个值会被 Thanos Sidecar 替换成 Pod 副本的名称，用于 Thanos 实现 Prometheus 高可用）</li>
+</ul>
+<h3 id="安装-query">安装 Query</h3>
+<p>准备 <code>thanos-query.yaml</code>:</p>
+<pre><code class="language-yaml">apiVersion: v1
+kind: Service
+metadata:
+  name: thanos-query
+  namespace: thanos
+  labels:
+    app.kubernetes.io/name: thanos-query
+spec:
+  ports:
+  - name: grpc
+    port: 10901
+    targetPort: grpc
+  - name: http
+    port: 9090
+    targetPort: http
+  selector:
+    app.kubernetes.io/name: thanos-query
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: thanos-query
+  namespace: thanos
+  labels:
+    app.kubernetes.io/name: thanos-query
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: thanos-query
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: thanos-query
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app.kubernetes.io/name
+                  operator: In
+                  values:
+                  - thanos-query
+              topologyKey: kubernetes.io/hostname
+            weight: 100
+      containers:
+      - args:
+        - query
+        - --log.level=debug
+        - --query.auto-downsampling
+        - --grpc-address=0.0.0.0:10901
+        - --http-address=0.0.0.0:9090
+        - --query.partial-response
+        - --query.replica-label=prometheus_replica
+        - --query.replica-label=rule_replica
+        - --store=dnssrv+_grpc._tcp.prometheus-headless.thanos.svc.cluster.local
+        - --store=dnssrv+_grpc._tcp.thanos-rule.thanos.svc.cluster.local
+        - --store=dnssrv+_grpc._tcp.thanos-store.thanos.svc.cluster.local
+        image: thanosio/thanos:v0.11.0
+        livenessProbe:
+          failureThreshold: 4
+          httpGet:
+            path: /-/healthy
+            port: 9090
+            scheme: HTTP
+          periodSeconds: 30
+        name: thanos-query
+        ports:
+        - containerPort: 10901
+          name: grpc
+        - containerPort: 9090
+          name: http
+        readinessProbe:
+          failureThreshold: 20
+          httpGet:
+            path: /-/ready
+            port: 9090
+            scheme: HTTP
+          periodSeconds: 5
+        terminationMessagePolicy: FallbackToLogsOnError
+      terminationGracePeriodSeconds: 120
+</code></pre>
+<ul>
+<li>因为 Query 是无状态的，使用 Deployment 部署，也不需要 headless service，直接创建普通的 service。</li>
+<li>使用软反亲和，尽量不让 Query 调度到同一节点。</li>
+<li>部署多个副本，实现 Query 的高可用。</li>
+<li><code>--query.partial-response</code> 启用 <a href="https://thanos.io/components/query.md/#partial-response" target="_blank" rel="noopener">Partial Response</a>，这样可以在部分后端 Store API 返回错误或超时的情况下也能看到正确的监控数据(如果后端 Store API 做了高可用，挂掉一个副本，Query 访问挂掉的副本超时，但由于还有没挂掉的副本，还是能正确返回结果；如果挂掉的某个后端本身就不存在我们需要的数据，挂掉也不影响结果的正确性；总之如果各个组件都做了高可用，想获得错误的结果都难，所以我们有信心启用 Partial Response 这个功能)。</li>
+<li><code>--query.auto-downsampling</code> 查询时自动降采样，提升查询效率。</li>
+<li><code>--query.replica-label</code> 指定我们刚刚给 Prometheus 配置的 <code>prometheus_replica</code> 这个 external label，Query 向 Sidecar 拉取 Prometheus 数据时会识别这个 label 并自动去重，这样即使挂掉一个副本，只要至少有一个副本正常也不会影响查询结果，也就是可以实现 Prometheus 的高可用。同理，再指定一个 <code>rule_replica</code> 用于给 Ruler 做高可用。</li>
+<li><code>--store</code> 指定实现了 Store API 的地址(Sidecar, Ruler, Store Gateway, Receiver)，通常不建议写静态地址，而是使用服务发现机制自动发现 Store API 地址，如果是部署在同一个集群，可以用 DNS SRV 记录来做服务发现，比如 <code>dnssrv+_grpc._tcp.prometheus-headless.thanos.svc.cluster.local</code>，也就是我们刚刚为包含 Sidecar 的 Prometheus 创建的 headless service (使用 headless service 才能正确实现服务发现)，并且指定了名为 grpc 的 tcp 端口，同理，其它组件也可以按照这样加到 <code>--store</code> 参数里；如果是其它有些组件部署在集群外，无法通过集群 dns 解析 DNS SRV 记录，可以使用配置文件来做服务发现，也就是指定 <code>--store.sd-files</code> 参数，将其它 Store API 地址写在配置文件里 (挂载 ConfigMap)，需要增加地址时直接更新 ConfigMap (不需要重启 Query)。</li>
+</ul>
+<h3 id="安装-store-gateway">安装 Store Gateway</h3>
+<p>准备 <code>thanos-store.yaml</code>:</p>
+<pre><code class="language-yaml">apiVersion: v1
+kind: Service
+metadata:
+  name: thanos-store
+  namespace: thanos
+  labels:
+    app.kubernetes.io/name: thanos-store
+spec:
+  clusterIP: None
+  ports:
+  - name: grpc
+    port: 10901
+    targetPort: 10901
+  - name: http
+    port: 10902
+    targetPort: 10902
+  selector:
+    app.kubernetes.io/name: thanos-store
+---
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: thanos-store
+  namespace: thanos
+  labels:
+    app.kubernetes.io/name: thanos-store
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: thanos-store
+  serviceName: thanos-store
+  podManagementPolicy: Parallel
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: thanos-store
+    spec:
+      containers:
+      - args:
+        - store
+        - --log.level=debug
+        - --data-dir=/var/thanos/store
+        - --grpc-address=0.0.0.0:10901
+        - --http-address=0.0.0.0:10902
+        - --objstore.config-file=/etc/thanos/objectstorage.yaml
+        - --experimental.enable-index-header
+        image: thanosio/thanos:v0.11.0
+        livenessProbe:
+          failureThreshold: 8
+          httpGet:
+            path: /-/healthy
+            port: 10902
+            scheme: HTTP
+          periodSeconds: 30
+        name: thanos-store
+        ports:
+        - containerPort: 10901
+          name: grpc
+        - containerPort: 10902
+          name: http
+        readinessProbe:
+          failureThreshold: 20
+          httpGet:
+            path: /-/ready
+            port: 10902
+            scheme: HTTP
+          periodSeconds: 5
+        terminationMessagePolicy: FallbackToLogsOnError
+        volumeMounts:
+        - mountPath: /var/thanos/store
+          name: data
+          readOnly: false
+        - name: thanos-objectstorage
+          subPath: objectstorage.yaml
+          mountPath: /etc/thanos/objectstorage.yaml
+      terminationGracePeriodSeconds: 120
+      volumes:
+      - name: thanos-objectstorage
+        secret:
+          secretName: thanos-objectstorage
+  volumeClaimTemplates:
+  - metadata:
+      labels:
+        app.kubernetes.io/name: thanos-store
+      name: data
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 10Gi
+</code></pre>
+<ul>
+<li>Store Gateway 实际也可以做到一定程度的无状态，它会需要一点磁盘空间来对对象存储做索引以加速查询，但数据不那么重要，是可以删除的，删除后会自动去拉对象存储查数据重新建立索引。这里我们避免每次重启都重新建立索引，所以用 StatefulSet 部署 Store Gateway，挂载一块小容量的磁盘(索引占用不到多大空间)。</li>
+<li>同样创建 headless service，用于 Query 对 Store Gateway 进行服务发现。</li>
+<li>部署两个副本，实现 Store Gateway 的高可用。</li>
+<li>Store Gateway 也需要对象存储的配置，用于读取对象存储的数据，所以要挂载对象存储的配置文件。</li>
+</ul>
+<h3 id="安装-ruler">安装 Ruler</h3>
+<p>准备 Ruler 部署配置 <code>thanos-ruler.yaml</code>:</p>
+<pre><code class="language-yaml">apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/name: thanos-rule
+  name: thanos-rule
+  namespace: thanos
+spec:
+  clusterIP: None
+  ports:
+  - name: grpc
+    port: 10901
+    targetPort: grpc
+  - name: http
+    port: 10902
+    targetPort: http
+  selector:
+    app.kubernetes.io/name: thanos-rule
+---
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app.kubernetes.io/name: thanos-rule
+  name: thanos-rule
+  namespace: thanos
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: thanos-rule
+  serviceName: thanos-rule
+  podManagementPolicy: Parallel
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: thanos-rule
+    spec:
+      containers:
+      - args:
+        - rule
+        - --grpc-address=0.0.0.0:10901
+        - --http-address=0.0.0.0:10902
+        - --rule-file=/etc/thanos/rules/*rules.yaml
+        - --objstore.config-file=/etc/thanos/objectstorage.yaml
+        - --data-dir=/var/thanos/rule
+        - --label=rule_replica=&quot;$(NAME)&quot;
+        - --alert.label-drop=&quot;rule_replica&quot;
+        - --query=dnssrv+_http._tcp.thanos-query.thanos.svc.cluster.local
+        env:
+        - name: NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        image: thanosio/thanos:v0.11.0
+        livenessProbe:
+          failureThreshold: 24
+          httpGet:
+            path: /-/healthy
+            port: 10902
+            scheme: HTTP
+          periodSeconds: 5
+        name: thanos-rule
+        ports:
+        - containerPort: 10901
+          name: grpc
+        - containerPort: 10902
+          name: http
+        readinessProbe:
+          failureThreshold: 18
+          httpGet:
+            path: /-/ready
+            port: 10902
+            scheme: HTTP
+          initialDelaySeconds: 10
+          periodSeconds: 5
+        terminationMessagePolicy: FallbackToLogsOnError
+        volumeMounts:
+        - mountPath: /var/thanos/rule
+          name: data
+          readOnly: false
+        - name: thanos-objectstorage
+          subPath: objectstorage.yaml
+          mountPath: /etc/thanos/objectstorage.yaml
+        - name: thanos-rules
+          mountPath: /etc/thanos/rules
+      volumes:
+      - name: thanos-objectstorage
+        secret:
+          secretName: thanos-objectstorage
+      - name: thanos-rules
+        configMap:
+          name: thanos-rules
+  volumeClaimTemplates:
+  - metadata:
+      labels:
+        app.kubernetes.io/name: thanos-rule
+      name: data
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 100Gi
+</code></pre>
+<ul>
+<li>Ruler 是有状态服务，使用 Statefulset 部署，挂载磁盘以便存储根据 rule 配置计算出的新数据。</li>
+<li>同样创建 headless service，用于 Query 对 Ruler 进行服务发现。</li>
+<li>部署两个副本，且使用 <code>--label=rule_replica=</code> 给所有数据添加 <code>rule_replica</code> 的 label (与 Query 配置的 <code>replica_label</code> 相呼应)，用于实现 Ruler 高可用。同时指定 <code>--alert.label-drop</code> 为 <code>rule_replica</code>，在触发告警发送通知给 AlertManager 时，去掉这个 label，以便让 AlertManager 自动去重 (避免重复告警)。</li>
+<li>使用 <code>--query</code> 指定 Query 地址，这里还是用 DNS SRV 来做服务发现，但效果跟配 <code>dns+thanos-query.thanos.svc.cluster.local:9090</code> 是一样的，最终都是通过 Query 的 ClusterIP (VIP) 访问，因为它是无状态的，可以直接由 K8S 来给我们做负载均衡。</li>
+<li>Ruler 也需要对象存储的配置，用于上传计算出的数据到对象存储，所以要挂载对象存储的配置文件。</li>
+<li><code>--rule-file</code> 指定挂载的 rule 配置，Ruler 根据配置来生成数据和触发告警。</li>
+</ul>
+<p>再准备 Ruler 配置文件 <code>thanos-ruler-config.yaml</code>:</p>
+<pre><code class="language-yaml">apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: thanos-rules
+  labels:
+    name: thanos-rules
+  namespace: thanos
+data:
+  record.rules.yaml: |-
+    groups:
+    - name: k8s.rules
+      rules:
+      - expr: |
+          sum(rate(container_cpu_usage_seconds_total{job=&quot;cadvisor&quot;, image!=&quot;&quot;, container!=&quot;&quot;}[5m])) by (namespace)
+        record: namespace:container_cpu_usage_seconds_total:sum_rate
+      - expr: |
+          sum(container_memory_usage_bytes{job=&quot;cadvisor&quot;, image!=&quot;&quot;, container!=&quot;&quot;}) by (namespace)
+        record: namespace:container_memory_usage_bytes:sum
+      - expr: |
+          sum by (namespace, pod, container) (
+            rate(container_cpu_usage_seconds_total{job=&quot;cadvisor&quot;, image!=&quot;&quot;, container!=&quot;&quot;}[5m])
+          )
+        record: namespace_pod_container:container_cpu_usage_seconds_total:sum_rate
+</code></pre>
+<ul>
+<li>配置内容仅为示例，根据自身情况来配置，格式基本兼容 Prometheus 的 rule 配置格式，参考: <a href="https://thanos.io/components/rule.md/#configuring-rules">https://thanos.io/components/rule.md/#configuring-rules</a></li>
+</ul>
+<h3 id="安装-compact">安装 Compact</h3>
+<p>准备 Compact 部署配置 <code>thanos-compact.yaml</code>:</p>
+<pre><code class="language-yaml">apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/name: thanos-compact
+  name: thanos-compact
+  namespace: thanos
+spec:
+  ports:
+  - name: http
+    port: 10902
+    targetPort: http
+  selector:
+    app.kubernetes.io/name: thanos-compact
+---
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app.kubernetes.io/name: thanos-compact
+  name: thanos-compact
+  namespace: thanos
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: thanos-compact
+  serviceName: thanos-compact
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: thanos-compact
+    spec:
+      containers:
+      - args:
+        - compact
+        - --wait
+        - --objstore.config-file=/etc/thanos/objectstorage.yaml
+        - --data-dir=/var/thanos/compact
+        - --debug.accept-malformed-index
+        - --log.level=debug
+        - --retention.resolution-raw=90d
+        - --retention.resolution-5m=180d
+        - --retention.resolution-1h=360d
+        image: thanosio/thanos:v0.11.0
+        livenessProbe:
+          failureThreshold: 4
+          httpGet:
+            path: /-/healthy
+            port: 10902
+            scheme: HTTP
+          periodSeconds: 30
+        name: thanos-compact
+        ports:
+        - containerPort: 10902
+          name: http
+        readinessProbe:
+          failureThreshold: 20
+          httpGet:
+            path: /-/ready
+            port: 10902
+            scheme: HTTP
+          periodSeconds: 5
+        terminationMessagePolicy: FallbackToLogsOnError
+        volumeMounts:
+        - mountPath: /var/thanos/compact
+          name: data
+          readOnly: false
+        - name: thanos-objectstorage
+          subPath: objectstorage.yaml
+          mountPath: /etc/thanos/objectstorage.yaml
+      terminationGracePeriodSeconds: 120
+      volumes:
+      - name: thanos-objectstorage
+        secret:
+          secretName: thanos-objectstorage
+  volumeClaimTemplates:
+  - metadata:
+      labels:
+        app.kubernetes.io/name: thanos-compact
+      name: data
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 100Gi
+
+</code></pre>
+<ul>
+<li>Compact 只能部署单个副本，因为如果多个副本都去对对象存储的数据做压缩和降采样的话，会造成冲突。</li>
+<li>使用 StatefulSet 部署，方便自动创建和挂载磁盘。磁盘用于存放临时数据，因为 Compact 需要一些磁盘空间来存放数据处理过程中产生的中间数据。</li>
+<li><code>--wait</code> 让 Compact 一直运行，轮询新数据来做压缩和降采样。</li>
+<li>Compact 也需要对象存储的配置，用于读取对象存储数据以及上传压缩和降采样后的数据到对象存储。</li>
+<li>创建一个普通 service，主要用于被 Prometheus 使用 kubernetes 的 endpoints 服务发现来采集指标(其它组件的 service 也一样有这个用途)。</li>
+<li><code>--retention.resolution-raw</code> 指定原始数据存放时长，<code>--retention.resolution-5m</code> 指定降采样到数据点 5 分钟间隔的数据存放时长，<code>--retention.resolution-1h</code> 指定降采样到数据点 1 小时间隔的数据存放时长，它们的数据精细程度递减，占用的存储空间也是递减，通常建议它们的存放时间递增配置 (一般只有比较新的数据才会放大看，久远的数据通常只会使用大时间范围查询来看个大致，所以建议将精细程度低的数据存放更长时间)</li>
+</ul>
+<h3 id="安装-receiver">安装 Receiver</h3>
+<p>该组件处于试验阶段，慎用。准备 Receiver 部署配置 <code>thanos-receiver.yaml</code>:</p>
+<pre><code class="language-yaml">apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: thanos-receive-hashrings
+  namespace: thanos
+data:
+  thanos-receive-hashrings.json: |
+    [
+      {
+        &quot;hashring&quot;: &quot;soft-tenants&quot;,
+        &quot;endpoints&quot;:
+        [
+          &quot;thanos-receive-0.thanos-receive.kube-system.svc.cluster.local:10901&quot;,
+          &quot;thanos-receive-1.thanos-receive.kube-system.svc.cluster.local:10901&quot;,
+          &quot;thanos-receive-2.thanos-receive.kube-system.svc.cluster.local:10901&quot;
+        ]
+      }
+    ]
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: thanos-receive
+  namespace: thanos
+  labels:
+    kubernetes.io/name: thanos-receive
+spec:
+  ports:
+  - name: http
+    port: 10902
+    protocol: TCP
+    targetPort: 10902
+  - name: remote-write
+    port: 19291
+    protocol: TCP
+    targetPort: 19291
+  - name: grpc
+    port: 10901
+    protocol: TCP
+    targetPort: 10901
+  selector:
+    kubernetes.io/name: thanos-receive
+  clusterIP: None
+---
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    kubernetes.io/name: thanos-receive
+  name: thanos-receive
+  namespace: thanos
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      kubernetes.io/name: thanos-receive
+  serviceName: thanos-receive
+  template:
+    metadata:
+      labels:
+        kubernetes.io/name: thanos-receive
+    spec:
+      containers:
+      - args:
+        - receive
+        - --grpc-address=0.0.0.0:10901
+        - --http-address=0.0.0.0:10902
+        - --remote-write.address=0.0.0.0:19291
+        - --objstore.config-file=/etc/thanos/objectstorage.yaml
+        - --tsdb.path=/var/thanos/receive
+        - --tsdb.retention=12h
+        - --label=receive_replica=&quot;$(NAME)&quot;
+        - --label=receive=&quot;true&quot;
+        - --receive.hashrings-file=/etc/thanos/thanos-receive-hashrings.json
+        - --receive.local-endpoint=$(NAME).thanos-receive.thanos.svc.cluster.local:10901
+        env:
+        - name: NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        image: thanosio/thanos:v0.11.0
+        livenessProbe:
+          failureThreshold: 4
+          httpGet:
+            path: /-/healthy
+            port: 10902
+            scheme: HTTP
+          periodSeconds: 30
+        name: thanos-receive
+        ports:
+        - containerPort: 10901
+          name: grpc
+        - containerPort: 10902
+          name: http
+        - containerPort: 19291
+          name: remote-write
+        readinessProbe:
+          httpGet:
+            path: /-/ready
+            port: 10902
+            scheme: HTTP
+          initialDelaySeconds: 10
+          periodSeconds: 30
+        resources:
+          limits:
+            cpu: &quot;4&quot;
+            memory: 8Gi
+          requests:
+            cpu: &quot;2&quot;
+            memory: 4Gi
+        volumeMounts:
+        - mountPath: /var/thanos/receive
+          name: data
+          readOnly: false
+        - mountPath: /etc/thanos/thanos-receive-hashrings.json
+          name: thanos-receive-hashrings
+          subPath: thanos-receive-hashrings.json
+        - mountPath: /etc/thanos/objectstorage.yaml
+          name: thanos-objectstorage
+          subPath: objectstorage.yaml
+      terminationGracePeriodSeconds: 120
+      volumes:
+      - configMap:
+          defaultMode: 420
+          name: thanos-receive-hashrings
+        name: thanos-receive-hashrings
+      - name: thanos-objectstorage
+        secret:
+          secretName: thanos-objectstorage
+  volumeClaimTemplates:
+  - metadata:
+      labels:
+        app.kubernetes.io/name: thanos-receive
+      name: data
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 200Gi
+</code></pre>
+<ul>
+<li>部署 3 个副本， 配置 hashring， <code>--label=receive_replica</code> 为数据添加 <code>receive_replica</code> 这个 label (Query 的 <code>--query.replica-label</code> 也要加上这个) 来实现 Receiver 的高可用。</li>
+<li>Query 要指定 Receiver 后端地址: <code>--store=dnssrv+_grpc._tcp.thanos-receive.thanos.svc.cluster.local</code></li>
+<li>request, limit 根据自身规模情况自行做适当调整。</li>
+<li><code>--tsdb.retention</code> 根据自身需求调整最新数据的保留时间。</li>
+<li>如果改命名空间，记得把 Receiver 的 <code>--receive.local-endpoint</code> 参数也改下，不然会疯狂报错直至 OOMKilled。</li>
+</ul>
+<p>因为使用了 Receiver 来统一接收 Prometheus 的数据，所以 Prometheus 也不需要 Sidecar 了，但需要给 Prometheus 配置文件里加下 <code>remote_write</code>，让 Prometheus 将数据 push 给 Receiver:</p>
+<pre><code class="language-yaml">    remote_write:
+    - url: http://thanos-receive.thanos.svc.cluster.local:19291/api/v1/receive
+</code></pre>
+<h3 id="指定-query-为数据源">指定 Query 为数据源</h3>
+<p>查询监控数据时需要指定 Prometheus 数据源地址，由于我们使用了 Thanos 来做分布式，而 Thanos 关键查询入口就是 Query，所以我们需要将数据源地址指定为 Query 的地址，假如使用 Grafana 查询，进入 <code>Configuration</code>-<code>Data Sources</code>-<code>Add data source</code>，选择 Prometheus，指定 thanos query 的地址: <code>http://thanos-query.thanos.svc.cluster.local:9090</code></p>
+<h2 id="总结">总结</h2>
+<p>本文教了大家如何选型 Thanos 部署方案并详细讲解了各个组件的安装方法，如果仔细阅读完本系列文章，我相信你已经有能力搭建并运维一套大型监控系统了。</p>
+    </div>
+
+    
+
+
+
+
+
+
+<div class="article-tags">
+  
+  <a class="badge badge-light" href="/tag/kubernetes/">kubernetes</a>
+  
+  <a class="badge badge-light" href="/tag/prometheus/">prometheus</a>
+  
+</div>
+
+
+
+<div class="share-box" aria-hidden="true">
+  <ul class="share">
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://twitter.com/intent/tweet?url=/post/202004/build-cloud-native-large-scale-distributed-monitoring-system-3/&amp;text=%e6%89%93%e9%80%a0%e4%ba%91%e5%8e%9f%e7%94%9f%e5%a4%a7%e5%9e%8b%e5%88%86%e5%b8%83%e5%bc%8f%e7%9b%91%e6%8e%a7%e7%b3%bb%e7%bb%9f%28%e4%b8%89%29:%20Thanos%20%e9%83%a8%e7%bd%b2%e4%b8%8e%e5%ae%9e%e8%b7%b5" target="_blank" rel="noopener" class="share-btn-twitter">
+          <i class="fab fa-twitter"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://www.facebook.com/sharer.php?u=/post/202004/build-cloud-native-large-scale-distributed-monitoring-system-3/&amp;t=%e6%89%93%e9%80%a0%e4%ba%91%e5%8e%9f%e7%94%9f%e5%a4%a7%e5%9e%8b%e5%88%86%e5%b8%83%e5%bc%8f%e7%9b%91%e6%8e%a7%e7%b3%bb%e7%bb%9f%28%e4%b8%89%29:%20Thanos%20%e9%83%a8%e7%bd%b2%e4%b8%8e%e5%ae%9e%e8%b7%b5" target="_blank" rel="noopener" class="share-btn-facebook">
+          <i class="fab fa-facebook"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="mailto:?subject=%e6%89%93%e9%80%a0%e4%ba%91%e5%8e%9f%e7%94%9f%e5%a4%a7%e5%9e%8b%e5%88%86%e5%b8%83%e5%bc%8f%e7%9b%91%e6%8e%a7%e7%b3%bb%e7%bb%9f%28%e4%b8%89%29:%20Thanos%20%e9%83%a8%e7%bd%b2%e4%b8%8e%e5%ae%9e%e8%b7%b5&amp;body=/post/202004/build-cloud-native-large-scale-distributed-monitoring-system-3/" target="_blank" rel="noopener" class="share-btn-email">
+          <i class="fas fa-envelope"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://www.linkedin.com/shareArticle?url=/post/202004/build-cloud-native-large-scale-distributed-monitoring-system-3/&amp;title=%e6%89%93%e9%80%a0%e4%ba%91%e5%8e%9f%e7%94%9f%e5%a4%a7%e5%9e%8b%e5%88%86%e5%b8%83%e5%bc%8f%e7%9b%91%e6%8e%a7%e7%b3%bb%e7%bb%9f%28%e4%b8%89%29:%20Thanos%20%e9%83%a8%e7%bd%b2%e4%b8%8e%e5%ae%9e%e8%b7%b5" target="_blank" rel="noopener" class="share-btn-linkedin">
+          <i class="fab fa-linkedin-in"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="whatsapp://send?text=%e6%89%93%e9%80%a0%e4%ba%91%e5%8e%9f%e7%94%9f%e5%a4%a7%e5%9e%8b%e5%88%86%e5%b8%83%e5%bc%8f%e7%9b%91%e6%8e%a7%e7%b3%bb%e7%bb%9f%28%e4%b8%89%29:%20Thanos%20%e9%83%a8%e7%bd%b2%e4%b8%8e%e5%ae%9e%e8%b7%b5%20/post/202004/build-cloud-native-large-scale-distributed-monitoring-system-3/" target="_blank" rel="noopener" class="share-btn-whatsapp">
+          <i class="fab fa-whatsapp"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://service.weibo.com/share/share.php?url=/post/202004/build-cloud-native-large-scale-distributed-monitoring-system-3/&amp;title=%e6%89%93%e9%80%a0%e4%ba%91%e5%8e%9f%e7%94%9f%e5%a4%a7%e5%9e%8b%e5%88%86%e5%b8%83%e5%bc%8f%e7%9b%91%e6%8e%a7%e7%b3%bb%e7%bb%9f%28%e4%b8%89%29:%20Thanos%20%e9%83%a8%e7%bd%b2%e4%b8%8e%e5%ae%9e%e8%b7%b5" target="_blank" rel="noopener" class="share-btn-weibo">
+          <i class="fab fa-weibo"></i>
+        </a>
+      </li>
+    
+  </ul>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+
+
+
+  
+  
+  
+    
+  
+  
+  
+  <div class="media author-card content-widget-hr">
+    
+      
+      <a href="/"><img class="avatar mr-3 avatar-circle" src="/author/roc/avatar_hu49c03114a9ce8ad2bc0bd62c0ddb3f2a_64404_270x270_fill_q75_lanczos_center.jpg" alt="roc"></a>
+    
+
+    <div class="media-body">
+      <h5 class="card-title"><a href="/">roc</a></h5>
+      <h6 class="card-subtitle">腾讯云高级工程师</h6>
+      <p class="card-text">授人以鱼不如授人以渔</p>
+      <ul class="network-icon" aria-hidden="true">
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="https://github.com/imroc" target="_blank" rel="noopener">
+        <i class="fab fa-github"></i>
+      </a>
+    </li>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+    <li>
+      <a href="mailto:roc@imroc.io" >
+        <i class="fas fa-envelope"></i>
+      </a>
+    </li>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="https://twitter.com/imrocchan" target="_blank" rel="noopener">
+        <i class="fab fa-twitter"></i>
+      </a>
+    </li>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="https://www.linkedin.com/in/%E9%B9%8F-%E9%99%88-b51646113" target="_blank" rel="noopener">
+        <i class="fab fa-linkedin"></i>
+      </a>
+    </li>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="https://www.youtube.com/channel/UCEtWQhtiNi1vvDmoC6wydNQ" target="_blank" rel="noopener">
+        <i class="fab fa-youtube"></i>
+      </a>
+    </li>
+  
+</ul>
+
+    </div>
+  </div>
+
+
+  
+
+
+
+
+
+
+
+
+
+
+<div class="article-widget">
+  
+<div class="post-nav">
+  
+  
+  
+  <div class="post-nav-item">
+    <div class="meta-nav">下一页</div>
+    <a href="/post/202006/kubernetes-app-deployment-best-practice-1/" rel="next">Kubernetes 服务部署最佳实践(一) 如何合理利用资源</a>
+  </div>
+  
+  
+  
+  <div class="post-nav-item">
+    <div class="meta-nav">上一页</div>
+    <a href="/post/202004/build-cloud-native-large-scale-distributed-monitoring-system-2/" rel="prev">打造云原生大型分布式监控系统(二): Thanos 架构详解</a>
+  </div>
+  
+</div>
+
+</div>
+
+
+
+
+
+  
+  
+  <div class="article-widget content-widget-hr">
+    <h3>相关</h3>
+    <ul>
+      
+      <li><a href="/post/202011/build-cloud-native-large-scale-distributed-monitoring-system-4/">打造云原生大型分布式监控系统(四): Kvass&#43;Thanos 监控超大规模容器集群</a></li>
+      
+      <li><a href="/post/202004/build-cloud-native-large-scale-distributed-monitoring-system-2/">打造云原生大型分布式监控系统(二): Thanos 架构详解</a></li>
+      
+      <li><a href="/post/202003/build-cloud-native-large-scale-distributed-monitoring-system-1/">打造云原生大型分布式监控系统(一): 大规模场景下 Prometheus 的优化手段</a></li>
+      
+      <li><a href="/post/202009/nginx-ingress-high-concurrency/">Nginx Ingress 高并发实践</a></li>
+      
+      <li><a href="/post/202008/nginx-ingress-on-tke/">Nginx Ingress on TKE 部署最佳实践</a></li>
+      
+    </ul>
+  </div>
+  
+
+
+
+
+
+  </div>
+</article>
+  </div>
+
+  <div class="page-footer">
+    
+    
+    <div class="container">
+      <footer class="site-footer">
+  
+
+  <p class="powered-by">
+    roc © 2021
+  </p>
+
+  
+  
+
+
+
+
+
+
+  <p class="powered-by">
+    
+    
+    
+    Published with
+    <a href="https://wowchemy.com/?utm_campaign=poweredby" target="_blank" rel="noopener">Wowchemy</a>  —
+    the free, <a href="https://github.com/wowchemy/wowchemy-hugo-modules" target="_blank" rel="noopener">
+    open source</a> website builder that empowers creators.
+    
+  </p>
+</footer>
+
+    </div>
+    
+  </div>
+
+  
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">引用</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <pre><code class="tex hljs"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-outline-primary my-1 js-copy-cite" href="#" target="_blank">
+          <i class="fas fa-copy"></i> 复制
+        </a>
+        <a class="btn btn-outline-primary my-1 js-download-cite" href="#" target="_blank">
+          <i class="fas fa-download"></i> 下载
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+      
+
+    
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+
+      
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js" integrity="sha256-lqvxZrPLtfffUl2G/e7szqSvPBILGbwmsGE1MKlOi0Q=" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js" integrity="sha256-CBrpuqrMhXwcLLUd5tvQ4euBHCdh7wGlDfNz8vbu/iI=" crossorigin="anonymous"></script>
+      
+
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/instant.page/5.1.0/instantpage.min.js" integrity="sha512-1+qUtKoh9XZW7j+6LhRMAyOrgSQKenQ4mluTR+cvxXjP1Z54RxZuzstR/H9kgPXQsVB8IW7DMDFUJpzLjvhGSQ==" crossorigin="anonymous"></script>
+
+      
+
+      
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/highlight.min.js" integrity="sha512-TDKKr+IvoqZnPzc3l35hdjpHD0m+b2EC2SrLEgKDRWpxf2rFCxemkgvJ5kfU48ip+Y+m2XVKyOCD85ybtlZDmw==" crossorigin="anonymous"></script>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.2.0/languages/r.min.js"></script>
+        
+      
+
+    
+
+    
+    
+
+    
+    
+
+    
+    
+    <script id="search-hit-fuse-template" type="text/x-template">
+      <div class="search-hit" id="summary-{{key}}">
+        <div class="search-hit-content">
+          <div class="search-hit-name">
+            <a href="{{relpermalink}}">{{title}}</a>
+            <div class="article-metadata search-hit-type">{{type}}</div>
+            <p class="search-hit-description">{{snippet}}</p>
+          </div>
+        </div>
+      </div>
+    </script>
+    
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.1/fuse.min.js" integrity="sha256-VzgmKYmhsGNNN4Ph1kMW+BjoYJM2jV5i4IlFoeZA9XI=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
+    
+
+    
+    
+    
+
+    
+    
+    
+
+    
+    
+
+    
+    
+
+    
+    
+      
+      
+      
+      
+      
+      
+      
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      
+      
+    
+    
+    <script src="/zh/js/wowchemy.min.64fd16cc68b6a5f25e0156dfff88edff.js"></script>
+
+    
+
+
+
+
+
+
+</body>
+</html>

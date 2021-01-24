@@ -1,63 +1,16 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>roc</title>
-    <link>https://imroc.io/en/</link>
-    <description>Recent content on roc</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>zh</language>
-    <managingEditor>roc@imroc.io (roc)</managingEditor>
-    <webMaster>roc@imroc.io (roc)</webMaster>
-    <lastBuildDate>Sat, 30 Nov 2019 15:32:00 +0800</lastBuildDate>
-    
-	<atom:link href="https://imroc.io/en/index.xml" rel="self" type="application/rss+xml" />
-    
-    
-    <item>
-      <title>Kubernetes v1.17 new feature preview: topology-aware service routing</title>
-      <link>https://imroc.io/en/posts/kubernetes-service-topology/</link>
-      <pubDate>Sat, 30 Nov 2019 15:32:00 +0800</pubDate>
-      <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/en/posts/kubernetes-service-topology/</guid>
-      <description>&lt;p&gt;Hello everyone, I&amp;rsquo;m roc, from the Tencent Kubernetes Engine (TKE) team. Today I will introduce a new feature of kubernetes in v1.17 that I am involved in: topology-aware service routing.&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;This article is translated from my Chinese blog post, which received a great response in China and was reposted by many well-known Chinese container technology media accounts.&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;h2 id=&#34;glossary&#34;&gt;Glossary&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;Topological domain: Indicates a certain type of &amp;ldquo;place&amp;rdquo; in the cluster, such as node, rack, zone or region etc.&lt;/li&gt;
-&lt;li&gt;endpoint: An ip:port of a kubernetes service, usually the ip:port of a pod.&lt;/li&gt;
-&lt;li&gt;service: kubernetes service resource, associated with a set of endpoints, traffic of access to the service will be forwarded to its&amp;rsquo; associated endpoints.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&#34;background&#34;&gt;Background&lt;/h2&gt;
-&lt;p&gt;Topology-aware service routing, simply called &lt;code&gt;Service Topology&lt;/code&gt;. This feature was originally proposed and designed by Jun Du (&lt;a href=&#34;https://github.com/m1093782566&#34;&gt;@m1093782566&lt;/a&gt;). Why design this feature? Imagine that the kubernetes cluster nodes are distributed in different places and the endpoints corresponding to the service are distributed in different nodes. The traditional forwarding strategy will load balance all endpoints and usually forward them with equal probability. When accessing the service, the traffic may be scattered and hit these different places. Although service forwarding is load-balanced, if the endpoints are far away, the network forwarding will have a high latency, which will affect network performance, and in some cases may even pay additional traffic costs. If the service can forward the endpoints nearby, will it be possible to reduce network latency and improve network performance? Yes! And this is exactly the purpose and significance of this feature.&lt;/p&gt;
-&lt;h2 id=&#34;kubernetes-affinity&#34;&gt;Kubernetes Affinity&lt;/h2&gt;
-&lt;p&gt;The service&amp;rsquo;s nearest forwarding is actually a kind of network affinity, and it tends to forward to the endpoints closer to itself. Prior to this feature, there have been some other affinity designs and implementations in terms of scheduling and storage:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Node Affinity: Allows Pods to be scheduled to Nodes that meet certain expectations, such as limiting scheduling to a certain Availability Zone, or requiring nodes to support GPUs. This is considered scheduling affinity, and the scheduling results depend on node attributes.&lt;/li&gt;
-&lt;li&gt;Pod affinity and anti-affinity: Allows pod to be scheduled depends on ther pods. E.g. Let a group of pods to be scheduled to nodes in the same topology domain, or dispersed to nodes in different topology domains. This is also can be considered as scheduling affinity, and the scheduling result depends on other pods.&lt;/li&gt;
-&lt;li&gt;Volume Topology-aware Scheduling: Allows Pods to be scheduled only to nodes that match the topology domain of the storage to which they are bound. This is considered as the affinity of scheduling and storage. The scheduling result depends on the topology domain of the storage.&lt;/li&gt;
-&lt;li&gt;Local Persistent Volume: Let Pod use local data volume, such as high-performance SSD, which is useful in some scenarios that require high IOPS and low latency. It also guarantees that the Pod is always scheduled to the same node, and the data will not lost. This is also can considered as the affinity of scheduling and storage. The scheduling result depends on the node where the storage is located.&lt;/li&gt;
-&lt;li&gt;Topology-Aware Volume Dynamic Provisioning: The Pod is scheduled first, and then the storage is created according to the topology domain of the node that pod been scheduled onto. This can be considered as the affinity between storage and scheduling, and the creation of storage depends on the scheduling result.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;However, kubernetes currently does not have an affinity capability on the network side. The new feature of topology-aware service routing can just fill this gap. This feature enables services can be forwarded nearby instead of all endpoints with equal probability forwarding.&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>Troubleshooting Kubernetes Network</title>
-      <link>https://imroc.io/en/posts/troubleshooting-with-kubernetes-network/</link>
-      <pubDate>Mon, 12 Aug 2019 16:59:00 +0800</pubDate>
-      <author>roc@imroc.io (roc)</author>
-      <guid>https://imroc.io/en/posts/troubleshooting-with-kubernetes-network/</guid>
-      <description>&lt;p&gt;Hi, I&amp;rsquo;m roc, from the Tencent Kubernetes Engine (&lt;a href=&#34;https://intl.cloud.tencent.com/product/tke&#34;&gt;TKE&lt;/a&gt;) team. I often help users to solve various problems of kubernetes and have accumulated rich experience. This article will share some thoughts, in-depth analysis of several complicated kubernetes network problem, which contains huge amount of information, you may need read it again and again if lack some relevant expereence.  I recommend collecting this article and reading it again and again, after I fully understand it, I believe that your skills will be more solid and solve the problem. Ability will be greatly improved.&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;The problems found in this article are encountered when using TKE. The network environments of different manufacturers may be different. The paper will explain the different network environments of the problems.&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;大家好，我是 roc，来自腾讯云容器服务(TKE)团队，经常帮助用户解决各种 K8S 的疑难杂症，积累了比较丰富的经验，本文分享几个比较复杂的网络方面的问题排查和解决思路，深入分析并展开相关知识，信息量巨大，相关经验不足的同学可能需要细细品味才能消化，我建议收藏本文反复研读，当完全看懂后我相信你的功底会更加扎实，解决问题的能力会大大提升。&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;本文发现的问题是在使用 TKE 时遇到的，不同厂商的网络环境可能不一样，文中会对不同的问题的网络环境进行说明&lt;/p&gt;
-&lt;/blockquote&gt;</description>
-    </item>
+    <title>roc的个人网站</title>
+    <link>/en/</link>
+      <atom:link href="/en/index.xml" rel="self" type="application/rss+xml" />
+    <description>roc的个人网站</description>
+    <generator>Wowchemy (https://wowchemy.com)</generator><language>en-us</language><copyright>roc © 2021</copyright>
+    <image>
+      <url>/images/icon_hua2ec155b4296a9c9791d015323e16eb5_11927_512x512_fill_lanczos_center_2.png</url>
+      <title>roc的个人网站</title>
+      <link>/en/</link>
+    </image>
     
   </channel>
 </rss>
