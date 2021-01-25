@@ -29,14 +29,6 @@
     </item>
     
     <item>
-      <title>Docker 学习笔记</title>
-      <link>/note/learning-docker/</link>
-      <pubDate>Fri, 24 Jan 2020 00:00:00 +0000</pubDate>
-      <guid>/note/learning-docker/</guid>
-      <description></description>
-    </item>
-    
-    <item>
       <title>Istio 学习笔记</title>
       <link>/note/learning-istio/</link>
       <pubDate>Fri, 24 Jan 2020 00:00:00 +0000</pubDate>
