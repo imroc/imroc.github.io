@@ -258,8 +258,8 @@
   <link rel="manifest" href="/index.webmanifest">
   
 
-  <link rel="icon" type="image/png" href="/images/icon_hua2ec155b4296a9c9791d015323e16eb5_11927_32x32_fill_lanczos_center_2.png">
-  <link rel="apple-touch-icon" type="image/png" href="/images/icon_hua2ec155b4296a9c9791d015323e16eb5_11927_192x192_fill_lanczos_center_2.png">
+  <link rel="icon" type="image/png" href="/images/icon_hu3dae195d017ecf405c1471d04b59d594_245698_32x32_fill_lanczos_center_2.png">
+  <link rel="apple-touch-icon" type="image/png" href="/images/icon_hu3dae195d017ecf405c1471d04b59d594_245698_192x192_fill_lanczos_center_2.png">
 
   <link rel="canonical" href="/post/202006/kubernetes-app-deployment-best-practice-1/">
 
@@ -282,8 +282,8 @@
   <meta property="og:site_name" content="roc的个人网站">
   <meta property="og:url" content="/post/202006/kubernetes-app-deployment-best-practice-1/">
   <meta property="og:title" content="Kubernetes 服务部署最佳实践(一) 如何合理利用资源 | roc的个人网站">
-  <meta property="og:description" content="目录  引言 Request 与 Limit 怎么设置才好  所有容器都应该设置 request 老是忘记设置怎么办 重要的线上应用改如何设置 怎样设置才能提高资源利用率 尽量避免使用过大的 request 与 limit 避免测试 namespace 消耗过多资源影响生产业务   如何让资源得到更合理的分配  使用亲和性 使用污点与容忍   弹性伸缩  如何支持流量突发型业务 如何节约成本 无法水平扩容的服务怎么办   参考资料    引言 业务容器化后，如何将其部署在 K8S 上？如果仅仅是将它跑起来，很简单，但如果是上生产，我们有许多地方是需要结合业务场景和部署环境进行方案选型和配置调优的。比如，如何设置容器的 Request 与 Limit、如何让部署的服务做到高可用、如何配置健康检查、如何进行弹性伸缩、如何更好的进行资源调度、如何选择持久化存储、如何对外暴露服务等。"><meta property="og:image" content="/images/icon_hua2ec155b4296a9c9791d015323e16eb5_11927_512x512_fill_lanczos_center_2.png">
-  <meta property="twitter:image" content="/images/icon_hua2ec155b4296a9c9791d015323e16eb5_11927_512x512_fill_lanczos_center_2.png"><meta property="og:locale" content="zh-Hans">
+  <meta property="og:description" content="目录  引言 Request 与 Limit 怎么设置才好  所有容器都应该设置 request 老是忘记设置怎么办 重要的线上应用改如何设置 怎样设置才能提高资源利用率 尽量避免使用过大的 request 与 limit 避免测试 namespace 消耗过多资源影响生产业务   如何让资源得到更合理的分配  使用亲和性 使用污点与容忍   弹性伸缩  如何支持流量突发型业务 如何节约成本 无法水平扩容的服务怎么办   参考资料    引言 业务容器化后，如何将其部署在 K8S 上？如果仅仅是将它跑起来，很简单，但如果是上生产，我们有许多地方是需要结合业务场景和部署环境进行方案选型和配置调优的。比如，如何设置容器的 Request 与 Limit、如何让部署的服务做到高可用、如何配置健康检查、如何进行弹性伸缩、如何更好的进行资源调度、如何选择持久化存储、如何对外暴露服务等。"><meta property="og:image" content="/images/icon_hu3dae195d017ecf405c1471d04b59d594_245698_512x512_fill_lanczos_center_2.png">
+  <meta property="twitter:image" content="/images/icon_hu3dae195d017ecf405c1471d04b59d594_245698_512x512_fill_lanczos_center_2.png"><meta property="og:locale" content="zh-Hans">
   
     
       <meta property="article:published_time" content="2020-06-16T00:00:00&#43;00:00">
@@ -329,7 +329,7 @@
     "name": "roc的个人网站",
     "logo": {
       "@type": "ImageObject",
-      "url": "/images/icon_hua2ec155b4296a9c9791d015323e16eb5_11927_192x192_fill_lanczos_center_2.png"
+      "url": "/images/icon_hu3dae195d017ecf405c1471d04b59d594_245698_192x192_fill_lanczos_center_2.png"
     }
   },
   "description": "目录  引言 Request 与 Limit 怎么设置才好  所有容器都应该设置 request 老是忘记设置怎么办 重要的线上应用改如何设置 怎样设置才能提高资源利用率 尽量避免使用过大的 request 与 limit 避免测试 namespace 消耗过多资源影响生产业务   如何让资源得到更合理的分配  使用亲和性 使用污点与容忍   弹性伸缩  如何支持流量突发型业务 如何节约成本 无法水平扩容的服务怎么办   参考资料    引言 业务容器化后，如何将其部署在 K8S 上？如果仅仅是将它跑起来，很简单，但如果是上生产，我们有许多地方是需要结合业务场景和部署环境进行方案选型和配置调优的。比如，如何设置容器的 Request 与 Limit、如何让部署的服务做到高可用、如何配置健康检查、如何进行弹性伸缩、如何更好的进行资源调度、如何选择持久化存储、如何对外暴露服务等。"

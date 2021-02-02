@@ -262,8 +262,8 @@
   <link rel="manifest" href="/index.webmanifest">
   
 
-  <link rel="icon" type="image/png" href="/images/icon_hua2ec155b4296a9c9791d015323e16eb5_11927_32x32_fill_lanczos_center_2.png">
-  <link rel="apple-touch-icon" type="image/png" href="/images/icon_hua2ec155b4296a9c9791d015323e16eb5_11927_192x192_fill_lanczos_center_2.png">
+  <link rel="icon" type="image/png" href="/images/icon_hu3dae195d017ecf405c1471d04b59d594_245698_32x32_fill_lanczos_center_2.png">
+  <link rel="apple-touch-icon" type="image/png" href="/images/icon_hu3dae195d017ecf405c1471d04b59d594_245698_192x192_fill_lanczos_center_2.png">
 
   <link rel="canonical" href="/post/202006/kubernetes-app-deployment-best-practice-2/">
 
@@ -290,8 +290,8 @@
 怎样提高我们部署服务的可用性呢？K8S 设计本身就考虑到了各种故障的可能性，并提供了一些自愈机制以提高系统的容错性，但有些情况还是可能导致较长时间不可用，拉低服务可用性的指标。本文将结合生产实践经验，为大家提供一些最佳实践来最大化的提高服务可用性。
 如何避免单点故障？ K8S 的设计就是假设节点是不可靠的。节点越多，发生软硬件故障导致节点不可用的几率就越高，所以我们通常需要给服务部署多个副本，根据实际情况调整 replicas 的值，如果值为 1 就必然存在单点故障，如果大于 1 但所有副本都调度到同一个节点了，那还是有单点故障，有时候还要考虑到灾难，比如整个机房不可用。
 所以我们不仅要有合理的副本数量，还需要让这些不同副本调度到不同的拓扑域(节点、可用区)，打散调度以避免单点故障，这个可以利用 Pod 反亲和性来做到，反亲和主要分强反亲和与弱反亲和两种。
-先来看个强反亲和的示例，将 dns 服务强制打散调度到不同节点上:"><meta property="og:image" content="/images/icon_hua2ec155b4296a9c9791d015323e16eb5_11927_512x512_fill_lanczos_center_2.png">
-  <meta property="twitter:image" content="/images/icon_hua2ec155b4296a9c9791d015323e16eb5_11927_512x512_fill_lanczos_center_2.png"><meta property="og:locale" content="zh-Hans">
+先来看个强反亲和的示例，将 dns 服务强制打散调度到不同节点上:"><meta property="og:image" content="/images/icon_hu3dae195d017ecf405c1471d04b59d594_245698_512x512_fill_lanczos_center_2.png">
+  <meta property="twitter:image" content="/images/icon_hu3dae195d017ecf405c1471d04b59d594_245698_512x512_fill_lanczos_center_2.png"><meta property="og:locale" content="zh-Hans">
   
     
       <meta property="article:published_time" content="2020-06-19T00:00:00&#43;00:00">
@@ -337,7 +337,7 @@
     "name": "roc的个人网站",
     "logo": {
       "@type": "ImageObject",
-      "url": "/images/icon_hua2ec155b4296a9c9791d015323e16eb5_11927_192x192_fill_lanczos_center_2.png"
+      "url": "/images/icon_hu3dae195d017ecf405c1471d04b59d594_245698_192x192_fill_lanczos_center_2.png"
     }
   },
   "description": "目录  引言 如何避免单点故障？ 如何避免节点维护或升级时导致服务不可用？ 如何让服务进行平滑更新？ 健康检查怎么配才好？ 参考资料    引言 上一篇 文章我们围绕如何合理利用资源的主题做了一些最佳实践的分享，这一次我们就如何提高服务可用性的主题来展开探讨。\n怎样提高我们部署服务的可用性呢？K8S 设计本身就考虑到了各种故障的可能性，并提供了一些自愈机制以提高系统的容错性，但有些情况还是可能导致较长时间不可用，拉低服务可用性的指标。本文将结合生产实践经验，为大家提供一些最佳实践来最大化的提高服务可用性。\n如何避免单点故障？ K8S 的设计就是假设节点是不可靠的。节点越多，发生软硬件故障导致节点不可用的几率就越高，所以我们通常需要给服务部署多个副本，根据实际情况调整 replicas 的值，如果值为 1 就必然存在单点故障，如果大于 1 但所有副本都调度到同一个节点了，那还是有单点故障，有时候还要考虑到灾难，比如整个机房不可用。\n所以我们不仅要有合理的副本数量，还需要让这些不同副本调度到不同的拓扑域(节点、可用区)，打散调度以避免单点故障，这个可以利用 Pod 反亲和性来做到，反亲和主要分强反亲和与弱反亲和两种。\n先来看个强反亲和的示例，将 dns 服务强制打散调度到不同节点上:"

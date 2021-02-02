@@ -258,8 +258,8 @@
   <link rel="manifest" href="/index.webmanifest">
   
 
-  <link rel="icon" type="image/png" href="/images/icon_hua2ec155b4296a9c9791d015323e16eb5_11927_32x32_fill_lanczos_center_2.png">
-  <link rel="apple-touch-icon" type="image/png" href="/images/icon_hua2ec155b4296a9c9791d015323e16eb5_11927_192x192_fill_lanczos_center_2.png">
+  <link rel="icon" type="image/png" href="/images/icon_hu3dae195d017ecf405c1471d04b59d594_245698_32x32_fill_lanczos_center_2.png">
+  <link rel="apple-touch-icon" type="image/png" href="/images/icon_hu3dae195d017ecf405c1471d04b59d594_245698_192x192_fill_lanczos_center_2.png">
 
   <link rel="canonical" href="/post/202009/nginx-ingress-high-concurrency/">
 
@@ -282,8 +282,8 @@
   <meta property="og:site_name" content="roc的个人网站">
   <meta property="og:url" content="/post/202009/nginx-ingress-high-concurrency/">
   <meta property="og:title" content="Nginx Ingress 高并发实践 | roc的个人网站">
-  <meta property="og:description" content="目录  概述 内核参数调优  调大连接队列的大小 扩大源端口范围 TIME_WAIT 复用 调大最大文件句柄数 配置示例   全局配置调优  调高 keepalive 连接最大请求数 调高 keepalive 最大空闲连接数 调高单个 worker 最大连接数 配置示例   总结 参考资料    概述 Nginx Ingress Controller 基于 Nginx 实现了 Kubernetes Ingress API，Nginx 是公认的高性能网关，但如果不对其进行一些参数调优，就不能充分发挥出高性能的优势。之前我们在 Nginx Ingress on TKE 部署最佳实践 一文中讲了 Nginx Ingress 在 TKE 上部署最佳实践，涉及的部署 YAML 其实已经包含了一些性能方面的参数优化，只是没有提及，本文将继续展开介绍针对 Nginx Ingress 的一些全局配置与内核参数调优的建议，可用于支撑我们的高并发业务。"><meta property="og:image" content="/images/icon_hua2ec155b4296a9c9791d015323e16eb5_11927_512x512_fill_lanczos_center_2.png">
-  <meta property="twitter:image" content="/images/icon_hua2ec155b4296a9c9791d015323e16eb5_11927_512x512_fill_lanczos_center_2.png"><meta property="og:locale" content="zh-Hans">
+  <meta property="og:description" content="目录  概述 内核参数调优  调大连接队列的大小 扩大源端口范围 TIME_WAIT 复用 调大最大文件句柄数 配置示例   全局配置调优  调高 keepalive 连接最大请求数 调高 keepalive 最大空闲连接数 调高单个 worker 最大连接数 配置示例   总结 参考资料    概述 Nginx Ingress Controller 基于 Nginx 实现了 Kubernetes Ingress API，Nginx 是公认的高性能网关，但如果不对其进行一些参数调优，就不能充分发挥出高性能的优势。之前我们在 Nginx Ingress on TKE 部署最佳实践 一文中讲了 Nginx Ingress 在 TKE 上部署最佳实践，涉及的部署 YAML 其实已经包含了一些性能方面的参数优化，只是没有提及，本文将继续展开介绍针对 Nginx Ingress 的一些全局配置与内核参数调优的建议，可用于支撑我们的高并发业务。"><meta property="og:image" content="/images/icon_hu3dae195d017ecf405c1471d04b59d594_245698_512x512_fill_lanczos_center_2.png">
+  <meta property="twitter:image" content="/images/icon_hu3dae195d017ecf405c1471d04b59d594_245698_512x512_fill_lanczos_center_2.png"><meta property="og:locale" content="zh-Hans">
   
     
       <meta property="article:published_time" content="2020-09-02T20:50:00&#43;08:00">
@@ -329,7 +329,7 @@
     "name": "roc的个人网站",
     "logo": {
       "@type": "ImageObject",
-      "url": "/images/icon_hua2ec155b4296a9c9791d015323e16eb5_11927_192x192_fill_lanczos_center_2.png"
+      "url": "/images/icon_hu3dae195d017ecf405c1471d04b59d594_245698_192x192_fill_lanczos_center_2.png"
     }
   },
   "description": "目录  概述 内核参数调优  调大连接队列的大小 扩大源端口范围 TIME_WAIT 复用 调大最大文件句柄数 配置示例   全局配置调优  调高 keepalive 连接最大请求数 调高 keepalive 最大空闲连接数 调高单个 worker 最大连接数 配置示例   总结 参考资料    概述 Nginx Ingress Controller 基于 Nginx 实现了 Kubernetes Ingress API，Nginx 是公认的高性能网关，但如果不对其进行一些参数调优，就不能充分发挥出高性能的优势。之前我们在 Nginx Ingress on TKE 部署最佳实践 一文中讲了 Nginx Ingress 在 TKE 上部署最佳实践，涉及的部署 YAML 其实已经包含了一些性能方面的参数优化，只是没有提及，本文将继续展开介绍针对 Nginx Ingress 的一些全局配置与内核参数调优的建议，可用于支撑我们的高并发业务。"
